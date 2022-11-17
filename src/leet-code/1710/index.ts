@@ -1,3 +1,8 @@
+/*
+ * 解题思路
+ * 1. 先将boxTypes按照numberOfUnitsPerBoxes从大到小排序
+ * 2. 采用贪心算法尽可能多的取前面的箱子（因为箱子数量是一定的，经过第一步之后越前面的箱子能够容纳的单元数量越多）
+ * */
 export function maximumUnits(boxTypes: number[][], truckSize: number): number {
     const sortedBoxTypes = sortBoxTypes(boxTypes);
 

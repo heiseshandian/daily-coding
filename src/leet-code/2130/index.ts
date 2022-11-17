@@ -7,6 +7,11 @@ export class ListNode {
     }
 }
 
+/*
+ * 1. 采用双指针法先找到中间位置
+ * 2. 将后一半节点反转并返回反转后的节点
+ * 3. 从头到尾遍历两个节点找出最大值
+ * */
 export function pairSum(head: ListNode | null): number {
     let middle = reverseSingleLinkedList(findMiddleNode(head));
     // @ts-ignore
