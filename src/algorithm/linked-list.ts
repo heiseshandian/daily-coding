@@ -2,7 +2,7 @@ export class SingleLinkedList {
     val: any;
     next: SingleLinkedList | null;
 
-    constructor(val: any, next?: SingleLinkedList) {
+    constructor(val: any, next?: SingleLinkedList | null) {
         this.val = val !== undefined ? val : null;
         this.next = next !== undefined ? next : null;
     }
@@ -23,7 +23,7 @@ export class DoubleLinkedList {
     next: DoubleLinkedList | null;
     prev: DoubleLinkedList | null;
 
-    constructor(val: any, prev?: DoubleLinkedList, next?: DoubleLinkedList) {
+    constructor(val: any, prev?: DoubleLinkedList | null, next?: DoubleLinkedList | null) {
         this.val = val !== undefined ? val : null;
         this.prev = prev !== undefined ? prev : null;
         this.next = next !== undefined ? next : null;
