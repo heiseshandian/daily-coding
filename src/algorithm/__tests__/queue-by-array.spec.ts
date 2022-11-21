@@ -1,5 +1,5 @@
 import { QueueByArray } from '../queue-by-array';
-import { times } from '../../ the-programmers-guide-to-code-interviews /utils/index';
+import { times } from '../../common/index';
 describe('QueueByArray', () => {
     test('isEmpty', () => {
         const queue = new QueueByArray(1);

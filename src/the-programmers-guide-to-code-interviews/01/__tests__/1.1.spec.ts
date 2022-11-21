@@ -1,5 +1,5 @@
 import { StackWithGetMinV2 } from '../1.1';
-import { times } from '../../utils';
+import { times } from '../../../common';
 
 describe('StackWithGetMin', () => {
     test('getMin will return undefined if the stack is empty', () => {

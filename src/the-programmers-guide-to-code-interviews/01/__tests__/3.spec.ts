@@ -1,6 +1,6 @@
 import { Stack } from '../../../algorithm/stack';
 import { reverseStack } from '../3';
-import { times } from '../../utils';
+import { times } from '../../../common';
 
 describe('reverseStack', () => {
     test('input 1,2,3 pop 1,2,3', () => {

@@ -1,5 +1,5 @@
 import { QueueWith2Stacks } from '../2';
-import { times } from '../../utils';
+import { times } from '../../../common';
 
 describe('QueueWith2Stacks', () => {
     test('add 1,2,3,4 peek 1, then poll 1,2,3,4,undefined', () => {
