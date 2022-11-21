@@ -24,4 +24,8 @@ export class Stack {
 
         return val;
     }
+
+    public peek() {
+        return this.#head?.val;
+    }
 }
