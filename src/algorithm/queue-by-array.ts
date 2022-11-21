@@ -24,7 +24,7 @@ export class QueueByArray {
         }
 
         this.#size++;
-        this.#head = this.#getNextHead();
+        this.#head = this.#getNextIndex(this.#head);
 
         this.#container[this.#head] = val;
     }
@@ -35,7 +35,7 @@ export class QueueByArray {
         }
 
         this.#size--;
-        this.#tail = this.#getNextTail();
+        this.#tail = this.#getNextIndex(this.#tail);
 
         return this.#container[this.#tail];
     }
@@ -44,11 +44,7 @@ export class QueueByArray {
         return this.#size === 0;
     }
 
-    #getNextTail() {
-        return this.#tail < this.#capacity - 1 ? this.#tail + 1 : 0;
-    }
-
-    #getNextHead() {
-        return this.#head < this.#capacity - 1 ? this.#head + 1 : 0;
+    #getNextIndex(current: number) {
+        return current < this.#capacity - 1 ? current + 1 : 0;
     }
 }
