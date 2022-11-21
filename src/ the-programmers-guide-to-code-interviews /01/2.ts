@@ -34,18 +34,14 @@ export class QueueWith2Stacks {
     }
 
     #fillOutputStack() {
-        let current = this.#inputStack.pop();
-        while (current !== undefined) {
-            this.#outputStack.push(current);
-            current = this.#inputStack.pop();
+        while (!this.#inputStack.isEmpty()) {
+            this.#outputStack.push(this.#inputStack.pop());
         }
     }
 
     #recoverInputStack() {
-        let current = this.#outputStack.pop();
-        while (current !== undefined) {
-            this.#inputStack.push(current);
-            current = this.#outputStack.pop();
+        while (!this.#outputStack.isEmpty()) {
+            this.#inputStack.push(this.#outputStack.pop());
         }
     }
 }

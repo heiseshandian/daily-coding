@@ -18,7 +18,7 @@ export class StackWithGetMinV2 {
     public push(val: any) {
         this.#dataStack.push(val);
 
-        if (this.#minStack.peek() === undefined) {
+        if (this.#minStack.isEmpty()) {
             this.#minStack.push(val);
             return;
         }

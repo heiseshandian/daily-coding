@@ -1,6 +1,26 @@
 import { Stack } from '../stack';
 
 describe('Stack', () => {
+    test('isEmpty', () => {
+        const stack = new Stack();
+        expect(stack.isEmpty()).toBe(true);
+    });
+
+    test('push 1 then check isEmpty', () => {
+        const stack = new Stack();
+        stack.push(1);
+
+        expect(stack.isEmpty()).toBe(false);
+    });
+
+    test('push 1, pop 1 then check isEmpty', () => {
+        const stack = new Stack();
+        stack.push(1);
+        stack.pop();
+
+        expect(stack.isEmpty()).toBe(true);
+    });
+
     test('pop undefined', () => {
         const stack = new Stack();
         expect(stack.pop()).toEqual(undefined);

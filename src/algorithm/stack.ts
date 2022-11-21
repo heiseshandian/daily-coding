@@ -28,4 +28,8 @@ export class Stack {
     public peek() {
         return this.#head?.val;
     }
+
+    public isEmpty() {
+        return this.#head === null;
+    }
 }
