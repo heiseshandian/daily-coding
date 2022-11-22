@@ -1,3 +1,5 @@
+import { swap } from '../common';
+
 export function quickSort(arr: number[]) {
     if (!arr || arr.length < 2) {
         return;
@@ -40,10 +42,4 @@ function netherlandsFlags(
     swap(arr, more, right);
 
     return [less + 1, more];
-}
-
-function swap(arr: number[], a: number, b: number) {
-    const temp = arr[b];
-    arr[b] = arr[a];
-    arr[a] = temp;
 }

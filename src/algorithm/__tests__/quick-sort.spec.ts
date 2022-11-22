@@ -3,8 +3,9 @@ import { sortTestData } from './sort.testdata';
 
 describe('mergeSort', () => {
     it.each(sortTestData)('mergeSort %j', ({ input, expected }) => {
-        quickSort(input);
+        const clone = input.slice();
+        quickSort(clone);
 
-        expect(input).toEqual(expected);
+        expect(clone).toEqual(expected);
     });
 });
