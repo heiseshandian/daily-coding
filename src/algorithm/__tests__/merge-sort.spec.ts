@@ -6,16 +6,10 @@ import {
     mergeSort,
     mergeSort2,
 } from '../merge-sort';
+import { sortTestData } from './sort.testdata';
 
 describe('mergeSort', () => {
-    const testData = [
-        { input: [], expected: [] },
-        { input: [1], expected: [1] },
-        { input: [3, 5, 2, 1, 4, 3], expected: [1, 2, 3, 3, 4, 5] },
-        { input: [3, 5, 2, 1, 4, 3, 10, 2, 11, 24, 0], expected: [0, 1, 2, 2, 3, 3, 4, 5, 10, 11, 24] },
-    ];
-
-    it.each(testData)('mergeSort %j', ({ input, expected }) => {
+    it.each(sortTestData)('mergeSort %j', ({ input, expected }) => {
         const clone1 = input.slice();
         const clone2 = input.slice();
         mergeSort(clone1);
