@@ -56,8 +56,12 @@ function heapify(arr: number[], i: number, heapSize: number) {
 }
 
 export function heapSort(arr: number[]) {
-    for (let i = 0; i < arr.length; i++) {
-        insertHeap(arr, i);
+    // for (let i = 0; i < arr.length; i++) {
+    //     insertHeap(arr, i);
+    // }
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        heapify(arr, i, arr.length);
     }
 
     let heapSize = arr.length;
