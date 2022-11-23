@@ -43,15 +43,13 @@ export class DoubleLinkedList {
 
 export function reverseSingleLinkedList(head: SingleLinkedList | null) {
     let prev = null;
-    let current = head;
+    let next = null;
 
-    while (current) {
-        const next = current.next;
-
-        current.next = prev;
-        prev = current;
-
-        current = next;
+    while (head) {
+        next = head.next;
+        head.next = prev;
+        prev = head;
+        head = next;
     }
 
     return prev;
@@ -59,38 +57,35 @@ export function reverseSingleLinkedList(head: SingleLinkedList | null) {
 
 export function reverseDoubleLinkedList(head: DoubleLinkedList | null) {
     let prev = null;
-    let current = head;
+    let next = null;
 
-    while (current) {
-        const next = current.next;
-
-        current.next = prev;
-        current.prev = next;
-        prev = current;
-
-        current = next;
+    while (head) {
+        next = head.next;
+        head.next = prev;
+        head.prev = next;
+        prev = head;
+        head = next;
     }
 
     return prev;
 }
 
 export function deleteNum(head: SingleLinkedList | null, num: number): SingleLinkedList | null {
-    let current = head;
-    while (current?.val === num) {
-        current = current.next;
+    while (head?.val === num) {
+        head = head.next;
     }
-    const newHead = current;
 
-    let prev: SingleLinkedList | null = null;
-    while (current) {
-        if (current.val === num) {
+    const newHead = head;
+    let prev = head;
+    while (head) {
+        if (head.val === num) {
             //@ts-ignore
-            prev?.next = current.next;
+            prev.next = head.next;
         } else {
-            prev = current;
+            prev = head;
         }
 
-        current = current.next;
+        head = head.next;
     }
 
     return newHead;
