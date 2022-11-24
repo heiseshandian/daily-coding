@@ -229,13 +229,21 @@ export function partition(head: SingleLinkedList | null, p: number) {
                 moreTail = current;
             }
         }
+
+        // @ts-ignore
+        current = current.next;
     }
 
-    if (!equalHead) {
-        equalTail = lessTail;
+    if (lessTail) {
+        lessTail.next = equalHead;
+        equalTail = equalTail || lessTail;
     }
     if (equalTail) {
         equalTail.next = moreHead;
+    }
+
+    if (moreTail) {
+        moreTail.next = null;
     }
     return lessHead ? lessHead : equalHead ? equalHead : moreHead;
 }
