@@ -4,7 +4,17 @@ import {
     reverseSingleLinkedList,
     reverseDoubleLinkedList,
     deleteNum,
+    getMiddleNode,
+    getMiddleNode2,
+    getMiddleNode3,
+    getMiddleNode4,
 } from '../linked-list';
+import {
+    getMiddleNode2TestData,
+    getMiddleNode3TestData,
+    getMiddleNode4TestData,
+    getMiddleNodeTestData,
+} from './linked-list.testdata';
 
 describe('SingleLinkedList.from', () => {
     test('return null if input is empty or []', () => {
@@ -107,5 +117,31 @@ describe('deleteNum', () => {
 
     test('return 2 if the input is [1,1,2,1,1,1],1', () => {
         expect(deleteNum(SingleLinkedList.from([1, 1, 2, 1, 1, 1]), 1)).toEqual(new SingleLinkedList(2));
+    });
+});
+
+describe('getMiddleNode', () => {
+    it.each(getMiddleNodeTestData)('getMiddleNode %j', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(getMiddleNode(head)?.val).toBe(expected);
+    });
+
+    it.each(getMiddleNode2TestData)('getMiddleNode2 %j', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(getMiddleNode2(head)?.val).toBe(expected);
+    });
+
+    it.each(getMiddleNode3TestData)('getMiddleNode3 %j', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(getMiddleNode3(head)?.val).toBe(expected);
+    });
+
+    it.each(getMiddleNode4TestData)('getMiddleNode4 %j', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(getMiddleNode4(head)?.val).toBe(expected);
     });
 });
