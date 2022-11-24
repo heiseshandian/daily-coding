@@ -303,3 +303,122 @@ export function deepCloneSpecialNodeList(head: SpecialNode | null) {
 
     return cloneHead;
 }
+
+/* 
+给定两个可能有环也可能无环的单链表，头结点head1，head2
+实现一个函数，如果两个链表相交，返回第一个相交的节点，如果不相交返回null
+*/
+export function getFirstIntersectNode(head1: SingleLinkedList | null, head2: SingleLinkedList | null) {
+    if ((!head1 && !head2) || (!head1?.next && !head2?.next)) {
+        return null;
+    }
+
+    const loop1 = getFirstLoopNode(head1);
+    const loop2 = getFirstLoopNode(head2);
+
+    // 两个链表都没有环
+    if (!loop1 && !loop2) {
+        return findIntersectNode(head1, head2, (node: SingleLinkedList | null) => !node);
+    }
+
+    // 两个链表都有环
+    if (loop1 && loop2) {
+        // 入环节点不等
+        if (loop1 !== loop2) {
+            let cur = loop1.next;
+            while (cur !== loop1) {
+                if (cur === loop2) {
+                    return loop1;
+                }
+
+                // @ts-ignore
+                cur = cur.next;
+            }
+
+            return null;
+        }
+
+        // 入环节点相等
+        const found = findIntersectNode(head1, head2, (node: SingleLinkedList | null) => node === loop1);
+        return found || loop1;
+    }
+
+    // 一个有环另一个没有环（两个必不相交，因为如果有环且相交则环必然是相交的部分，也就是说必然同时有环或者同时无环）
+    return null;
+}
+
+function findIntersectNode(
+    head1: SingleLinkedList | null,
+    head2: SingleLinkedList | null,
+    hasTouchEnd: (node: SingleLinkedList | null) => boolean
+) {
+    let count = 0;
+    let cur = head1;
+    while (!hasTouchEnd(cur)) {
+        count++;
+        // @ts-ignore
+        cur = cur.next;
+    }
+
+    cur = head2;
+    while (!hasTouchEnd(cur)) {
+        count--;
+        // @ts-ignore
+        cur = cur.next;
+    }
+
+    let longerHead = count >= 0 ? head1 : head2;
+    let shorterHead = longerHead === head1 ? head2 : head1;
+    let longerCount = Math.abs(count);
+
+    while (longerCount) {
+        // @ts-ignore
+        longerHead = longerHead?.next;
+        longerCount--;
+    }
+
+    while (!hasTouchEnd(shorterHead)) {
+        if (shorterHead === longerHead) {
+            return shorterHead;
+        }
+
+        // @ts-ignore
+        shorterHead = shorterHead.next;
+        // @ts-ignore
+        longerHead = longerHead!.next;
+    }
+
+    return null;
+}
+
+// 检测链表是否有环，有的话返回第一个入环的节点，否则返回null
+export function getFirstLoopNode(head: SingleLinkedList | null) {
+    if (head === null || head.next === null) {
+        return null;
+    }
+
+    // 快慢节点需要同时从head出发，这里我们让初始值先各自走一步方便下面的while循环判断（快慢指针相遇）
+    let slow = head.next;
+    let fast = head.next.next;
+
+    while (slow !== fast) {
+        if (!fast) {
+            return null;
+        }
+
+        // @ts-ignore
+        fast = fast.next?.next;
+        // @ts-ignore
+        slow = slow.next;
+    }
+
+    fast = head;
+    while (fast !== slow) {
+        // @ts-ignore
+        fast = fast.next;
+        // @ts-ignore
+        slow = slow.next;
+    }
+
+    return slow;
+}

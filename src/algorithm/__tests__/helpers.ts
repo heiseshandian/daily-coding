@@ -48,3 +48,12 @@ function isEqual(
 
     return !head1 && !head2;
 }
+
+export function buildNodes(values: number[]) {
+    const nodes = values.map((val) => new SingleLinkedList(val));
+    nodes.forEach((node, index) => {
+        node.next = nodes[index + 1] || null;
+    });
+
+    return nodes;
+}

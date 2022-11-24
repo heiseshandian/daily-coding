@@ -11,8 +11,10 @@ import {
     isPalindrome,
     partition,
     deepCloneSpecialNodeList,
+    getFirstLoopNode,
+    getFirstIntersectNode,
 } from '../linked-list';
-import { buildSpecialNodes, isSingleLinkedListEqual, isSpecialNodeEqual } from './helpers';
+import { buildSpecialNodes, isSingleLinkedListEqual, isSpecialNodeEqual, buildNodes } from './helpers';
 import {
     deepCloneSpecialNodeListTestData,
     getMiddleNode2TestData,
@@ -176,5 +178,83 @@ describe('deepCloneSpecialNodeList', () => {
         const expectedHead = buildSpecialNodes(input);
 
         expect(isSpecialNodeEqual(deepCloneSpecialNodeList(head), expectedHead)).toBe(true);
+    });
+});
+
+describe('getFirstLoopNode', () => {
+    test('input null output null', () => {
+        expect(getFirstLoopNode(null)).toBe(null);
+    });
+
+    test('input 1 output null', () => {
+        expect(getFirstLoopNode(new SingleLinkedList(1))).toBe(null);
+    });
+
+    test('input 1,2 output 1', () => {
+        const nodes = [1, 2].map((val) => new SingleLinkedList(val));
+        nodes[0].next = nodes[1];
+        nodes[1].next = nodes[0];
+
+        expect(getFirstLoopNode(nodes[0])).toBe(nodes[0]);
+    });
+
+    test('input 1,2,3,4,5,6,7,8,9,6 output 6', () => {
+        const nodes = buildNodes([1, 2, 3, 4, 5, 6, 7, 8, 9, 6]);
+        // 设置第一个入环的节点
+        nodes[nodes.length - 1].next = nodes[5];
+
+        expect(getFirstLoopNode(nodes[0])).toBe(nodes[5]);
+    });
+
+    test('input 1,2,3,4,5,6,7,8,9 output null', () => {
+        const nodes = buildNodes([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        expect(getFirstLoopNode(nodes[0])).toBe(null);
+    });
+});
+
+describe('getFirstIntersectNode', () => {
+    test('input null,null output null', () => {
+        expect(getFirstIntersectNode(null, null)).toBe(null);
+    });
+
+    test('input null,1 output null', () => {
+        expect(getFirstIntersectNode(new SingleLinkedList(1), null)).toBe(null);
+    });
+
+    test('input 1,null output null', () => {
+        expect(getFirstIntersectNode(null, new SingleLinkedList(1))).toBe(null);
+    });
+
+    test('input 1,1 output null', () => {
+        expect(getFirstIntersectNode(new SingleLinkedList(1), new SingleLinkedList(1))).toBe(null);
+    });
+
+    test('input [1,2,3,4,5],[0,3,4,5] output 3', () => {
+        const nodes1 = buildNodes([1, 2, 3, 4, 5]);
+        const nodes2 = buildNodes([0]);
+        nodes2[0].next = nodes1[2];
+
+        expect(getFirstIntersectNode(nodes1[0], nodes2[0])).toBe(nodes1[2]);
+    });
+
+    test('input [1,2,3,4,5,6,7,8,9,0],[0,3,4] output 5', () => {
+        const nodes1 = buildNodes([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        nodes1[nodes1.length - 1].next = nodes1[4];
+
+        const nodes2 = buildNodes([0, 3, 4]);
+        nodes2[nodes2.length - 1].next = nodes1[4];
+
+        expect(getFirstIntersectNode(nodes1[0], nodes2[0])).toBe(nodes1[4]);
+    });
+
+    test('input [1,2,3,4,5,6,7,8,9,0],[0,3,4] output 5', () => {
+        const nodes1 = buildNodes([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        nodes1[nodes1.length - 1].next = nodes1[4];
+
+        const nodes2 = buildNodes([0, 3, 4]);
+        nodes2[nodes2.length - 1].next = nodes1[7];
+
+        expect(getFirstIntersectNode(nodes1[0], nodes2[0])).toBe(nodes1[4]);
     });
 });
