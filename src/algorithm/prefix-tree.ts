@@ -9,6 +9,10 @@ export class PrefixTree {
     #root = new Node();
 
     public add(word: string) {
+        if (!word || word.length === 0) {
+            return;
+        }
+
         let node = this.#root;
         for (let i = 0; i < word.length; i++) {
             const code = getCode(word[i]);
@@ -24,6 +28,10 @@ export class PrefixTree {
     }
 
     public search(word: string) {
+        if (!word || word.length === 0) {
+            return 0;
+        }
+
         let node = this.#root;
         for (let i = 0; i < word.length; i++) {
             const code = getCode(word[i]);
@@ -57,6 +65,24 @@ export class PrefixTree {
         }
 
         node.end--;
+    }
+
+    public prefixCount(prefix: string) {
+        if (!prefix || prefix.length === 0) {
+            return 0;
+        }
+
+        let node = this.#root;
+        for (let i = 0; i < prefix.length; i++) {
+            const code = getCode(prefix[i]);
+            if (!node.nextList[code]) {
+                return 0;
+            }
+
+            node = node.nextList[code];
+        }
+
+        return node.pass;
     }
 }
 
