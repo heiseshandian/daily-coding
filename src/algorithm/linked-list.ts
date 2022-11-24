@@ -185,3 +185,57 @@ export function isPalindrome(head: SingleLinkedList | null) {
 
     return result;
 }
+
+/* 
+根据给定的值将链表分成三部分，左边大于p，中间等于p，右边大于p
+例：
+input:[1,5,4,3,2,3,1] p=3
+output:[1,2,1,3,3,5,4]
+注：给定的p值有可能在链表中不存在
+*/
+export function partition(head: SingleLinkedList | null, p: number) {
+    let [lessHead, lessTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
+    let [equalHead, equalTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
+    let [moreHead, moreTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
+
+    if (head === null) {
+        return head;
+    }
+
+    let current = head;
+    while (current) {
+        if (current.val < p) {
+            if (!lessHead) {
+                lessHead = current;
+                lessTail = current;
+            } else {
+                lessTail!.next = current;
+                lessTail = current;
+            }
+        } else if (current.val === p) {
+            if (!equalHead) {
+                equalHead = current;
+                equalTail = current;
+            } else {
+                equalTail!.next = current;
+                equalTail = current;
+            }
+        } else {
+            if (!moreHead) {
+                moreHead = current;
+                moreTail = current;
+            } else {
+                moreTail!.next = current;
+                moreTail = current;
+            }
+        }
+    }
+
+    if (!equalHead) {
+        equalTail = lessTail;
+    }
+    if (equalTail) {
+        equalTail.next = moreHead;
+    }
+    return lessHead ? lessHead : equalHead ? equalHead : moreHead;
+}

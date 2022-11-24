@@ -9,6 +9,7 @@ import {
     getMiddleNode3,
     getMiddleNode4,
     isPalindrome,
+    partition,
 } from '../linked-list';
 import {
     getMiddleNode2TestData,
@@ -16,6 +17,7 @@ import {
     getMiddleNode4TestData,
     getMiddleNodeTestData,
     isPalindromeTestData,
+    partitionTestData,
 } from './linked-list.testdata';
 
 describe('SingleLinkedList.from', () => {
@@ -154,6 +156,14 @@ describe('isPalindromeTestData', () => {
 
         expect(isPalindrome(head)).toBe(expected);
         expect(isEqual(head, SingleLinkedList.from(input))).toBe(true);
+    });
+});
+
+describe('partition', () => {
+    it.each(partitionTestData)('partition %j', ({ input, p, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(isEqual(partition(head, p), SingleLinkedList.from(expected))).toBe(true);
     });
 });
 
