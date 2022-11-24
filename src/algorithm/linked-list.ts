@@ -159,3 +159,29 @@ export function getMiddleNode4(head: SingleLinkedList | null) {
 
     return slow;
 }
+
+// 判断单链表是否回文
+export function isPalindrome(head: SingleLinkedList | null) {
+    if (head === null || head.next === null) {
+        return true;
+    }
+
+    const middle = getMiddleNode2(head);
+    const originalTail = reverseSingleLinkedList(middle);
+
+    let result = true;
+    let tail = originalTail;
+    while (head && tail) {
+        if (head.val !== tail.val) {
+            result = false;
+            break;
+        }
+
+        head = head.next;
+        tail = tail.next;
+    }
+
+    reverseSingleLinkedList(originalTail);
+
+    return result;
+}

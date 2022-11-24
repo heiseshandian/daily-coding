@@ -8,12 +8,14 @@ import {
     getMiddleNode2,
     getMiddleNode3,
     getMiddleNode4,
+    isPalindrome,
 } from '../linked-list';
 import {
     getMiddleNode2TestData,
     getMiddleNode3TestData,
     getMiddleNode4TestData,
     getMiddleNodeTestData,
+    isPalindromeTestData,
 } from './linked-list.testdata';
 
 describe('SingleLinkedList.from', () => {
@@ -145,3 +147,25 @@ describe('getMiddleNode', () => {
         expect(getMiddleNode4(head)?.val).toBe(expected);
     });
 });
+
+describe('isPalindromeTestData', () => {
+    it.each(isPalindromeTestData)('isPalindrome %j', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+
+        expect(isPalindrome(head)).toBe(expected);
+        expect(isEqual(head, SingleLinkedList.from(input))).toBe(true);
+    });
+});
+
+function isEqual(head1: SingleLinkedList | null, head2: SingleLinkedList | null) {
+    while (head1 && head2) {
+        if (head1.val !== head2.val) {
+            return false;
+        }
+
+        head1 = head1.next;
+        head2 = head2.next;
+    }
+
+    return head1 === null && head2 === null;
+}
