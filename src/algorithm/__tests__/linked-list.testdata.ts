@@ -50,3 +50,27 @@ export const partitionTestData = [
     { input: [1, 2, 1, 3, 2], p: 2, expected: [1, 1, 2, 2, 3] },
     { input: [1, 2, 1, 3, 2], p: 4, expected: [1, 2, 1, 3, 2] },
 ];
+
+export const deepCloneSpecialNodeListTestData = [
+    { input: [] },
+    {
+        input: [{ val: 1, next: null, random: 1 }],
+    },
+    {
+        input: [{ val: 1, next: null, random: null }],
+    },
+    {
+        input: [
+            { val: 1, next: 2, random: 1 },
+            { val: 2, next: null, random: 2 },
+        ],
+    },
+    {
+        input: [
+            { val: 1, next: 2, random: null },
+            { val: 2, next: 3, random: 1 },
+            { val: 3, next: 4, random: 3 },
+            { val: 4, next: null, random: 2 },
+        ],
+    },
+];

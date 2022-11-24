@@ -10,8 +10,11 @@ import {
     getMiddleNode4,
     isPalindrome,
     partition,
+    deepCloneSpecialNodeList,
 } from '../linked-list';
+import { buildSpecialNodes, isSingleLinkedListEqual, isSpecialNodeEqual } from './helpers';
 import {
+    deepCloneSpecialNodeListTestData,
     getMiddleNode2TestData,
     getMiddleNode3TestData,
     getMiddleNode4TestData,
@@ -155,7 +158,7 @@ describe('isPalindromeTestData', () => {
         const head = SingleLinkedList.from(input);
 
         expect(isPalindrome(head)).toBe(expected);
-        expect(isEqual(head, SingleLinkedList.from(input))).toBe(true);
+        expect(isSingleLinkedListEqual(head, SingleLinkedList.from(input))).toBe(true);
     });
 });
 
@@ -163,19 +166,15 @@ describe('partition', () => {
     it.each(partitionTestData)('partition %j', ({ input, p, expected }) => {
         const head = SingleLinkedList.from(input);
 
-        expect(isEqual(partition(head, p), SingleLinkedList.from(expected))).toBe(true);
+        expect(isSingleLinkedListEqual(partition(head, p), SingleLinkedList.from(expected))).toBe(true);
     });
 });
 
-function isEqual(head1: SingleLinkedList | null, head2: SingleLinkedList | null) {
-    while (head1 && head2) {
-        if (head1.val !== head2.val) {
-            return false;
-        }
+describe('deepCloneSpecialNodeList', () => {
+    it.each(deepCloneSpecialNodeListTestData)('deepCloneSpecialNodeList', ({ input }) => {
+        const head = buildSpecialNodes(input);
+        const expectedHead = buildSpecialNodes(input);
 
-        head1 = head1.next;
-        head2 = head2.next;
-    }
-
-    return head1 === null && head2 === null;
-}
+        expect(isSpecialNodeEqual(deepCloneSpecialNodeList(head), expectedHead)).toBe(true);
+    });
+});

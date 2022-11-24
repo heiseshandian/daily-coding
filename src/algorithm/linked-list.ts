@@ -10,8 +10,8 @@ export class SingleLinkedList {
     static from(arr: Array<any> = []): SingleLinkedList | null {
         const nodes = arr.map((val) => new SingleLinkedList(val));
 
-        nodes.forEach((value, index, array) => {
-            value.next = array[index + 1] || null;
+        nodes.forEach((node, index) => {
+            node.next = nodes[index + 1] || null;
         });
 
         return nodes[0] || null;
@@ -32,9 +32,9 @@ export class DoubleLinkedList {
     static from(arr: Array<any> = []): DoubleLinkedList {
         const nodes = arr.map((val) => new DoubleLinkedList(val));
 
-        nodes.forEach((value, index, array) => {
-            value.next = array[index + 1] || null;
-            value.prev = array[index - 1] || null;
+        nodes.forEach((node, index) => {
+            node.next = nodes[index + 1] || null;
+            node.prev = nodes[index - 1] || null;
         });
 
         return nodes[0] || null;
@@ -246,4 +246,60 @@ export function partition(head: SingleLinkedList | null, p: number) {
         moreTail.next = null;
     }
     return lessHead ? lessHead : equalHead ? equalHead : moreHead;
+}
+
+// 实现一个函数来深度copy SpecialNode
+export class SpecialNode {
+    val: number;
+    next: SpecialNode | null = null;
+    random: SpecialNode | null = null;
+
+    constructor(val: number) {
+        this.val = val;
+    }
+}
+
+export function deepCloneSpecialNodeList(head: SpecialNode | null) {
+    if (!head) {
+        return head;
+    }
+
+    // 先遍历复制节点，并把复制出来的节点放在原先节点的后一个节点上
+    // 1 > 2 > 3 变成 1 > 1' > 2 > 2' > 3 > 3' ('表示复制出来的节点)
+    let cur = head;
+    while (cur) {
+        const next = cur.next;
+        const clone = new SpecialNode(cur.val);
+        cur.next = clone;
+        clone.next = next;
+        // @ts-ignore
+        cur = next;
+    }
+
+    // 建立复制节点的random指针
+    cur = head;
+    while (cur) {
+        const next = cur.next!.next;
+        const clone = cur.next;
+        // @ts-ignore
+        clone!.random = cur.random?.next;
+        // @ts-ignore
+        cur = next;
+    }
+
+    const cloneHead = head.next;
+
+    // 分离原始节点与clone节点
+    cur = head;
+    while (cur) {
+        const next = cur.next?.next;
+        // @ts-ignore
+        cur.next.next = next?.next;
+        // @ts-ignore
+        cur.next = next;
+        // @ts-ignore
+        cur = next;
+    }
+
+    return cloneHead;
 }
