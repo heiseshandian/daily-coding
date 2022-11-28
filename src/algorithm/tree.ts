@@ -277,3 +277,38 @@ function recursivePreBuildNode(queue: Queue<number | null>) {
 
     return head;
 }
+
+/* 给定节点如下所示，每个节点都有一个指向父节点的parent节点，要求实现函数返回任意给定节点的后继结点
+所谓后继结点指的是中序遍历中处在后面的节点，比如说某棵树中序遍历的结果是 [1,2,3,4]，那么2就是1的后继节点，
+3就是2的后继节点，以此类推 ，整棵树的最后一个节点没有后继节点，可以直接返回null*/
+export class TreeNodeWithParent {
+    val: number;
+    left: TreeNodeWithParent | null = null;
+    right: TreeNodeWithParent | null = null;
+    parent: TreeNodeWithParent | null = null;
+
+    constructor(val: number) {
+        this.val = val;
+    }
+}
+
+export function findNextNode(node: TreeNodeWithParent | null) {
+    // 如果当前节点有右子树，那么右子树上最左的节点就是当前节点的后继节点
+    if (node?.right) {
+        let preLeft = node.right;
+        let left = preLeft.left;
+        while (left) {
+            preLeft = left;
+            left = left.left;
+        }
+        return preLeft;
+    }
+
+    // 如果当前节点无右子树，则向上找，若查找过程中某个节点是父节点的左节点，那么该父节点就是我们要找的后继结点
+    let parent = node?.parent;
+    while (parent && parent.left !== node) {
+        parent = parent.parent;
+    }
+
+    return parent;
+}

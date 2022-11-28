@@ -12,6 +12,8 @@ import {
     getMaxWidth,
     getMaxWidthNoMap,
     preSerialize,
+    TreeNodeWithParent,
+    findNextNode,
 } from '../tree';
 import {
     preVisitNodeTestData,
@@ -73,5 +75,33 @@ describe('preSerialize', () => {
         const root = preBuildNode(Queue.from(input));
 
         expect(preSerialize(root).valueOf()).toEqual(input);
+    });
+});
+
+describe('findNextNode', () => {
+    test('findNextNode', () => {
+        const [root, node2, node3, node4, node6, node7, node8] = [1, 2, 3, 4, 6, 7, 8].map(
+            (val) => new TreeNodeWithParent(val)
+        );
+        node7.parent = node6;
+        node8.parent = node6;
+        node6.parent = node3;
+        node4.parent = node2;
+        node3.parent = root;
+        node2.parent = root;
+
+        root.left = node2;
+        root.right = node3;
+        node2.left = node4;
+        node3.right = node6;
+        node6.left = node7;
+        node6.right = node8;
+
+        expect(findNextNode(root)).toBe(node3);
+        expect(findNextNode(node4)).toBe(node2);
+        expect(findNextNode(node2)).toBe(root);
+        expect(findNextNode(node3)).toBe(node7);
+        expect(findNextNode(node6)).toBe(node8);
+        expect(findNextNode(node8)).toBe(null);
     });
 });
