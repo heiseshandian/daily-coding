@@ -312,3 +312,58 @@ export function findNextNode(node: TreeNodeWithParent | null) {
 
     return parent;
 }
+
+/* 
+判断一棵树是否平衡二叉树
+平衡二叉树的定义：任何节点的左子树和右子树高度差不超过1
+ */
+type BalancedInfo = {
+    isBalanced: boolean;
+    height: number;
+};
+
+export function isBalancedTree(root: TreeNode | null): BalancedInfo {
+    if (!root) {
+        return {
+            isBalanced: true,
+            height: 0,
+        };
+    }
+
+    const { isBalanced: isLeftBalanced, height: leftHeight } = isBalancedTree(root.left);
+    const { isBalanced: isRightBalanced, height: rightHeight } = isBalancedTree(root.right);
+
+    const height = Math.max(leftHeight, rightHeight) + 1;
+    const isBalanced = isLeftBalanced && isRightBalanced && Math.abs(leftHeight - rightHeight) < 2;
+
+    return {
+        isBalanced,
+        height,
+    };
+}
+
+type MaxDistanceInfo = {
+    maxDistance: number;
+    height: number;
+};
+
+// 假定一个节点走到另一个节点的最短路线就是这个点到另一个点的距离，求一颗树的最大距离
+export function getMaxDistance(root: TreeNode | null): MaxDistanceInfo {
+    if (!root) {
+        return {
+            maxDistance: 0,
+            height: 0,
+        };
+    }
+
+    const { maxDistance: leftMaxDistance, height: leftHeight } = getMaxDistance(root.left);
+    const { maxDistance: rightMaxDistance, height: rightHeight } = getMaxDistance(root.right);
+
+    const height = Math.max(leftHeight, rightHeight) + 1;
+    const maxDistance = Math.max(leftMaxDistance, rightMaxDistance, leftHeight + rightHeight + 1);
+
+    return {
+        maxDistance,
+        height,
+    };
+}
