@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
     transform: {
         '^.+\\.ts$': 'ts-jest',
     },
-    testMatch: ['**/__tests__/**/*.spec.ts'],
+    testMatch: ['**/__tests__/**/*.spec.ts', '**/*.spec.ts'],
 };
 
 export default config;
