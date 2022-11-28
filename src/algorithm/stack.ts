@@ -1,13 +1,13 @@
 import { DoubleLinkedList } from './linked-list';
 
-export class Stack {
+export class Stack<T = any> {
     #head: DoubleLinkedList | null;
 
     constructor() {
         this.#head = null;
     }
 
-    public push(val: any) {
+    public push(val: T) {
         const newNode = new DoubleLinkedList(val, this.#head);
         if (this.#head) {
             this.#head.next = newNode;
@@ -16,7 +16,7 @@ export class Stack {
         this.#head = newNode;
     }
 
-    public pop() {
+    public pop(): T {
         const val = this.#head?.val;
         if (this.#head) {
             this.#head = this.#head.prev;
