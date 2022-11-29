@@ -9,8 +9,8 @@ export function zigzagMatrix(matrix: number[][]) {
     let pointAY = 0;
     let pointBX = 0;
     let pointBY = 0;
-    const endX = matrix[0].length - 1;
-    const endY = matrix.length - 1;
+    const endX = matrix.length - 1;
+    const endY = matrix[0].length - 1;
     let shouldReverse = false;
 
     while (pointAX <= endX && pointAY <= endY && pointBX <= endX && pointBY <= endY) {
@@ -47,5 +47,54 @@ function slash(
     if (shouldReverse) {
         return result.reverse();
     }
+    return result;
+}
+
+export function circleMatrix(matrix: number[][]) {
+    if (!matrix || matrix.length === 0) {
+        return [];
+    }
+
+    let startX = 0;
+    let startY = 0;
+    let endX = matrix.length - 1;
+    let endY = matrix[0].length - 1;
+
+    const result: number[] = [];
+    while (startX <= endX && startY <= endY) {
+        result.push(...getEdge(matrix, startX++, startY++, endX--, endY--));
+    }
+
+    return result;
+}
+
+function getEdge(matrix: number[][], startX: number, startY: number, endX: number, endY: number) {
+    const result: number[] = [];
+
+    if (startX === endX) {
+        while (startY <= endY) {
+            result.push(matrix[startX][startY++]);
+        }
+    } else if (startY === endY) {
+        while (startX <= endX) {
+            result.push(matrix[startX++][startY]);
+        }
+    } else {
+        let x = startX;
+        let y = startY;
+        while (y < endY) {
+            result.push(matrix[startX][y++]);
+        }
+        while (x < endX) {
+            result.push(matrix[x++][endY]);
+        }
+        while (y > startY) {
+            result.push(matrix[endX][y--]);
+        }
+        while (x > startX) {
+            result.push(matrix[x--][startY]);
+        }
+    }
+
     return result;
 }
