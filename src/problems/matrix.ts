@@ -1,3 +1,4 @@
+// 锯齿形打印矩阵
 export function zigzagMatrix(matrix: number[][]) {
     if (!matrix || matrix.length === 0) {
         return [];
@@ -50,6 +51,7 @@ function slash(
     return result;
 }
 
+// 环形打印矩阵
 export function circleMatrix(matrix: number[][]) {
     if (!matrix || matrix.length === 0) {
         return [];
