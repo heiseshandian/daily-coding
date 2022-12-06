@@ -1,4 +1,5 @@
 import { Queue } from './queue';
+import { Stack } from './stack';
 export class Edge {
     weight: number;
     from: GraphNode;
@@ -85,7 +86,38 @@ export function bfsGraph(node: GraphNode | undefined): GraphNode[] | null {
     return result;
 }
 
-export function dfsGraph(node: GraphNode) {}
+export function dfsGraph(node: GraphNode): GraphNode[] | null {
+    if (!node) {
+        return null;
+    }
+
+    const result: GraphNode[] = [];
+    const addedNodes = new Set<GraphNode>();
+    const stack = new Stack<GraphNode>();
+
+    stack.push(node);
+    addedNodes.add(node);
+    result.push(node);
+
+    while (!stack.isEmpty()) {
+        const cur = stack.pop();
+
+        for (const nextNode of cur.nextNodes) {
+            if (addedNodes.has(nextNode)) {
+                continue;
+            }
+
+            addedNodes.add(nextNode);
+            stack.push(cur);
+            stack.push(nextNode);
+
+            result.push(nextNode);
+            break;
+        }
+    }
+
+    return result;
+}
 
 export function miniSpanTreeK(node: GraphNode) {}
 
