@@ -211,3 +211,50 @@ export function miniSpanTreeP(graph: Graph): Set<Edge> {
 
     return result;
 }
+
+export function dijkstra(node: GraphNode): Map<GraphNode, number> {
+    const distanceMap = new Map<GraphNode, number>();
+    distanceMap.set(node, 0);
+    const selectedNodes = new Set<GraphNode>();
+
+    let minNode = getMinDistanceNodeFromUnselectedNodes(distanceMap, selectedNodes);
+    while (minNode) {
+        const minDistance = distanceMap.get(minNode) as number;
+
+        minNode.nextEdges.forEach((edge) => {
+            const { weight, to } = edge;
+            if (!distanceMap.get(to)) {
+                distanceMap.set(to, minDistance + weight);
+            } else {
+                const previousDistance = distanceMap.get(to) as number;
+                distanceMap.set(to, Math.min(minDistance + weight, previousDistance));
+            }
+        });
+
+        selectedNodes.add(minNode);
+        minNode = getMinDistanceNodeFromUnselectedNodes(distanceMap, selectedNodes);
+    }
+
+    return distanceMap;
+}
+
+function getMinDistanceNodeFromUnselectedNodes(
+    distanceMap: Map<GraphNode, number>,
+    selectedNodes: Set<GraphNode>
+): GraphNode | null {
+    let minNode = null;
+    let minDistance = Infinity;
+
+    for (const [node, distance] of distanceMap) {
+        if (selectedNodes.has(node)) {
+            continue;
+        }
+
+        if (distance < minDistance) {
+            minDistance = distance;
+            minNode = node;
+        }
+    }
+
+    return minNode;
+}
