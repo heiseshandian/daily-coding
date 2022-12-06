@@ -12,11 +12,15 @@ export class UnionSet<T = any> {
 
     constructor(values: T[] = []) {
         values.forEach((val) => {
-            const node = new UnionSetNode<T>(val);
-            this.#nodes.set(val, node);
-            this.#parents.set(node, node);
-            this.#sizeMap.set(node, 1);
+            this.addNode(val);
         });
+    }
+
+    public addNode(value: T) {
+        const node = new UnionSetNode<T>(value);
+        this.#nodes.set(value, node);
+        this.#parents.set(node, node);
+        this.#sizeMap.set(node, 1);
     }
 
     public isSameSet(a: T, b: T) {

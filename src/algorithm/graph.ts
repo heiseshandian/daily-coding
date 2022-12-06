@@ -1,5 +1,7 @@
+import { GenericHeap } from './generic-heap';
 import { Queue } from './queue';
 import { Stack } from './stack';
+import { UnionSet } from './union-set';
 export class Edge {
     weight: number;
     from: GraphNode;
@@ -119,6 +121,93 @@ export function dfsGraph(node: GraphNode): GraphNode[] | null {
     return result;
 }
 
-export function miniSpanTreeK(node: GraphNode) {}
+export function topologicalSortGraph(graph: Graph): GraphNode[] {
+    const inEdgeCountMap = new Map<GraphNode, number>();
+    const zeroInQueue = new Queue<GraphNode>();
 
-export function miniSpanTreeP(node: GraphNode) {}
+    graph.nodes.forEach((node) => {
+        inEdgeCountMap.set(node, node.inEdgeCount);
+        if (node.inEdgeCount === 0) {
+            zeroInQueue.add(node);
+        }
+    });
+
+    const result: GraphNode[] = [];
+
+    while (!zeroInQueue.isEmpty()) {
+        const cur = zeroInQueue.poll() as GraphNode;
+        result.push(cur);
+
+        for (const nextNode of cur.nextNodes) {
+            inEdgeCountMap.set(nextNode, (inEdgeCountMap.get(nextNode) as number) - 1);
+            if (inEdgeCountMap.get(nextNode) === 0) {
+                zeroInQueue.add(nextNode);
+            }
+        }
+    }
+
+    return result;
+}
+
+export function miniSpanTreeK(graph: Graph): Set<Edge> {
+    const minHeap = new GenericHeap<Edge>((a, b) => a.weight - b.weight);
+    const unionSet = new UnionSet<GraphNode>();
+
+    graph.edges.forEach((edge) => {
+        minHeap.push(edge);
+    });
+    for (const [, node] of graph.nodes) {
+        unionSet.addNode(node);
+    }
+
+    const result = new Set<Edge>();
+    while (!minHeap.isEmpty()) {
+        const edge = minHeap.pop();
+        const { from, to } = edge;
+        if (!unionSet.isSameSet(from, to)) {
+            result.add(edge);
+            unionSet.union(from, to);
+        }
+    }
+
+    return result;
+}
+
+export function miniSpanTreeP(graph: Graph): Set<Edge> {
+    const minEdgeHeap = new GenericHeap<Edge>((a, b) => a.weight - b.weight);
+    const visitedNodes = new Set<GraphNode>();
+    const visitedEdges = new Set<Edge>();
+
+    const result = new Set<Edge>();
+    // 防止森林
+    for (const [, node] of graph.nodes) {
+        if (visitedNodes.has(node)) {
+            continue;
+        }
+
+        visitedNodes.add(node);
+        node.nextEdges.forEach((edge) => {
+            if (!visitedEdges.has(edge)) {
+                visitedEdges.add(edge);
+                minEdgeHeap.push(edge);
+            }
+        });
+
+        while (!minEdgeHeap.isEmpty()) {
+            const curMinEdge = minEdgeHeap.pop();
+            if (!visitedNodes.has(curMinEdge.to)) {
+                visitedNodes.add(curMinEdge.to);
+                result.add(curMinEdge);
+
+                curMinEdge.to.nextEdges.forEach((edge) => {
+                    if (!visitedEdges.has(edge)) {
+                        visitedEdges.add(edge);
+                        minEdgeHeap.push(edge);
+                    }
+                });
+            }
+        }
+    }
+
+    return result;
+}
