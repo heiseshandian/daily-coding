@@ -12,3 +12,11 @@ export const hanoiTestData = [
         ],
     },
 ];
+
+export const subsequenceTestData = [
+    { input: 'abc', expected: ['', 'c', 'b', 'bc', 'a', 'ac', 'ab', 'abc'] },
+    {
+        input: 'abcd',
+        expected: ['', 'd', 'c', 'cd', 'b', 'bd', 'bc', 'bcd', 'a', 'ad', 'ac', 'acd', 'ab', 'abd', 'abc', 'abcd'],
+    },
+];

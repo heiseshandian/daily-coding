@@ -17,3 +17,20 @@ function process(n: number, from: string, to: string, center: string, path: stri
     path.push(`${n} ${from} > ${to}`);
     process(n - 1, center, to, from, path);
 }
+
+/* 获取字符串的所有子序列 */
+export function subsequence(str: string) {
+    const result: string[] = [];
+    process2(str, 0, result, '');
+    return result;
+}
+
+function process2(str: string, index: number, result: string[], currentSubsequence: string) {
+    if (index === str.length) {
+        result.push(currentSubsequence);
+        return;
+    }
+
+    process2(str, index + 1, result, currentSubsequence);
+    process2(str, index + 1, result, currentSubsequence + str[index]);
+}
