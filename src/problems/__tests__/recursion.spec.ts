@@ -1,5 +1,5 @@
-import { bag, hanoi, subsequence } from '../recursion';
-import { bagTestData, hanoiTestData, subsequenceTestData } from './recursion.testdata';
+import { bag, hanoi, maxNum, subsequence } from '../recursion';
+import { bagTestData, hanoiTestData, maxNumTestData, subsequenceTestData } from './recursion.testdata';
 
 describe('hanoi', () => {
     it.each(hanoiTestData)('hanoi %j', ({ input, expected }) => {
@@ -16,5 +16,11 @@ describe('subsequence', () => {
 describe('bag', () => {
     it.each(bagTestData)('bag %j', ({ input: { weights, values, targetWeight }, expected }) => {
         expect(bag(weights, values, targetWeight)).toBe(expected);
+    });
+});
+
+describe('maxNum', () => {
+    it.each(maxNumTestData)('maxNum', ({ input, expected }) => {
+        expect(maxNum(input)).toBe(expected);
     });
 });

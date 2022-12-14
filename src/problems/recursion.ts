@@ -20,6 +20,7 @@ function hanoiProcess(n: number, from: string, to: string, center: string, path:
     hanoiProcess(n - 1, center, to, from, path);
 }
 
+/* 从左到右或者从右到左的尝试 */
 /* 获取字符串的所有子序列 */
 export function subsequence(str: string) {
     const result: string[] = [];
@@ -100,4 +101,30 @@ function bagProcess(weights: number[], values: number[], leftWeight: number, ind
         val2 += values[index];
     }
     return Math.max(val1, val2);
+}
+
+/* 范围尝试 */
+/* 有一组数字牌 array，array中所有的数字都是正数，有A和B两个玩家，规定只能从剩余牌的头尾拿牌，问A和B能获得的最大分数是多少 */
+export function maxNum(arr: number[]) {
+    return Math.max(maxNumF(arr, 0, arr.length - 1), maxNumS(arr, 0, arr.length - 1));
+}
+
+// 先手过程
+function maxNumF(arr: number[], left: number, right: number): number {
+    if (left === right) {
+        return arr[left];
+    }
+
+    return Math.max(arr[left] + maxNumS(arr, left + 1, right), arr[right] + maxNumS(arr, left, right - 1));
+}
+
+// 后手过程
+function maxNumS(arr: number[], left: number, right: number): number {
+    // 如果只剩下一张牌且是后手，则先手一定会拿走剩下的牌，后手会获得0分
+    if (left === right) {
+        return 0;
+    }
+
+    // 此外后手只能选择先手拿牌之后的最小值
+    return Math.min(maxNumF(arr, left + 1, right), maxNumF(arr, left, right - 1));
 }
