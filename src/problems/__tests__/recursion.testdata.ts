@@ -52,6 +52,14 @@ export const bagTestData = [
             values: [20, 30, 20, 3, 5, 6, 8, 7],
             targetWeight: 30,
         },
-        expected: 66,
+        expected: 59,
+    },
+    {
+        input: {
+            weights: [100],
+            values: [100],
+            targetWeight: 30,
+        },
+        expected: 0,
     },
 ];

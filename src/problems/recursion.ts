@@ -83,59 +83,21 @@ function process4(strArr: string[], i: number, result: string[]) {
 }
 
 export function bag(weights: number[], values: number[], targetWeight: number) {
-    return process5({
-        weights,
-        values,
-        targetWeight,
-        currentIndex: 0,
-        previousSumValue: 0,
-        currentSumValue: 0,
-        currentSumWeight: 0,
-    });
+    return process6(weights, values, targetWeight, 0);
 }
 
-function process5({
-    weights,
-    values,
-    targetWeight,
-    currentIndex,
-    previousSumValue,
-    currentSumValue,
-    currentSumWeight,
-}: {
-    weights: number[];
-    values: number[];
-    targetWeight: number;
-    currentIndex: number;
-    previousSumValue: number;
-    currentSumValue: number;
-    currentSumWeight: number;
-}): number {
-    if (currentIndex === weights.length || currentSumWeight === targetWeight) {
-        return currentSumValue;
+function process6(weights: number[], values: number[], leftWeight: number, index: number): number {
+    if (leftWeight < 0) {
+        return -1;
     }
-    if (currentSumWeight > targetWeight) {
-        return previousSumValue;
+    if (index == weights.length) {
+        return 0;
     }
 
-    return Math.max(
-        process5({
-            weights,
-            values,
-            targetWeight,
-            currentIndex: currentIndex + 1,
-            previousSumValue: currentSumValue,
-            currentSumValue: currentSumValue + values[currentIndex],
-            currentSumWeight: currentSumWeight + weights[currentIndex],
-        }),
-        process5({
-            weights,
-            values,
-            targetWeight,
-            currentIndex: currentIndex + 1,
-            previousSumValue: currentSumValue,
-            currentSumValue: currentSumValue,
-            currentSumWeight: currentSumWeight,
-        })
-    );
+    const val1 = process6(weights, values, leftWeight, index + 1);
+    let val2 = process6(weights, values, leftWeight - weights[index], index + 1);
+    if (val2 !== -1) {
+        val2 += values[index];
+    }
+    return Math.max(val1, val2);
 }
