@@ -20,3 +20,38 @@ export const subsequenceTestData = [
         expected: ['', 'd', 'c', 'cd', 'b', 'bd', 'bc', 'bcd', 'a', 'ad', 'ac', 'acd', 'ab', 'abd', 'abc', 'abcd'],
     },
 ];
+
+export const bagTestData = [
+    {
+        input: {
+            weights: [10, 90, 1, 4],
+            values: [20, 30, 20, 3],
+            targetWeight: 100,
+        },
+        expected: 53,
+    },
+    {
+        input: {
+            weights: [10, 90, 1, 4],
+            values: [20, 30, 20, 3],
+            targetWeight: 90,
+        },
+        expected: 43,
+    },
+    {
+        input: {
+            weights: [10, 90, 1, 4, 5, 6, 7, 8],
+            values: [20, 30, 20, 3, 5, 6, 8, 7],
+            targetWeight: 90,
+        },
+        expected: 69,
+    },
+    {
+        input: {
+            weights: [10, 90, 1, 4, 5, 6, 7, 8],
+            values: [20, 30, 20, 3, 5, 6, 8, 7],
+            targetWeight: 30,
+        },
+        expected: 66,
+    },
+];

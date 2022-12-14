@@ -81,3 +81,61 @@ function process4(strArr: string[], i: number, result: string[]) {
         swap(strArr, i, j);
     }
 }
+
+export function bag(weights: number[], values: number[], targetWeight: number) {
+    return process5({
+        weights,
+        values,
+        targetWeight,
+        currentIndex: 0,
+        previousSumValue: 0,
+        currentSumValue: 0,
+        currentSumWeight: 0,
+    });
+}
+
+function process5({
+    weights,
+    values,
+    targetWeight,
+    currentIndex,
+    previousSumValue,
+    currentSumValue,
+    currentSumWeight,
+}: {
+    weights: number[];
+    values: number[];
+    targetWeight: number;
+    currentIndex: number;
+    previousSumValue: number;
+    currentSumValue: number;
+    currentSumWeight: number;
+}): number {
+    if (currentIndex === weights.length || currentSumWeight === targetWeight) {
+        return currentSumValue;
+    }
+    if (currentSumWeight > targetWeight) {
+        return previousSumValue;
+    }
+
+    return Math.max(
+        process5({
+            weights,
+            values,
+            targetWeight,
+            currentIndex: currentIndex + 1,
+            previousSumValue: currentSumValue,
+            currentSumValue: currentSumValue + values[currentIndex],
+            currentSumWeight: currentSumWeight + weights[currentIndex],
+        }),
+        process5({
+            weights,
+            values,
+            targetWeight,
+            currentIndex: currentIndex + 1,
+            previousSumValue: currentSumValue,
+            currentSumValue: currentSumValue,
+            currentSumWeight: currentSumWeight,
+        })
+    );
+}
