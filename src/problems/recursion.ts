@@ -1,3 +1,5 @@
+import { swap } from '../common';
+
 /* 
 n层汉诺塔问题
  */
@@ -33,4 +35,49 @@ function process2(str: string, index: number, result: string[], currentSubsequen
 
     process2(str, index + 1, result, currentSubsequence);
     process2(str, index + 1, result, currentSubsequence + str[index]);
+}
+
+/* 字符串的全排列问题 */
+export function allPermutation(str: string) {
+    const result: string[] = [];
+    process3(str.split(''), 0, result);
+    return result;
+}
+
+function process3(strArr: string[], i: number, result: string[]) {
+    if (i === strArr.length - 1) {
+        result.push(strArr.join(''));
+        return;
+    }
+    for (let j = i; j < strArr.length; j++) {
+        swap(strArr, i, j);
+        process3(strArr, i + 1, result);
+        swap(strArr, i, j);
+    }
+}
+
+/* 过滤掉重复序列的全排列问题 */
+export function allPermutation2(str: string) {
+    const result: string[] = [];
+    process4(str.split(''), 0, result);
+    return result;
+}
+
+function process4(strArr: string[], i: number, result: string[]) {
+    if (i === strArr.length - 1) {
+        result.push(strArr.join(''));
+        return;
+    }
+
+    const visited = new Map<string, boolean>();
+    for (let j = i; j < strArr.length; j++) {
+        if (visited.get(strArr[j])) {
+            continue;
+        }
+
+        visited.set(strArr[j], true);
+        swap(strArr, i, j);
+        process3(strArr, i + 1, result);
+        swap(strArr, i, j);
+    }
 }
