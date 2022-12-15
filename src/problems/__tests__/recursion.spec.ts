@@ -1,4 +1,4 @@
-import { bag, hanoi, maxNum, subsequence } from '../recursion';
+import { bag, hanoi, maxPoint, subsequence } from '../recursion';
 import { bagTestData, hanoiTestData, maxNumTestData, subsequenceTestData } from './recursion.testdata';
 
 describe('hanoi', () => {
@@ -21,6 +21,6 @@ describe('bag', () => {
 
 describe('maxNum', () => {
     it.each(maxNumTestData)('maxNum', ({ input, expected }) => {
-        expect(maxNum(input)).toBe(expected);
+        expect(maxPoint(input)).toBe(expected);
     });
 });
