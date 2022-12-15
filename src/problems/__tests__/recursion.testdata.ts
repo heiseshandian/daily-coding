@@ -71,3 +71,34 @@ export const maxNumTestData = [
         expected: 104,
     },
 ];
+
+export const nQueenTestData = [
+    {
+        input: 1,
+        expected: 1,
+    },
+    {
+        input: 2,
+        expected: 0,
+    },
+    {
+        input: 3,
+        expected: 0,
+    },
+    {
+        input: 4,
+        expected: 2,
+    },
+    {
+        input: 5,
+        expected: 10,
+    },
+    {
+        input: 8,
+        expected: 92,
+    },
+    {
+        input: 9,
+        expected: 352,
+    },
+];

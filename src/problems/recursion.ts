@@ -128,3 +128,37 @@ function maxPointS(arr: number[], left: number, right: number): number {
     // 此外后手只能选择先手拿牌之后的最小值
     return Math.min(maxPointF(arr, left + 1, right), maxPointF(arr, left, right - 1));
 }
+
+/* n皇后问题，有n个皇后，摆放在N x N的格子上，要求任意两个皇后不同行，不同列且不共斜线，问一共有多少种摆法 */
+export function nQueen(n: number): number {
+    if (n < 1) {
+        return 0;
+    }
+    return nQueenProcess(0, [], n);
+}
+
+function nQueenProcess(i: number, record: number[], n: number): number {
+    if (i === n) {
+        return 1;
+    }
+
+    let count = 0;
+    for (let j = 0; j < n; j++) {
+        if (isValid(i, j, record)) {
+            record[i] = j;
+            count += nQueenProcess(i + 1, record, n);
+        }
+    }
+
+    return count;
+}
+
+function isValid(i: number, j: number, record: number[]): boolean {
+    for (let k = 0; k < i; k++) {
+        if (j === record[k] || Math.abs(i - k) === Math.abs(j - record[k])) {
+            return false;
+        }
+    }
+
+    return true;
+}
