@@ -563,3 +563,41 @@ function reverseRightEdge(node: TreeNode | null) {
 
     return prev;
 }
+
+// 搜索二叉树定义，对于任意子树而言，子树上的所有值小于根节点上的值，所有根节点的值小于右子树上的值
+export function isBST(node: TreeNode | null): boolean {
+    let cur: TreeNode | null = node;
+    let mostRight: TreeNode;
+    let previous = -Infinity;
+    while (cur) {
+        if (cur.left) {
+            mostRight = cur.left;
+            while (mostRight.right && mostRight.right !== cur) {
+                mostRight = mostRight.right;
+            }
+
+            if (!mostRight.right) {
+                if (previous >= cur.val) {
+                    return false;
+                }
+                previous = cur.val;
+
+                mostRight.right = cur;
+                cur = cur.left;
+            } else {
+                // mostRight.right === cur
+                mostRight.right = null;
+                cur = cur.right;
+            }
+        } else {
+            if (previous >= cur.val) {
+                return false;
+            }
+            previous = cur.val;
+
+            cur = cur.right;
+        }
+    }
+
+    return true;
+}
