@@ -409,3 +409,98 @@ export function getMaxHappyProcess(node: Employee): EmployeeInfo {
         maxHappyWithX,
     };
 }
+
+/* 
+Morris，利用子树上大量的空节点来优化额外空间复杂度，实现常数级别的额外空间复杂度（正常递归实现的遍历额外空间复杂度是递归深度，也就是树的高度）
+
+具体过程
+假设cur是当前节点，一开始cur来到头结点位置
+1. 若cur无左节点，则cur向右移动（cur=cur.right）
+2. 若cur有左节点，找到左节点上的最有节点mostRight
+    a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+    b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+3. cur为空时停止
+*/
+export function morris(node: TreeNode) {
+    let cur: TreeNode | null = node;
+    let mostRight: TreeNode;
+    while (cur) {
+        if (!cur.left) {
+            cur = cur.right;
+            continue;
+        }
+
+        mostRight = cur.left;
+        while (mostRight.right && mostRight.right !== cur) {
+            mostRight = mostRight.right;
+        }
+
+        if (!mostRight.right) {
+            mostRight.right = cur;
+            cur = cur.left;
+        } else {
+            mostRight.right = null;
+            cur = cur.right;
+        }
+    }
+}
+
+export function morrisPre(node: TreeNode | null): TreeNode[] {
+    const result: TreeNode[] = [];
+
+    let cur: TreeNode | null = node;
+    let mostRight: TreeNode;
+    while (cur) {
+        if (cur.left) {
+            mostRight = cur.left;
+            while (mostRight.right && mostRight.right !== cur) {
+                mostRight = mostRight.right;
+            }
+
+            if (!mostRight.right) {
+                result.push(cur);
+                mostRight.right = cur;
+                cur = cur.left;
+            } else {
+                // mostRight.right === cur
+                mostRight.right = null;
+                cur = cur.right;
+            }
+        } else {
+            result.push(cur);
+            cur = cur.right;
+        }
+    }
+
+    return result;
+}
+
+export function morrisMid(node: TreeNode | null): TreeNode[] {
+    const result: TreeNode[] = [];
+
+    let cur: TreeNode | null = node;
+    let mostRight: TreeNode;
+    while (cur) {
+        if (cur.left) {
+            mostRight = cur.left;
+            while (mostRight.right && mostRight.right !== cur) {
+                mostRight = mostRight.right;
+            }
+
+            if (!mostRight.right) {
+                mostRight.right = cur;
+                cur = cur.left;
+            } else {
+                // mostRight.right === cur
+                result.push(cur);
+                mostRight.right = null;
+                cur = cur.right;
+            }
+        } else {
+            result.push(cur);
+            cur = cur.right;
+        }
+    }
+
+    return result;
+}

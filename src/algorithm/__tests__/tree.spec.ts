@@ -1,4 +1,5 @@
 import { Queue } from '../queue';
+import { morrisMid } from '../tree';
 import {
     preBuildNode,
     preVisitNode,
@@ -14,6 +15,7 @@ import {
     preSerialize,
     TreeNodeWithParent,
     findNextNode,
+    morrisPre,
 } from '../tree';
 import {
     preVisitNodeTestData,
@@ -32,6 +34,7 @@ describe('preVisitNode', () => {
 
         expect(preVisitNode(root).map(getVal)).toEqual(expected);
         expect(preVisitNode2(root).map(getVal)).toEqual(expected);
+        expect(morrisPre(root).map(getVal)).toEqual(expected);
     });
 });
 
@@ -50,6 +53,7 @@ describe('middleVisitNode', () => {
 
         expect(middleVisitNode(root).map(getVal)).toEqual(expected);
         expect(middleVisitNode2(root).map(getVal)).toEqual(expected);
+        expect(morrisMid(root).map(getVal)).toEqual(expected);
     });
 });
 
