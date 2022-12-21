@@ -367,3 +367,45 @@ export function getMaxDistance(root: TreeNode | null): MaxDistanceInfo {
         height,
     };
 }
+
+/*  
+给定以下的员工结构，每个员工的直接下级存储在subEmployees中，假如现在需要举办party，
+Employee中的happy表示该员工的快乐值，如果某个员工来则该员工的所有直接下级都不能来（下级的下级可以来）
+问如何选择可以使得party的快乐值最大
+*/
+type Employee = {
+    happy: number;
+    subEmployees: Employee[];
+};
+type EmployeeInfo = {
+    maxHappyWithX: number;
+    maxHappyWithoutX: number;
+};
+
+export function getMaxHappy(node: Employee) {
+    const { maxHappyWithX, maxHappyWithoutX } = getMaxHappyProcess(node);
+    return Math.max(maxHappyWithX, maxHappyWithoutX);
+}
+
+export function getMaxHappyProcess(node: Employee): EmployeeInfo {
+    if (node.subEmployees.length === 0) {
+        return {
+            maxHappyWithX: node.happy,
+            maxHappyWithoutX: 0,
+        };
+    }
+
+    let maxHappyWithX = node.happy;
+    let maxHappyWithoutX = 0;
+    for (const employee of node.subEmployees) {
+        const { maxHappyWithoutX: childMaxHappyWithoutX, maxHappyWithX: childMaxHappyWithX } =
+            getMaxHappyProcess(employee);
+        maxHappyWithX += childMaxHappyWithoutX;
+        maxHappyWithoutX += Math.max(childMaxHappyWithoutX, childMaxHappyWithX);
+    }
+
+    return {
+        maxHappyWithoutX,
+        maxHappyWithX,
+    };
+}
