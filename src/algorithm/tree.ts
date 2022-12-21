@@ -504,3 +504,62 @@ export function morrisMid(node: TreeNode | null): TreeNode[] {
 
     return result;
 }
+
+export function morrisPost(node: TreeNode | null): TreeNode[] {
+    const result: TreeNode[] = [];
+
+    let cur: TreeNode | null = node;
+    let mostRight: TreeNode;
+    while (cur) {
+        if (cur.left) {
+            mostRight = cur.left;
+            while (mostRight.right && mostRight.right !== cur) {
+                mostRight = mostRight.right;
+            }
+
+            if (!mostRight.right) {
+                mostRight.right = cur;
+                cur = cur.left;
+            } else {
+                // 先设空然后再打印，不然mostRight.right会影响打印结果
+                mostRight.right = null;
+                // 第二次来到当前节点的时候逆序打印左子树的右边界
+                result.push(...getRightEdge(cur.left));
+                cur = cur.right;
+            }
+        } else {
+            cur = cur.right;
+        }
+    }
+    // 单独打印整棵树的右边界
+    result.push(...getRightEdge(node));
+
+    return result;
+}
+
+function getRightEdge(node: TreeNode | null): TreeNode[] {
+    const result: TreeNode[] = [];
+
+    const tail = reverseRightEdge(node);
+    let cur: TreeNode | null = tail;
+    while (cur) {
+        result.push(cur);
+        cur = cur.right;
+    }
+    reverseRightEdge(tail);
+
+    return result;
+}
+
+function reverseRightEdge(node: TreeNode | null) {
+    let prev = null;
+    let cur: TreeNode | null = node;
+    while (cur) {
+        const next = cur.right;
+        cur.right = prev;
+        prev = cur;
+        cur = next;
+    }
+
+    return prev;
+}

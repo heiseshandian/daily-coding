@@ -1,5 +1,5 @@
 import { Queue } from '../queue';
-import { morrisMid } from '../tree';
+import { morrisMid, morrisPost } from '../tree';
 import {
     preBuildNode,
     preVisitNode,
@@ -44,6 +44,7 @@ describe('postVisitNode', () => {
 
         expect(postVisitNode(root).map(getVal)).toEqual(expected);
         expect(postVisitNode2(root).map(getVal)).toEqual(expected);
+        expect(morrisPost(root).map(getVal)).toEqual(expected);
     });
 });
 
