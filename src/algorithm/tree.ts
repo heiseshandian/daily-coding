@@ -193,11 +193,13 @@ export function getMaxWidth(root: TreeNode | null) {
         if (currentLevel === currentNodeLevel) {
             currentLevelNodes++;
         } else {
+            // 另起一层的时候结算上一层的最大节点数
             max = Math.max(currentLevelNodes, max);
             currentLevel = currentNodeLevel;
             currentLevelNodes = 1;
         }
     }
+    // 最后一层没有下一层来标识结算，所以出循环后单独结算
     max = Math.max(currentLevelNodes, max);
 
     return max;
