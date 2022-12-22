@@ -603,3 +603,56 @@ export function isBST(node: TreeNode | null): boolean {
 
     return true;
 }
+
+/* 
+递归套路判断一棵树是否是搜索二叉树
+搜索二叉树定义，对于任意子树而言 左 < 头 < 右
+*/
+export function isBST2(node: TreeNode): boolean {
+    if (!node) {
+        return true;
+    }
+
+    // 若节点不为空则processIsBST2的返回值必不为空
+    return processIsBST2(node)!.isBST;
+}
+
+type BSTInfo = {
+    isBST: boolean;
+    min: number;
+    max: number;
+};
+
+function processIsBST2(node: TreeNode | null): BSTInfo | null {
+    if (node === null) {
+        return null;
+    }
+
+    const leftInfo = processIsBST2(node.left);
+    const rightInfo = processIsBST2(node.right);
+
+    let min = node.val;
+    let max = node.val;
+    if (leftInfo) {
+        min = Math.min(min, leftInfo.min);
+        max = Math.max(max, leftInfo.max);
+    }
+    if (rightInfo) {
+        min = Math.min(min, rightInfo.min);
+        max = Math.max(max, rightInfo.max);
+    }
+
+    let isBST = true;
+    if (leftInfo && (!leftInfo.isBST || leftInfo.max >= node.val)) {
+        isBST = false;
+    }
+    if (rightInfo && (!rightInfo.isBST || rightInfo.min <= node.val)) {
+        isBST = false;
+    }
+
+    return {
+        min,
+        max,
+        isBST,
+    };
+}
