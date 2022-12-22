@@ -686,3 +686,19 @@ function processIsFull(node: TreeNode | null): FullInfo {
         height,
     };
 }
+
+/* 折纸问题，取一张纸条，对折，打开后可以看到一条凹折痕，合起来再对折，可以在第一条折痕的上下分别看到一条凹和一条凸折痕，问对折n次之后从上到下打印所有折痕 */
+export function printCrease(n: number) {
+    printCreaseProcess(n, 0, true);
+}
+
+// 中序方式打印折痕二叉树
+function printCreaseProcess(n: number, i: number, isDown: boolean) {
+    if (i > n) {
+        return;
+    }
+
+    printCreaseProcess(n, i + 1, true);
+    console.log(isDown ? '凹' : '凸');
+    printCreaseProcess(n, i + 1, false);
+}
