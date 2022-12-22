@@ -656,3 +656,33 @@ function processIsBST2(node: TreeNode | null): BSTInfo | null {
         isBST,
     };
 }
+
+// 是否满二叉树
+export function isFull(node: TreeNode): boolean {
+    return processIsFull(node).isFull;
+}
+
+type FullInfo = {
+    isFull: boolean;
+    height: number;
+};
+
+function processIsFull(node: TreeNode | null): FullInfo {
+    if (!node) {
+        return {
+            isFull: true,
+            height: 0,
+        };
+    }
+
+    const leftInfo = processIsFull(node.left);
+    const rightInfo = processIsFull(node.right);
+
+    const height = Math.max(leftInfo.height, rightInfo.height) + 1;
+    const isFull = leftInfo.isFull && rightInfo.isFull && leftInfo.height === rightInfo.height;
+
+    return {
+        isFull,
+        height,
+    };
+}
