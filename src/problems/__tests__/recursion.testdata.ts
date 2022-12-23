@@ -102,3 +102,18 @@ export const nQueenTestData = [
         expected: 352,
     },
 ];
+
+export const jumpTestData = [
+    {
+        input: [2, 3, 2, 1, 2, 1, 5],
+        expected: 3,
+    },
+    {
+        input: [2, 9, 2, 1, 2, 1, 5],
+        expected: 2,
+    },
+    {
+        input: [3, 6, 2, 1, 4, 5, 2, 1, 1, 1],
+        expected: 3,
+    },
+];

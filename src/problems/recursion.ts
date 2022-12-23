@@ -162,3 +162,41 @@ function isValid(i: number, j: number, record: number[]): boolean {
 
     return true;
 }
+
+export function jump(arr: number[]) {
+    return walkProcess(arr, 0);
+}
+
+// 从i位置走到最后最少需要多少步
+function walkProcess(arr: number[], i: number) {
+    if (i >= arr.length - 1) {
+        return 0;
+    }
+
+    const stepCounts: number[] = [];
+    for (let k = 1; k <= arr[i]; k++) {
+        const currentStep = walkProcess(arr, i + k) + 1;
+        stepCounts.push(currentStep);
+    }
+
+    return Math.min(...stepCounts);
+}
+
+export function jumpDp(arr: number[]): number {
+    const len = arr.length;
+    const dp = new Array(len);
+    dp[len - 1] = 0;
+
+    for (let i = len - 2; i >= 0; i--) {
+        let min = Infinity;
+        for (let k = 1; k <= arr[i] && i + k < len; k++) {
+            if (min > dp[i + k]) {
+                min = dp[i + k];
+            }
+        }
+
+        dp[i] = Math.min(min + 1);
+    }
+
+    return dp[0];
+}
