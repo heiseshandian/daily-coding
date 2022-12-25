@@ -13,5 +13,5 @@ export function maxCommonFactor(a: number, b: number): number {
         return b;
     }
 
-    return maxCommonFactor(a, a % b);
+    return maxCommonFactor(b, a % b);
 }
