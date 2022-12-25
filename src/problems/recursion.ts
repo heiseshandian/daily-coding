@@ -271,3 +271,73 @@ class HeapNode {
         this.val = val;
     }
 }
+
+/* 
+给定两个数组，arrx 和 arry，长度都是N，表示二维平面上的点，问一条直线最多可以经过平面上的多少个点，返回最多的点数
+尝试策略：
+假设平面上的点为a,b,c,d,e...
+那我们依次考察从a出发的直线最多经过几个点，从b出发的点最多经过几个点
+
+同一直线上的点可能的关系
+1 共点（两个点位置相同）
+2 共斜率（横线和竖线是特殊共斜率场景）
+*/
+export function getMaxPoints(arr1: number[], arr2: number[]): number {
+    const points: Point[] = [];
+    for (let i = 0; i < arr1.length; i++) {
+        for (let j = 0; j < arr2.length; j++) {
+            points.push(new Point(arr1[i], arr2[j]));
+        }
+    }
+
+    let max = -Infinity;
+    for (let i = 0; i < points.length; i++) {
+        let sameXY = 1; //共点（某个点自己）
+        let sameXDiffY = 0; //x相同（斜率无穷大）
+        const kMap: Map<number, number> = new Map();
+
+        // 里面不必从0开始，因为外层已经考虑过前i个点和后面所有点的斜率关系，假如i,j共线的话那么在前面i轮循环已经计算过了
+        for (let j = i + 1; j < points.length; j++) {
+            if (points[i].x === points[j].x) {
+                if (points[i].y === points[j].y) {
+                    sameXY++;
+                } else {
+                    sameXDiffY++;
+                }
+            } else {
+                const k = (points[i].y - points[j].y) / (points[i].x - points[j].x);
+                const previousCount = kMap.get(k) || 0;
+                kMap.set(k, previousCount + 1);
+            }
+        }
+
+        const currentMax = Math.max(getMaxCount(kMap) + sameXY, sameXDiffY + sameXY);
+        if (max < currentMax) {
+            max = currentMax;
+        }
+    }
+
+    return max;
+}
+
+function getMaxCount(kMap: Map<number, number>): number {
+    let max = -Infinity;
+
+    for (const [, count] of kMap) {
+        if (max < count) {
+            max = count;
+        }
+    }
+
+    return max;
+}
+
+class Point {
+    x: number;
+    y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}
