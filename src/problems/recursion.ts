@@ -244,9 +244,11 @@ export function getMaxSumK(arr1: number[], arr2: number[], k: number): number[] 
         result.push(val);
 
         if (x - 1 >= 0 && !set.has(getSetId(x - 1, y))) {
+            set.add(getSetId(x - 1, y));
             maxHeap.push(new HeapNode(x - 1, y, arr1[x - 1] + arr2[y]));
         }
         if (y - 1 >= 0 && !set.has(getSetId(x, y - 1))) {
+            set.add(getSetId(x, y - 1));
             maxHeap.push(new HeapNode(x, y - 1, arr1[x] + arr2[y - 1]));
         }
     }
