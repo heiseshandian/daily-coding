@@ -357,3 +357,21 @@ class Point {
         this.y = y;
     }
 }
+
+export function fullPermutation(str: string): string[] {
+    const result: string[] = [];
+    fullPermutationProcess(str.split(''), 0, result);
+    return result;
+}
+
+function fullPermutationProcess(arr: string[], i: number, result: string[]) {
+    if (i === arr.length) {
+        result.push(arr.join(''));
+    }
+
+    for (let k = i; k < arr.length; k++) {
+        swap(arr, i, k);
+        fullPermutationProcess(arr, i + 1, result);
+        swap(arr, i, k);
+    }
+}

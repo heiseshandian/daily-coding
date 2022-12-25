@@ -132,3 +132,39 @@ export const getSubstringsTestData = [
         expected: ['a', 'ab', 'abc', 'abcd', 'b', 'bc', 'bcd', 'c', 'cd', 'd'],
     },
 ];
+
+export const fullPermutationTestData = [
+    {
+        input: 'abc',
+        expected: ['abc', 'acb', 'bac', 'bca', 'cba', 'cab'],
+    },
+    {
+        input: 'abcd',
+        expected: [
+            'abcd',
+            'abdc',
+            'acbd',
+            'acdb',
+            'adcb',
+            'adbc',
+            'bacd',
+            'badc',
+            'bcad',
+            'bcda',
+            'bdca',
+            'bdac',
+            'cbad',
+            'cbda',
+            'cabd',
+            'cadb',
+            'cdab',
+            'cdba',
+            'dbca',
+            'dbac',
+            'dcba',
+            'dcab',
+            'dacb',
+            'dabc',
+        ],
+    },
+];

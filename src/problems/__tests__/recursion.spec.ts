@@ -9,9 +9,11 @@ import {
     jumpDp2,
     getMaxSumK,
     getSubstrings,
+    fullPermutation,
 } from '../recursion';
 import {
     bagTestData,
+    fullPermutationTestData,
     getSubstringsTestData,
     hanoiTestData,
     jumpTestData,
@@ -67,5 +69,11 @@ describe('getMaxSumK', () => {
 describe('getSubstrings', () => {
     it.each(getSubstringsTestData)('getSubstrings %j', ({ input, expected }) => {
         expect(getSubstrings(input)).toEqual(expected);
+    });
+});
+
+describe('fullPermutation', () => {
+    it.each(fullPermutationTestData)('fullPermutation %j', ({ input, expected }) => {
+        expect(fullPermutation(input)).toEqual(expected);
     });
 });
