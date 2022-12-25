@@ -7,3 +7,11 @@ export function swap(arr: any[], a: number, b: number) {
     arr[a] = arr[b];
     arr[b] = temp;
 }
+
+export function maxCommonFactor(a: number, b: number): number {
+    if (a % b === 0) {
+        return b;
+    }
+
+    return maxCommonFactor(a, a % b);
+}

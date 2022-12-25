@@ -1,5 +1,5 @@
 import { GenericHeap } from '../algorithm/generic-heap';
-import { swap } from '../common';
+import { maxCommonFactor, swap } from '../common';
 
 /* 
 n层汉诺塔问题
@@ -294,7 +294,7 @@ export function getMaxPoints(arr1: number[], arr2: number[]): number {
     for (let i = 0; i < points.length; i++) {
         let sameXY = 1; //共点（某个点自己）
         let sameXDiffY = 0; //x相同（斜率无穷大）
-        const kMap: Map<number, number> = new Map();
+        const kMap: Map<string, number> = new Map();
 
         // 里面不必从0开始，因为外层已经考虑过前i个点和后面所有点的斜率关系，假如i,j共线的话那么在前面i轮循环已经计算过了
         for (let j = i + 1; j < points.length; j++) {
@@ -305,13 +305,15 @@ export function getMaxPoints(arr1: number[], arr2: number[]): number {
                     sameXDiffY++;
                 }
             } else {
-                const k = (points[i].y - points[j].y) / (points[i].x - points[j].x);
+                const factor = maxCommonFactor(points[i].y - points[j].y, points[i].x - points[j].x);
+                // 此处若用数字来表示会有精度丢失，两个点靠的很近的情况下两个斜率可能区分不出来，故而采用分数的最简形式来表示斜率
+                const k = `${(points[i].y - points[j].y) / factor}_${(points[i].x - points[j].x) / factor}`;
                 const previousCount = kMap.get(k) || 0;
                 kMap.set(k, previousCount + 1);
             }
         }
 
-        const currentMax = Math.max(getMaxCount(kMap) + sameXY, sameXDiffY + sameXY);
+        const currentMax = Math.max(getMaxCount(kMap), sameXDiffY) + sameXY;
         if (max < currentMax) {
             max = currentMax;
         }
@@ -320,7 +322,7 @@ export function getMaxPoints(arr1: number[], arr2: number[]): number {
     return max;
 }
 
-function getMaxCount(kMap: Map<number, number>): number {
+function getMaxCount(kMap: Map<string, number>): number {
     let max = -Infinity;
 
     for (const [, count] of kMap) {
