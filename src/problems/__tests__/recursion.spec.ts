@@ -1,4 +1,4 @@
-import { bag, hanoi, maxPoint, nQueen, subsequence, jump, jumpDp, jumpDp2 } from '../recursion';
+import { bag, hanoi, maxPoint, nQueen, subsequence, jump, jumpDp, jumpDp2, getMaxSumK } from '../recursion';
 import {
     bagTestData,
     hanoiTestData,
@@ -43,5 +43,11 @@ describe('jump', () => {
         expect(jump(input)).toBe(expected);
         expect(jumpDp(input)).toBe(expected);
         expect(jumpDp2(input)).toBe(expected);
+    });
+});
+
+describe('getMaxSumK', () => {
+    test('getMaxSumK arr1:[1,2,3,4,5] arr2:[3,5,7,9,11],k=4 maxK:[16,15,14,14]', () => {
+        expect(getMaxSumK([1, 2, 3, 4, 5], [3, 5, 7, 9, 11], 4)).toEqual([16, 15, 14, 14]);
     });
 });

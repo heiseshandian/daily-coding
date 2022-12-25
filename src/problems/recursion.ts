@@ -216,3 +216,96 @@ export function jumpDp2(arr: number[]): number {
 
     return step;
 }
+
+/* 
+给定两个有序数组arr1和arr2，在给定整数k，返回arr1和arr2中的两个数相加和最大的前k个数，两个相加数必须分别来自arr1和arr2
+例：
+arr1:[1,2,3,4,5] arr2:[3,5,7,9,11],k=4
+maxK:[16,15,14,14]
+*/
+export function getMaxSumK(arr1: number[], arr2: number[], k: number): number[] {
+    const result: number[] = [];
+    const maxHeap = new MaxHeap();
+
+    const x = arr1.length - 1;
+    const y = arr2.length - 1;
+    maxHeap.add(x, y, arr1[x] + arr2[y]);
+
+    while (result.length < k) {
+        const { x, y, val } = maxHeap.poll();
+        result.push(val);
+
+        x - 1 >= 0 && maxHeap.add(x - 1, y, arr1[x - 1] + arr2[y]);
+        y - 1 >= 0 && maxHeap.add(x, y - 1, arr1[x] + arr2[y - 1]);
+    }
+
+    return result;
+}
+
+class HeapNode {
+    x: number;
+    y: number;
+    val: number;
+
+    constructor(x: number, y: number, val: number) {
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
+}
+
+class MaxHeap {
+    private container: HeapNode[] = [];
+    private set: Set<string> = new Set();
+
+    public add(x: number, y: number, val: number) {
+        const id = `${x}_${y}`;
+        if (this.set.has(id)) {
+            return;
+        }
+        this.set.add(id);
+
+        this.container.push(new HeapNode(x, y, val));
+        this.insertHeap(this.container.length - 1);
+    }
+
+    private insertHeap(i: number) {
+        while (i) {
+            const parent = (i - 1) >> 1;
+            if (this.container[parent].val >= this.container[i].val) {
+                return;
+            }
+
+            swap(this.container, parent, i);
+            i = parent;
+        }
+    }
+
+    private heapify(i: number) {
+        let left = i * 2 + 1;
+        while (left < this.container.length) {
+            let right = left + 1;
+            let largestIndex =
+                right < this.container.length && this.container[right].val >= this.container[left].val ? right : left;
+            largestIndex = this.container[i].val >= this.container[largestIndex].val ? i : largestIndex;
+
+            if (largestIndex === i) {
+                return;
+            }
+
+            swap(this.container, largestIndex, i);
+            i = largestIndex;
+            left = i * 2 + 1;
+        }
+    }
+
+    public poll() {
+        const result = this.container[0];
+
+        swap(this.container, 0, this.container.length - 1);
+        this.container.length--;
+        this.heapify(0);
+
+        return result;
+    }
+}
