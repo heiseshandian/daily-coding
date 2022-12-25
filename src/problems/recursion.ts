@@ -200,3 +200,19 @@ export function jumpDp(arr: number[]): number {
 
     return dp[0];
 }
+
+export function jumpDp2(arr: number[]): number {
+    let step = 0;
+    let curMaxRight = 0;
+    let nextMaxRight = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+        if (curMaxRight < i) {
+            step++;
+            curMaxRight = nextMaxRight;
+        }
+        nextMaxRight = Math.max(i + arr[i], nextMaxRight);
+    }
+
+    return step;
+}

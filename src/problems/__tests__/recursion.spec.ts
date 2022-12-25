@@ -1,4 +1,4 @@
-import { bag, hanoi, maxPoint, nQueen, subsequence, jump, jumpDp } from '../recursion';
+import { bag, hanoi, maxPoint, nQueen, subsequence, jump, jumpDp, jumpDp2 } from '../recursion';
 import {
     bagTestData,
     hanoiTestData,
@@ -42,5 +42,6 @@ describe('jump', () => {
     it.each(jumpTestData)('jump %j', ({ input, expected }) => {
         expect(jump(input)).toBe(expected);
         expect(jumpDp(input)).toBe(expected);
+        expect(jumpDp2(input)).toBe(expected);
     });
 });
