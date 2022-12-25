@@ -117,3 +117,18 @@ export const jumpTestData = [
         expected: 3,
     },
 ];
+
+export const getSubstringsTestData = [
+    {
+        input: 'ab',
+        expected: ['a', 'ab', 'b'],
+    },
+    {
+        input: 'abc',
+        expected: ['a', 'ab', 'abc', 'b', 'bc', 'c'],
+    },
+    {
+        input: 'abcd',
+        expected: ['a', 'ab', 'abc', 'abcd', 'b', 'bc', 'bcd', 'c', 'cd', 'd'],
+    },
+];

@@ -21,6 +21,20 @@ function hanoiProcess(n: number, from: string, to: string, center: string, path:
     hanoiProcess(n - 1, center, to, from, path);
 }
 
+// 字符串的字串问题
+export function getSubstrings(str: string): string[] {
+    const result: string[] = [];
+
+    for (let i = 0; i < str.length; i++) {
+        for (let j = i; j < str.length; j++) {
+            // substring(start,end), end char is not included
+            result.push(str.substring(i, j + 1));
+        }
+    }
+
+    return result;
+}
+
 /* 从左到右或者从右到左的尝试 */
 /* 获取字符串的所有子序列 */
 export function subsequence(str: string) {
