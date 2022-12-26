@@ -57,6 +57,7 @@ export function longestPalindrome2(str: string): string {
     return maxStr;
 }
 
+// 整体上从左往右，检测是否回文串的时候区分奇偶从中间往两边
 export function longestPalindrome3(s: string): string {
     let longestPS = '';
 
