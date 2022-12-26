@@ -1,2 +1,3 @@
-# leet-code-problems
-A collection of leet code problems
+# daily-study
+
+Done is better than perfect.
