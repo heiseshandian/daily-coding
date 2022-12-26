@@ -37,6 +37,13 @@ describe('findMedianSortedArrays', () => {
             },
             expected: 5.5,
         },
+        {
+            input: {
+                nums1: [0, 0],
+                nums2: [0, 0],
+            },
+            expected: 0,
+        },
     ];
 
     it.each(testData)('findMedianSortedArrays %j', ({ input: { nums1, nums2 }, expected }) => {

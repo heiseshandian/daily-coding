@@ -17,22 +17,21 @@ export function findMedianSortedArrays(nums1: number[], nums2: number[]): number
     let i2 = 0;
     while (count < target - 1) {
         if (i1 === nums1.length) {
-            count++;
-            i2++;
-            continue;
+            const delta = target - 1 - count;
+            i2 += delta;
+            break;
         }
 
         if (i2 === nums2.length) {
-            count++;
-            i1++;
-            continue;
+            const delta = target - 1 - count;
+            i1 += delta;
+            break;
         }
 
+        count++;
         if (nums1[i1] <= nums2[i2]) {
-            count++;
             i1++;
         } else {
-            count++;
             i2++;
         }
     }
@@ -53,7 +52,7 @@ export function findMedianSortedArrays(nums1: number[], nums2: number[]): number
     if (!isEven) {
         return nums1[i1] <= nums2[i2] ? nums1[i1] : nums2[i2];
     }
-    const [a, b] = [nums1[i1], nums2[i2], nums1[i1 + 1] || Infinity, nums2[i2 + 1] || Infinity]
+    const [a, b] = [nums1[i1], nums2[i2], nums1[i1 + 1] ?? Infinity, nums2[i2 + 1] ?? Infinity]
         .sort((a, b) => a - b)
         .slice(0, 2);
     return (a + b) / 2;
