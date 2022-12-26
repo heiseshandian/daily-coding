@@ -1,4 +1,4 @@
-import { longestPalindrome } from '../5';
+import { longestPalindrome, longestPalindrome2, longestPalindrome3 } from '../5';
 describe('longestPalindrome', () => {
     const testData = [
         {
@@ -25,5 +25,7 @@ describe('longestPalindrome', () => {
 
     it.each(testData)('longestPalindrome %j', ({ input, expected }) => {
         expect(longestPalindrome(input)).toBe(expected);
+        expect(longestPalindrome2(input)).toBe(expected);
+        expect(longestPalindrome3(input)).toBe(expected);
     });
 });
