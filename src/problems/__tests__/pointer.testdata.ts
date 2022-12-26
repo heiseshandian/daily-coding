@@ -44,3 +44,26 @@ export const getNthUglyNumberTestData = [
         expected: 15,
     },
 ];
+
+export const getMinArrTestData = [
+    {
+        input: [1, 5, 4, 3, 2, 6, 7],
+        expected: [5, 4, 3, 2],
+    },
+    {
+        input: [1, 5, 4, 3, 2, 6, 7, 0],
+        expected: [1, 5, 4, 3, 2, 6, 7, 0],
+    },
+    {
+        input: [2, 1],
+        expected: [2, 1],
+    },
+    {
+        input: [],
+        expected: [],
+    },
+    {
+        input: [1],
+        expected: [1],
+    },
+];
