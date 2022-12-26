@@ -85,6 +85,7 @@ function allPermutation2Process(strArr: string[], i: number, result: string[]) {
         return;
     }
 
+    // 通过分支限界来避免递归函数展开
     const visited = new Map<string, boolean>();
     for (let j = i; j < strArr.length; j++) {
         if (visited.get(strArr[j])) {
