@@ -13,10 +13,12 @@ import {
     bagDp,
     getMinUnavailableSum,
     getMinUnavailableSum2,
+    getMinCount,
 } from '../recursion';
 import {
     bagTestData,
     fullPermutationTestData,
+    getMinCountTestData,
     getMinUnavailableSumTestData,
     getMinUnavailableSumTestData2,
     getSubstringsTestData,
@@ -93,5 +95,11 @@ describe('getMinUnavailableSum', () => {
 describe('getMinUnavailableSum2', () => {
     it.each(getMinUnavailableSumTestData2)('getMinUnavailableSum2 %j', ({ input, expected }) => {
         expect(getMinUnavailableSum2(input)).toBe(expected);
+    });
+});
+
+describe('getMinCount', () => {
+    it.each(getMinCountTestData)('getMinCount %j', ({ input: { arr, target }, expected }) => {
+        expect(getMinCount(arr, target)).toBe(expected);
     });
 });

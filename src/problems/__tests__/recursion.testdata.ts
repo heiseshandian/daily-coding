@@ -190,3 +190,18 @@ export const getMinUnavailableSumTestData2 = [
         expected: 4,
     },
 ];
+
+export const getMinCountTestData = [
+    {
+        input: { arr: [1, 2, 3, 7], target: 15 },
+        expected: 1,
+    },
+    {
+        input: { arr: [1, 5, 7], target: 15 },
+        expected: 2,
+    },
+    {
+        input: { arr: [1], target: 15 },
+        expected: 3,
+    },
+];
