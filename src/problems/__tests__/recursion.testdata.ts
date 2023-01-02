@@ -168,3 +168,14 @@ export const fullPermutationTestData = [
         ],
     },
 ];
+
+export const getMinUnavailableSumTestData = [
+    {
+        input: [2, 3, 5],
+        expected: 4,
+    },
+    {
+        input: [1, 2, 4],
+        expected: 8,
+    },
+];

@@ -395,3 +395,49 @@ function fullPermutationProcess(arr: string[], i: number, result: string[]) {
         swap(arr, i, k);
     }
 }
+
+/* 
+给定一个正数数组 arr，其中所有的值都为整数，以下是最小不可组成和的概念：
+把 arr 每个子集内的所有元素加起来会出现很多值，其中最小的记为 min，最大的记为max 在区间【min，max】上，如果有数不可以被arr某一个子集相加得到，那么其中最小的那个数是arr 的最小不可组成和
+在区间【min，max】上，如果所有的数都可以被arr的某一个子集相加得到，那么max+1是arr的最小不可组成和
+请写函数返回正数数组 arr 的最小不可组成和。
+
+【举例】
+arr=【3，2，5】。子集{2】相加产生2为min，子集（3，2，5】相加产生10为max。在区间【2，10】上，4、6和9不能被任何子集相加得到，其中4是arr的最小不可组成和。
+arr=【1，2，4】。子集【1】相加产生1为min，子集【1，2，4】相加产生7为max。在区间【1，7】上，任何 数都可以被子集相加得到，所以8是 arr 的最小不可组成和。
+
+【进阶】
+如果已知正数数组 arr 中肯定有1 这个数，是否能更快地得到最小不可组成和？
+*/
+export function getMinUnavailableSum(arr: number[]): number | null {
+    if (!arr || arr.length < 1) {
+        return null;
+    }
+
+    const max = arr.reduce((sum, cur) => sum + cur, 0);
+    // i,j表示用[0...i]位置上的数字自由组合能否组成j
+    const dp: boolean[][] = new Array(arr.length).fill(0).map((_) => new Array(max + 1));
+
+    dp[0].fill(false);
+    dp[0][arr[0]] = true;
+
+    for (let i = 1; i < arr.length; i++) {
+        for (let j = 0; j <= max; j++) {
+            if (j - arr[i] > 0) {
+                dp[i][j] = dp[i - 1][j - arr[i]] || dp[i - 1][j];
+            } else if (j - arr[i] === 0) {
+                dp[i][j] = true;
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+
+    const min = Math.min(...arr);
+    for (let j = min + 1; j < max; j++) {
+        if (dp[arr.length - 1][j] === false) {
+            return j;
+        }
+    }
+    return max + 1;
+}
