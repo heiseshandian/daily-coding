@@ -10,6 +10,7 @@ import {
     getMaxSumK,
     getSubstrings,
     fullPermutation,
+    bagDp,
 } from '../recursion';
 import {
     bagTestData,
@@ -37,6 +38,7 @@ describe('subsequence', () => {
 describe('bag', () => {
     it.each(bagTestData)('bag %j', ({ input: { weights, values, targetWeight }, expected }) => {
         expect(bag(weights, values, targetWeight)).toBe(expected);
+        expect(bagDp(weights, values, targetWeight)).toBe(expected);
     });
 });
 

@@ -99,6 +99,7 @@ function allPermutation2Process(strArr: string[], i: number, result: string[]) {
     }
 }
 
+// 背包问题，给定重量和价值数组，以及目标重量，要求在目标重量内选取物品使得总价值最大，返回最大价值
 export function bag(weights: number[], values: number[], targetWeight: number) {
     return bagProcess(weights, values, targetWeight, 0);
 }
@@ -117,6 +118,24 @@ function bagProcess(weights: number[], values: number[], leftWeight: number, ind
         val2 += values[index];
     }
     return Math.max(val1, val2);
+}
+
+export function bagDp(weights: number[], values: number[], targetWeight: number) {
+    const dp: number[][] = new Array(targetWeight + 1).fill(0).map((_) => new Array(weights.length + 1).fill(0));
+
+    for (let index = weights.length - 1; index >= 0; index--) {
+        for (let leftWeight = 0; leftWeight <= targetWeight; leftWeight++) {
+            const val1 = dp[leftWeight][index + 1];
+            let val2 = -1;
+            if (leftWeight - weights[index] >= 0) {
+                val2 = dp[leftWeight - weights[index]][index + 1] + values[index];
+            }
+
+            dp[leftWeight][index] = Math.max(val1, val2);
+        }
+    }
+
+    return dp[targetWeight][0];
 }
 
 /* 范围尝试 */
