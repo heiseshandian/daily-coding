@@ -12,11 +12,13 @@ import {
     fullPermutation,
     bagDp,
     getMinUnavailableSum,
+    getMinUnavailableSum2,
 } from '../recursion';
 import {
     bagTestData,
     fullPermutationTestData,
     getMinUnavailableSumTestData,
+    getMinUnavailableSumTestData2,
     getSubstringsTestData,
     hanoiTestData,
     jumpTestData,
@@ -85,5 +87,11 @@ describe('fullPermutation', () => {
 describe('getMinUnavailableSum', () => {
     it.each(getMinUnavailableSumTestData)('getMinUnavailableSum %j', ({ input, expected }) => {
         expect(getMinUnavailableSum(input)).toBe(expected);
+    });
+});
+
+describe('getMinUnavailableSum2', () => {
+    it.each(getMinUnavailableSumTestData2)('getMinUnavailableSum2 %j', ({ input, expected }) => {
+        expect(getMinUnavailableSum2(input)).toBe(expected);
     });
 });

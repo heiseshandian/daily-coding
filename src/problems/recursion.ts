@@ -441,3 +441,23 @@ export function getMinUnavailableSum(arr: number[]): number | null {
     }
     return max + 1;
 }
+
+// 如果arr中必然有1，则通过排序之后一次遍历的方式就可以得到数组的最小不可组成和
+export function getMinUnavailableSum2(arr: number[]): number | null {
+    if (!arr || arr.length < 1) {
+        return null;
+    }
+    arr.sort((a, b) => a - b);
+
+    // [0-i]位置的数可以组合出 [0-range]范围的数字
+    let range = 1;
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] <= range + 1) {
+            range += arr[i];
+        } else {
+            return range + 1;
+        }
+    }
+
+    return range + 1;
+}

@@ -179,3 +179,14 @@ export const getMinUnavailableSumTestData = [
         expected: 8,
     },
 ];
+
+export const getMinUnavailableSumTestData2 = [
+    {
+        input: [1, 2, 4],
+        expected: 8,
+    },
+    {
+        input: [1, 1, 7, 1],
+        expected: 4,
+    },
+];
