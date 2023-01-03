@@ -9,8 +9,8 @@ export function reverseInteger(x: number): number {
         x = parseInt(`${x / 10}`);
 
         // Simply because biggest int32 is 2147483647 and least is -2147483648
-        if (reversed > MAX_VALUE / 10 || (reversed == MAX_VALUE / 10 && pop > 7)) return 0;
-        if (reversed < MIN_VALUE / 10 || (reversed == MIN_VALUE / 10 && pop < -8)) return 0;
+        if (reversed > MAX_VALUE / 10 || (reversed == MAX_VALUE / 10 && pop > MAX_VALUE % 10)) return 0;
+        if (reversed < MIN_VALUE / 10 || (reversed == MIN_VALUE / 10 && pop < MIN_VALUE % 10)) return 0;
         reversed = reversed * 10 + pop;
     }
     return reversed;
