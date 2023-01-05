@@ -7,6 +7,16 @@ export class SingleLinkedList {
         this.next = next !== undefined ? next : null;
     }
 
+    static toArray(head: SingleLinkedList | null) {
+        let cur: SingleLinkedList | null = head;
+        const result = [];
+        while (cur) {
+            result.push(cur.val);
+            cur = cur.next;
+        }
+        return result;
+    }
+
     static from(arr: Array<any> = []): SingleLinkedList | null {
         const nodes = arr.map((val) => new SingleLinkedList(val));
 
