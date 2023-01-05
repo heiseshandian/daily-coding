@@ -500,3 +500,26 @@ export function getMinCount(arr: number[], target: number): number {
 
     return count;
 }
+
+/* 
+假设有两个数组，arr1表示能力数组，arr2表示收买所需要的钱，分别表示第i只怪兽的能力以及收买所需要的钱
+假设现在有个小人，比如说顺序通过所有怪兽，如果小人当前能力小于怪兽则必须收买才能通过，若小人能力高于怪兽则可以选择
+收买或直接通过，问至少需要多少钱才能通过所有怪兽
+ */
+export function minMoney(arr1: number[], arr2: number[]): number {
+    return minMoneyProcess(arr1, arr2, 0, 0);
+}
+
+function minMoneyProcess(arr1: number[], arr2: number[], power: number, i: number): number {
+    if (i === arr1.length) {
+        return 0;
+    }
+
+    if (power < arr1[i]) {
+        return minMoneyProcess(arr1, arr2, power + arr1[i], i + 1) + arr2[i];
+    }
+    return Math.min(
+        minMoneyProcess(arr1, arr2, power + arr1[i], i + 1) + arr2[i],
+        minMoneyProcess(arr1, arr2, power, i + 1)
+    );
+}
