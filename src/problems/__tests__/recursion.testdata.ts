@@ -205,3 +205,15 @@ export const getMinCountTestData = [
         expected: 3,
     },
 ];
+
+export const getIslandCountTestData = [
+    {
+        input: [
+            [0, 0, 1, 0, 1, 0],
+            [1, 1, 1, 0, 1, 0],
+            [1, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ],
+        expected: 3,
+    },
+];

@@ -14,10 +14,12 @@ import {
     getMinUnavailableSum,
     getMinUnavailableSum2,
     getMinCount,
+    getIslandCount,
 } from '../recursion';
 import {
     bagTestData,
     fullPermutationTestData,
+    getIslandCountTestData,
     getMinCountTestData,
     getMinUnavailableSumTestData,
     getMinUnavailableSumTestData2,
@@ -101,5 +103,11 @@ describe('getMinUnavailableSum2', () => {
 describe('getMinCount', () => {
     it.each(getMinCountTestData)('getMinCount %j', ({ input: { arr, target }, expected }) => {
         expect(getMinCount(arr, target)).toBe(expected);
+    });
+});
+
+describe('getIslandCount', () => {
+    it.each(getIslandCountTestData)('getIslandCount %j', ({ input, expected }) => {
+        expect(getIslandCount(input)).toBe(expected);
     });
 });

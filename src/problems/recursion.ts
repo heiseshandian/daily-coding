@@ -523,3 +523,44 @@ function minMoneyProcess(arr1: number[], arr2: number[], power: number, i: numbe
         minMoneyProcess(arr1, arr2, power, i + 1)
     );
 }
+
+/* 
+岛问题
+【题目】
+一个矩阵中只有0和1两种值，每个位置都可以和自己的上、下、左、右 四个位置相连，如果有一片1连在一起，这个部分叫做一个岛，求一个矩阵中有多少个岛？
+【举例】△
+001010 
+111010 
+100100 
+000000
+这个矩阵中有三个岛
+
+【进阶】
+如何设计一个并行算法解决这个问题
+*/
+export function getIslandCount(arr: number[][]): number {
+    let count = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[0].length; j++) {
+            if (arr[i][j] === 1) {
+                count++;
+                infect(arr, i, j);
+            }
+        }
+    }
+
+    return count;
+}
+
+function infect(arr: number[][], i: number, j: number) {
+    if (i < 0 || i > arr.length - 1 || j < 0 || j > arr[0].length - 1 || arr[i][j] !== 1) {
+        return;
+    }
+
+    arr[i][j] = 2;
+    infect(arr, i - 1, j);
+    infect(arr, i + 1, j);
+    infect(arr, i, j - 1);
+    infect(arr, i, j + 1);
+}
