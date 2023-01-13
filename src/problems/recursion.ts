@@ -564,3 +564,49 @@ function infect(arr: number[][], i: number, j: number) {
     infect(arr, i, j - 1);
     infect(arr, i, j + 1);
 }
+
+// kmp算法求解index问题
+export function getIndexOf(str1: string, str2: string): number {
+    if (str2.length > str1.length) {
+        return -1;
+    }
+
+    let i1 = 0;
+    let i2 = 0;
+
+    const preSuffixArr = getMaxPreSuffixArray(str2);
+    while (i1 < str1.length && i2 < str2.length) {
+        if (str1[i1] === str2[i2]) {
+            i1++;
+            i2++;
+        } else if (i2 === 0) {
+            i1++;
+        } else {
+            i2 = preSuffixArr[i2];
+        }
+    }
+
+    return i2 === str2.length ? i1 - i2 : -1;
+}
+
+function getMaxPreSuffixArray(str: string): number[] {
+    if (str.length === 1) {
+        return [-1];
+    }
+
+    const result: number[] = [-1, 0];
+    let i = 2;
+    let maxEqualLength = result[i - 1];
+
+    while (i < str.length) {
+        if (str[i - 1] === str[maxEqualLength]) {
+            result[i++] = ++maxEqualLength;
+        } else if (maxEqualLength > 0) {
+            maxEqualLength = result[maxEqualLength];
+        } else {
+            result[i++] = 0;
+        }
+    }
+
+    return result;
+}
