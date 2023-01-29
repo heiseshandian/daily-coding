@@ -22,6 +22,7 @@ export function searchInsert(nums: number[], target: number): number {
 /**
  Do not return anything, modify board in-place instead.
  */
+// https://leetcode.com/problems/sudoku-solver/
 export function solveSudoku(board: string[][]): void {
     // row[i][num] (i:0-8,num:1-9) row[0][9]=true 表示0行9这个数字已经出现过（也就是说第0行不能再放9了）
     const row: boolean[][] = new Array(9).fill(0).map((_) => new Array(10));
