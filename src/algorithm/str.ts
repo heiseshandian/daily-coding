@@ -65,6 +65,11 @@ export function getMaxPalindrome(str: string): string {
 
     // 以i为中心，left，right分别向两边扩
     const extendR = (i: number, left: number, right: number) => {
+        if (left === right) {
+            left--;
+            right++;
+        }
+
         while (left >= 0 && right < manacherStr.length) {
             if (manacherStr[left] !== manacherStr[right]) {
                 break;
