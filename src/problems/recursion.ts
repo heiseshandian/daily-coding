@@ -571,41 +571,48 @@ export function getIndexOf(str1: string, str2: string): number {
         return -1;
     }
 
-    let i1 = 0;
-    let i2 = 0;
+    const maxPreSuffixArr = getMaxPreSuffixArr(str2);
 
-    const preSuffixArr = getMaxPreSuffixArray(str2);
-    while (i1 < str1.length && i2 < str2.length) {
-        if (str1[i1] === str2[i2]) {
-            i1++;
-            i2++;
-        } else if (i2 === 0) {
-            i1++;
+    let i = 0;
+    let j = 0;
+    while (i < str1.length && j < str2.length) {
+        if (str1[i] === str2[j]) {
+            i++;
+            j++;
         } else {
-            i2 = preSuffixArr[i2];
+            j = maxPreSuffixArr[j];
+            while (j) {
+                if (str1[i] === str2[j]) {
+                    i++;
+                    j++;
+                    break;
+                }
+                j = maxPreSuffixArr[j];
+            }
+            i++;
         }
     }
 
-    return i2 === str2.length ? i1 - i2 : -1;
+    return j === str2.length ? i - str2.length : -1;
 }
 
-function getMaxPreSuffixArray(str: string): number[] {
-    if (str.length === 1) {
-        return [-1];
+// 生成每个位置的最长前缀后缀匹配长度数组
+function getMaxPreSuffixArr(str: string): number[] {
+    if (str.length < 3) {
+        return [-1, 0].slice(0, str.length);
     }
 
-    const result: number[] = [-1, 0];
-    let i = 2;
-    let maxEqualLength = result[i - 1];
-
-    while (i < str.length) {
-        if (str[i - 1] === str[maxEqualLength]) {
-            result[i++] = ++maxEqualLength;
-        } else if (maxEqualLength > 0) {
-            maxEqualLength = result[maxEqualLength];
-        } else {
-            result[i++] = 0;
+    const result = [-1, 0];
+    for (let i = 3; i < str.length; ) {
+        let k = result[i - 1];
+        while (k) {
+            if (str[i] === str[k]) {
+                result[i++] = k + 1;
+                break;
+            }
+            k = result[k];
         }
+        result[i++] = 0;
     }
 
     return result;
