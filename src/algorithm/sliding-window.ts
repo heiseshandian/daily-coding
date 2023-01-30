@@ -1,4 +1,4 @@
-export class SlidingWindow {
+export class MaxSlidingWindow {
     arr: number[];
 
     left = -1;

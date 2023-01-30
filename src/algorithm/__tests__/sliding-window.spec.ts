@@ -1,10 +1,10 @@
-import { SlidingWindow } from '../sliding-window';
+import { MaxSlidingWindow } from '../sliding-window';
 
 describe('SlidingWindow', () => {
     const arr = [4, 3, 5, 4, 3, 3, 6, 7];
 
     test('moveRight moveLeft getMax', () => {
-        const slidingWindow = new SlidingWindow(arr);
+        const slidingWindow = new MaxSlidingWindow(arr);
 
         slidingWindow.moveRight();
         slidingWindow.moveRight();
@@ -18,7 +18,7 @@ describe('SlidingWindow', () => {
     });
 
     test('moveRight moveLeft getMax 2', () => {
-        const slidingWindow = new SlidingWindow(arr);
+        const slidingWindow = new MaxSlidingWindow(arr);
 
         slidingWindow.moveRight();
         slidingWindow.moveRight();
