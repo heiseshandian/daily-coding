@@ -1,4 +1,4 @@
-import { getIndexOf } from '../str';
+import { getIndexOf, getMaxPalindrome } from '../str';
 
 describe('getIndexOf', () => {
     const strs = [
@@ -14,5 +14,30 @@ describe('getIndexOf', () => {
 
     it.each(strs)('getIndexOf %j', ([str1, str2]) => {
         expect(getIndexOf(str1, str2)).toBe(str1.indexOf(str2));
+    });
+});
+
+describe('getMaxPalindrome', () => {
+    const testData = [
+        {
+            input: '',
+            expected: '',
+        },
+        {
+            input: 'ccc',
+            expected: 'ccc',
+        },
+        {
+            input: 'abccdd',
+            expected: 'cc',
+        },
+        {
+            input: 'aba',
+            expected: 'aba',
+        },
+    ];
+
+    it.each(testData)('getMaxPalindrome %j', ({ input, expected }) => {
+        expect(getMaxPalindrome(input)).toBe(expected);
     });
 });

@@ -53,7 +53,7 @@ function getMaxPreSuffixArr(str: string): number[] {
 }
 
 // Manacher算法求解最长回文串长度
-export function getMaxPalindromeLen(str: string): string {
+export function getMaxPalindrome(str: string): string {
     // 扩的过程中最远的回文右边界
     let r = -1;
     // 最远的回文右边界对应的中心点
