@@ -346,11 +346,7 @@ export function countWalkMethods(n: number, m: number, k: number, p: number): nu
 // 目标点为p，i是当前位置，restK是剩余步数，返回一共有多少种走法
 function walkProcess(n: number, p: number, restK: number, i: number): number {
     if (restK === 0) {
-        if (i === p) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return i === p ? 1 : 0;
     }
 
     // 当前位置是1只能向右走
