@@ -1,5 +1,5 @@
-import { bagTestData, maxPointsTestData } from '../../problems/__tests__/recursion.testdata';
-import { getMaxPointsDp } from '../dp';
+import { bagTestData, maxPointsTestData, nQueenTestData } from '../../problems/__tests__/recursion.testdata';
+import { countNQueen, getMaxPointsDp } from '../dp';
 import {
     countConversionResult,
     countConversionResultDp,
@@ -33,5 +33,9 @@ describe('dp', () => {
     it.each(maxPointsTestData)('getMaxPoints', ({ input, expected }) => {
         expect(getMaxPoints(input)).toBe(expected);
         expect(getMaxPointsDp(input)).toBe(expected);
+    });
+
+    it.each(nQueenTestData)('countNQueen', ({ input, expected }) => {
+        expect(countNQueen(input)).toBe(expected);
     });
 });

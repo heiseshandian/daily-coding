@@ -257,3 +257,39 @@ export function getMaxPointsDp(points: number[]): number {
 
     return Math.max(dpFirst[0][len - 1], dpLast[0][len - 1]);
 }
+
+// n皇后问题
+// 有n个皇后需要摆放到n*n的格子上，要求任何皇后不同行不同列且不同对角线
+export function countNQueen(n: number): number {
+    // 下标表示行号，值表示列号，queen[0]=1 表示0行1列上摆放了皇后
+    const queen: number[] = new Array(n);
+    return countNQueenProcess(queen, 0);
+}
+
+function countNQueenProcess(queen: number[], i: number): number {
+    if (i === queen.length) {
+        return 1;
+    }
+
+    let count = 0;
+    for (let j = 0; j < queen.length; j++) {
+        if (isValidPosition(queen, i, j)) {
+            // 在i行j列摆放皇后
+            queen[i] = j;
+            count += countNQueenProcess(queen, i + 1);
+        }
+    }
+
+    return count;
+}
+
+function isValidPosition(queen: number[], i: number, j: number): boolean {
+    // 此处lineNum < i 而不是<queen.length 因为后面还没摆放皇后
+    for (let lineNum = 0; lineNum < i; lineNum++) {
+        if (queen[lineNum] === j || Math.abs(i - lineNum) === Math.abs(j - queen[lineNum])) {
+            return false;
+        }
+    }
+
+    return true;
+}
