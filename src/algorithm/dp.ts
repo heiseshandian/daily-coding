@@ -293,3 +293,39 @@ function isValidPosition(queen: number[], i: number, j: number): boolean {
 
     return true;
 }
+
+// 利用位运算加速n皇后问题
+export function countNQueen2(n: number): number {
+    if (n < 1 || n > 32) {
+        return 0;
+    }
+
+    // limit 右侧有n个1，左侧是0
+    const limit = n === 32 ? -1 : (1 << n) - 1;
+    return countNQueen2Process(limit, 0, 0, 0);
+}
+
+function countNQueen2Process(limit: number, colLimit: number, leftLimit: number, rightLimit: number): number {
+    if (colLimit === limit) {
+        return 1;
+    }
+
+    // pos中所有1的位置是剩下的可以摆放的位置
+    let pos = limit & ~(colLimit | leftLimit | rightLimit);
+    let count = 0;
+    // 尝试所有位置
+    while (pos) {
+        const mostRightOne = pos & (~pos + 1);
+        pos = pos - mostRightOne;
+
+        count += countNQueen2Process(
+            limit,
+            colLimit | mostRightOne,
+            (leftLimit | mostRightOne) << 1,
+            // 无符号右移，高位补0
+            (rightLimit | mostRightOne) >>> 1
+        );
+    }
+
+    return count;
+}
