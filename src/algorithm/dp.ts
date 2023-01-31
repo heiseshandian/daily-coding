@@ -329,3 +329,87 @@ function countNQueen2Process(limit: number, colLimit: number, leftLimit: number,
 
     return count;
 }
+
+/* 
+题目一
+假设有排成一行的N个位置，记为1~N， N一定大于或等于2 
+开始时机器人在其中的M位置上（M一定是1~N中的一个）
+如果机器人来到1位置，那么下一步只能往右来到2位置；
+如果机器人来到N位置，那么下一步只能往左来到N-1位置；
+如果机器人来到中间位置，那么下一步可以往左走或者往右走；
+规定机器人必须走K步，最终能来到P位置（P也是1~N中的一个）的方法有多少种给定四个参数N、M、K、P，返回方法数。
+*/
+export function countWalkMethods(n: number, m: number, k: number, p: number): number {
+    return walkProcess(n, p, k, m);
+}
+
+// 目标点为p，i是当前位置，restK是剩余步数，返回一共有多少种走法
+function walkProcess(n: number, p: number, restK: number, i: number): number {
+    if (restK === 0) {
+        if (i === p) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    // 当前位置是1只能向右走
+    if (i === 1) {
+        return walkProcess(n, p, restK - 1, i + 1);
+    }
+
+    // 当前位置是n只能往左走
+    if (i === n) {
+        return walkProcess(n, p, restK - 1, i - 1);
+    }
+
+    // 向左走或者向右走
+    return walkProcess(n, p, restK - 1, i + 1) + walkProcess(n, p, restK - 1, i - 1);
+}
+
+export function countWalkMethodsDp(n: number, m: number, k: number, p: number): number {
+    // dp[restK][i] 表示剩余步数为restK，当前位置为i的情况下，后续有多少种走法
+    // restK:0-k 一共k+1个位置
+    // i:1-n
+    // dp[k][m] 就是我们最终需要返回的值
+    const dp: number[][] = new Array(k + 1).fill(0).map((_) => new Array(n + 1).fill(0));
+    dp[0][p] = 1;
+
+    for (let restK = 1; restK <= k; restK++) {
+        for (let i = 1; i <= n; i++) {
+            if (i === 1) {
+                dp[restK][i] = dp[restK - 1][i + 1];
+            } else if (i === n) {
+                dp[restK][i] = dp[restK - 1][i - 1];
+            } else {
+                dp[restK][i] = dp[restK - 1][i + 1] + dp[restK - 1][i - 1];
+            }
+        }
+    }
+
+    return dp[k][m];
+}
+
+// 用两个数组滚动来节省空间
+export function countWalkMethodsDp2(n: number, m: number, k: number, p: number): number {
+    let prevDp = new Array(n + 1).fill(0);
+    prevDp[p] = 1;
+
+    const dp = new Array(n + 1).fill(0);
+
+    for (let restK = 1; restK <= k; restK++) {
+        for (let i = 1; i <= n; i++) {
+            if (i === 1) {
+                dp[i] = prevDp[i + 1];
+            } else if (i === n) {
+                dp[i] = prevDp[i - 1];
+            } else {
+                dp[i] = prevDp[i + 1] + prevDp[i - 1];
+            }
+        }
+
+        prevDp = dp.slice();
+    }
+
+    return dp[m];
+}
