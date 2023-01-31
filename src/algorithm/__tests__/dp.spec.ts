@@ -1,8 +1,10 @@
-import { bagTestData } from '../../problems/__tests__/recursion.testdata';
+import { bagTestData, maxPointsTestData } from '../../problems/__tests__/recursion.testdata';
+import { getMaxPointsDp } from '../dp';
 import {
     countConversionResult,
     countConversionResultDp,
     countConversionResultDp2,
+    getMaxPoints,
     maxValueOfBag,
     maxValueOfBagDp,
     maxValueOfBagDp2,
@@ -26,5 +28,10 @@ describe('dp', () => {
         expect(maxValueOfBag(weights, values, targetWeight)).toBe(expected);
         expect(maxValueOfBagDp(weights, values, targetWeight)).toBe(expected);
         expect(maxValueOfBagDp2(weights, values, targetWeight)).toBe(expected);
+    });
+
+    it.each(maxPointsTestData)('getMaxPoints', ({ input, expected }) => {
+        expect(getMaxPoints(input)).toBe(expected);
+        expect(getMaxPointsDp(input)).toBe(expected);
     });
 });

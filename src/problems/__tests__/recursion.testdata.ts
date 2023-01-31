@@ -64,7 +64,7 @@ export const bagTestData = [
     },
 ];
 
-export const maxNumTestData = [
+export const maxPointsTestData = [
     { input: [1, 100, 1], expected: 100 },
     {
         input: [1, 100, 1, 4],

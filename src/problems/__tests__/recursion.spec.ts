@@ -26,7 +26,7 @@ import {
     getSubstringsTestData,
     hanoiTestData,
     jumpTestData,
-    maxNumTestData,
+    maxPointsTestData,
     nQueenTestData,
     subsequenceTestData,
 } from './recursion.testdata';
@@ -51,7 +51,7 @@ describe('bag', () => {
 });
 
 describe('maxPoint', () => {
-    it.each(maxNumTestData)('maxPoint', ({ input, expected }) => {
+    it.each(maxPointsTestData)('maxPoint', ({ input, expected }) => {
         expect(maxPoint(input)).toBe(expected);
     });
 });

@@ -192,3 +192,68 @@ export function maxValueOfBagDp2(weights: number[], values: number[], bag: numbe
 
     return dp[bag];
 }
+
+/* 
+范围上尝试的模型
+
+给定一个整型数组arr，代表数值不同的纸牌排成一条线，玩家A和玩家B依次拿走每张纸牌，规定玩家A先拿，玩家B后拿，
+但是每个玩家每次只能拿走最左或最右的纸牌，玩家A和玩家B都绝顶聪明。请返回最后获胜者的分数。
+*/
+export function getMaxPoints(points: number[]): number {
+    return Math.max(first(points, 0, points.length - 1), last(points, 0, points.length - 1));
+}
+
+// 在left-right上先手拿牌所能获得的最大点数
+function first(points: number[], left: number, right: number): number {
+    if (left === right) {
+        return points[left];
+    }
+
+    // 两种选择，拿走left或者拿走right的牌
+    const p1 = points[left] + last(points, left + 1, right);
+    const p2 = points[right] + last(points, left, right - 1);
+    return Math.max(p1, p2);
+}
+
+// 在left-right上后手拿牌所能获得的最大点数
+function last(points: number[], left: number, right: number): number {
+    if (left === right) {
+        return 0;
+    }
+
+    // 取决于先手的选择，先手拿走left，或先手拿走right
+    const p1 = first(points, left + 1, right);
+    const p2 = first(points, left, right - 1);
+
+    return Math.min(p1, p2);
+}
+
+export function getMaxPointsDp(points: number[]): number {
+    const len = points.length;
+
+    // dpFirst[i][j] 在i-j上先手能获得的最大点数
+    const dpFirst: number[][] = new Array(len).fill(0).map((_) => new Array(len).fill(0));
+    // dpLast[i][j]在i-j上后手能获得的最大点数
+    const dpLast: number[][] = new Array(len).fill(0).map((_) => new Array(len).fill(0));
+
+    // left===right dpLast[i][j]=points[left];
+    for (let i = 0; i < len; i++) {
+        dpFirst[i][i] = points[i];
+    }
+
+    for (let left = len - 1; left >= 0; left--) {
+        for (let right = left + 1; right < len; right++) {
+            // 两种选择，拿走left或者拿走right的牌
+            const f1 = points[left] + dpLast[left + 1][right];
+            const f2 = points[right] + dpLast[left][right - 1];
+            dpFirst[left][right] = Math.max(f1, f2);
+
+            // 取决于先手的选择，先手拿走left，或先手拿走right
+            const l1 = dpFirst[left + 1][right];
+            const l2 = dpFirst[left][right - 1];
+            dpLast[left][right] = Math.min(l1, l2);
+        }
+    }
+
+    return Math.max(dpFirst[0][len - 1], dpLast[0][len - 1]);
+}
