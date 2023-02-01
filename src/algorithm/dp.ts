@@ -565,3 +565,47 @@ function getMinMethodsProcess(strArr: number[], handledArr: number[][], i: numbe
 
     return min === Infinity ? -1 : min;
 }
+
+export function getMinMethodsDp(str: string, arr: string[]): number {
+    const handledArr: number[][] = new Array(arr.length).fill(0);
+    for (let i = 0; i < arr.length; i++) {
+        handledArr[i] = convertStr2CountArr(arr[i]);
+    }
+
+    const dp: Map<string, number> = new Map();
+    dp.set('', 0);
+
+    return getMinMethodsDpProcess(str, handledArr, dp);
+}
+
+function getMinMethodsDpProcess(rest: string, handledArr: number[][], dp: Map<string, number>): number {
+    if (dp.has(rest)) {
+        return dp.get(rest) as number;
+    }
+    const restArr = convertStr2CountArr(rest);
+    let min = Infinity;
+
+    // 自由使用贴纸来搞定rest
+    for (let i = 0; i < handledArr.length; i++) {
+        // 先从rest第一个字符开始搞定，没有第一个字符的贴纸本轮循环不参与
+        // 假如存在一种方案搞定rest则必然需要搞定第一个字符
+        if (handledArr[i][rest[0].charCodeAt(0) - 'a'.charCodeAt(0)] === 0) {
+            continue;
+        }
+
+        let newRest = '';
+        for (let k = 0; k < restArr.length; k++) {
+            const count = Math.max(0, restArr[k] - handledArr[i][k]);
+            const char = String.fromCharCode(k + 'a'.charCodeAt(0));
+            newRest += ''.padEnd(count, char);
+        }
+
+        const next = getMinMethodsDpProcess(newRest, handledArr, dp);
+        if (next !== -1) {
+            min = Math.min(min, next + 1);
+        }
+    }
+
+    dp.set(rest, min === Infinity ? -1 : min);
+    return dp.get(rest) as number;
+}

@@ -10,6 +10,7 @@ import {
     countWalkMethodsDp,
     countWalkMethodsDp2,
     getMaxPointsDp,
+    getMinMethodsDp,
 } from '../dp';
 import { countMoneyTestData, countWalkMethodsTestData, getMinMethodsTestData } from './dp.testdata';
 import { getMinMethods } from '../dp';
@@ -68,5 +69,6 @@ describe('dp', () => {
 
     it.each(getMinMethodsTestData)('getMinMethods', ({ input: { str, arr }, expected }) => {
         expect(getMinMethods(str, arr)).toBe(expected);
+        expect(getMinMethodsDp(str, arr)).toBe(expected);
     });
 });
