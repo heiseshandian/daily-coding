@@ -578,6 +578,8 @@ export function getMinMethodsDp(str: string, arr: string[]): number {
     return getMinMethodsDpProcess(str, handledArr, dp);
 }
 
+// 自由使用所有贴纸搞定rest最少需要多少张贴纸，这种尝试模型就比上面的要好一点，因为这种尝试模型只有一个可变参数，可以有效提高缓存结构的命中率，
+// 而且所需要的缓存也会少一些
 function getMinMethodsDpProcess(rest: string, handledArr: number[][], dp: Map<string, number>): number {
     if (dp.has(rest)) {
         return dp.get(rest) as number;
