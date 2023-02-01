@@ -462,10 +462,9 @@ export function countMoneyDp2(arr: number[], target: number): number {
     for (let i = arr.length - 1; i >= 0; i--) {
         for (let rest = 1; rest <= target; rest++) {
             // 通过画图分析观察优化枚举行为
+            dp[i][rest] = dp[i + 1][rest];
             if (rest - arr[i] >= 0) {
-                dp[i][rest] = dp[i][rest - arr[i]] + dp[i + 1][rest];
-            } else {
-                dp[i][rest] = dp[i + 1][rest];
+                dp[i][rest] += dp[i][rest - arr[i]];
             }
         }
     }
@@ -482,10 +481,9 @@ export function countMoneyDp3(arr: number[], target: number): number {
     for (let i = arr.length - 1; i >= 0; i--) {
         for (let rest = 1; rest <= target; rest++) {
             // 通过画图分析观察优化枚举行为
+            dp[rest] = preDp[rest];
             if (rest - arr[i] >= 0) {
-                dp[rest] = dp[rest - arr[i]] + preDp[rest];
-            } else {
-                dp[rest] = preDp[rest];
+                dp[rest] += dp[rest - arr[i]];
             }
         }
 
