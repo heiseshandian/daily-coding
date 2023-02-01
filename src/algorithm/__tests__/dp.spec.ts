@@ -12,8 +12,13 @@ import {
     getMaxPointsDp,
     getMinMethodsDp,
 } from '../dp';
-import { countMoneyTestData, countWalkMethodsTestData, getMinMethodsTestData } from './dp.testdata';
-import { getMinMethods } from '../dp';
+import {
+    countMoneyTestData,
+    countWalkMethodsTestData,
+    getMinMethodsTestData,
+    maxCommonSubsequenceTestData,
+} from './dp.testdata';
+import { getMinMethods, maxCommonSubsequence } from '../dp';
 import {
     countConversionResult,
     countConversionResultDp,
@@ -70,5 +75,9 @@ describe('dp', () => {
     it.each(getMinMethodsTestData)('getMinMethods', ({ input: { str, arr }, expected }) => {
         expect(getMinMethods(str, arr)).toBe(expected);
         expect(getMinMethodsDp(str, arr)).toBe(expected);
+    });
+
+    it.each(maxCommonSubsequenceTestData)('maxCommonSubsequence', ({ input: { str1, str2 }, expected }) => {
+        expect(maxCommonSubsequence(str1, str2)).toBe(expected);
     });
 });

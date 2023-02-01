@@ -66,3 +66,20 @@ export const getMinMethodsTestData = [
         expected: -1,
     },
 ];
+
+export const maxCommonSubsequenceTestData = [
+    {
+        input: {
+            str1: 'abc1234ef5',
+            str2: 'ty671234',
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            str1: '1234',
+            str2: 'abcd',
+        },
+        expected: 0,
+    },
+];

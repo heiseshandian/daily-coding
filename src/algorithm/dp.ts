@@ -1,10 +1,22 @@
+import { StackByArray } from './stack-by-array';
 // 从暴力递归到动态规划
+
 /* 
 面试中设计暴力递归过程的原则
+
 1）每一个可变参数的类型，一定不要比int类型更加复杂
 2）原则1）可以违反，让类型突破到一维线性结构，那必须是唯一可变参数
 3）如果发现原则1）被违反，但不违反原则2），只需要做到记忆化搜索即可
 4）可变参数的个数，能少则少
+*/
+
+/* 
+常见的4种尝试模型
+
+1）从左往右的尝试模型
+2）范围上的尝试模型
+3) 多样本位置全对应的尝试模型
+4）寻找业务限制的尝试模型
 */
 
 /* 
@@ -617,4 +629,40 @@ function getMinMethodsDpProcess(rest: string, handledArr: number[][], dp: Map<st
 
     dp.set(rest, min === Infinity ? -1 : min);
     return dp.get(rest) as number;
+}
+
+// 多样本位置全对应的尝试模型
+// 两个字符串的最长公共子序列问题
+export function maxCommonSubsequence(str1: string, str2: string): number {
+    // 上来就弄一张二维表，然后再赋予这张二维表意义
+    // dp[i][j] str1 0-i字符与str2 0-j字符的最长公共子序列长度，dp[str1.length-1][str2.length-1]就是我们最终的返回值
+    const dp: number[][] = new Array(str1.length).fill(0).map((_) => new Array(str2.length).fill(0));
+    dp[0][0] = str1[0] === str2[0] ? 1 : 0;
+
+    // 第0行的值，一旦出现一个相同字符，后续位置都是1（因为str1此时就一个字符，可能的最长公共子序列长度也就是1）
+    for (let j = 1; j < str2.length; j++) {
+        dp[0][j] = Math.max(dp[0][j - 1], str2[j] === str1[0] ? 1 : 0);
+    }
+
+    // 第0列的值同理
+    for (let i = 1; i < str1.length; i++) {
+        dp[i][0] = Math.max(dp[i - 1][0], str1[i] === str2[0] ? 1 : 0);
+    }
+
+    // 任意位置
+    // 1) 最长子序列以i且以j结尾 (str1[i]===str2[j]) dp[i-1][j-1]+1
+    // 2) 最长子序列不以i，j结尾 dp[i-1][j-1]
+    // 3) 最长子序列以i结尾，不以j结尾 dp[i][j-1]
+    // 4) 最长子序列以j结尾不以i结尾 dp[i-1][j]
+    for (let i = 1; i < str1.length; i++) {
+        for (let j = 1; j < str2.length; j++) {
+            // dp[i][j - 1], dp[i - 1][j] 的值不可能比dp[i - 1][j - 1]更小，这里我们直接省略掉dp[i - 1][j - 1]这种情况
+            dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+            if (str1[i] === str2[j]) {
+                dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - 1] + 1);
+            }
+        }
+    }
+
+    return dp[str1.length - 1][str2.length - 1];
 }
