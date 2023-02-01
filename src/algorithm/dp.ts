@@ -492,3 +492,76 @@ export function countMoneyDp3(arr: number[], target: number): number {
 
     return dp[target];
 }
+
+/* 
+题目二
+给定一个字符串str，给定一个字符串类型的数组arr。
+arr里的每一个字符串，代表一张贴纸，你可以把单个字符剪开使用，目的是拼出str来。
+返回需要至少多少张贴纸可以完成这个任务。
+
+例子： str= "babac"， arr ={"ba"，"c"，"abcd"}
+至少需要两张贴纸"ba"和"abcd"，因为使用这两张贴纸，把每一个字符单独剪开，含有2个a、2个b、1个c。是可以拼出str的。所以返回2。
+*/
+// 因为字符可以单独剪开使用，所以原串和贴纸串中字符顺序对结果无影响，我们可以用一个长度为26位的数组来代替原串和贴纸
+export function getMinMethods(str: string, arr: string[]): number {
+    // 假定只有26种字符，strArr[0]=23表示str中有23个a
+    const strArr: number[] = convertStr2CountArr(str);
+
+    const handledArr: number[][] = new Array(arr.length).fill(0);
+    for (let i = 0; i < arr.length; i++) {
+        handledArr[i] = convertStr2CountArr(arr[i]);
+    }
+
+    return getMinMethodsProcess(strArr, handledArr, 0);
+}
+
+function convertStr2CountArr(str: string): number[] {
+    const strArr: number[] = new Array(26).fill(0);
+    for (let i = 0; i < str.length; i++) {
+        const index = str[i].charCodeAt(0) - 'a'.charCodeAt(0);
+        strArr[index] += 1;
+    }
+
+    return strArr;
+}
+
+// 从i位置自由选择，搞定剩下的字符最少需要多少张贴纸
+function getMinMethodsProcess(strArr: number[], handledArr: number[][], i: number): number {
+    // 所有字符已经搞定返回最少需要0张
+    if (strArr.every((val) => val === 0)) {
+        return 0;
+    }
+    // 还有字符没搞定，但是已经没有贴纸了，返回-1，后面需要对-1进行处理
+    if (i === handledArr.length) {
+        return -1;
+    }
+
+    // i位置可以选择0张，1张...max
+    let max = 0;
+    for (let k = 0; k < strArr.length; k++) {
+        // 全部用当前贴纸搞定当前字符最少需要几张
+        if (handledArr[i][k] !== 0) {
+            const curMax = Math.ceil(strArr[k] / handledArr[i][k]);
+            max = Math.max(max, curMax);
+        }
+    }
+
+    // 当前贴纸可以选取0-max张，从中选最小值返回
+    let min = Infinity;
+    for (let k = 0; k <= max; k++) {
+        // 保存现场
+        const copy = strArr.slice();
+        for (let j = 0; j < strArr.length; j++) {
+            strArr[j] = Math.max(0, strArr[j] - handledArr[i][j] * k);
+        }
+        const next = getMinMethodsProcess(strArr, handledArr, i + 1);
+        // 恢复现场
+        strArr = copy.slice();
+
+        if (next !== -1) {
+            min = Math.min(min, next + k);
+        }
+    }
+
+    return min === Infinity ? -1 : min;
+}

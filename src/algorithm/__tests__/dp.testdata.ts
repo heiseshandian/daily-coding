@@ -49,3 +49,20 @@ export const countMoneyTestData = [
         expected: 4246,
     },
 ];
+
+export const getMinMethodsTestData = [
+    {
+        input: {
+            str: 'babac',
+            arr: ['ba', 'c', 'abcd'],
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            str: 'babace',
+            arr: ['ba', 'c', 'abcd'],
+        },
+        expected: -1,
+    },
+];

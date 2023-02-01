@@ -11,7 +11,8 @@ import {
     countWalkMethodsDp2,
     getMaxPointsDp,
 } from '../dp';
-import { countMoneyTestData, countWalkMethodsTestData } from './dp.testdata';
+import { countMoneyTestData, countWalkMethodsTestData, getMinMethodsTestData } from './dp.testdata';
+import { getMinMethods } from '../dp';
 import {
     countConversionResult,
     countConversionResultDp,
@@ -63,5 +64,9 @@ describe('dp', () => {
         expect(countMoneyDp(arr, target)).toBe(expected);
         expect(countMoneyDp2(arr, target)).toBe(expected);
         expect(countMoneyDp3(arr, target)).toBe(expected);
+    });
+
+    it.each(getMinMethodsTestData)('getMinMethods', ({ input: { str, arr }, expected }) => {
+        expect(getMinMethods(str, arr)).toBe(expected);
     });
 });
