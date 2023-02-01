@@ -18,3 +18,27 @@ export const countWalkMethodsTestData = [
         expected: 1,
     },
 ];
+
+export const countMoneyTestData = [
+    {
+        input: {
+            arr: [10, 20, 30],
+            target: 100,
+        },
+        expected: 14,
+    },
+    {
+        input: {
+            arr: [10, 50, 52, 21, 2],
+            target: 30,
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            arr: [10, 31],
+            target: 100,
+        },
+        expected: 1,
+    },
+];

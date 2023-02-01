@@ -409,3 +409,88 @@ export function countWalkMethodsDp2(n: number, m: number, k: number, p: number):
 
     return dp[m];
 }
+
+// 给定整数数组arr，arr中的元素表示不同面值的货币，给定target，每种面值的货币可以使用无线多次，问一共有多少种方式可以搞出target
+export function countMoney(arr: number[], target: number): number {
+    return countMoneyProcess(arr, 0, target);
+}
+
+// i以及i位置之后的货币自由选择，凑出rest一共有多少种方式
+function countMoneyProcess(arr: number[], i: number, rest: number): number {
+    if (i === arr.length && rest !== 0) {
+        return 0;
+    }
+    if (rest === 0) {
+        return 1;
+    }
+
+    let count = 0;
+    for (let j = 0; j <= Math.floor(rest / arr[i]); j++) {
+        count += countMoneyProcess(arr, i + 1, rest - arr[i] * j);
+    }
+
+    return count;
+}
+
+export function countMoneyDp(arr: number[], target: number): number {
+    // dp[i][rest] 从i位置开始自由选择，搞定rest有多少种选择方案
+    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(target + 1).fill(0));
+    for (let i = 0; i <= arr.length; i++) {
+        dp[i][0] = 1;
+    }
+
+    for (let i = arr.length; i >= 0; i--) {
+        for (let rest = 1; rest <= target; rest++) {
+            let count = 0;
+            for (let j = 0; j <= Math.floor(rest / arr[i]); j++) {
+                count += dp[i + 1][rest - arr[i] * j];
+            }
+            dp[i][rest] = count;
+        }
+    }
+
+    return dp[0][target];
+}
+
+export function countMoneyDp2(arr: number[], target: number): number {
+    // dp[i][rest] 从i位置开始自由选择，搞定rest有多少种选择方案
+    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(target + 1).fill(0));
+    for (let i = 0; i <= arr.length; i++) {
+        dp[i][0] = 1;
+    }
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= target; rest++) {
+            // 通过画图分析观察优化枚举行为
+            if (rest - arr[i] >= 0) {
+                dp[i][rest] = dp[i][rest - arr[i]] + dp[i + 1][rest];
+            } else {
+                dp[i][rest] = dp[i + 1][rest];
+            }
+        }
+    }
+
+    return dp[0][target];
+}
+
+// dp表每个位置的数据都只依赖于下面的数据和本行的数据，可以用两个一维表滚动的方式来优化空间
+export function countMoneyDp3(arr: number[], target: number): number {
+    const dp: number[] = new Array(target + 1).fill(0);
+    dp[0] = 1;
+    let preDp = dp.slice();
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= target; rest++) {
+            // 通过画图分析观察优化枚举行为
+            if (rest - arr[i] >= 0) {
+                dp[rest] = dp[rest - arr[i]] + preDp[rest];
+            } else {
+                dp[rest] = preDp[rest];
+            }
+        }
+
+        preDp = dp.slice();
+    }
+
+    return dp[target];
+}

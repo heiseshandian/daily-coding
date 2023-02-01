@@ -1,5 +1,9 @@
 import { bagTestData, maxPointsTestData, nQueenTestData } from '../../problems/__tests__/recursion.testdata';
 import {
+    countMoney,
+    countMoneyDp,
+    countMoneyDp2,
+    countMoneyDp3,
     countNQueen,
     countNQueen2,
     countWalkMethods,
@@ -7,7 +11,7 @@ import {
     countWalkMethodsDp2,
     getMaxPointsDp,
 } from '../dp';
-import { countWalkMethodsTestData } from './dp.testdata';
+import { countMoneyTestData, countWalkMethodsTestData } from './dp.testdata';
 import {
     countConversionResult,
     countConversionResultDp,
@@ -52,5 +56,12 @@ describe('dp', () => {
         expect(countWalkMethods(n, m, k, p)).toBe(expected);
         expect(countWalkMethodsDp(n, m, k, p)).toBe(expected);
         expect(countWalkMethodsDp2(n, m, k, p)).toBe(expected);
+    });
+
+    it.each(countMoneyTestData)('countMoney', ({ input: { arr, target }, expected }) => {
+        expect(countMoney(arr, target)).toBe(expected);
+        expect(countMoneyDp(arr, target)).toBe(expected);
+        expect(countMoneyDp2(arr, target)).toBe(expected);
+        expect(countMoneyDp3(arr, target)).toBe(expected);
     });
 });
