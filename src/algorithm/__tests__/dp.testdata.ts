@@ -41,4 +41,11 @@ export const countMoneyTestData = [
         },
         expected: 1,
     },
+    {
+        input: {
+            arr: [5, 10, 50, 100],
+            target: 1000,
+        },
+        expected: 4246,
+    },
 ];
