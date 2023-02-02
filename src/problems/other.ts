@@ -281,3 +281,55 @@ export function getMinBoats(arr: number[], limit: number): number {
 
     return oddCount + evenCount;
 }
+
+/* 
+（为了题目6的启发题目）题目5
+给定一个数组arr，和整数sum 返回累加和等于sum的子数组有多少个？
+*/
+export function countSubArr(arr: number[], target: number): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    // 暴力解法，先生成前缀和数组
+    const sumArr = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        sumArr[i] = sumArr[i - 1] + arr[i];
+    }
+
+    let count = 0;
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i; j < arr.length; j++) {
+            const sum = i === 0 ? sumArr[j] : sumArr[j] - sumArr[i - 1];
+            if (sum === target) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+export function countSubArr2(arr: number[], target: number): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    const map: Map<number, number> = new Map();
+    let sum = 0;
+    let count = 0;
+    // 假定子数组必须以i位置结尾，则i以前出现 sum - target的次数就是以i位置结尾且和等于target的个数
+    // 假设k位置的和等于 sum - target则k+1到i位置的和必然是target 因为从0到i的和是sum
+    // 用map来避免遍历前缀和数组，秒啊
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+
+        const times = map.get(sum - target) || 0;
+        count += times;
+
+        const prev = map.get(sum) || 0;
+        map.set(sum, prev + 1);
+    }
+
+    return count;
+}

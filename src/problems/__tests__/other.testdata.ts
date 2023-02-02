@@ -49,3 +49,13 @@ export const getMinBoatsTestData = [
         expected: 6,
     },
 ];
+
+export const countSubArrTestData = [
+    {
+        input: {
+            arr: [1, -1, 0, 4, 3, 5, 0, 4, 2, 9, 1],
+            target: 9,
+        },
+        expected: 2,
+    },
+];
