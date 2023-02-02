@@ -66,8 +66,7 @@ export function heapSort(arr: number[]) {
 
     let heapSize = arr.length;
     while (heapSize > 1) {
-        heapSize--;
-        swap(arr, 0, heapSize);
-        heapify(arr, 0, heapSize);
+        swap(arr, 0, heapSize - 1);
+        heapify(arr, 0, --heapSize);
     }
 }
