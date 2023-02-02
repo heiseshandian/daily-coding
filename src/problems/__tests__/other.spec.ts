@@ -1,5 +1,5 @@
-import { getMinCandyTestData, getMinValueOfColorTestData } from './other.testdata';
-import { getMinCandy, getMinValueOfColor, getMinValueOfColor2, getMinValueOfColorDp } from '../other';
+import { getMinBoatsTestData, getMinCandyTestData, getMinValueOfColorTestData } from './other.testdata';
+import { getMinBoats, getMinCandy, getMinValueOfColor, getMinValueOfColor2, getMinValueOfColorDp } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -10,5 +10,9 @@ describe('other', () => {
 
     it.each(getMinCandyTestData)('getMinCandy', ({ input, expected }) => {
         expect(getMinCandy(input)).toBe(expected);
+    });
+
+    it.each(getMinBoatsTestData)('getMinBoats', ({ input: { arr, limit }, expected }) => {
+        expect(getMinBoats(arr, limit)).toBe(expected);
     });
 });

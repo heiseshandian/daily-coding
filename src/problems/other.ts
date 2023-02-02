@@ -224,3 +224,60 @@ export function getMinCandy(arr: number[]): number {
         return acc;
     }, 0);
 }
+
+/* 
+题目3（来自腾讯）
+给定一个正数数组arr，代表每个人的体重。
+给定一个正数limit代表船的载重，所有船都是同样的载重量每个人的体重都一定不大于船的载重
+要求：
+1，可以1个人单独一搜船
+2，一艘船如果坐2人，两个人的体重相加需要是偶数，且总体重不能超过船的载重
+3，一艘船最多坐2人
+返回如果想所有人同时坐船，船的最小数量
+*/
+export function getMinBoats(arr: number[], limit: number): number {
+    arr.sort((a, b) => a - b);
+
+    // 由于奇数和偶数不能同坐一条船所以直接将奇数和偶数分开
+    const odd = [];
+    const even = [];
+    for (let i = 0; i < arr.length; i++) {
+        if ((arr[i] & 1) === 1) {
+            odd.push(arr[i]);
+        } else {
+            even.push(arr[i]);
+        }
+    }
+
+    // 先处理奇数
+    let left = 0;
+    let right = odd.length - 1;
+    let oddCount = 0;
+    while (left <= right) {
+        if (odd[left] + odd[right] <= limit) {
+            left++;
+            right--;
+        } else {
+            right--;
+        }
+
+        oddCount++;
+    }
+
+    // 再处理偶数
+    left = 0;
+    right = even.length - 1;
+    let evenCount = 0;
+    while (left <= right) {
+        if (even[left] + even[right] <= limit) {
+            left++;
+            right--;
+        } else {
+            right--;
+        }
+
+        evenCount++;
+    }
+
+    return oddCount + evenCount;
+}

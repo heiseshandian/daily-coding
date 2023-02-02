@@ -39,3 +39,13 @@ export const getMinCandyTestData = [
         expected: 14,
     },
 ];
+
+export const getMinBoatsTestData = [
+    {
+        input: {
+            arr: [1, 3, 5, 7, 9, 2, 2, 4, 6, 8],
+            limit: 10,
+        },
+        expected: 6,
+    },
+];
