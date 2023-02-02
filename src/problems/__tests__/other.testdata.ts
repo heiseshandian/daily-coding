@@ -28,3 +28,14 @@ export const getMinValueOfColorTestData = [
         expected: 0,
     },
 ];
+
+export const getMinCandyTestData = [
+    {
+        input: [1, 2, 5, 4, 3, 1],
+        expected: 13,
+    },
+    {
+        input: [1, 2, 5, 4, 3, 6, 4],
+        expected: 14,
+    },
+];
