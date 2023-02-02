@@ -738,3 +738,75 @@ function coffeeTimeProcess2(
     dp.get(i)?.set(freeTime, Math.min(p1, p2));
     return Math.min(p1, p2);
 }
+
+export function getCoffeeTimeDp2(arr: number[], a: number, b: number): number {
+    arr.sort((a1, a2) => a1 - a2);
+
+    // 从业务限制中找到freeTime的最大值
+    // 很明显，如果所有的咖啡杯都用咖啡机来洗的话freeTime的时间最大
+    let maxFreeTime = 0;
+    for (let i = 0; i < arr.length; i++) {
+        maxFreeTime = Math.max(arr[i], maxFreeTime) + a;
+    }
+
+    // dp[i][freeTime] dp[0][0]就是我们需要的返回值
+    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(maxFreeTime + 1).fill(0));
+
+    // dp[arr.length][freeTime]=freeTime
+    for (let freeTime = 0; freeTime <= maxFreeTime; freeTime++) {
+        dp[arr.length][freeTime] = freeTime;
+    }
+
+    // 从下到上，从右到左填表
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let freeTime = maxFreeTime; freeTime >= 0; freeTime--) {
+            // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
+            const p1 = Math.max(arr[i] + b, dp[i + 1][freeTime]);
+
+            // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
+            const nextFreeTime = Math.max(arr[i], freeTime) + a;
+            const p2 = Math.max(nextFreeTime, dp[i + 1][nextFreeTime]);
+
+            dp[i][freeTime] = Math.min(p1, p2);
+        }
+    }
+
+    return dp[0][0];
+}
+
+// 用两个一维表代替二维表
+export function getCoffeeTimeDp3(arr: number[], a: number, b: number): number {
+    arr.sort((a1, a2) => a1 - a2);
+
+    // 从业务限制中找到freeTime的最大值
+    // 很明显，如果所有的咖啡杯都用咖啡机来洗的话freeTime的时间最大
+    let maxFreeTime = 0;
+    for (let i = 0; i < arr.length; i++) {
+        maxFreeTime = Math.max(arr[i], maxFreeTime) + a;
+    }
+
+    // dp[freeTime] dp[0]就是我们需要的返回值
+    const dp: number[] = new Array(maxFreeTime + 1).fill(0);
+    // dp[freeTime]=freeTime
+    for (let freeTime = 0; freeTime <= maxFreeTime; freeTime++) {
+        dp[freeTime] = freeTime;
+    }
+    let prevDp = dp.slice();
+
+    // 从下到上，从右到左填表
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let freeTime = maxFreeTime; freeTime >= 0; freeTime--) {
+            // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
+            const p1 = Math.max(arr[i] + b, prevDp[freeTime]);
+
+            // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
+            const nextFreeTime = Math.max(arr[i], freeTime) + a;
+            const p2 = Math.max(nextFreeTime, prevDp[nextFreeTime]);
+
+            dp[freeTime] = Math.min(p1, p2);
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[0];
+}

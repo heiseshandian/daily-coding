@@ -11,6 +11,8 @@ import {
     countWalkMethodsDp2,
     getCoffeeTime,
     getCoffeeTimeDp,
+    getCoffeeTimeDp2,
+    getCoffeeTimeDp3,
     getMaxPointsDp,
     getMinMethodsDp,
 } from '../dp';
@@ -87,5 +89,7 @@ describe('dp', () => {
     it.each(getCoffeeTimeTestData)('getCoffeeTime', ({ input: { arr, a, b }, expected }) => {
         expect(getCoffeeTime(arr, a, b)).toBe(expected);
         expect(getCoffeeTimeDp(arr, a, b)).toBe(expected);
+        expect(getCoffeeTimeDp2(arr, a, b)).toBe(expected);
+        expect(getCoffeeTimeDp3(arr, a, b)).toBe(expected);
     });
 });
