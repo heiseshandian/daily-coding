@@ -666,3 +666,75 @@ export function maxCommonSubsequence(str1: string, str2: string): number {
 
     return dp[str1.length - 1][str2.length - 1];
 }
+
+// 寻找业务限制的尝试模型
+/* 
+给定一个数组，代表每个人喝完咖啡准备刷杯子的时间
+只有一台咖啡机，一次只能洗一个杯子，时间耗费a，
+洗完才能洗下一杯每个咖啡杯也可以自己挥发干净，时间耗费b，
+咖啡杯可以并行挥发返回让所有咖啡杯变干净的最早完成时间三个参数：int【】arr、int a、int b
+*/
+export function getCoffeeTime(arr: number[], a: number, b: number): number {
+    arr.sort((a1, a2) => a1 - a2);
+
+    return coffeeTimeProcess(arr, a, b, 0, 0);
+}
+
+/*  
+当前来到i号咖啡杯，咖啡机空闲的时间是freeTime，返回洗完所有杯子所需要的最少时间
+假设i号杯子决定放进咖啡机里面洗则nextFreeTime = Math.max(arr[i],freeTime) + a
+假设i号杯子决定自己挥发干净则最快干净的时间是 arr[i] + b
+ */
+function coffeeTimeProcess(arr: number[], a: number, b: number, i: number, freeTime: number): number {
+    // 没有杯子需要洗了，则咖啡机洗完的时间就是最少时间
+    if (i === arr.length) {
+        return freeTime;
+    }
+
+    // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
+    const p1 = Math.max(arr[i] + b, coffeeTimeProcess(arr, a, b, i + 1, freeTime));
+
+    // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
+    const nextFreeTime = Math.max(arr[i], freeTime) + a;
+    const p2 = Math.max(nextFreeTime, coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime));
+
+    return Math.min(p1, p2);
+}
+
+export function getCoffeeTimeDp(arr: number[], a: number, b: number): number {
+    arr.sort((a1, a2) => a1 - a2);
+
+    const dp: Map<number, Map<number, number>> = new Map();
+    return coffeeTimeProcess2(arr, a, b, 0, 0, dp);
+}
+
+function coffeeTimeProcess2(
+    arr: number[],
+    a: number,
+    b: number,
+    i: number,
+    freeTime: number,
+    dp: Map<number, Map<number, number>>
+): number {
+    if (dp.has(i) && dp.get(i)?.has(freeTime)) {
+        return dp.get(i)?.get(freeTime) as number;
+    }
+
+    // 没有杯子需要洗了，则咖啡机洗完的时间就是最少时间
+    if (i === arr.length) {
+        return freeTime;
+    }
+
+    // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
+    const p1 = Math.max(arr[i] + b, coffeeTimeProcess(arr, a, b, i + 1, freeTime));
+
+    // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
+    const nextFreeTime = Math.max(arr[i], freeTime) + a;
+    const p2 = Math.max(nextFreeTime, coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime));
+
+    if (!dp.has(i)) {
+        dp.set(i, new Map());
+    }
+    dp.get(i)?.set(freeTime, Math.min(p1, p2));
+    return Math.min(p1, p2);
+}

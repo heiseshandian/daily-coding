@@ -9,12 +9,15 @@ import {
     countWalkMethods,
     countWalkMethodsDp,
     countWalkMethodsDp2,
+    getCoffeeTime,
+    getCoffeeTimeDp,
     getMaxPointsDp,
     getMinMethodsDp,
 } from '../dp';
 import {
     countMoneyTestData,
     countWalkMethodsTestData,
+    getCoffeeTimeTestData,
     getMinMethodsTestData,
     maxCommonSubsequenceTestData,
 } from './dp.testdata';
@@ -79,5 +82,10 @@ describe('dp', () => {
 
     it.each(maxCommonSubsequenceTestData)('maxCommonSubsequence', ({ input: { str1, str2 }, expected }) => {
         expect(maxCommonSubsequence(str1, str2)).toBe(expected);
+    });
+
+    it.each(getCoffeeTimeTestData)('getCoffeeTime', ({ input: { arr, a, b }, expected }) => {
+        expect(getCoffeeTime(arr, a, b)).toBe(expected);
+        expect(getCoffeeTimeDp(arr, a, b)).toBe(expected);
     });
 });

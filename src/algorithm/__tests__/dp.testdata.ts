@@ -83,3 +83,22 @@ export const maxCommonSubsequenceTestData = [
         expected: 0,
     },
 ];
+
+export const getCoffeeTimeTestData = [
+    {
+        input: {
+            arr: [1, 1, 1, 1, 1, 1, 1, 1, 1, 11],
+            a: 3,
+            b: 10,
+        },
+        expected: 14,
+    },
+    {
+        input: {
+            arr: [1, 3, 5, 6, 8, 9, 2, 1, 11],
+            a: 3,
+            b: 10,
+        },
+        expected: 17,
+    },
+];
