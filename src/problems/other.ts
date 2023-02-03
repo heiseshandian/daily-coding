@@ -333,3 +333,54 @@ export function countSubArr2(arr: number[], target: number): number {
 
     return count;
 }
+
+// 给定正数数组arr，数组元素表示一系列点，给定绳子长度，问绳子最多可以压中几个点
+export function getMaxRopePoints(arr: number[], rope: number): number {
+    arr.sort((a, b) => a - b);
+
+    // 假定绳子的末尾点在i点上，则arr[i] - rope范围内有几个点就表示以i结尾时绳子最多压中几个点
+    let max = 0;
+    for (let i = 0; i < arr.length; i++) {
+        const target = arr[i] - rope;
+        // 在0-i之间找>=target 且离target最近的位置
+        let found = 0;
+        let left = 0;
+        let right = i;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (arr[mid] === target) {
+                found = mid;
+                break;
+            }
+
+            if (arr[mid] > target) {
+                found = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        max = Math.max(max, i - found + 1);
+    }
+
+    return max;
+}
+
+export function getMaxRopePoints2(arr: number[], rope: number): number {
+    arr.sort((a, b) => a - b);
+
+    // 用滑动窗口来解决
+    let left = 0;
+    let right = 0;
+    let max = 0;
+    while (left < arr.length) {
+        // right先往右到不能再往右，然后right再加1，此时right-left就是绳子覆盖的点
+        while (right < arr.length && arr[right] - arr[left] <= rope) {
+            right++;
+        }
+        max = Math.max(max, right - left++);
+    }
+
+    return max;
+}

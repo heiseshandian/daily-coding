@@ -59,3 +59,20 @@ export const countSubArrTestData = [
         expected: 2,
     },
 ];
+
+export const getMaxRopePointsTestData = [
+    {
+        input: {
+            arr: [1, 7, 8, 9, 10, 11, 16, 18],
+            rope: 4,
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            arr: [1, 7, 8, 13],
+            rope: 4,
+        },
+        expected: 2,
+    },
+];
