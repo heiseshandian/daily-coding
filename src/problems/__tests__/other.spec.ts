@@ -1,10 +1,17 @@
-import { getMaxRopePoints, getMaxRopePoints2 } from '../other';
+import {
+    getMaxRopePoints,
+    getMaxRopePoints2,
+    getPlusOrMinusCount,
+    getPlusOrMinusCountDp,
+    getPlusOrMinusCountDp2,
+} from '../other';
 import {
     countSubArrTestData,
     getMaxRopePointsTestData,
     getMinBoatsTestData,
     getMinCandyTestData,
     getMinValueOfColorTestData,
+    getPlusOrMinusCountTestData,
 } from './other.testdata';
 import {
     countSubArr,
@@ -39,5 +46,11 @@ describe('other', () => {
     it.each(getMaxRopePointsTestData)('getMaxRopePoints', ({ input: { arr, rope }, expected }) => {
         expect(getMaxRopePoints(arr, rope)).toBe(expected);
         expect(getMaxRopePoints2(arr, rope)).toBe(expected);
+    });
+
+    it.each(getPlusOrMinusCountTestData)('getPlusOrMinusCount', ({ input: { arr, target }, expected }) => {
+        expect(getPlusOrMinusCount(arr, target)).toBe(expected);
+        expect(getPlusOrMinusCountDp(arr, target)).toBe(expected);
+        expect(getPlusOrMinusCountDp2(arr, target)).toBe(expected);
     });
 });

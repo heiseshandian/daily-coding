@@ -76,3 +76,34 @@ export const getMaxRopePointsTestData = [
         expected: 2,
     },
 ];
+
+export const getPlusOrMinusCountTestData = [
+    {
+        input: {
+            arr: [1, 1, 1, 1, 1, 0, 0],
+            target: 3,
+        },
+        expected: 20,
+    },
+    {
+        input: {
+            arr: [1],
+            target: 1,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            arr: [1, 2, 3],
+            target: 5,
+        },
+        expected: 0,
+    },
+    {
+        input: {
+            arr: [1, 2, 3],
+            target: 8,
+        },
+        expected: 0,
+    },
+];
