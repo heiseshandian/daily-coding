@@ -767,3 +767,23 @@ export function getMaxGameWindow(arr: number[], k: number): number {
 
     return count;
 }
+
+// 求子数组的最大累加和
+export function getMaxSumOfSubArr(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    let prev = arr[0];
+    let cur = arr[0];
+    let max = cur;
+
+    // 子数组以i结尾的前提下所形成的最大累加和是多少，最终答案求一个最大值返回即可
+    for (let i = 1; i < arr.length; i++) {
+        const cur = Math.max(prev, prev + arr[i], arr[i]);
+        max = Math.max(max, cur);
+        prev = cur;
+    }
+
+    return max;
+}
