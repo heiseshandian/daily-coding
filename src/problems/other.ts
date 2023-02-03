@@ -780,7 +780,7 @@ export function getMaxSumOfSubArr(arr: number[]): number {
 
     // 子数组以i结尾的前提下所形成的最大累加和是多少，最终答案求一个最大值返回即可
     for (let i = 1; i < arr.length; i++) {
-        const cur = Math.max(prev, prev + arr[i], arr[i]);
+        const cur = Math.max(prev + arr[i], arr[i]);
         max = Math.max(max, cur);
         prev = cur;
     }
