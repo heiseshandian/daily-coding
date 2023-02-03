@@ -1,3 +1,4 @@
+import { TreeNode } from '../algorithm/tree';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -837,4 +838,44 @@ export function isInterleave(str1: string, str2: string, str3: string): boolean 
     }
 
     return dp[str1.length][str2.length];
+}
+
+/* 
+题目6
+如果一个节点×，它左树结构和右树结构完全一样那么我们说以X为头的树是相等树
+给定一棵二叉树的头节点head 返回head整棵树上有多少棵相等子树
+*/
+export function countEqualTree(head: TreeNode | null): number {
+    if (!head) {
+        return 0;
+    }
+
+    let count = 0;
+    const countEqualTreeProcess = (node: TreeNode) => {
+        // 当前节点
+        if (node && isEqualTree(node.left, node.right)) {
+            count++;
+        }
+
+        if (node.left) {
+            countEqualTreeProcess(node.left);
+        }
+        if (node.right) {
+            countEqualTreeProcess(node.right);
+        }
+    };
+
+    countEqualTreeProcess(head);
+
+    return count;
+}
+
+function isEqualTree(node1: TreeNode | null, node2: TreeNode | null): boolean {
+    if (node1 === null || node2 === null) {
+        return node1 === node2;
+    }
+
+    if (node1.val !== node2.val) return false;
+
+    return isEqualTree(node1.left, node2.right) && isEqualTree(node1.right, node2.left);
 }

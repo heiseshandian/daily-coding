@@ -1,3 +1,4 @@
+import { TreeNode } from '../../algorithm/tree';
 import {
     getMaxGameTestData,
     getMaxMoneyTestData,
@@ -5,6 +6,7 @@ import {
     isInterleaveTestData,
 } from './other.testdata';
 import {
+    countEqualTree,
     getMaxGame,
     getMaxGameWindow,
     getMaxMoneyDp,
@@ -112,5 +114,32 @@ describe('other', () => {
 
     it.each(isInterleaveTestData)('isInterleave', ({ input: { str1, str2, str3 }, expected }) => {
         expect(isInterleave(str1, str2, str3)).toBe(expected);
+    });
+
+    describe('countEqualTree', () => {
+        test('countEqualTree 1', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+            head.right = new TreeNode(3);
+
+            expect(countEqualTree(head)).toBe(2);
+        });
+
+        test('countEqualTree 2', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+
+            expect(countEqualTree(head)).toBe(1);
+        });
+
+        test('countEqualTree 3', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+            head.right = new TreeNode(2);
+            head.left.left = new TreeNode(4);
+            head.right.right = new TreeNode(4);
+
+            expect(countEqualTree(head)).toBe(3);
+        });
     });
 });
