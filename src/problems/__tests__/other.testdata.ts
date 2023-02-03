@@ -119,3 +119,14 @@ export const getMaxMoneyTestData = [
         expected: 15,
     },
 ];
+
+export const getMaxGameTestData = [
+    {
+        input: { arr: [1, 3, 7, 5], k: 2 },
+        expected: 2,
+    },
+    {
+        input: { arr: [1, 3, 7, 5, 8, 0, 6], k: 2 },
+        expected: 3,
+    },
+];

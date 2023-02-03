@@ -1,5 +1,5 @@
-import { getMaxMoneyTestData } from './other.testdata';
-import { getMaxMoneyDp, getMaxMoneyDp2, MapWithSetAll } from '../other';
+import { getMaxGameTestData, getMaxMoneyTestData } from './other.testdata';
+import { getMaxGame, getMaxMoneyDp, getMaxMoneyDp2, MapWithSetAll } from '../other';
 import {
     getMaxMoney,
     getMaxMoney2,
@@ -86,5 +86,9 @@ describe('other', () => {
 
         map.set(9, 0);
         expect(map.get(9)).toBe(0);
+    });
+
+    it.each(getMaxGameTestData)('getMaxGame', ({ input: { arr, k }, expected }) => {
+        expect(getMaxGame(arr, k)).toBe(expected);
     });
 });

@@ -685,3 +685,42 @@ export function maxSubstringWithoutRepeatingChar(str: string): number {
 
     return max;
 }
+
+/* 
+题目4
+给定一个数组arr，代表每个人的能力值。再给定一个非负数k 
+如果两个人能力差值正好为k，那么可以凑在一起比赛一局比赛只有两个人
+返回最多可以同时有多少场比赛
+*/
+export function getMaxGame(arr: number[], k: number): number {
+    // 一开始所有的数字都没被用过
+    const used: boolean[] = new Array(arr.length).fill(false);
+
+    arr.sort((a, b) => a - b);
+
+    let count = 0;
+    for (let i = 0; i < arr.length - 1; i++) {
+        if (used[i]) {
+            continue;
+        }
+
+        // 二分法在i+1 - arr.length中找 arr[i]+k
+        let left = i + 1;
+        let right = arr.length - 1;
+        const target = arr[i] + k;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (arr[mid] === target) {
+                count++;
+                used[mid] = true;
+                break;
+            } else if (arr[mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+    }
+
+    return count;
+}
