@@ -628,3 +628,32 @@ export function getMaxMoneyDp2(income: number[][]): number {
 
     return dp[half];
 }
+
+// 要求实现一个含有setAll功能的hash表结构，setAll需要把当前hash表中所有的值都变成给定值，要求时间复杂度是O(1)
+export class MapWithSetAll<Key = any, Value = any> {
+    setAllTime = -Infinity;
+    currentTime = 0;
+    all: Value | null = null;
+    map: Map<Key, [value: Value, time: number]> = new Map();
+
+    public set(key: Key, value: Value) {
+        this.map.set(key, [value, this.currentTime++]);
+    }
+
+    public setAll(value: Value) {
+        this.all = value;
+        this.setAllTime = this.currentTime++;
+    }
+
+    public get(key: Key) {
+        if (!this.map.has(key)) {
+            return undefined;
+        }
+
+        const [value, time] = this.map.get(key)!;
+        if (time <= this.setAllTime) {
+            return this.all;
+        }
+        return value;
+    }
+}

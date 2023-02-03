@@ -1,5 +1,5 @@
 import { getMaxMoneyTestData } from './other.testdata';
-import { getMaxMoneyDp, getMaxMoneyDp2 } from '../other';
+import { getMaxMoneyDp, getMaxMoneyDp2, MapWithSetAll } from '../other';
 import {
     getMaxMoney,
     getMaxMoney2,
@@ -63,5 +63,28 @@ describe('other', () => {
         expect(getMaxMoney2(input)).toBe(expected);
         expect(getMaxMoneyDp(input)).toBe(expected);
         expect(getMaxMoneyDp2(input)).toBe(expected);
+    });
+
+    test('MapWithSetAll', () => {
+        const map = new MapWithSetAll();
+
+        map.set(1, 0);
+        map.set(2, 1);
+        expect(map.get(1)).toBe(0);
+        expect(map.get(2)).toBe(1);
+
+        map.setAll(3);
+        map.set(4, 8);
+        expect(map.get(1)).toBe(3);
+        expect(map.get(2)).toBe(3);
+        expect(map.get(4)).toBe(8);
+
+        map.setAll(5);
+        expect(map.get(1)).toBe(5);
+        expect(map.get(2)).toBe(5);
+        expect(map.get(4)).toBe(5);
+
+        map.set(9, 0);
+        expect(map.get(9)).toBe(0);
     });
 });
