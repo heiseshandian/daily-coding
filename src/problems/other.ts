@@ -482,3 +482,149 @@ export function getPlusOrMinusCountDp2(arr: number[], target: number): number {
 
     return dp[p] * Math.pow(2, zeroCount);
 }
+
+/* 
+题目4
+现有司机N*2人，调度中心会将所有司机平分给A、B两个区域第i个司机去A可得收入为income【i】【0】，第i个司机去B可得收入为income【i】【1】，
+返回所有调度方案中能使所有司机总收入最高的方案，是多少钱
+*/
+export function getMaxMoney(income: number[][]): number {
+    // 先让所有人都去A算出一个值
+    let count = income.reduce((acc, [aMoney]) => {
+        acc += aMoney;
+        return acc;
+    }, 0);
+
+    // 类似于石头染色问题，把所有income按照 bMoney-aMoney的差值排序，越大的改到B可以获得更大收益
+    income.sort(([aMoney1, bMoney1], [aMoney2, bMoney2]) => {
+        // 按照bMoney-aMoney从大到小排序
+        return bMoney2 - aMoney2 - (bMoney1 - aMoney1);
+    });
+
+    // 让一半人从A到B
+    const n = income.length >> 1;
+    for (let i = 0; i < n; i++) {
+        const [aMoney, bMoney] = income[i];
+        count += bMoney - aMoney;
+    }
+
+    return count;
+}
+
+export function getMaxMoney2(income: number[][]): number {
+    return getMaxMoney2Process(income, 0, income.length >> 1);
+}
+
+function getMaxMoney2Process(income: number[][], i: number, restA: number): number {
+    if (i === income.length) {
+        return restA === 0 ? 0 : -1;
+    }
+
+    if (restA === 0) {
+        // 剩下人都必须去B
+        return income.slice(i).reduce((acc, [, bMoney]) => {
+            acc += bMoney;
+            return acc;
+        }, 0);
+    }
+
+    const [aMoney, bMoney] = income[i];
+    // i去A
+    let p1 = 0;
+    const next1 = getMaxMoney2Process(income, i + 1, restA - 1);
+    if (next1 !== -1) {
+        p1 = aMoney + next1;
+    }
+
+    // i去B
+    let p2 = 0;
+    const next2 = getMaxMoney2Process(income, i + 1, restA);
+    if (next2 !== -1) {
+        p2 = bMoney + next2;
+    }
+
+    return Math.max(p1, p2);
+}
+
+export function getMaxMoneyDp(income: number[][]): number {
+    const half = income.length >> 1;
+    // dp[i][restA]
+    const dp: number[][] = new Array(income.length + 1).fill(0).map((_) => new Array(half + 1).fill(0));
+
+    for (let restA = 1; restA <= half; restA++) {
+        dp[income.length][restA] = -1;
+    }
+
+    for (let i = income.length - 1; i >= 0; i--) {
+        const [, bMoney] = income[i];
+        dp[i][0] = dp[i + 1][0] + bMoney;
+    }
+
+    // 从下到上，从左到右填表
+    for (let i = income.length - 1; i >= 0; i--) {
+        for (let restA = 1; restA <= half; restA++) {
+            const [aMoney, bMoney] = income[i];
+            // i去A
+            let p1 = 0;
+            const next1 = dp[i + 1][restA - 1];
+            if (next1 !== -1) {
+                p1 = aMoney + next1;
+            }
+
+            // i去B
+            let p2 = 0;
+            const next2 = dp[i + 1][restA];
+            if (next2 !== -1) {
+                p2 = bMoney + next2;
+            }
+
+            dp[i][restA] = Math.max(p1, p2);
+        }
+    }
+
+    return dp[0][half];
+}
+
+export function getMaxMoneyDp2(income: number[][]): number {
+    const half = income.length >> 1;
+
+    // 两个一维数组滚动代替二维数组
+    const dp: number[] = new Array(half + 1).fill(0);
+    for (let restA = 1; restA <= half; restA++) {
+        dp[restA] = -1;
+    }
+    let prevDp = dp.slice();
+
+    // 存储第0列的值
+    const bMoneySumArr = new Array(income.length + 1).fill(0);
+    for (let i = income.length - 1; i >= 0; i--) {
+        const [, bMoney] = income[i];
+        bMoneySumArr[i] = bMoneySumArr[i + 1] + bMoney;
+    }
+
+    // 从下到上，从左到右填表
+    for (let i = income.length - 1; i >= 0; i--) {
+        for (let restA = 1; restA <= half; restA++) {
+            const [aMoney, bMoney] = income[i];
+            // i去A
+            let p1 = 0;
+            const next1 = restA === 1 ? bMoneySumArr[i + 1] : prevDp[restA - 1];
+            if (next1 !== -1) {
+                p1 = aMoney + next1;
+            }
+
+            // i去B
+            let p2 = 0;
+            const next2 = restA === 1 ? bMoneySumArr[i + 1] : prevDp[restA];
+            if (next2 !== -1) {
+                p2 = bMoney + next2;
+            }
+
+            dp[restA] = Math.max(p1, p2);
+        }
+
+        prevDp = dp.slice();
+    }
+
+    return dp[half];
+}

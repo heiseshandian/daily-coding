@@ -107,3 +107,15 @@ export const getPlusOrMinusCountTestData = [
         expected: 0,
     },
 ];
+
+export const getMaxMoneyTestData = [
+    {
+        input: [
+            [1, 2],
+            [2, 4],
+            [6, 1],
+            [3, 2],
+        ],
+        expected: 15,
+    },
+];

@@ -1,4 +1,8 @@
+import { getMaxMoneyTestData } from './other.testdata';
+import { getMaxMoneyDp, getMaxMoneyDp2 } from '../other';
 import {
+    getMaxMoney,
+    getMaxMoney2,
     getMaxRopePoints,
     getMaxRopePoints2,
     getPlusOrMinusCount,
@@ -52,5 +56,12 @@ describe('other', () => {
         expect(getPlusOrMinusCount(arr, target)).toBe(expected);
         expect(getPlusOrMinusCountDp(arr, target)).toBe(expected);
         expect(getPlusOrMinusCountDp2(arr, target)).toBe(expected);
+    });
+
+    it.each(getMaxMoneyTestData)('getMaxMoney', ({ input, expected }) => {
+        expect(getMaxMoney(input)).toBe(expected);
+        expect(getMaxMoney2(input)).toBe(expected);
+        expect(getMaxMoneyDp(input)).toBe(expected);
+        expect(getMaxMoneyDp2(input)).toBe(expected);
     });
 });
