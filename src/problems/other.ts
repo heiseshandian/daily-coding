@@ -214,15 +214,12 @@ export function getMinCandy(arr: number[]): number {
     rightCandyArr.reverse();
 
     // 左右坡度取最大值就是最终的糖果数
-    const candy = [];
+    let candy = 0;
     for (let i = 1; i < leftCandyArr.length; i++) {
-        candy.push(Math.max(leftCandyArr[i], rightCandyArr[i]));
+        candy += Math.max(leftCandyArr[i], rightCandyArr[i]);
     }
 
-    return candy.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    return candy;
 }
 
 /* 
