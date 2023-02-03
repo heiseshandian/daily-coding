@@ -1,5 +1,12 @@
-import { getMaxGameTestData, getMaxMoneyTestData } from './other.testdata';
-import { getMaxGame, getMaxGameWindow, getMaxMoneyDp, getMaxMoneyDp2, MapWithSetAll } from '../other';
+import { getMaxGameTestData, getMaxMoneyTestData, getMaxSumOfSubArrTestData } from './other.testdata';
+import {
+    getMaxGame,
+    getMaxGameWindow,
+    getMaxMoneyDp,
+    getMaxMoneyDp2,
+    getMaxSumOfSubArr,
+    MapWithSetAll,
+} from '../other';
 import {
     getMaxMoney,
     getMaxMoney2,
@@ -91,5 +98,9 @@ describe('other', () => {
     it.each(getMaxGameTestData)('getMaxGame', ({ input: { arr, k }, expected }) => {
         expect(getMaxGame(arr, k)).toBe(expected);
         expect(getMaxGameWindow(arr, k)).toBe(expected);
+    });
+
+    it.each(getMaxSumOfSubArrTestData)('getMaxSumOfSubArr', ({ input, expected }) => {
+        expect(getMaxSumOfSubArr(input)).toBe(expected);
     });
 });

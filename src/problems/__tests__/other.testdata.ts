@@ -138,3 +138,14 @@ export const getMaxGameTestData = [
         expected: 0,
     },
 ];
+
+export const getMaxSumOfSubArrTestData = [
+    {
+        input: [1, 4, 3, 2, -1, -6, 9],
+        expected: 12,
+    },
+    {
+        input: [1, 4, 3, 2, -1, -1, 11],
+        expected: 19,
+    },
+];
