@@ -129,4 +129,12 @@ export const getMaxGameTestData = [
         input: { arr: [1, 3, 7, 5, 8, 0, 6], k: 2 },
         expected: 3,
     },
+    {
+        input: { arr: [1, 3, 7, 5, 5, 8, 0, 6], k: 0 },
+        expected: 1,
+    },
+    {
+        input: { arr: [1, 3, 7, 5, 5, 8, 0, 6], k: -1 },
+        expected: 0,
+    },
 ];

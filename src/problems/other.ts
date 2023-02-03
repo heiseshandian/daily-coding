@@ -693,6 +693,10 @@ export function maxSubstringWithoutRepeatingChar(str: string): number {
 返回最多可以同时有多少场比赛
 */
 export function getMaxGame(arr: number[], k: number): number {
+    if (k < 0 || !arr || arr.length < 2) {
+        return 0;
+    }
+
     // 一开始所有的数字都没被用过
     const used: boolean[] = new Array(arr.length).fill(false);
 
@@ -726,6 +730,10 @@ export function getMaxGame(arr: number[], k: number): number {
 }
 
 export function getMaxGameWindow(arr: number[], k: number): number {
+    if (k < 0 || !arr || arr.length < 2) {
+        return 0;
+    }
+
     // 一开始所有的数字都没被用过
     const used: boolean[] = new Array(arr.length).fill(false);
 
@@ -737,6 +745,10 @@ export function getMaxGameWindow(arr: number[], k: number): number {
     while (left < arr.length) {
         if (used[left]) {
             left++;
+            continue;
+        }
+        if (right === left) {
+            right++;
             continue;
         }
 
