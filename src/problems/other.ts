@@ -724,3 +724,34 @@ export function getMaxGame(arr: number[], k: number): number {
 
     return count;
 }
+
+export function getMaxGameWindow(arr: number[], k: number): number {
+    // 一开始所有的数字都没被用过
+    const used: boolean[] = new Array(arr.length).fill(false);
+
+    arr.sort((a, b) => a - b);
+
+    let count = 0;
+    let left = 0;
+    let right = 0;
+    while (left < arr.length) {
+        if (used[left]) {
+            left++;
+            continue;
+        }
+
+        if (arr[right] - arr[left] === k) {
+            count++;
+
+            used[right] = true;
+            right++;
+            left++;
+        } else if (arr[right] - arr[left] < k) {
+            right++;
+        } else {
+            left++;
+        }
+    }
+
+    return count;
+}
