@@ -657,3 +657,31 @@ export class MapWithSetAll<Key = any, Value = any> {
         return value;
     }
 }
+
+// 给定字符串str，求str的最长无重复字符子串长度
+export function maxSubstringWithoutRepeatingChar(str: string): number {
+    if (!str || str.length === 0) {
+        return 0;
+    }
+
+    const map: Map<string, number> = new Map();
+    map.set(str[0], 0);
+
+    let pre = 1;
+    let cur = 1;
+    let max = 1;
+    for (let i = 1; i < str.length; i++) {
+        // 比如说当前来到4位置，若str[4]之前没出现过，则按照上次出现的重复字符来算长度就是4-0+1 也就是 4-(-1)
+        // 用 || 语法的时候一定要注意判断前面的值是否能取到0
+        // 0 || -1的值最终是-1
+        const p1 = i - (map.get(str[i]) ?? -1);
+        const p2 = pre + 1;
+        cur = Math.min(p1, p2);
+        max = Math.max(max, cur);
+
+        pre = cur;
+        map.set(str[i], i);
+    }
+
+    return max;
+}
