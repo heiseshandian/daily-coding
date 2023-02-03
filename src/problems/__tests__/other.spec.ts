@@ -1,10 +1,16 @@
-import { getMaxGameTestData, getMaxMoneyTestData, getMaxSumOfSubArrTestData } from './other.testdata';
+import {
+    getMaxGameTestData,
+    getMaxMoneyTestData,
+    getMaxSumOfSubArrTestData,
+    isInterleaveTestData,
+} from './other.testdata';
 import {
     getMaxGame,
     getMaxGameWindow,
     getMaxMoneyDp,
     getMaxMoneyDp2,
     getMaxSumOfSubArr,
+    isInterleave,
     MapWithSetAll,
 } from '../other';
 import {
@@ -102,5 +108,9 @@ describe('other', () => {
 
     it.each(getMaxSumOfSubArrTestData)('getMaxSumOfSubArr', ({ input, expected }) => {
         expect(getMaxSumOfSubArr(input)).toBe(expected);
+    });
+
+    it.each(isInterleaveTestData)('isInterleave', ({ input: { str1, str2, str3 }, expected }) => {
+        expect(isInterleave(str1, str2, str3)).toBe(expected);
     });
 });

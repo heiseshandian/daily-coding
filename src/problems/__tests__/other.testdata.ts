@@ -149,3 +149,30 @@ export const getMaxSumOfSubArrTestData = [
         expected: 19,
     },
 ];
+
+export const isInterleaveTestData = [
+    {
+        input: {
+            str1: 'aabcc',
+            str2: 'dbbca',
+            str3: 'aadbbcbcac',
+        },
+        expected: true,
+    },
+    {
+        input: {
+            str1: 'aabcc',
+            str2: 'dbbca',
+            str3: 'aadbbbaccc',
+        },
+        expected: false,
+    },
+    {
+        input: {
+            str1: '',
+            str2: '',
+            str3: '',
+        },
+        expected: true,
+    },
+];

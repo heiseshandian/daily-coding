@@ -784,3 +784,57 @@ export function getMaxSumOfSubArr(arr: number[]): number {
 
     return max;
 }
+
+/* 
+字符串交错组成问题
+给定字符串 str1和str2已经str3
+判定str3是否str1和str2的交错组成
+
+str3是str1和str2的交错组成判定规则：
+1) str3的长度等于str1.length+str.length
+2) str3中存在子序列等于str1且扣除str1之后的子序列等于str2
+
+比如说
+str1=abc
+str2=123
+str3=a12b3c
+str4=321abc
+
+str3就是str1和str2的交错组成，但是str4就不是str1和str2的交错组成
+*/
+// 样本对应模型
+export function isInterleave(str1: string, str2: string, str3: string): boolean {
+    if (str1.length + str2.length !== str3.length) {
+        return false;
+    }
+
+    // dp[i][j] str1取前i个字符，str2取前j个字符能否交错组成 str3中 前i+j个字符
+    // dp[str1.length][str2.length]就是我们想要的结果
+    const dp: boolean[][] = new Array(str1.length + 1).fill(0).map((_) => new Array(str2.length).fill(false));
+
+    // str1取0个字符，str2取0个字符必然可以组成str3取0个字符
+    dp[0][0] = true;
+
+    // str1取0个字符
+    for (let j = 1; j <= str2.length; j++) {
+        // 取j个字符，小标是j-1
+        dp[0][j] = dp[0][j - 1] && str2[j - 1] === str3[j - 1];
+    }
+
+    // str2取0个字符
+    for (let i = 1; i <= str1.length; i++) {
+        dp[i][0] = dp[i - 1][0] && str1[i - 1] === str3[i - 1];
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= str1.length; i++) {
+        for (let j = 1; j <= str2.length; j++) {
+            // 两种可能str3 第i+j-1个字符来自str1或者str2
+            const p1 = str3[i + j - 1] === str1[i - 1] && dp[i - 1][j];
+            const p2 = str3[i + j - 1] === str2[j - 1] && dp[i][j - 1];
+            dp[i][j] = p1 || p2;
+        }
+    }
+
+    return dp[str1.length][str2.length];
+}
