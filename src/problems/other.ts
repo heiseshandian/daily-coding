@@ -742,7 +742,7 @@ export function getMaxGameWindow(arr: number[], k: number): number {
     let count = 0;
     let left = 0;
     let right = 0;
-    while (left < arr.length) {
+    while (left < arr.length && right < arr.length) {
         if (used[left]) {
             left++;
             continue;
