@@ -1,4 +1,5 @@
 import { TreeNode } from '../../algorithm/tree';
+import { countEqualTree2 } from '../other';
 import {
     getMaxGameTestData,
     getMaxMoneyTestData,
@@ -123,6 +124,7 @@ describe('other', () => {
             head.right = new TreeNode(3);
 
             expect(countEqualTree(head)).toBe(2);
+            expect(countEqualTree2(head)).toBe(2);
         });
 
         test('countEqualTree 2', () => {

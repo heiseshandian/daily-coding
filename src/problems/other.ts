@@ -879,3 +879,44 @@ function isEqualTree(node1: TreeNode | null, node2: TreeNode | null): boolean {
 
     return isEqualTree(node1.left, node2.right) && isEqualTree(node1.right, node2.left);
 }
+
+export function countEqualTree2(head: TreeNode | null): number {
+    if (!head) {
+        return 0;
+    }
+
+    return countEqualTree2Process(head).num;
+}
+
+class EqualTreeInfo {
+    // 当前节点的相等子树数目
+    num: number;
+    // 先序方式遍历得到的序列
+    preStr: string;
+
+    constructor(num: number, preStr: string) {
+        this.num = num;
+        this.preStr = preStr;
+    }
+}
+
+// 直接用先序遍历字符串来替代递归判断两颗子树是否相等
+function countEqualTree2Process(head: TreeNode | null): EqualTreeInfo {
+    if (!head) {
+        return {
+            num: 0,
+            preStr: '#',
+        };
+    }
+
+    const left = countEqualTree2Process(head.left);
+    const right = countEqualTree2Process(head.right);
+
+    const num = left.num + right.num + (left.preStr === right.preStr ? 1 : 0);
+    const preStr = `${head.val},${left.preStr},${right.preStr}`;
+
+    return {
+        num,
+        preStr,
+    };
+}
