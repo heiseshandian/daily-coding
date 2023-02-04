@@ -15,7 +15,7 @@ export function getIndexOf(str1: string, str2: string): number {
             j++;
         } else {
             j = maxPreSuffixArr[j];
-            while (j) {
+            while (j >= 0) {
                 if (str1[i] === str2[j]) {
                     i++;
                     j++;
@@ -23,7 +23,12 @@ export function getIndexOf(str1: string, str2: string): number {
                 }
                 j = maxPreSuffixArr[j];
             }
-            i++;
+
+            // 0位置还没匹配上，i从下一个位置开始匹配
+            if (j === -1) {
+                j = 0;
+                i++;
+            }
         }
     }
 
@@ -39,14 +44,18 @@ function getMaxPreSuffixArr(str: string): number[] {
     const result = [-1, 0];
     for (let i = 3; i < str.length; ) {
         let k = result[i - 1];
-        while (k) {
+        while (k >= 0) {
             if (str[i] === str[k]) {
                 result[i++] = k + 1;
                 break;
             }
             k = result[k];
         }
-        result[i++] = 0;
+
+        // 0位置还没匹配上
+        if (k === -1) {
+            result[i++] = 0;
+        }
     }
 
     return result;
