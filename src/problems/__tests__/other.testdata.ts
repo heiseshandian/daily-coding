@@ -215,3 +215,14 @@ export const reverseBitsTestData = [
         expected: 0b11111111111111111111111111111111,
     },
 ];
+
+export const getMaxATestData = [
+    // {
+    //     input: [5, 5, 5, 5],
+    //     expected: 100,
+    // },
+    {
+        input: [5, 4, 3, 6, 1, 7],
+        expected: 54,
+    },
+];

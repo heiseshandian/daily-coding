@@ -1019,3 +1019,112 @@ export function reverseBits2(n: number): number {
 
     return result;
 }
+
+/* 
+定义：数组中累加和与最小值的乘积，假设叫做指标A。给定一个正数数组，请返回子数组中，指标A最大的值。
+*/
+export function getMaxA(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    // 前缀和数组，用于优化子数组求和
+    const preSumArr = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        preSumArr[i] = preSumArr[i - 1] + arr[i];
+    }
+
+    // 大流程，从左到右，每个数字必须是当前子数组的最小值的情况下所形成的子数组中，累加和最大的指标A一定最大
+    // 单调栈结构，左边最近的比它小的与右边最近的比它小的
+    const closestMinArr = getClosestMinArr(arr);
+
+    let max = 0;
+    for (let i = 0; i < arr.length; i++) {
+        let [left, right] = closestMinArr[i];
+        if (left === undefined) {
+            left = -1;
+        }
+        if (right === undefined) {
+            right = arr.length;
+        }
+
+        // left+1 到 right-1就是最长的（也就是sum最大的）以当前数字为最小值的子数组
+        const sum = preSumArr[right - 1] - (left === -1 ? 0 : preSumArr[left]);
+        max = Math.max(max, sum * arr[i]);
+    }
+
+    return max;
+}
+
+// 单调栈结构，左边最近的比它小的与右边最近的比它小的
+function getClosestMinArr(arr: number[]): Array<[number | undefined, number | undefined]> {
+    // 单调栈本身从上到下严格从小到大，stack存储的是下标
+    const stack: number[][] = [];
+
+    // result也只存储位置信息，不存储具体的值
+    const result: Array<[number | undefined, number | undefined]> = [];
+
+    const generate = (biggerIndex: number | undefined) => {
+        if (stack.length === 0) {
+            return;
+        }
+
+        const top = stack[stack.length - 1];
+
+        let before = undefined;
+        if (stack.length >= 2) {
+            const last = stack[stack.length - 2];
+            before = last[last.length - 1];
+        }
+
+        let k = 0;
+        while (k < top.length) {
+            const index = top[k];
+            result[index] = [before, biggerIndex];
+            k++;
+        }
+
+        // 生成结束栈顶元素出栈
+        stack.length--;
+    };
+
+    for (let i = 0; i < arr.length; i++) {
+        // 如果栈为空则直接放
+        if (stack.length === 0) {
+            stack.push([i]);
+            continue;
+        }
+
+        const top = stack[stack.length - 1];
+        const lastIndex = top[top.length - 1];
+
+        // 当前值比栈顶元素大直接放
+        if (arr[i] > arr[lastIndex]) {
+            stack.push([i]);
+        } else if (arr[i] === arr[lastIndex]) {
+            // 如果当前值与栈顶元素相等则修改栈顶元素
+            top.push(i);
+        } else {
+            // 小于直接生成信息
+            let topLastIndex = lastIndex;
+            while (stack.length > 0 && arr[i] < arr[topLastIndex]) {
+                generate(i);
+                if (stack.length === 0) {
+                    break;
+                }
+
+                const top = stack[stack.length - 1];
+                topLastIndex = top[top?.length - 1];
+            }
+
+            stack.push([i]);
+        }
+    }
+
+    // 清算阶段
+    while (stack.length > 0) {
+        generate(undefined);
+    }
+
+    return result;
+}
