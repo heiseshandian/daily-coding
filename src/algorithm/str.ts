@@ -42,10 +42,10 @@ function getMaxPreSuffixArr(str: string): number[] {
     }
 
     const result = [-1, 0];
-    for (let i = 3; i < str.length; ) {
+    for (let i = 2; i < str.length; ) {
         let k = result[i - 1];
         while (k >= 0) {
-            if (str[i] === str[k]) {
+            if (str[i - 1] === str[k]) {
                 result[i++] = k + 1;
                 break;
             }

@@ -9,9 +9,23 @@ describe('getIndexOf', () => {
             },
             expected: 2,
         },
+        {
+            input: {
+                str1: 'leetcode',
+                str2: 'leeto',
+            },
+            expected: -1,
+        },
+        {
+            input: {
+                str1: 'mississippi',
+                str2: 'issip',
+            },
+            expected: 4,
+        },
     ];
 
-    it.each(testData)('getIndexOf %j', ({ input: { str1, str2 }, expected }) => {
+    it.each(testData)('getIndexOf', ({ input: { str1, str2 }, expected }) => {
         expect(getIndexOf(str1, str2)).toBe(expected);
     });
 });
