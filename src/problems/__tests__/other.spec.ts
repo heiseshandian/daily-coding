@@ -1,5 +1,6 @@
 import { TreeNode } from '../../algorithm/tree';
-import { countEqualTree2, getMinEditDistance, getMinEditDistance2 } from '../other';
+import { countEqualTree2, getMinEditDistance, getMinEditDistance2, reverseBits, reverseBits2 } from '../other';
+import { reverseBitsTestData } from './other.testdata';
 import {
     editDistanceTestData,
     getMaxGameTestData,
@@ -149,5 +150,10 @@ describe('other', () => {
     it.each(editDistanceTestData)('getMinEditDistance', ({ input: { word1, word2 }, expected }) => {
         expect(getMinEditDistance(word1, word2)).toBe(expected);
         expect(getMinEditDistance2(word1, word2)).toBe(expected);
+    });
+
+    it.each(reverseBitsTestData)('reverseBits', ({ input, expected }) => {
+        expect(reverseBits(input)).toBe(expected);
+        expect(reverseBits2(input)).toBe(expected);
     });
 });
