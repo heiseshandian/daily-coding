@@ -1,6 +1,7 @@
 import { TreeNode } from '../../algorithm/tree';
-import { countEqualTree2 } from '../other';
+import { countEqualTree2, getMinEditDistance, getMinEditDistance2 } from '../other';
 import {
+    editDistanceTestData,
     getMaxGameTestData,
     getMaxMoneyTestData,
     getMaxSumOfSubArrTestData,
@@ -143,5 +144,10 @@ describe('other', () => {
 
             expect(countEqualTree(head)).toBe(3);
         });
+    });
+
+    it.each(editDistanceTestData)('getMinEditDistance', ({ input: { word1, word2 }, expected }) => {
+        expect(getMinEditDistance(word1, word2)).toBe(expected);
+        expect(getMinEditDistance2(word1, word2)).toBe(expected);
     });
 });

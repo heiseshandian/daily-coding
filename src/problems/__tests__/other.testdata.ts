@@ -176,3 +176,27 @@ export const isInterleaveTestData = [
         expected: true,
     },
 ];
+
+export const editDistanceTestData = [
+    {
+        input: {
+            word1: 'horse',
+            word2: 'ros',
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            word1: 'horse',
+            word2: '',
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            word1: 'intention',
+            word2: 'execution',
+        },
+        expected: 5,
+    },
+];

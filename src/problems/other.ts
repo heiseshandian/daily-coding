@@ -920,3 +920,71 @@ function countEqualTree2Process(head: TreeNode | null): EqualTreeInfo {
         preStr,
     };
 }
+
+/* 
+字符串的编辑距离问题
+可以有插入，删除和替换操作，问使得word1变成word2最少需要多少次操作
+举例
+word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+
+样本对应模型 */
+export function getMinEditDistance(word1: string, word2: string) {
+    // dp[i][j] word1取前i个字符（下标 0 到 i-1）编辑成 word2取前j个字符（0到j-1）的最小代价
+    const dp: number[][] = new Array(word1.length + 1).fill(0).map((_) => new Array(word2.length + 1).fill(0));
+
+    // word1取0个字符
+    for (let j = 0; j <= word2.length; j++) {
+        dp[0][j] = j;
+    }
+
+    // word2取0个字符
+    for (let i = 0; i <= word1.length; i++) {
+        dp[i][0] = i;
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= word1.length; i++) {
+        for (let j = 1; j <= word2.length; j++) {
+            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i - 1][j - 1] + 1, dp[i][j - 1] + 1);
+            if (word1[i - 1] === word2[j - 1]) {
+                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+            }
+        }
+    }
+
+    return dp[word1.length][word2.length];
+}
+
+// 两个一维表滚动代替二维表
+export function getMinEditDistance2(word1: string, word2: string) {
+    // word2只有0个字符
+    if (word2.length === 0) {
+        return word1.length;
+    }
+
+    // dp[i][j] word1取前i个字符（下标 0 到 i-1）编辑成 word2取前j个字符（0到j-1）的最小代价
+    const dp: number[] = new Array(word2.length + 1).fill(0);
+    // word1取0个字符
+    for (let j = 0; j <= word2.length; j++) {
+        dp[j] = j;
+    }
+    let prevDp = dp.slice();
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= word1.length; i++) {
+        for (let j = 1; j <= word2.length; j++) {
+            dp[j] = Math.min(prevDp[j] + 1, (j === 1 ? i - 1 : prevDp[j - 1]) + 1, (j === 1 ? i : prevDp[j - 1]) + 1);
+            if (word1[i - 1] === word2[j - 1]) {
+                dp[j] = Math.min(dp[j], j === 1 ? i - 1 : prevDp[j - 1]);
+            }
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[word2.length];
+}
