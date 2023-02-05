@@ -810,8 +810,12 @@ export function getCoffeeTimeDp3(arr: number[], a: number, b: number): number {
     return dp[0];
 }
 
-// 三维动态规划
-/* 
+/*
+三维动态规划
+需要注意的点：
+1）初始值设置（不一定可以直接从递归函数中拿过来，拿过来之前需要分析实际含义）
+2）按层来填值
+ 
 有一张9x10的棋盘，假设当前马在（0,0）位置，给定目标点(a,b) 以及目标步数k，问有多少种方式能够到达目标点
 */
 export function getHorseMethods(maxX: number, maxY: number, a: number, b: number, k: number): number {
