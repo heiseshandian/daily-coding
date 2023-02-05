@@ -444,15 +444,12 @@ export function morris(node: TreeNode): TreeNode[] {
             mostRight = mostRight.right;
         }
 
-        // 若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
         if (!mostRight.right) {
             mostRight.right = cur;
             cur = cur.left;
-            continue;
-        }
-
-        // 若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
-        if (mostRight.right === cur) {
+        } else {
+            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
             mostRight.right = null;
             cur = cur.right;
         }
