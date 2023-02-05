@@ -1,6 +1,16 @@
 import { TreeNode } from '../../algorithm/tree';
-import { countEqualTree2, getMaxA, getMinEditDistance, getMinEditDistance2, reverseBits, reverseBits2 } from '../other';
-import { getMaxATestData, reverseBitsTestData } from './other.testdata';
+import {
+    countEqualTree2,
+    getMaxA,
+    getMinCoins,
+    getMinCoinsDp,
+    getMinEditDistance,
+    getMinEditDistance2,
+    reverseBits,
+    reverseBits2,
+} from '../other';
+import { getMaxATestData, getMinCoinsTestData, reverseBitsTestData } from './other.testdata';
+import { getMinCoinsDp2 } from '../other';
 import {
     editDistanceTestData,
     getMaxGameTestData,
@@ -159,5 +169,11 @@ describe('other', () => {
 
     it.each(getMaxATestData)('getMaxA', ({ input, expected }) => {
         expect(getMaxA(input)).toBe(expected);
+    });
+
+    it.each(getMinCoinsTestData)('getMinCoins', ({ input: { arr, target }, expected }) => {
+        expect(getMinCoins(arr, target)).toBe(expected);
+        expect(getMinCoinsDp(arr, target)).toBe(expected);
+        expect(getMinCoinsDp2(arr, target)).toBe(expected);
     });
 });

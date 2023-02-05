@@ -217,12 +217,36 @@ export const reverseBitsTestData = [
 ];
 
 export const getMaxATestData = [
-    // {
-    //     input: [5, 5, 5, 5],
-    //     expected: 100,
-    // },
+    {
+        input: [5, 5, 5, 5],
+        expected: 100,
+    },
     {
         input: [5, 4, 3, 6, 1, 7],
         expected: 54,
+    },
+];
+
+export const getMinCoinsTestData = [
+    {
+        input: {
+            arr: [2, 7, 3, 5, 3],
+            target: 10,
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            arr: [2, 7, 3, 5, 10],
+            target: 10,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            arr: [2],
+            target: 10,
+        },
+        expected: -1,
     },
 ];

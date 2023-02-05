@@ -1056,3 +1056,110 @@ export function getMaxA(arr: number[]): number {
 
     return max;
 }
+
+// 给定一个正数数组arr表示硬币面值，给定target表示目标值，求搞定target最少需要几个硬币（每个硬币只能用一次）
+export function getMinCoins(arr: number[], target: number): number {
+    if (!arr || arr.length === 0 || target <= 0) {
+        return 0;
+    }
+
+    return getMinCoinsProcess(arr, 0, target);
+}
+
+function getMinCoinsProcess(arr: number[], i: number, rest: number): number {
+    if (rest === 0) {
+        return 0;
+    }
+
+    // 没有硬币且rest不是0，返回-1无法搞定
+    if (i === arr.length || rest < 0) {
+        return -1;
+    }
+
+    // 两种选择，要不要当前硬币
+    let p1 = Infinity;
+    const next1 = getMinCoinsProcess(arr, i + 1, rest - arr[i]);
+    if (next1 !== -1) {
+        p1 = next1 + 1;
+    }
+
+    let p2 = Infinity;
+    const next2 = getMinCoinsProcess(arr, i + 1, rest);
+    if (next2 !== -1) {
+        p2 = next2;
+    }
+
+    // 某一次有可能出现两种决策都失败的情况
+    return p1 === Infinity && p2 === Infinity ? -1 : Math.min(p1, p2);
+}
+
+export function getMinCoinsDp(arr: number[], target: number): number {
+    if (!arr || arr.length === 0 || target <= 0) {
+        return 0;
+    }
+
+    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(target + 1).fill(0));
+    // 第arr.length行
+    for (let rest = 1; rest <= target; rest++) {
+        dp[arr.length][rest] = -1;
+    }
+
+    // 从下到上，从左到右填表
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= target; rest++) {
+            // 两种选择，要不要当前硬币
+            let p1 = Infinity;
+            const next1 = rest - arr[i] >= 0 ? dp[i + 1][rest - arr[i]] : -1;
+            if (next1 !== -1) {
+                p1 = next1 + 1;
+            }
+
+            let p2 = Infinity;
+            const next2 = dp[i + 1][rest];
+            if (next2 !== -1) {
+                p2 = next2;
+            }
+
+            dp[i][rest] = p1 === Infinity && p2 === Infinity ? -1 : Math.min(p1, p2);
+        }
+    }
+
+    return dp[0][target];
+}
+
+// 两个一维表滚动代替二维表
+export function getMinCoinsDp2(arr: number[], target: number): number {
+    if (!arr || arr.length === 0 || target <= 0) {
+        return 0;
+    }
+
+    const dp: number[] = new Array(target + 1).fill(0);
+    // 第arr.length行
+    for (let rest = 1; rest <= target; rest++) {
+        dp[rest] = -1;
+    }
+    let prevDp = dp.slice();
+
+    // 从下到上，从左到右填表
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= target; rest++) {
+            // 两种选择，要不要当前硬币
+            let p1 = Infinity;
+            const next1 = rest - arr[i] >= 0 ? prevDp[rest - arr[i]] : -1;
+            if (next1 !== -1) {
+                p1 = next1 + 1;
+            }
+
+            let p2 = Infinity;
+            const next2 = prevDp[rest];
+            if (next2 !== -1) {
+                p2 = next2;
+            }
+
+            dp[rest] = p1 === Infinity && p2 === Infinity ? -1 : Math.min(p1, p2);
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[target];
+}
