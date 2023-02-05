@@ -459,28 +459,35 @@ export function morris(node: TreeNode): TreeNode[] {
 }
 
 export function morrisPre(node: TreeNode | null): TreeNode[] {
+    let cur: TreeNode | null = node;
+    // 当前节点左子树上的最右节点
+    let mostRight: TreeNode | null;
     const result: TreeNode[] = [];
 
-    let cur: TreeNode | null = node;
-    let mostRight: TreeNode;
     while (cur) {
-        if (cur.left) {
-            mostRight = cur.left;
-            while (mostRight.right && mostRight.right !== cur) {
-                mostRight = mostRight.right;
-            }
-
-            if (!mostRight.right) {
-                result.push(cur);
-                mostRight.right = cur;
-                cur = cur.left;
-            } else {
-                // mostRight.right === cur
-                mostRight.right = null;
-                cur = cur.right;
-            }
-        } else {
+        // 没有左节点直接向右移动
+        if (!cur.left) {
+            // 没有左子树的节点只会到达一次，直接访问
             result.push(cur);
+            cur = cur.right;
+            continue;
+        }
+
+        // 有左节点找到左节点上的最右非空节点
+        mostRight = cur.left!;
+        while (mostRight.right && mostRight.right !== cur) {
+            mostRight = mostRight.right;
+        }
+
+        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+        if (!mostRight.right) {
+            // 会访问两次的节点第一次到达的时候访问
+            result.push(cur);
+            mostRight.right = cur;
+            cur = cur.left;
+        } else {
+            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+            mostRight.right = null;
             cur = cur.right;
         }
     }
