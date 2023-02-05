@@ -530,34 +530,41 @@ export function morrisMid(node: TreeNode | null): TreeNode[] {
     return result;
 }
 
-export function morrisPost(node: TreeNode | null): TreeNode[] {
+export function morrisPost(head: TreeNode | null): TreeNode[] {
+    let cur: TreeNode | null = head;
+    // 当前节点左子树上的最右节点
+    let mostRight: TreeNode | null;
     const result: TreeNode[] = [];
 
-    let cur: TreeNode | null = node;
-    let mostRight: TreeNode;
     while (cur) {
-        if (cur.left) {
-            mostRight = cur.left;
-            while (mostRight.right && mostRight.right !== cur) {
-                mostRight = mostRight.right;
-            }
+        // 没有左节点直接向右移动
+        if (!cur.left) {
+            cur = cur.right;
+            continue;
+        }
 
-            if (!mostRight.right) {
-                mostRight.right = cur;
-                cur = cur.left;
-            } else {
-                // 先设空然后再打印，不然mostRight.right会影响打印结果
-                mostRight.right = null;
-                // 第二次来到当前节点的时候逆序打印左子树的右边界
-                result.push(...getRightEdge(cur.left));
-                cur = cur.right;
-            }
+        // 有左节点找到左节点上的最右非空节点
+        mostRight = cur.left!;
+        while (mostRight.right && mostRight.right !== cur) {
+            mostRight = mostRight.right;
+        }
+
+        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+        if (!mostRight.right) {
+            mostRight.right = cur;
+            cur = cur.left;
         } else {
+            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+            // 先设置空再打印，不然会影响打印
+            mostRight.right = null;
+            // 第二次来到一个节点就逆序打印左子树的右边界
+            result.push(...getRightEdge(cur.left));
             cur = cur.right;
         }
     }
-    // 单独打印整棵树的右边界
-    result.push(...getRightEdge(node));
+
+    // 遍历结束单独打印整棵树的右边界
+    result.push(...getRightEdge(head));
 
     return result;
 }
