@@ -418,33 +418,47 @@ Morris，利用子树上大量的空节点来优化额外空间复杂度，实�
 具体过程
 假设cur是当前节点，一开始cur来到头结点位置
 1. 若cur无左节点，则cur向右移动（cur=cur.right）
-2. 若cur有左节点，找到左节点上的最有节点mostRight
+2. 若cur有左节点，找到左节点上的最右节点mostRight
     a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
     b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
 3. cur为空时停止
 */
-export function morris(node: TreeNode) {
+export function morris(node: TreeNode): TreeNode[] {
     let cur: TreeNode | null = node;
-    let mostRight: TreeNode;
+    // 当前节点左子树上的最右节点
+    let mostRight: TreeNode | null;
+    const result: TreeNode[] = [];
+
     while (cur) {
+        result.push(cur);
+
+        // 没有左节点直接向右移动
         if (!cur.left) {
             cur = cur.right;
             continue;
         }
 
-        mostRight = cur.left;
+        // 有左节点找到左节点上的最右非空节点
+        mostRight = cur.left!;
         while (mostRight.right && mostRight.right !== cur) {
             mostRight = mostRight.right;
         }
 
+        // 若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
         if (!mostRight.right) {
             mostRight.right = cur;
             cur = cur.left;
-        } else {
+            continue;
+        }
+
+        // 若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+        if (mostRight.right === cur) {
             mostRight.right = null;
             cur = cur.right;
         }
     }
+
+    return result;
 }
 
 export function morrisPre(node: TreeNode | null): TreeNode[] {

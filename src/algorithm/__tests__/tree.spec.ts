@@ -1,5 +1,5 @@
 import { Queue } from '../queue';
-import { morrisMid, morrisPost } from '../tree';
+import { morris, morrisMid, morrisPost } from '../tree';
 import {
     preBuildNode,
     preVisitNode,
@@ -28,7 +28,7 @@ import {
 
 const getVal = (node: TreeNode) => node.val;
 
-describe('preVisitNode', () => {
+describe('tree', () => {
     it.each(preVisitNodeTestData)('preVisitNode %j', ({ input, expected }) => {
         const root = preBuildNode(Queue.from(input));
 
@@ -36,9 +36,7 @@ describe('preVisitNode', () => {
         expect(preVisitNode2(root).map(getVal)).toEqual(expected);
         expect(morrisPre(root).map(getVal)).toEqual(expected);
     });
-});
 
-describe('postVisitNode', () => {
     it.each(postVisitNodeTestData)('postVisitNode %j', ({ input, expected }) => {
         const root = preBuildNode(Queue.from(input));
 
@@ -46,9 +44,7 @@ describe('postVisitNode', () => {
         expect(postVisitNode2(root).map(getVal)).toEqual(expected);
         expect(morrisPost(root).map(getVal)).toEqual(expected);
     });
-});
 
-describe('middleVisitNode', () => {
     it.each(middleVisitNodeTestData)('middleVisitNode %j', ({ input, expected }) => {
         const root = preBuildNode(Queue.from(input));
 
@@ -56,34 +52,26 @@ describe('middleVisitNode', () => {
         expect(middleVisitNode2(root).map(getVal)).toEqual(expected);
         expect(morrisMid(root).map(getVal)).toEqual(expected);
     });
-});
 
-describe('visitTreeByLevel', () => {
     it.each(visitTreeByLevelTestData)('visitTreeByLevel %j', ({ input, expected }) => {
         const root = preBuildNode(Queue.from(input));
 
         expect(visitTreeByLevel(root).map(getVal)).toEqual(expected);
     });
-});
 
-describe('getMaxWidth', () => {
     it.each(getMaxWidthTestData)('getMaxWidth %j', ({ input, expected }) => {
         const root = preBuildNode(Queue.from(input));
 
         expect(getMaxWidth(root)).toBe(expected);
         expect(getMaxWidthNoMap(root)).toBe(expected);
     });
-});
 
-describe('preSerialize', () => {
     it.each(preSerializeTestData)('preSerialize %j', ({ input }) => {
         const root = preBuildNode(Queue.from(input));
 
         expect(preSerialize(root).valueOf()).toEqual(input);
     });
-});
 
-describe('findNextNode', () => {
     test('findNextNode', () => {
         const [root, node2, node3, node4, node6, node7, node8] = [1, 2, 3, 4, 6, 7, 8].map(
             (val) => new TreeNodeWithParent(val)
@@ -108,5 +96,37 @@ describe('findNextNode', () => {
         expect(findNextNode(node3)).toBe(node7);
         expect(findNextNode(node6)).toBe(node8);
         expect(findNextNode(node8)).toBe(null);
+    });
+
+    test('morris', () => {
+        const head = new TreeNode(1);
+        head.left = new TreeNode(2);
+        head.right = new TreeNode(3);
+
+        head.left.left = new TreeNode(4);
+        head.left.right = new TreeNode(5);
+        head.right.left = new TreeNode(6);
+        head.right.right = new TreeNode(7);
+    });
+
+    describe('morris', () => {
+        const head = new TreeNode(1);
+        head.left = new TreeNode(2);
+        head.right = new TreeNode(3);
+
+        head.left.left = new TreeNode(4);
+        head.left.right = new TreeNode(5);
+        head.right.left = new TreeNode(6);
+        head.right.right = new TreeNode(7);
+
+        test('morris 1', () => {
+            expect(morris(head).map(({ val }) => val)).toEqual([1, 2, 4, 2, 5, 1, 3, 6, 3, 7]);
+        });
+
+        test('morris 2', () => {
+            head.left!.left = null;
+
+            expect(morris(head).map(({ val }) => val)).toEqual([1, 2, 5, 1, 3, 6, 3, 7]);
+        });
     });
 });
