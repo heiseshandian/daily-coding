@@ -809,3 +809,160 @@ export function getCoffeeTimeDp3(arr: number[], a: number, b: number): number {
 
     return dp[0];
 }
+
+// 三维动态规划
+/* 
+有一张9x10的棋盘，假设当前马在（0,0）位置，给定目标点(a,b) 以及目标步数k，问有多少种方式能够到达目标点
+*/
+export function getHorseMethods(maxX: number, maxY: number, a: number, b: number, k: number): number {
+    if (k < 0) {
+        return 0;
+    }
+
+    return getHorseMethodsProcess(maxX, maxY, a, b, 0, 0, k);
+}
+
+function getHorseMethodsProcess(
+    maxX: number,
+    maxY: number,
+    a: number,
+    b: number,
+    curA: number,
+    curB: number,
+    rest: number
+): number {
+    // 剩余0步且当前来到了(a,b)位置则找到了一种走法，否则返回0
+    if (rest === 0) {
+        return curA === a && curB === b ? 1 : 0;
+    }
+
+    // 走到了非法位置直接返回0终止递归
+    if (curA < 0 || curA > maxX || curB < 0 || curB > maxY) {
+        return 0;
+    }
+
+    // 8种可能
+    let count = 0;
+    count +=
+        getHorseMethodsProcess(maxX, maxY, a, b, curA + 2, curB + 1, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA + 2, curB - 1, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA - 2, curB + 1, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA - 2, curB - 1, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA + 1, curB + 2, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA - 1, curB + 2, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA + 1, curB - 2, rest - 1) +
+        getHorseMethodsProcess(maxX, maxY, a, b, curA - 1, curB - 2, rest - 1);
+
+    return count;
+}
+
+export function getHorseMethods2(maxX: number, maxY: number, a: number, b: number, k: number): number {
+    if (k < 0) {
+        return 0;
+    }
+
+    return getHorseMethodsProcess2(maxX, maxY, a, b, k);
+}
+
+function getHorseMethodsProcess2(maxX: number, maxY: number, curA: number, curB: number, rest: number): number {
+    // 剩余0步且当前来到了(0,0)位置则找到了一种走法，否则返回0
+    if (rest === 0) {
+        return curA === 0 && curB === 0 ? 1 : 0;
+    }
+
+    // 走到了非法位置直接返回0终止递归
+    if (curA < 0 || curA > maxX || curB < 0 || curB > maxY) {
+        return 0;
+    }
+
+    // 8种可能
+    let count = 0;
+    count +=
+        getHorseMethodsProcess2(maxX, maxY, curA + 2, curB + 1, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA + 2, curB - 1, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA - 2, curB + 1, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA - 2, curB - 1, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA + 1, curB + 2, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA - 1, curB + 2, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA + 1, curB - 2, rest - 1) +
+        getHorseMethodsProcess2(maxX, maxY, curA - 1, curB - 2, rest - 1);
+
+    return count;
+}
+
+export function getHorseMethodsDp(maxX: number, maxY: number, a: number, b: number, k: number): number {
+    if (k < 0) {
+        return 0;
+    }
+
+    // dp[k][a][b]是最终返回值
+    const dp: number[][][] = new Array(k + 1)
+        .fill(0)
+        .map((_) => new Array(maxX + 1).fill(0).map((_) => new Array(maxY + 1).fill(0)));
+
+    // 剩余0步且当前来到了(a,b)位置则找到了一种走法，否则返回0
+    // if (rest === 0) {
+    //     return curA === a && curB === b ? 1 : 0;
+    // }
+    // 此处不可以直接写dp[0][a][b]=0 因为马是从（0,0）出发的，如果直接写成dp[0][a][b]=1就相当于马是从(a,b)出发的，走了k步之后再回到(a,b)
+    dp[0][0][0] = 1;
+
+    const isOutOfScope = (curA: number, curB: number) => {
+        return curA < 0 || curA > maxX || curB < 0 || curB > maxY;
+    };
+
+    // 从第0层开始往上填写
+    for (let rest = 1; rest <= k; rest++) {
+        for (let curA = 0; curA <= maxX; curA++) {
+            for (let curB = 0; curB <= maxY; curB++) {
+                dp[rest][curA][curB] =
+                    (isOutOfScope(curA + 2, curB + 1) ? 0 : dp[rest - 1][curA + 2][curB + 1]) +
+                    (isOutOfScope(curA + 2, curB - 1) ? 0 : dp[rest - 1][curA + 2][curB - 1]) +
+                    (isOutOfScope(curA - 2, curB + 1) ? 0 : dp[rest - 1][curA - 2][curB + 1]) +
+                    (isOutOfScope(curA - 2, curB - 1) ? 0 : dp[rest - 1][curA - 2][curB - 1]) +
+                    (isOutOfScope(curA + 1, curB + 2) ? 0 : dp[rest - 1][curA + 1][curB + 2]) +
+                    (isOutOfScope(curA - 1, curB + 2) ? 0 : dp[rest - 1][curA - 1][curB + 2]) +
+                    (isOutOfScope(curA + 1, curB - 2) ? 0 : dp[rest - 1][curA + 1][curB - 2]) +
+                    (isOutOfScope(curA - 1, curB - 2) ? 0 : dp[rest - 1][curA - 1][curB - 2]);
+            }
+        }
+    }
+
+    return dp[k][a][b];
+}
+
+export function getHorseMethodsDp2(maxX: number, maxY: number, a: number, b: number, k: number): number {
+    if (k < 0) {
+        return 0;
+    }
+
+    // dp[k][a][b]是最终返回值
+    const dp: number[][] = new Array(maxX + 1).fill(0).map((_) => new Array(maxY + 1).fill(0));
+    dp[0][0] = 1;
+    let prevDp = dp.slice().map((arr) => arr.slice());
+
+    const isOutOfScope = (curA: number, curB: number) => {
+        return curA < 0 || curA > maxX || curB < 0 || curB > maxY;
+    };
+
+    // 从第0层开始往上填写
+    for (let rest = 1; rest <= k; rest++) {
+        for (let curA = 0; curA <= maxX; curA++) {
+            for (let curB = 0; curB <= maxY; curB++) {
+                dp[curA][curB] =
+                    (isOutOfScope(curA + 2, curB + 1) ? 0 : prevDp[curA + 2][curB + 1]) +
+                    (isOutOfScope(curA + 2, curB - 1) ? 0 : prevDp[curA + 2][curB - 1]) +
+                    (isOutOfScope(curA - 2, curB + 1) ? 0 : prevDp[curA - 2][curB + 1]) +
+                    (isOutOfScope(curA - 2, curB - 1) ? 0 : prevDp[curA - 2][curB - 1]) +
+                    (isOutOfScope(curA + 1, curB + 2) ? 0 : prevDp[curA + 1][curB + 2]) +
+                    (isOutOfScope(curA - 1, curB + 2) ? 0 : prevDp[curA - 1][curB + 2]) +
+                    (isOutOfScope(curA + 1, curB - 2) ? 0 : prevDp[curA + 1][curB - 2]) +
+                    (isOutOfScope(curA - 1, curB - 2) ? 0 : prevDp[curA - 1][curB - 2]);
+            }
+        }
+
+        prevDp = dp.slice().map((arr) => arr.slice());
+    }
+
+    return dp[a][b];
+}

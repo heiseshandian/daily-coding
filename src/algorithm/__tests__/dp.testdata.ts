@@ -102,3 +102,22 @@ export const getCoffeeTimeTestData = [
         expected: 17,
     },
 ];
+
+export const getHorseMethodsTestData = [
+    {
+        input: {
+            a: 2,
+            b: 1,
+            k: 1,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            a: 2,
+            b: 1,
+            k: 3,
+        },
+        expected: 8,
+    },
+];

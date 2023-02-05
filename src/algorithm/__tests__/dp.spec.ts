@@ -20,10 +20,18 @@ import {
     countMoneyTestData,
     countWalkMethodsTestData,
     getCoffeeTimeTestData,
+    getHorseMethodsTestData,
     getMinMethodsTestData,
     maxCommonSubsequenceTestData,
 } from './dp.testdata';
-import { getMinMethods, maxCommonSubsequence } from '../dp';
+import {
+    getMinMethods,
+    maxCommonSubsequence,
+    getHorseMethods,
+    getHorseMethodsDp,
+    getHorseMethodsDp2,
+    getHorseMethods2,
+} from '../dp';
 import {
     countConversionResult,
     countConversionResultDp,
@@ -91,5 +99,12 @@ describe('dp', () => {
         expect(getCoffeeTimeDp(arr, a, b)).toBe(expected);
         expect(getCoffeeTimeDp2(arr, a, b)).toBe(expected);
         expect(getCoffeeTimeDp3(arr, a, b)).toBe(expected);
+    });
+
+    it.each(getHorseMethodsTestData)('getHorseMethods', ({ input: { a, b, k }, expected }) => {
+        expect(getHorseMethods(8, 9, a, b, k)).toBe(expected);
+        expect(getHorseMethods2(8, 9, a, b, k)).toBe(expected);
+        expect(getHorseMethodsDp(8, 9, a, b, k)).toBe(expected);
+        expect(getHorseMethodsDp2(8, 9, a, b, k)).toBe(expected);
     });
 });
