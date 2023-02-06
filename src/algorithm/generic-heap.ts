@@ -2,10 +2,10 @@ import { swap } from '../common';
 
 type Comparator<T> = (a: T, b: T) => number;
 
-export class GenericHeap<T extends object> {
+export class GenericHeap<T> {
     #container: Array<T> = [];
 
-    #val2IndexMap: WeakMap<T, number> = new WeakMap();
+    #val2IndexMap: Map<T, number> = new Map();
 
     /* 关于比较器的约定
     1. 如果返回值小于0 则排在前面
