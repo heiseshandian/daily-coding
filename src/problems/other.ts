@@ -1163,3 +1163,72 @@ export function getMinCoinsDp2(arr: number[], target: number): number {
 
     return dp[target];
 }
+
+/* 
+给出一组正整数，你从第一个数向最后一个数方向跳跃，每次至少跳跃1格，每个数的值表示你从这个位置可以跳跃的最大长度。计算如何以最少的跳跃次数跳到最后一个数。
+*/
+export function getMinJumpSteps(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+    return jumpStepsProcess(arr, 0);
+}
+
+// 从i位置开始跳到最后最少需要多少步
+function jumpStepsProcess(arr: number[], i: number): number {
+    if (i >= arr.length - 1) {
+        return 0;
+    }
+
+    let min = Infinity;
+    for (let k = 1; k <= arr[i]; k++) {
+        min = Math.min(min, 1 + jumpStepsProcess(arr, i + k));
+    }
+
+    return min;
+}
+
+export function getMinJumpStepsDp(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    const dp: number[] = new Array(arr.length);
+    dp[arr.length - 1] = 0;
+
+    for (let i = arr.length - 2; i >= 0; i--) {
+        let min = Infinity;
+        for (let k = 1; k <= arr[i]; k++) {
+            min = Math.min(min, 1 + (i + k >= arr.length - 1 ? 0 : dp[i + k]));
+        }
+
+        dp[i] = min;
+    }
+
+    return dp[0];
+}
+
+// 最优解有点类似于马拉车算法中的最右的回文右边界
+export function getMinJumpSteps2(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    let cur = 0;
+    let count = 1;
+    let mostRight = arr[0];
+    let nextMostRight = -Infinity;
+
+    while (cur < arr.length && mostRight < arr.length) {
+        if (cur <= mostRight) {
+            nextMostRight = Math.max(nextMostRight, arr[cur] + cur);
+            cur++;
+            continue;
+        }
+
+        count++;
+        mostRight = nextMostRight;
+    }
+
+    return count;
+}

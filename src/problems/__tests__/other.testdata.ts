@@ -250,3 +250,18 @@ export const getMinCoinsTestData = [
         expected: -1,
     },
 ];
+
+export const getMinJumpStepsTestData = [
+    {
+        input: [2, 3, 2, 1, 2, 1, 5],
+        expected: 3,
+    },
+    {
+        input: [2, 4, 1],
+        expected: 1,
+    },
+    {
+        input: [],
+        expected: 0,
+    },
+];

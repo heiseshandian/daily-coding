@@ -9,8 +9,8 @@ import {
     reverseBits,
     reverseBits2,
 } from '../other';
-import { getMaxATestData, getMinCoinsTestData, reverseBitsTestData } from './other.testdata';
-import { getMinCoinsDp2 } from '../other';
+import { getMaxATestData, getMinCoinsTestData, reverseBitsTestData, getMinJumpStepsTestData } from './other.testdata';
+import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2 } from '../other';
 import {
     editDistanceTestData,
     getMaxGameTestData,
@@ -175,5 +175,11 @@ describe('other', () => {
         expect(getMinCoins(arr, target)).toBe(expected);
         expect(getMinCoinsDp(arr, target)).toBe(expected);
         expect(getMinCoinsDp2(arr, target)).toBe(expected);
+    });
+
+    it.each(getMinJumpStepsTestData)('getMinJumpSteps', ({ input, expected }) => {
+        expect(getMinJumpSteps(input)).toBe(expected);
+        expect(getMinJumpStepsDp(input)).toBe(expected);
+        expect(getMinJumpSteps2(input)).toBe(expected);
     });
 });
