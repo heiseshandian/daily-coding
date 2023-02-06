@@ -22,7 +22,7 @@ describe('LRUCache', () => {
         cache.set('B', 'B');
         cache.set('D', 'D');
 
-        expect(cache.get('A')).toBe(null);
+        expect(cache.get('A')).toBe(undefined);
         expect(cache.get('B')).toBe('B');
         expect(cache.get('D')).toBe('D');
     });
@@ -36,7 +36,7 @@ describe('LRUCache', () => {
         cache.set('D', 'D');
 
         expect(cache.get('A')).toBe('C');
-        expect(cache.get('B')).toBe(null);
+        expect(cache.get('B')).toBe(undefined);
         expect(cache.get('D')).toBe('D');
     });
 
@@ -49,7 +49,7 @@ describe('LRUCache', () => {
         cache.set('D', 'D');
 
         expect(cache.get('A')).toBe('A');
-        expect(cache.get('B')).toBe(null);
+        expect(cache.get('B')).toBe(undefined);
         expect(cache.get('D')).toBe('D');
     });
 });
