@@ -1,5 +1,6 @@
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
 import { TreeNode } from '../algorithm/tree';
+import { swap } from '../common';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -1231,4 +1232,111 @@ export function getMinJumpSteps2(arr: number[]): number {
     }
 
     return count;
+}
+
+/* 
+给定两个有序数组arr1和arr2，再给定一个整数k，返回来自arr1和arr2的两个数相加和最大的前k个，两个数必须分别来自两个数组。
+
+【举例】
+arr1=【1，2，3，4，5】，arr2=【3，5，7，9，11】，k=4。返回数组【16，15, 14，14】
+
+【要求】
+时间复杂度达到0（klogk）
+*/
+export function getMaxK(arr1: number[], arr2: number[], k: number): number[] {
+    const maxHeap = new MaxHeap();
+    maxHeap.push(arr1[arr1.length - 1] + arr2[arr2.length - 1], arr1.length - 1, arr2.length - 1);
+
+    const result = [];
+    while (result.length < k) {
+        const { val, i, j } = maxHeap.pop();
+        result.push(val);
+
+        if (i - 1 >= 0) {
+            maxHeap.push(arr1[i - 1] + arr2[j], i - 1, j);
+        }
+        if (j - 1 >= 0) {
+            maxHeap.push(arr1[i] + arr2[j - 1], i, j - 1);
+        }
+    }
+
+    return result;
+}
+
+class MaxHeapNode {
+    val: number;
+    i: number;
+    j: number;
+
+    constructor(val: number, i: number, j: number) {
+        this.val = val;
+        this.i = i;
+        this.j = j;
+    }
+}
+
+class MaxHeap {
+    arr: MaxHeapNode[] = [];
+
+    // i_j组合弄成字符串放在set里，避免重复加入
+    set: Set<string> = new Set();
+
+    public push(val: number, i: number, j: number) {
+        const node = new MaxHeapNode(val, i, j);
+
+        const id = `${i}_${j}`;
+        if (this.set.has(id)) {
+            return;
+        }
+        this.set.add(id);
+
+        this.arr.push(node);
+        this.heapInsert();
+    }
+
+    public pop() {
+        const result = this.arr[0];
+        swap(this.arr, 0, this.arr.length - 1);
+        this.arr.length--;
+
+        this.heapify();
+
+        return result;
+    }
+
+    // 最后位置的元素向上来到该来的位置
+    private heapInsert() {
+        let i = this.arr.length - 1;
+        let parent = (i - 1) >> 1;
+
+        while (parent >= 0) {
+            // 如果父节点比当前节点小就交换
+            if (this.arr[parent].val < this.arr[i].val) {
+                swap(this.arr, parent, i);
+                i = parent;
+                parent = (i - 1) >> 1;
+            } else {
+                // 否则直接停止
+                break;
+            }
+        }
+    }
+
+    // 0位置的元素向下来到该来的位置
+    private heapify() {
+        let i = 0;
+        let left = i * 2 + 1;
+        while (left < this.arr.length) {
+            const right = left + 1;
+            let largeIndex = right < this.arr.length && this.arr[right].val > this.arr[left].val ? right : left;
+            largeIndex = this.arr[i].val >= this.arr[largeIndex].val ? i : largeIndex;
+            if (largeIndex === i) {
+                break;
+            }
+
+            swap(this.arr, largeIndex, i);
+            i = largeIndex;
+            left = i * 2 + 1;
+        }
+    }
 }

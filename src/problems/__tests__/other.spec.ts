@@ -2,6 +2,7 @@ import { TreeNode } from '../../algorithm/tree';
 import {
     countEqualTree2,
     getMaxA,
+    getMaxK,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -9,7 +10,13 @@ import {
     reverseBits,
     reverseBits2,
 } from '../other';
-import { getMaxATestData, getMinCoinsTestData, reverseBitsTestData, getMinJumpStepsTestData } from './other.testdata';
+import {
+    getMaxATestData,
+    getMinCoinsTestData,
+    reverseBitsTestData,
+    getMinJumpStepsTestData,
+    getMaxKTestData,
+} from './other.testdata';
 import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2 } from '../other';
 import {
     editDistanceTestData,
@@ -181,5 +188,9 @@ describe('other', () => {
         expect(getMinJumpSteps(input)).toBe(expected);
         expect(getMinJumpStepsDp(input)).toBe(expected);
         expect(getMinJumpSteps2(input)).toBe(expected);
+    });
+
+    it.each(getMaxKTestData)('getMaxK', ({ input: { arr1, arr2, k }, expected }) => {
+        expect(getMaxK(arr1, arr2, k)).toEqual(expected);
     });
 });

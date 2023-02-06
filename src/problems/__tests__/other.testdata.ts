@@ -265,3 +265,14 @@ export const getMinJumpStepsTestData = [
         expected: 0,
     },
 ];
+
+export const getMaxKTestData = [
+    {
+        input: {
+            arr1: [1, 2, 3, 4, 5],
+            arr2: [3, 5, 7, 9, 11],
+            k: 4,
+        },
+        expected: [16, 15, 14, 14],
+    },
+];
