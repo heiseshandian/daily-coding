@@ -3,6 +3,7 @@ import {
     canSplit4Parts,
     countEqualTree2,
     countLostNumbers,
+    getConnectedRegions,
     getMaxA,
     getMaxK,
     getMinCoins,
@@ -69,6 +70,7 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
+import { getConnectedRegionsTestData } from './other.testdata';
 import {
     getNthUglyNumberTestData,
     getMinSumThatCanNotBeComposedTestData,
@@ -224,10 +226,14 @@ describe('other', () => {
     });
 
     it.each(getMinSumThatCanNotBeComposed1TestData)('getMinSumThatCanNotBeComposed1', ({ input, expected }) => {
-        expect(getMinSumThatCanNotBeComposed1(input)).toBe(expected);
+        expect(getMinSumThatCanNotBeComposed1(input)).toEqual(expected);
     });
 
     it.each(countLostNumbersTestData)('countLostNumbers', ({ input: { arr, range }, expected }) => {
         expect(countLostNumbers(arr, range)).toBe(expected);
+    });
+
+    it.each(getConnectedRegionsTestData)('getConnectedRegions', ({ input, expected }) => {
+        expect(getConnectedRegions(input)).toEqual(expected);
     });
 });

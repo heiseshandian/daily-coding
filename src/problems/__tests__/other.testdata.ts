@@ -385,13 +385,13 @@ export const getMinSumThatCanNotBeComposed1TestData = [
 ];
 
 export const countLostNumbersTestData = [
-    // {
-    //     input: {
-    //         arr: [1, 2, 3, 7],
-    //         range: 15,
-    //     },
-    //     expected: 1,
-    // },
+    {
+        input: {
+            arr: [1, 2, 3, 7],
+            range: 15,
+        },
+        expected: 1,
+    },
     {
         input: {
             arr: [1, 5, 7],
@@ -405,5 +405,12 @@ export const countLostNumbersTestData = [
             range: 10,
         },
         expected: 1,
+    },
+];
+
+export const getConnectedRegionsTestData = [
+    {
+        input: [2, 4, 6, 8, 10, 12, 16, 3, 7, 11, 3, 5],
+        expected: [3, 10],
     },
 ];

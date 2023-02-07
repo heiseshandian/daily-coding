@@ -8,6 +8,7 @@ export function swap(arr: any[], a: number, b: number) {
     arr[b] = temp;
 }
 
+// 最大公约数
 export function maxCommonFactor(a: number, b: number): number {
     if (a % b === 0) {
         return b;

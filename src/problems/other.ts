@@ -1,6 +1,7 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
-import { TreeNode, findNextNode } from '../algorithm/tree';
+import { TreeNode } from '../algorithm/tree';
+import { maxCommonFactor } from '../common/index';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -1523,4 +1524,122 @@ export function countLostNumbers(arr: number[], range: number): number {
     }
 
     return count;
+}
+
+/* 
+给定一个不含有1的正数数组arr，假设其中任意两个数为a和b，如果a和b的最大公约数比1大，那么认为a和b之间有路相连；
+如果a和b的最大公约数是1，认为a和b之间没有路相连。那么arr中所有的数字就可以组成一张图，
+
+1，求arr中有多少个连通区域
+2，求arr中的最大的连通区域中有多少个数。
+
+分析：连通性问题，用并查集来做
+*/
+
+// 简单的包一层，用于支持重复val
+class UnionFindNode {
+    val: number;
+    constructor(val: number) {
+        this.val = val;
+    }
+}
+
+class UnionFind {
+    // 用于判断节点是否加入并查集中
+    set: Set<UnionFindNode>;
+    // 用于维护节点与节点之间的父子关系
+    parents: Map<UnionFindNode, UnionFindNode> = new Map();
+    // 当且仅当一个节点是一个集合的代表节点时才在sizeMap中有一条记录
+    // 用于集合合并时小挂大，查询效率
+    sizeMap: Map<UnionFindNode, number> = new Map();
+
+    constructor(nodes: UnionFindNode[]) {
+        this.set = new Set(nodes);
+
+        nodes.forEach((node) => {
+            this.parents.set(node, node);
+            this.sizeMap.set(node, 1);
+        });
+    }
+
+    public isSameSet(nodeA: UnionFindNode, nodeB: UnionFindNode) {
+        if (!this.set.has(nodeA) || !this.set.has(nodeB)) {
+            return false;
+        }
+
+        return this.findParent(nodeA) === this.findParent(nodeB);
+    }
+
+    // 将nodeA和nodeB背后的集合合并在一起
+    public union(nodeA: UnionFindNode, nodeB: UnionFindNode) {
+        if (!this.set.has(nodeA) || !this.set.has(nodeB)) {
+            return;
+        }
+
+        const parentA = this.parents.get(nodeA) as UnionFindNode;
+        const parentB = this.parents.get(nodeB) as UnionFindNode;
+        if (parentA === parentB) {
+            return;
+        }
+
+        // 小集合挂在大集合的下面
+        const sizeA = this.sizeMap.get(parentA) as number;
+        const sizeB = this.sizeMap.get(parentB) as number;
+        const large = sizeA >= sizeB ? parentA : parentB;
+        const small = large === parentA ? parentB : parentA;
+
+        this.parents.set(small, large);
+        this.sizeMap.delete(small);
+        this.sizeMap.set(large, sizeA + sizeB);
+    }
+
+    private findParent(node: UnionFindNode) {
+        if (!this.set.has(node)) {
+            return;
+        }
+
+        let cur = node;
+        const nodes = [];
+        while (cur !== this.parents.get(cur)) {
+            nodes.push(cur);
+            cur = this.parents.get(cur) as UnionFindNode;
+        }
+
+        // 节点打平优化下次查找效率
+        nodes.forEach((curNode) => {
+            this.parents.set(curNode, cur);
+        });
+
+        return cur;
+    }
+}
+
+export function getConnectedRegions(arr: number[]): number[] {
+    const nodes = arr.map((val) => new UnionFindNode(val));
+    const unionFind = new UnionFind(nodes);
+
+    for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+            const nodeA = nodes[i];
+            const nodeB = nodes[j];
+
+            // 已经在一个集合里面直接下一个
+            if (unionFind.isSameSet(nodeA, nodeB)) {
+                continue;
+            }
+
+            // 不在一个集合里面计算下最大公约数
+            const k = maxCommonFactor(nodeA.val, nodeB.val);
+            if (k !== 1) {
+                unionFind.union(nodeA, nodeB);
+            }
+        }
+    }
+
+    let max = -Infinity;
+    unionFind.sizeMap.forEach((size) => {
+        max = Math.max(max, size);
+    });
+
+    return [unionFind.sizeMap.size, max];
 }
