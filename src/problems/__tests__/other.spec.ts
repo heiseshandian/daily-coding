@@ -10,6 +10,7 @@ import {
     getMinCoinsDp,
     getMinEditDistance,
     getMinEditDistance2,
+    getMinMoneyOfPassingMonster,
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
@@ -24,6 +25,7 @@ import {
     getMaxKTestData,
     getMinArrTestData,
     getMinSumThatCanNotBeComposed1TestData,
+    getMinMoneyOfPassingMonsterTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -78,6 +80,11 @@ import {
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
 import { getConnectedRegionsTestData } from './other.testdata';
+import {
+    getMinMoneyOfPassingMonsterDp,
+    getMinMoneyOfPassingMonsterDp2,
+    getMinMoneyOfPassingMonsterDp3,
+} from '../other';
 import {
     getNthUglyNumberTestData,
     getMinSumThatCanNotBeComposedTestData,
@@ -244,4 +251,14 @@ describe('other', () => {
         expect(getConnectedRegions(input)).toEqual(expected);
         expect(getConnectedRegions2(input)).toEqual(expected);
     });
+
+    it.each(getMinMoneyOfPassingMonsterTestData)(
+        'getMinMoneyOfPassingMonster',
+        ({ input: { arr1, arr2 }, expected }) => {
+            expect(getMinMoneyOfPassingMonster(arr1, arr2)).toBe(expected);
+            expect(getMinMoneyOfPassingMonsterDp(arr1, arr2)).toBe(expected);
+            expect(getMinMoneyOfPassingMonsterDp2(arr1, arr2)).toBe(expected);
+            expect(getMinMoneyOfPassingMonsterDp3(arr1, arr2)).toBe(expected);
+        }
+    );
 });

@@ -1686,3 +1686,120 @@ export function getConnectedRegions2(arr: number[]) {
 
     return [unionSet.sizeMap.size, max];
 }
+
+/* 
+收买怪兽问题
+给定两个数组，arr1[i]和arr2[i]分别表示怪兽的能力和收买所需的钱数
+
+一开始人的能力值是0，花钱收买怪兽之后怪兽的能力值可以叠加到人身上
+当人的能力值低于当前怪兽的能力值时必须收买才能过，当人的能力高于或等于当前怪兽的能力值时可收买也可不收买
+问通过所有怪兽所需要的最少钱数是多少
+*/
+export function getMinMoneyOfPassingMonster(arr1: number[], arr2: number[]): number {
+    if (arr1.length === 0) {
+        return 0;
+    }
+
+    return getMinMoneyProcess(arr1, arr2, 0, 0);
+}
+
+function getMinMoneyProcess(arr1: number[], arr2: number[], i: number, power: number): number {
+    if (i === arr1.length) {
+        return 0;
+    }
+
+    // 两种选择，收买或者不收买，不收买有条件（power>=arr1[i]）
+    if (power < arr1[i]) {
+        return arr2[i] + getMinMoneyProcess(arr1, arr2, i + 1, power + arr1[i]);
+    }
+
+    return Math.min(
+        arr2[i] + getMinMoneyProcess(arr1, arr2, i + 1, power + arr1[i]),
+        getMinMoneyProcess(arr1, arr2, i + 1, power)
+    );
+}
+
+export function getMinMoneyOfPassingMonsterDp(arr1: number[], arr2: number[]): number {
+    const maxPower = arr1.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+
+    // dp[i][power] 返回值dp[0][0]
+    const dp: number[][] = new Array(arr1.length + 1).fill(0).map((_) => new Array(maxPower + 1).fill(0));
+
+    // 从下到上，从右到左填表
+    for (let i = arr1.length - 1; i >= 0; i--) {
+        for (let power = maxPower; power >= 0; power--) {
+            if (power < arr1[i]) {
+                dp[i][power] = arr2[i] + dp[i + 1][power + arr1[i]];
+            } else {
+                dp[i][power] = Math.min(arr2[i] + dp[i + 1][power + arr1[i]], dp[i + 1][power]);
+            }
+        }
+    }
+
+    return dp[0][0];
+}
+
+// 数组滚动压缩空间
+export function getMinMoneyOfPassingMonsterDp2(arr1: number[], arr2: number[]): number {
+    const maxPower = arr1.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+
+    // dp[i][power] 返回值dp[0][0]
+    const dp: number[] = new Array(maxPower + 1).fill(0);
+    let prevDp = dp.slice();
+
+    // 从下到上，从右到左填表
+    for (let i = arr1.length - 1; i >= 0; i--) {
+        for (let power = maxPower; power >= 0; power--) {
+            if (power < arr1[i]) {
+                dp[power] = arr2[i] + prevDp[power + arr1[i]];
+            } else {
+                dp[power] = Math.min(arr2[i] + prevDp[power + arr1[i]], prevDp[power]);
+            }
+        }
+
+        prevDp = dp.slice();
+    }
+
+    return dp[0];
+}
+
+// 根据输入状况来判断动态规划方案是否可行
+// 假如怪兽的能力值很大，那么maxPower的变化范围就会很大，这时候我们就不太适合用maxPower来做表
+export function getMinMoneyOfPassingMonsterDp3(arr1: number[], arr2: number[]): number {
+    const maxMoney = arr2.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+
+    // dp[i][j] 通过i号怪兽，严格花j块钱所能达到的最大能力值
+    const dp: number[][] = new Array(arr1.length).fill(0).map((_) => new Array(maxMoney + 1).fill(-1));
+    dp[0][arr2[0]] = arr1[0];
+
+    // 从上到下从左到右填表
+    for (let i = 1; i < arr1.length; i++) {
+        for (let j = 1; j < maxMoney; j++) {
+            // 不花钱
+            const p1 = dp[i - 1][j] >= arr1[i] ? dp[i - 1][j] : -1;
+            // 花钱
+            const p2 = j - arr2[i] >= 0 && dp[i - 1][j - arr2[i]] !== -1 ? dp[i - 1][j - arr2[i]] + arr1[i] : -1;
+
+            dp[i][j] = Math.max(p1, p2);
+        }
+    }
+
+    let result = maxMoney;
+    for (let j = 1; j <= maxMoney; j++) {
+        if (dp[arr1.length - 1][j] !== -1) {
+            result = j;
+            break;
+        }
+    }
+
+    return result;
+}

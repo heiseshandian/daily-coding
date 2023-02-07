@@ -414,3 +414,20 @@ export const getConnectedRegionsTestData = [
         expected: [3, 10],
     },
 ];
+
+export const getMinMoneyOfPassingMonsterTestData = [
+    {
+        input: {
+            arr1: [7, 2, 9],
+            arr2: [3, 6, 1],
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            arr1: [7, 2, 9],
+            arr2: [3, 6, 100],
+        },
+        expected: 9,
+    },
+];
