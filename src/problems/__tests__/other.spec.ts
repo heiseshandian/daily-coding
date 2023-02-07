@@ -2,6 +2,7 @@ import { TreeNode } from '../../algorithm/tree';
 import {
     canSplit4Parts,
     countEqualTree2,
+    countLostNumbers,
     getMaxA,
     getMaxK,
     getMinCoins,
@@ -68,7 +69,11 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
-import { getNthUglyNumberTestData, getMinSumThatCanNotBeComposedTestData } from './other.testdata';
+import {
+    getNthUglyNumberTestData,
+    getMinSumThatCanNotBeComposedTestData,
+    countLostNumbersTestData,
+} from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -220,5 +225,9 @@ describe('other', () => {
 
     it.each(getMinSumThatCanNotBeComposed1TestData)('getMinSumThatCanNotBeComposed1', ({ input, expected }) => {
         expect(getMinSumThatCanNotBeComposed1(input)).toBe(expected);
+    });
+
+    it.each(countLostNumbersTestData)('countLostNumbers', ({ input: { arr, range }, expected }) => {
+        expect(countLostNumbers(arr, range)).toBe(expected);
     });
 });

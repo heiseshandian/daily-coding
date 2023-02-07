@@ -1487,3 +1487,40 @@ export function getMinSumThatCanNotBeComposed1(arr: number[]): number {
 
     return range + 1;
 }
+
+/* 
+给定一个有序的正数数组arr和一个正数range，如果可以自由选择arr中的数字，想累加得到1~range范围上所有的数，返回arr最少还缺几个数。
+
+【举例】
+arr = {1,2,3,7},range = 15
+想累加得到1~15范围上所有的数，arr还缺14这个数，所以返回1
+
+arr = {1,5,7},range = 15
+想累加得到1~15范围止所有的数，arr还缺2和4，所以返回2
+*/
+export function countLostNumbers(arr: number[], range: number): number {
+    let touch = 0;
+    let count = 0;
+
+    for (let i = 0; i < arr.length; ) {
+        if (touch >= range) {
+            break;
+        }
+
+        if (arr[i] > touch + 1) {
+            touch += touch + 1;
+            count++;
+        } else {
+            // 当前数字被使用了再跳到下一个数字
+            touch += arr[i++];
+        }
+    }
+
+    // 数字用完了还没达到
+    while (touch < range) {
+        touch += touch + 1;
+        count++;
+    }
+
+    return count;
+}
