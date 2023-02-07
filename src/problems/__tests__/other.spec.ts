@@ -80,6 +80,7 @@ import {
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
 import { getConnectedRegionsTestData } from './other.testdata';
+import { getMinMoneyOfPassingMonsterDp4 } from '../other';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -259,6 +260,7 @@ describe('other', () => {
             expect(getMinMoneyOfPassingMonsterDp(arr1, arr2)).toBe(expected);
             expect(getMinMoneyOfPassingMonsterDp2(arr1, arr2)).toBe(expected);
             expect(getMinMoneyOfPassingMonsterDp3(arr1, arr2)).toBe(expected);
+            expect(getMinMoneyOfPassingMonsterDp4(arr1, arr2)).toBe(expected);
         }
     );
 });

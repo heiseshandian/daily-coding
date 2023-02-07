@@ -1803,3 +1803,38 @@ export function getMinMoneyOfPassingMonsterDp3(arr1: number[], arr2: number[]): 
 
     return result;
 }
+
+export function getMinMoneyOfPassingMonsterDp4(arr1: number[], arr2: number[]): number {
+    const maxMoney = arr2.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+
+    // dp[i][j] 通过i号怪兽，严格花j块钱所能达到的最大能力值
+    const dp: number[] = new Array(maxMoney + 1).fill(-1);
+    dp[arr2[0]] = arr1[0];
+    let prevDp = dp.slice();
+
+    // 从上到下从左到右填表
+    for (let i = 1; i < arr1.length; i++) {
+        for (let j = 1; j < maxMoney; j++) {
+            // 不花钱
+            const p1 = dp[j] >= arr1[i] ? prevDp[j] : -1;
+            // 花钱
+            const p2 = j - arr2[i] >= 0 && prevDp[j - arr2[i]] !== -1 ? prevDp[j - arr2[i]] + arr1[i] : -1;
+
+            dp[j] = Math.max(p1, p2);
+        }
+        prevDp = dp.slice();
+    }
+
+    let result = maxMoney;
+    for (let j = 1; j <= maxMoney; j++) {
+        if (dp[j] !== -1) {
+            result = j;
+            break;
+        }
+    }
+
+    return result;
+}
