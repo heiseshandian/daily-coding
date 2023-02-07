@@ -357,3 +357,29 @@ export const getMinArrTestData = [
         expected: [],
     },
 ];
+
+export const getMinSumThatCanNotBeComposedTestData = [
+    {
+        input: [3, 2, 5],
+        expected: 4,
+    },
+    {
+        input: [1, 2, 4],
+        expected: 8,
+    },
+];
+
+export const getMinSumThatCanNotBeComposed1TestData = [
+    {
+        input: [1, 2, 6],
+        expected: 4,
+    },
+    {
+        input: [1, 2, 4],
+        expected: 8,
+    },
+    {
+        input: [1],
+        expected: 2,
+    },
+];

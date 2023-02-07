@@ -1413,3 +1413,77 @@ export function getMinSubArrThatShouldBeSorted(arr: number[]): number[] {
 
     return arr.slice(left, right + 1);
 }
+
+/* 
+给定一个正数数组 arr，其中所有的值都为整数，以下是最小不可组成和的概念：
+把 arr 每个子集内的所有元素加起来会出现很多值，其中最小的记为 min，最大的记为max 在区间【min，max】上，如果有数不可以被arr某一个子集相加得到，那么其中最小的那个数是arr 的最小不可组成和
+在区间【min，max】上，如果所有的数都可以被arr的某一个子集相加得到，那么max+1是arr的最小不可组成和
+请写函数返回正数数组 arr 的最小不可组成和。
+
+【举例】
+arr=【3，2，5】。子集{2】相加产生 2为 min，子集【3，2，5】相加产生 10 为 max。在区间【2，10】上，4、6和9不能被任何子集相加得到，其中4是arr的最小不可组成和。
+arr=【1，2，4】。子集【1】相加产生1为min，子集{1，2，4}相加产生7为max。在区间【1，7】上，任何 数都可以被子集相加得到，所以8是 arr 的最小不可组成和。
+
+【进阶】
+如果已知正数数组 arr 中肯定有1 这个数，是否能更快地得到最小不可组成和？
+*/
+export function getMinSumThatCanNotBeComposed(arr: number[]): number {
+    const sum = arr.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+
+    // 背包问题
+    // dp[i][sum] 自由使用i以及以后的数字能否弄出sum
+    const dp: boolean[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(sum + 1).fill(false));
+    // dp[i][0]=true
+    for (let i = 0; i <= arr.length; i++) {
+        dp[i][0] = true;
+    }
+
+    // 从下到上填表，从左到右，最上面一行从左到右第一个为false的数字就是最小不可组成和，若全都是true则sum+1就是最小不可组成和
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= sum; rest++) {
+            if ((rest - arr[i] >= 0 && dp[i + 1][rest - arr[i]]) || dp[i + 1][rest]) {
+                dp[i][rest] = true;
+            }
+        }
+    }
+
+    const min = Math.min(...arr);
+    let minSum = sum + 1;
+    // 根据不可组成和的定义，我们这里需要从min开始遍历
+    for (let rest = min; rest <= sum; rest++) {
+        if (dp[0][rest] === false) {
+            minSum = rest;
+            break;
+        }
+    }
+
+    return minSum;
+}
+
+/* 
+进阶问题，如果已知正数数组 arr 中肯定有1 这个数，是否能更快地得到最小不可组成和？ 
+
+分析：从小往外推
+1可以搞定 1-1范围内所有的数
+再加2就可以搞定 1-(1+2)范围内所有的数
+再加4就可以搞定1-(1+2+4)范围内所有的数字 
+依次类推，只要前面的范围(range)是连续的，那么后面只要增加一个range+1就可以把整体的范围扩展到
+range+range+1
+*/
+export function getMinSumThatCanNotBeComposed1(arr: number[]): number {
+    arr.sort((a, b) => a - b);
+
+    let range = 1;
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] > range + 1) {
+            break;
+        }
+
+        range += arr[i];
+    }
+
+    return range + 1;
+}

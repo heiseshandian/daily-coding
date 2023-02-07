@@ -9,6 +9,8 @@ import {
     getMinEditDistance,
     getMinEditDistance2,
     getMinSubArrThatShouldBeSorted,
+    getMinSumThatCanNotBeComposed,
+    getMinSumThatCanNotBeComposed1,
     reverseBits,
     reverseBits2,
 } from '../other';
@@ -19,6 +21,7 @@ import {
     getMinJumpStepsTestData,
     getMaxKTestData,
     getMinArrTestData,
+    getMinSumThatCanNotBeComposed1TestData,
 } from './other.testdata';
 import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2, getNthUglyNumber } from '../other';
 import {
@@ -65,7 +68,7 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
-import { getNthUglyNumberTestData } from './other.testdata';
+import { getNthUglyNumberTestData, getMinSumThatCanNotBeComposedTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -209,5 +212,13 @@ describe('other', () => {
 
     it.each(getMinArrTestData)('getMinSubArrThatShouldBeSorted', ({ input, expected }) => {
         expect(getMinSubArrThatShouldBeSorted(input)).toEqual(expected);
+    });
+
+    it.each(getMinSumThatCanNotBeComposedTestData)('getMinSumThatCanNotBeComposed', ({ input, expected }) => {
+        expect(getMinSumThatCanNotBeComposed(input)).toBe(expected);
+    });
+
+    it.each(getMinSumThatCanNotBeComposed1TestData)('getMinSumThatCanNotBeComposed1', ({ input, expected }) => {
+        expect(getMinSumThatCanNotBeComposed1(input)).toBe(expected);
     });
 });
