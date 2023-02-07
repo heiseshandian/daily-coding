@@ -431,3 +431,14 @@ export const getMinMoneyOfPassingMonsterTestData = [
         expected: 9,
     },
 ];
+
+export const getMaxLenOfComposableSubArrTestData = [
+    {
+        input: [5, 3, 4, 6, 2],
+        expected: 5,
+    },
+    {
+        input: [5, 5, 3, 2, 6, 4, 3],
+        expected: 5,
+    },
+];

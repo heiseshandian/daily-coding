@@ -1838,3 +1838,102 @@ export function getMinMoneyOfPassingMonsterDp4(arr1: number[], arr2: number[]): 
 
     return result;
 }
+
+/* 
+先给出可整合数组的定义：如果一个数组在排序之后，每相邻两个数差的绝对值都为1，则该数组为可整合数组。
+例如，【5，3，4，6，2】排序之后为【2，3，4，5，6】，符合每相邻两个数差的绝对值 都为 1，所以这个数组为可整合数组。
+
+给定一个整型数组 arr，请返回其中最大可整合子数组的长度。
+例如，【5，5，3，2，6，4，3】的最大 可整合子数组为【5，3，2，6，4】，所以返回 5。
+*/
+class MaxMinSlidingWindow {
+    left = -1;
+    right = -1;
+
+    arr: number[];
+
+    // 窗口内最大值双端队列，严格从大到小，存储位置信息
+    maxQueue: number[] = [];
+
+    // 窗口内最小值双端队列，严格从小到大，存储位置信息
+    minQueue: number[] = [];
+
+    constructor(arr: number[]) {
+        this.arr = arr;
+    }
+
+    public moveRight(): boolean {
+        if (this.right + 1 >= this.arr.length) {
+            return false;
+        }
+
+        this.right++;
+        // 更新最大值双端队列
+        while (this.maxQueue.length > 0) {
+            const top = this.maxQueue[this.maxQueue.length - 1];
+
+            // 不大于right位置的数字出队列
+            if (this.arr[top] <= this.arr[this.right]) {
+                this.maxQueue.length--;
+            } else {
+                break;
+            }
+        }
+        this.maxQueue.push(this.right);
+
+        // 更新最小值双端队列
+        while (this.minQueue.length > 0) {
+            const top = this.minQueue[this.minQueue.length - 1];
+
+            // 不小于right位置的数字出队列
+            if (this.arr[top] >= this.arr[this.right]) {
+                this.minQueue.length--;
+            } else {
+                break;
+            }
+        }
+        this.minQueue.push(this.right);
+
+        return true;
+    }
+
+    public moveLeft(): boolean {
+        if (this.left + 1 > this.right) {
+            return false;
+        }
+
+        this.left++;
+        // 更新最大值双端队列，left位置被认为窗口外
+        if (this.left >= this.maxQueue[0]) {
+            this.maxQueue.shift();
+        }
+        // 更新最小值双端队列，left位置被认为窗口外
+        if (this.left >= this.minQueue[0]) {
+            this.minQueue.shift();
+        }
+
+        return true;
+    }
+
+    public getMaxValue() {
+        return this.arr[this.maxQueue[0]];
+    }
+
+    public getMinValue() {
+        return this.arr[this.minQueue[0]];
+    }
+}
+
+export function getMaxLenOfComposableSubArr(arr: number[]): number {
+    const maxMinWindow = new MaxMinSlidingWindow(arr);
+
+    let max = 0;
+    while (maxMinWindow.moveRight()) {
+        // 如果left+1到right的范围是可整合数组，则窗口内最大值减去最小值必然等于this.right-this.left-1
+        if (maxMinWindow.getMaxValue() - maxMinWindow.getMinValue() === maxMinWindow.right - maxMinWindow.left - 1) {
+            max = Math.max(max, maxMinWindow.right - maxMinWindow.left);
+        }
+    }
+
+    return max;
+}

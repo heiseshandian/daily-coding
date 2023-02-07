@@ -6,6 +6,7 @@ import {
     getConnectedRegions,
     getMaxA,
     getMaxK,
+    getMaxLenOfComposableSubArr,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -26,6 +27,7 @@ import {
     getMinArrTestData,
     getMinSumThatCanNotBeComposed1TestData,
     getMinMoneyOfPassingMonsterTestData,
+    getMaxLenOfComposableSubArrTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -263,4 +265,8 @@ describe('other', () => {
             expect(getMinMoneyOfPassingMonsterDp4(arr1, arr2)).toBe(expected);
         }
     );
+
+    it.each(getMaxLenOfComposableSubArrTestData)('getMaxLenOfComposableSubArr', ({ input, expected }) => {
+        expect(getMaxLenOfComposableSubArr(input)).toBe(expected);
+    });
 });
