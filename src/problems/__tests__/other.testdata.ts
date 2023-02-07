@@ -276,3 +276,14 @@ export const getMaxKTestData = [
         expected: [16, 15, 14, 14],
     },
 ];
+
+export const canSplit4PartsTestData = [
+    {
+        input: [4, 5, 1, 3, 6, 2, 2, 9, 1, 2, 1, 8],
+        expected: false,
+    },
+    {
+        input: [1, 5, 9, 3, 3, 8, 1, 2, 3, 7, 3, 3],
+        expected: true,
+    },
+];

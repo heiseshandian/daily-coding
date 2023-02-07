@@ -1,5 +1,6 @@
 import { TreeNode } from '../../algorithm/tree';
 import {
+    canSplit4Parts,
     countEqualTree2,
     getMaxA,
     getMaxK,
@@ -61,6 +62,7 @@ import {
     getMinValueOfColor2,
     getMinValueOfColorDp,
 } from '../other';
+import { canSplit4PartsTestData } from './preprocessing.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -192,5 +194,9 @@ describe('other', () => {
 
     it.each(getMaxKTestData)('getMaxK', ({ input: { arr1, arr2, k }, expected }) => {
         expect(getMaxK(arr1, arr2, k)).toEqual(expected);
+    });
+
+    it.each(canSplit4PartsTestData)('canSplit4Parts', ({ input, expected }) => {
+        expect(canSplit4Parts(input)).toBe(expected);
     });
 });

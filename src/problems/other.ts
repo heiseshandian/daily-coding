@@ -1294,3 +1294,45 @@ export function getMaxK(arr1: number[], arr2: number[], k: number): number[] {
 
     return result;
 }
+
+// 给定一个长度大于7的正数数组，返回数组能否分成4部分（切掉的数字不算），并且每部分的累加和相等
+export function canSplit4Parts(arr: number[]): boolean {
+    // 从第一个位置往后遍历，看某个位置能否作为第一个切割位置
+    // 若当前位置可以作为第一个位置，则必存在 前缀和为part1Sum+arr[cur]+part2Sum的位置
+    const prefixMap: Map<number, number> = new Map();
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+        prefixMap.set(sum, i);
+    }
+
+    let part1Sum = arr[0];
+    for (let cut1 = 1; cut1 < arr.length; cut1++) {
+        const tmp = part1Sum + arr[cut1] + part1Sum;
+        if (prefixMap.get(tmp) === undefined) {
+            part1Sum += arr[cut1];
+            continue;
+        }
+
+        let cut2 = (prefixMap.get(tmp) as number) + 1;
+        const tmp2 = tmp + arr[cut2] + part1Sum;
+        if (prefixMap.get(tmp2) === undefined) {
+            // 第二个位置不存在说明第一个位置是不可以作为第一刀的
+            part1Sum += arr[cut1];
+            continue;
+        }
+
+        let cut3 = (prefixMap.get(tmp2) as number) + 1;
+        const tmp3 = tmp2 + arr[cut3] + part1Sum;
+        if (prefixMap.get(tmp3) === undefined) {
+            // 第三个位置不存在说明第一个位置是不可以作为第一刀的
+            part1Sum += arr[cut1];
+            continue;
+        }
+
+        // 三个位置都找到了，最后一个sum出现的位置必须是arr.length-1
+        return (prefixMap.get(tmp3) as number) === arr.length - 1;
+    }
+
+    return false;
+}
