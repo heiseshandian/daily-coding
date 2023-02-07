@@ -8,7 +8,7 @@ class UnionSetNode<T = any> {
 export class UnionSet<T = any> {
     #nodes: Map<T, UnionSetNode<T>> = new Map();
     #parents: Map<UnionSetNode<T>, UnionSetNode<T>> = new Map();
-    #sizeMap: Map<UnionSetNode<T>, number> = new Map();
+    sizeMap: Map<UnionSetNode<T>, number> = new Map();
 
     constructor(values: T[] = []) {
         values.forEach((val) => {
@@ -20,7 +20,7 @@ export class UnionSet<T = any> {
         const node = new UnionSetNode<T>(value);
         this.#nodes.set(value, node);
         this.#parents.set(node, node);
-        this.#sizeMap.set(node, 1);
+        this.sizeMap.set(node, 1);
     }
 
     public isSameSet(a: T, b: T) {
@@ -46,14 +46,14 @@ export class UnionSet<T = any> {
             return;
         }
 
-        const sizeA = this.#sizeMap.get(parentA) as number;
-        const sizeB = this.#sizeMap.get(parentB) as number;
+        const sizeA = this.sizeMap.get(parentA) as number;
+        const sizeB = this.sizeMap.get(parentB) as number;
         const largeSet = sizeA >= sizeB ? parentA : parentB;
         const smallSet = largeSet === parentA ? parentB : parentA;
 
         this.#parents.set(smallSet, largeSet);
-        this.#sizeMap.set(largeSet, sizeA + sizeB);
-        this.#sizeMap.delete(smallSet);
+        this.sizeMap.set(largeSet, sizeA + sizeB);
+        this.sizeMap.delete(smallSet);
     }
 
     #findParent(node: UnionSetNode<T>) {

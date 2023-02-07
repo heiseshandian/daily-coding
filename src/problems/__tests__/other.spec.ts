@@ -25,7 +25,14 @@ import {
     getMinArrTestData,
     getMinSumThatCanNotBeComposed1TestData,
 } from './other.testdata';
-import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2, getNthUglyNumber } from '../other';
+import {
+    getMinCoinsDp2,
+    getMinJumpSteps,
+    getMinJumpStepsDp,
+    getMinJumpSteps2,
+    getNthUglyNumber,
+    getConnectedRegions2,
+} from '../other';
 import {
     editDistanceTestData,
     getMaxGameTestData,
@@ -235,5 +242,6 @@ describe('other', () => {
 
     it.each(getConnectedRegionsTestData)('getConnectedRegions', ({ input, expected }) => {
         expect(getConnectedRegions(input)).toEqual(expected);
+        expect(getConnectedRegions2(input)).toEqual(expected);
     });
 });

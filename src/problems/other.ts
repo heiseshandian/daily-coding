@@ -1,6 +1,7 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
 import { TreeNode } from '../algorithm/tree';
+import { UnionSet } from '../algorithm/union-set';
 import { maxCommonFactor } from '../common/index';
 /* 
 题目1（来自小红书）
@@ -1642,4 +1643,46 @@ export function getConnectedRegions(arr: number[]): number[] {
     });
 
     return [unionFind.sizeMap.size, max];
+}
+
+// 通过找齐一个数代表因子的方式来连接
+export function getConnectedRegions2(arr: number[]) {
+    // 我们把所有的下标加入并查集中，后面根据因子在某个位置出现过来直接合并下标
+    const unionSet = new UnionSet(new Array(arr.length).fill(0).map((_, i) => i));
+
+    const map: Map<number, number> = new Map();
+    for (let i = 0; i < arr.length; i++) {
+        let k = 1;
+        while (k <= Math.floor(Math.sqrt(arr[i]))) {
+            // 一旦整除我们就找到关于arr[i]的两个因子（k和arr[i]/k）
+            if (arr[i] % k === 0) {
+                const prev1 = map.get(k);
+                const prev2 = map.get(arr[i] / k);
+
+                // k这个因子之前没出现过，直接加入
+                if (prev1 === undefined) {
+                    map.set(k, i);
+                } else {
+                    // 出现过且共同因子大于1则合并两个集合
+                    if (k !== 1) {
+                        unionSet.union(prev1, i);
+                    }
+                }
+
+                if (prev2 === undefined) {
+                    map.set(arr[i] / k, i);
+                } else {
+                    unionSet.union(prev2, i);
+                }
+            }
+            k++;
+        }
+    }
+
+    let max = -Infinity;
+    unionSet.sizeMap.forEach((size) => {
+        max = Math.max(max, size);
+    });
+
+    return [unionSet.sizeMap.size, max];
 }
