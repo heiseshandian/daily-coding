@@ -1,7 +1,6 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
-import { TreeNode } from '../algorithm/tree';
-import { swap } from '../common';
+import { TreeNode, findNextNode } from '../algorithm/tree';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -1335,4 +1334,82 @@ export function canSplit4Parts(arr: number[]): boolean {
     }
 
     return false;
+}
+
+/* 
+如果一个数的因子中只包含2,3,5这三个数字，那么我们说这个数是丑数，1我们认为规定是丑数
+那么前面几个丑数是1 2 3 4 5 6 8 9 10 12 15
+问第n个丑数是多少？
+
+思想：从前面的丑数乘以2,3,5选出其中最小的作为下一个丑数
+*/
+export function getNthUglyNumber(n: number): number {
+    if (n === 1) {
+        return 1;
+    }
+
+    const result = [1];
+    let i2 = 0;
+    let i3 = 0;
+    let i5 = 0;
+
+    while (result.length < n) {
+        const nextUglyNumberI2 = result[i2] * 2;
+        const nextUglyNumberI3 = result[i3] * 3;
+        const nextUglyNumberI5 = result[i5] * 5;
+
+        const nextUglyNumber = Math.min(nextUglyNumberI2, nextUglyNumberI3, nextUglyNumberI5);
+        result.push(nextUglyNumber);
+
+        if (nextUglyNumber === nextUglyNumberI2) {
+            i2++;
+        }
+        if (nextUglyNumber === nextUglyNumberI3) {
+            i3++;
+        }
+        if (nextUglyNumber === nextUglyNumberI5) {
+            i5++;
+        }
+    }
+
+    return result[n - 1];
+}
+
+/* 
+给定一个无序数组，只能对其中一个子数组进行排序就能使得整体从小到大排序，问这个子数组的长度是多少
+
+例如
+arr:[1,5,3,2,4,6,7]
+最小需要排序的子数组是 [5,3,2,4] 所以返回 [5,3,2,4]
+
+分析思路：如果真的排序完毕右边有哪些位置是不需要动的，左边有哪些位置是不需要动的？
+右边不需要动的位置 大于等于左边的最大值
+左边不需要动的位置 小于等于右边的最小值
+*/
+export function getMinSubArrThatShouldBeSorted(arr: number[]): number[] {
+    if (!arr || arr.length < 2) {
+        return [];
+    }
+
+    // 找到右边不需要动的位置的前一个位置
+    let leftMax = arr[0];
+    let right = arr.length - 1;
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < leftMax) {
+            right = i;
+        }
+        leftMax = Math.max(leftMax, arr[i]);
+    }
+
+    // 找到左边不需要动的位置的后一个位置
+    let rightMin = arr[arr.length - 1];
+    let left = 0;
+    for (let i = arr.length - 2; i >= 0; i--) {
+        if (arr[i] > rightMin) {
+            left = i;
+        }
+        rightMin = Math.min(rightMin, arr[i]);
+    }
+
+    return arr.slice(left, right + 1);
 }

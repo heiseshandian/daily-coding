@@ -8,6 +8,7 @@ import {
     getMinCoinsDp,
     getMinEditDistance,
     getMinEditDistance2,
+    getMinSubArrThatShouldBeSorted,
     reverseBits,
     reverseBits2,
 } from '../other';
@@ -17,8 +18,9 @@ import {
     reverseBitsTestData,
     getMinJumpStepsTestData,
     getMaxKTestData,
+    getMinArrTestData,
 } from './other.testdata';
-import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2 } from '../other';
+import { getMinCoinsDp2, getMinJumpSteps, getMinJumpStepsDp, getMinJumpSteps2, getNthUglyNumber } from '../other';
 import {
     editDistanceTestData,
     getMaxGameTestData,
@@ -63,6 +65,7 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
+import { getNthUglyNumberTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -198,5 +201,13 @@ describe('other', () => {
 
     it.each(canSplit4PartsTestData)('canSplit4Parts', ({ input, expected }) => {
         expect(canSplit4Parts(input)).toBe(expected);
+    });
+
+    it.each(getNthUglyNumberTestData)('getNthUglyNumber', ({ input, expected }) => {
+        expect(getNthUglyNumber(input)).toBe(expected);
+    });
+
+    it.each(getMinArrTestData)('getMinSubArrThatShouldBeSorted', ({ input, expected }) => {
+        expect(getMinSubArrThatShouldBeSorted(input)).toEqual(expected);
     });
 });
