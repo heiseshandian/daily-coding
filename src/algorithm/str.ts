@@ -42,11 +42,12 @@ function getMaxPreSuffixArr(str: string): number[] {
     }
 
     const result = [-1, 0];
-    for (let i = 2; i < str.length; ) {
+    for (let i = 2; i < str.length; i++) {
         let k = result[i - 1];
         while (k >= 0) {
+            // i-1位置的字符和前面的字符比较
             if (str[i - 1] === str[k]) {
-                result[i++] = k + 1;
+                result[i] = k + 1;
                 break;
             }
             k = result[k];
@@ -54,7 +55,7 @@ function getMaxPreSuffixArr(str: string): number[] {
 
         // 0位置还没匹配上
         if (k === -1) {
-            result[i++] = 0;
+            result[i] = 0;
         }
     }
 
