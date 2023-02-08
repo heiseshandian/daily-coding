@@ -18,6 +18,7 @@ import {
     getMinSumThatCanNotBeComposed1,
     reverseBits,
     reverseBits2,
+    unzipStr,
 } from '../other';
 import {
     getMaxATestData,
@@ -30,6 +31,7 @@ import {
     getMinMoneyOfPassingMonsterTestData,
     getMaxLenOfComposableSubArrTestData,
     getMinStrCountTestData,
+    unzipStrTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -274,5 +276,9 @@ describe('other', () => {
 
     it.each(getMinStrCountTestData)('getMinStrCount', ({ input, expected }) => {
         expect(getMinStrCount(input)).toBe(expected);
+    });
+
+    it.each(unzipStrTestData)('unzipStr', ({ input, expected }) => {
+        expect(unzipStr(input)).toBe(expected);
     });
 });

@@ -1919,3 +1919,53 @@ export function getMinStrCount(str: string) {
 
     return str.length - max;
 }
+
+/* 
+递归类题目，（压缩字符串，公式求解）统一用递归函数来求解
+可以自己用堆栈来做，不过相当于要自己维护栈信息，代码相对来说更不好写一点
+
+已知某个字符串只含有小写字母，压缩之后的字符串str包含数字、大括号和小写字符。请根据str还原出原始字符串并返回。
+比如：
+3{2{abc}} -> abcabcabcabcabcabc 
+3{a}2{bc} -> aaabcbc 
+3{a2{c}} -> accaccacc
+*/
+export function unzipStr(str: string): string {
+    const [result] = unzipStrProcess(str, 0);
+    return result;
+}
+
+// 从start位置开始解析，遇到右括号或者结尾就终止，返回解析后的字符串和终止位置
+function unzipStrProcess(str: string, start: number): [result: string, end: number] {
+    let result = '';
+    let times = 0;
+
+    while (start < str.length) {
+        // 遇到右括号就终止
+        if (str[start] === '}') {
+            break;
+        }
+
+        // 遇到左括号就递归调用子函数去获取结果
+        if (str[start] === '{') {
+            const [subResult, subEnd] = unzipStrProcess(str, start + 1);
+            start = subEnd + 1;
+            result += times > 0 ? repeat(times, subResult) : subResult;
+            times = 0;
+        } else {
+            const num = parseInt(str[start]);
+            if (num >= 0 && num <= 9) {
+                times = times * 10 + num;
+            } else {
+                result += times > 0 ? repeat(times, str[start]) : str[start];
+            }
+            start++;
+        }
+    }
+
+    return [result, start];
+}
+
+function repeat(times: number, str: string) {
+    return new Array(times).fill(str).join('');
+}

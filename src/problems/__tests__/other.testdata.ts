@@ -465,3 +465,18 @@ export const getMinStrCountTestData = [
         expected: 5,
     },
 ];
+
+export const unzipStrTestData = [
+    {
+        input: '3{2{abc}}',
+        expected: 'abcabcabcabcabcabc',
+    },
+    {
+        input: '3{a}2{bc}',
+        expected: 'aaabcbc',
+    },
+    {
+        input: '3{a2{c}}',
+        expected: 'accaccacc',
+    },
+];
