@@ -441,4 +441,12 @@ export const getMaxLenOfComposableSubArrTestData = [
         input: [5, 5, 3, 2, 6, 4, 3],
         expected: 5,
     },
+    {
+        input: [5, 5, 1, 2, 6, 4, 3],
+        expected: 6,
+    },
+    {
+        input: [44, 4, 6, 3, 2, 1, 5, 8],
+        expected: 6,
+    },
 ];
