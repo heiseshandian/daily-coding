@@ -1969,3 +1969,64 @@ function unzipStrProcess(str: string, start: number): [result: string, end: numb
 function repeat(times: number, str: string) {
     return new Array(times).fill(str).join('');
 }
+
+/* 
+给定一个有序数组arr，和一个整数aim，请不重复打印arr中所有累加和为aim的二元组。
+
+分析思路：
+left指向0，right指向arr.length-1
+[left]+[right] < aim left++
+[left]+[right] > aim right--
+[left]+[right] === aim left跳过所有相等位置，right跳过所有相等位置
+*/
+export function getAllTwoTuples(arr: number[], target: number, left: number = 0): number[][] {
+    let right = arr.length - 1;
+    const result: number[][] = [];
+
+    while (left <= right) {
+        if (arr[left] + arr[right] < target) {
+            left++;
+        } else if (arr[left] + arr[right] > target) {
+            right--;
+        } else {
+            result.push([arr[left], arr[right]]);
+
+            // 相等的组合直接跳过
+            const prevLeft = left;
+            const prevRight = right;
+            while (arr[++left] === arr[prevLeft]) {
+                // empty block
+            }
+            while (arr[--right] === arr[prevRight]) {
+                // empty block
+            }
+        }
+    }
+
+    return result;
+}
+
+/* 
+给定一个有序数组arr，和一个整数aim，请不重复打印arr中所有累加和为aim的三元组。
+
+分析：第一个数固定，右边玩二元组
+*/
+export function getAllTriples(arr: number[], target: number): number[][] {
+    let left = 0;
+    const result: number[][] = [];
+
+    while (left < arr.length) {
+        const allTwoTuples = getAllTwoTuples(arr, target - arr[left], left + 1);
+        if (allTwoTuples.length > 0) {
+            result.push(...allTwoTuples.map((val) => [arr[left], ...val]));
+        }
+
+        // 跳过所有相同位置
+        const prevLeft = left;
+        while (arr[++left] === arr[prevLeft]) {
+            // empty block
+        }
+    }
+
+    return result;
+}

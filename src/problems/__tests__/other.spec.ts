@@ -3,6 +3,8 @@ import {
     canSplit4Parts,
     countEqualTree2,
     countLostNumbers,
+    getAllTriples,
+    getAllTwoTuples,
     getConnectedRegions,
     getMaxA,
     getMaxK,
@@ -32,6 +34,8 @@ import {
     getMaxLenOfComposableSubArrTestData,
     getMinStrCountTestData,
     unzipStrTestData,
+    getAllTwoTuplesTestData,
+    getAllTriplesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -280,5 +284,13 @@ describe('other', () => {
 
     it.each(unzipStrTestData)('unzipStr', ({ input, expected }) => {
         expect(unzipStr(input)).toBe(expected);
+    });
+
+    it.each(getAllTwoTuplesTestData)('getAllTwoTuples', ({ input: { arr, target }, expected }) => {
+        expect(getAllTwoTuples(arr, target)).toEqual(expected);
+    });
+
+    it.each(getAllTriplesTestData)('getAllTriples', ({ input: { arr, target }, expected }) => {
+        expect(getAllTriples(arr, target)).toEqual(expected);
     });
 });

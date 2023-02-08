@@ -480,3 +480,43 @@ export const unzipStrTestData = [
         expected: 'accaccacc',
     },
 ];
+
+export const getAllTwoTuplesTestData = [
+    {
+        input: {
+            arr: [1, 2, 4, 4, 4, 6, 6, 6, 8, 11],
+            target: 10,
+        },
+        expected: [
+            [2, 8],
+            [4, 6],
+        ],
+    },
+    {
+        input: {
+            arr: [1, 9],
+            target: 10,
+        },
+        expected: [[1, 9]],
+    },
+    {
+        input: {
+            arr: [1, 9],
+            target: 11,
+        },
+        expected: [],
+    },
+];
+
+export const getAllTriplesTestData = [
+    {
+        input: {
+            arr: [1, 1, 2, 4, 4, 4, 6, 6, 6, 8, 11],
+            target: 11,
+        },
+        expected: [
+            [1, 2, 8],
+            [1, 4, 6],
+        ],
+    },
+];
