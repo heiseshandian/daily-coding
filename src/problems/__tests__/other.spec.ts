@@ -12,6 +12,7 @@ import {
     getMinEditDistance,
     getMinEditDistance2,
     getMinMoneyOfPassingMonster,
+    getMinStrCount,
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
@@ -28,6 +29,7 @@ import {
     getMinSumThatCanNotBeComposed1TestData,
     getMinMoneyOfPassingMonsterTestData,
     getMaxLenOfComposableSubArrTestData,
+    getMinStrCountTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -268,5 +270,9 @@ describe('other', () => {
 
     it.each(getMaxLenOfComposableSubArrTestData)('getMaxLenOfComposableSubArr', ({ input, expected }) => {
         expect(getMaxLenOfComposableSubArr(input)).toBe(expected);
+    });
+
+    it.each(getMinStrCountTestData)('getMinStrCount', ({ input, expected }) => {
+        expect(getMinStrCount(input)).toBe(expected);
     });
 });

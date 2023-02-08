@@ -1897,3 +1897,25 @@ export function getMaxLenOfComposableSubArr(arr: number[]): number {
 
     return result;
 }
+
+/* 
+给定一个字符串str，只能在str的后面添加字符，生成一个更长的字符串，更长的字符串需要包含两个str，且两个str开始的位置不能一样。求最少添加多少个字符。比如：
+str = "123123"，后面最少添加"123"，变成"123123123123"，其中包含两个str，且两个str开始的位置不一样。所以返回3
+
+// kmp算法
+*/
+export function getMinStrCount(str: string) {
+    // 先求str.length位置的最长前缀和最长后缀匹配长度
+    let count = 1;
+    let max = 0;
+    while (count < str.length) {
+        const prefix = str.slice(0, count);
+        const suffix = str.slice(str.length - count, str.length);
+        if (prefix === suffix) {
+            max = count;
+        }
+        count++;
+    }
+
+    return str.length - max;
+}

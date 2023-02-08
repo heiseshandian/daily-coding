@@ -450,3 +450,18 @@ export const getMaxLenOfComposableSubArrTestData = [
         expected: 6,
     },
 ];
+
+export const getMinStrCountTestData = [
+    {
+        input: '123123',
+        expected: 3,
+    },
+    {
+        input: '123ab123',
+        expected: 5,
+    },
+    {
+        input: 'abcde',
+        expected: 5,
+    },
+];
