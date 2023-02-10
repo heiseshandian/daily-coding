@@ -534,4 +534,8 @@ export const getMinMissingNumberTestData = [
         input: [-1, 0, 1, 3, 4, 5],
         expected: 2,
     },
+    {
+        input: [1, 2, 0],
+        expected: 3,
+    },
 ];
