@@ -34,7 +34,7 @@ describe('skip-list', () => {
             skipSet.add(val);
         });
 
-        expect(skipSet.first()?.key).toBe(-1);
-        expect(skipSet.last()?.key).toBe(56);
+        expect(skipSet.first()).toBe(-1);
+        expect(skipSet.last()).toBe(56);
     });
 });

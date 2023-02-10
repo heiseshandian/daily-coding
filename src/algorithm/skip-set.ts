@@ -165,7 +165,7 @@ export class SkipSet<K> {
     }
 
     public first() {
-        return this.head.nextNodes[0];
+        return this.head.nextNodes[0]?.key;
     }
 
     public last() {
@@ -181,7 +181,7 @@ export class SkipSet<K> {
             }
         }
 
-        return curNode;
+        return curNode.key;
     }
 
     public print(width = 10) {
