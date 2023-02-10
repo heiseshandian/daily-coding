@@ -539,3 +539,20 @@ export const getMinMissingNumberTestData = [
         expected: 3,
     },
 ];
+
+export const findKthLargestTestData = [
+    {
+        input: {
+            arr: [3, 2, 1, 5, 6, 4],
+            k: 2,
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            arr: [3, 2, 3, 1, 2, 4, 5, 5, 6],
+            k: 4,
+        },
+        expected: 4,
+    },
+];

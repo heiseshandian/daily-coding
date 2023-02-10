@@ -3,6 +3,7 @@ import {
     canSplit4Parts,
     countEqualTree2,
     countLostNumbers,
+    findKthLargest,
     getAllTriples,
     getAllTwoTuples,
     getConnectedRegions,
@@ -37,6 +38,7 @@ import {
     unzipStrTestData,
     getAllTwoTuplesTestData,
     getAllTriplesTestData,
+    findKthLargestTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -297,5 +299,9 @@ describe('other', () => {
 
     it.each(getMinMissingNumberTestData)('getMinMissingNumber', ({ input, expected }) => {
         expect(getMinMissingNumber(input)).toBe(expected);
+    });
+
+    it.each(findKthLargestTestData)('findKthLargest', ({ input: { arr, k }, expected }) => {
+        expect(findKthLargest(arr, k)).toBe(expected);
     });
 });

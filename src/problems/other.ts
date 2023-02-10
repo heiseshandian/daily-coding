@@ -2057,3 +2057,44 @@ export function getMinMissingNumber(arr: number[]): number {
 
     return left + 1;
 }
+
+// 给定一个无序数组，求数组的第k大元素
+export function findKthLargest(arr: number[], k: number): number {
+    let left = 0;
+    let right = arr.length - 1;
+    // 平均情况下每次分区只取一半的数字，也就是说总体时间复杂度是
+    // n + (n/2) + (n/4) + ...
+    // 最终结果不超过2n
+    // 从而使得整体时间复杂度是O(n)
+    while (left < right) {
+        const p = partition(arr, left, right);
+        if (p + 1 === k) {
+            return arr[p];
+        } else if (p + 1 > k) {
+            right = p - 1;
+        } else {
+            left = p + 1;
+        }
+    }
+
+    return arr[left];
+}
+
+function partition(arr: number[], left: number, right: number): number {
+    const numBetweenLeftAndRight = Math.ceil(Math.random() * (right - left)) + left;
+    swap(arr, numBetweenLeftAndRight, right);
+
+    const prevRight = right;
+    const target = arr[right];
+    // 大于等于放左边，小于放右边
+    while (left < right) {
+        if (arr[left] >= target) {
+            left++;
+        } else {
+            swap(arr, left, --right);
+        }
+    }
+
+    swap(arr, left, prevRight);
+    return left;
+}
