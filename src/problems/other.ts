@@ -2,7 +2,7 @@ import { GenericHeap } from '../algorithm/generic-heap';
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
 import { TreeNode } from '../algorithm/tree';
 import { UnionSet } from '../algorithm/union-set';
-import { maxCommonFactor } from '../common/index';
+import { maxCommonFactor, swap } from '../common/index';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -2029,4 +2029,31 @@ export function getAllTriples(arr: number[], target: number): number[][] {
     }
 
     return result;
+}
+
+/* 
+给定一个无序数组，要求找出数组中缺失的最小正整数 
+例如
+[0,-1,3,5,4,2,1] 6
+[0,-1,3,6,4,2,1] 5
+*/
+export function getMinMissingNumber(arr: number[]): number {
+    let left = 0;
+    let right = arr.length;
+
+    while (left < right) {
+        if (arr[left] < left + 1 || arr[left] > right) {
+            // 当前数字范围不在 left+1 到 right之间，把left位置的数丢进垃圾区
+            swap(arr, left, --right);
+        } else if (arr[left] === left + 1) {
+            left++;
+        } else if (arr[left] === arr[arr[left] - 1]) {
+            // 重复出现值也直接丢进垃圾区
+            swap(arr, left, --right);
+        } else {
+            swap(arr, left, arr[left] - 1);
+        }
+    }
+
+    return left + 1;
 }

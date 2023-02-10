@@ -520,3 +520,18 @@ export const getAllTriplesTestData = [
         ],
     },
 ];
+
+export const getMinMissingNumberTestData = [
+    {
+        input: [0, -1, 3, 5, 4, 2, 1, 3, 3, 3, 3, 3, 3, 3],
+        expected: 6,
+    },
+    {
+        input: [0, -1, 3, 6, 4, 2, 1],
+        expected: 5,
+    },
+    {
+        input: [-1, 0, 1, 3, 4, 5],
+        expected: 2,
+    },
+];
