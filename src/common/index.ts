@@ -29,3 +29,7 @@ export function printBinary(n: number): string {
 
     return result.reverse().join('');
 }
+
+export function flipACoin(): boolean {
+    return Math.random() < 0.5;
+}
