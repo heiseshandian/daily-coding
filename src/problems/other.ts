@@ -2219,3 +2219,71 @@ export function getMinRange(arr: number[][]): number[] {
 
     return [min, max];
 }
+
+/* 
+添加最少字符使字符串整体都是回文字符串
+给定一个字符串 str，如果可以在 str 的任意位置添加字符，请返回在添加字符最少的情况下，让 str 整体都是回文字符串的一种结果。
+
+【举例】
+str="ABA"。str 本身就是回文串，不需要添加字符，所以返回"ABA"。
+str="AB"。可以在'A'之前添加'B'，使 str整体都是回文串，故可以返回"BAB"。也可以在"B'之后添加'A'，使 str整体都是回文串，故也可以返回"ABA"。
+总之，只要添加的字符数最少，返回其中一种结果即可。
+
+进阶问题
+给定一个字符串 str，再给定 str 的最长回文子序列字符串，请返回在添加 字符最少的情况下，让 str整体都是回文字符串的一种结果。
+进阶问题比原问题多了一个参数，请做到时间复杂度比原问题的实现低。
+
+范围尝试模型
+*/
+// 先求使得str成为回文字符最少需要添加几个字符
+function getMinCharCountDp(str: string): number[][] {
+    // dp[left][right] 使得从left到right范围上的字符串变成回文最少需要添加几个字符
+    const dp: number[][] = new Array(str.length).fill(0).map((_) => new Array(str.length).fill(0));
+
+    // 从下往上，从左往右填表
+    for (let left = str.length - 2; left >= 0; left--) {
+        for (let right = left + 1; right < str.length; right++) {
+            dp[left][right] = Math.min(dp[left + 1][right] + 1, dp[left][right - 1] + 1);
+            if (left + 1 === right && str[left] === str[right]) {
+                dp[left][right] = 0;
+            }
+            if (left + 1 <= right - 1 && str[left] === str[right]) {
+                dp[left][right] = Math.min(dp[left][right], dp[left + 1][right - 1]);
+            }
+        }
+    }
+
+    return dp;
+}
+
+// 然后根据dp表还原出一种回文字符串
+export function getMinPalindrome(str: string): string {
+    const dp = getMinCharCountDp(str);
+
+    let left = 0;
+    let right = str.length - 1;
+
+    const result: string[] = new Array(str.length + dp[left][right]);
+    let i = 0;
+    let j = result.length - 1;
+
+    while (left <= right) {
+        let curStr: string;
+
+        // 当前值来源于左下角的值，此处不能用 dp[left + 1][right-1] === dp[left][right]来判断当前值来源于左下角的值
+        // 因为即使dp[left + 1][right-1] === dp[left][right]也有可能来源于左边或者下面的值
+        if (left + 1 <= right - 1 && str[left] === str[right]) {
+            curStr = str[left++];
+            right--;
+        } else if (left + 1 <= right && dp[left + 1][right] + 1 === dp[left][right]) {
+            curStr = str[left++];
+        } else {
+            curStr = str[right--];
+        }
+
+        result[i++] = curStr;
+        result[j--] = curStr;
+    }
+
+    return result.join('');
+}
