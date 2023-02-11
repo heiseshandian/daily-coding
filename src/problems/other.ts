@@ -2098,3 +2098,70 @@ function partition(arr: number[], left: number, right: number): number {
     swap(arr, left, prevRight);
     return left;
 }
+
+/* 
+要求实现一个结构可以不按序接收消息，但是可以按序打印
+
+例：
+收到消息的顺序是 4,5,3,2,1
+打印的消息：1,2,3,4,5
+*/
+
+class MessageNode<V> {
+    val: V;
+    next: MessageNode<V> | undefined = undefined;
+
+    constructor(val: V) {
+        this.val = val;
+    }
+}
+
+export class MessageBox<V> {
+    // 记录所有待打印链表头结点
+    headMap: Map<number, MessageNode<V>> = new Map();
+    // 记录所有待打印链表尾节点（以空间换时间，不然需要从头结点遍历到尾节点才能知道链表结尾在哪里）
+    tailMap: Map<number, MessageNode<V>> = new Map();
+    waitPoint = 1;
+
+    public receive(num: number, val: V) {
+        if (num < 1) {
+            return;
+        }
+
+        const node = new MessageNode(val);
+        // 构建一个num~num的单链表
+        this.headMap.set(num, node);
+        this.tailMap.set(num, node);
+
+        // 存在num-1结尾的链表
+        if (this.tailMap.has(num - 1)) {
+            this.tailMap.get(num - 1)!.next = node;
+            this.tailMap.delete(num - 1);
+            this.headMap.delete(num);
+        }
+
+        // 存在num+1开头的链表
+        if (this.headMap.has(num + 1)) {
+            node.next = this.headMap.get(num + 1)!;
+            this.headMap.delete(num + 1);
+            this.tailMap.delete(num);
+        }
+
+        if (this.waitPoint === num) {
+            this.print();
+        }
+    }
+
+    private print() {
+        let node: MessageNode<V> | undefined = this.headMap.get(this.waitPoint);
+        this.headMap.delete(this.waitPoint);
+
+        while (node) {
+            console.log(node.val);
+            node = node.next;
+            this.waitPoint++;
+        }
+
+        this.tailMap.delete(this.waitPoint - 1);
+    }
+}
