@@ -577,3 +577,14 @@ export const getMinRangeTestData = [
         expected: [10, 200],
     },
 ];
+
+export const getMinPalindromeTestData = [
+    {
+        input: 'AB',
+        expected: 'ABA',
+    },
+    {
+        input: 'ab12231c',
+        expected: 'abc132231cba',
+    },
+];

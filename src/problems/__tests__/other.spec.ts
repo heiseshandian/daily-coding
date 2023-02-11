@@ -16,6 +16,7 @@ import {
     getMinEditDistance2,
     getMinMissingNumber,
     getMinMoneyOfPassingMonster,
+    getMinPalindrome,
     getMinRange,
     getMinStrCount,
     getMinSubArrThatShouldBeSorted,
@@ -95,7 +96,7 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { canSplit4PartsTestData } from './preprocessing.testdata';
-import { getConnectedRegionsTestData, getMinMissingNumberTestData } from './other.testdata';
+import { getConnectedRegionsTestData, getMinMissingNumberTestData, getMinPalindromeTestData } from './other.testdata';
 import { getMinMoneyOfPassingMonsterDp4 } from '../other';
 import {
     getMinMoneyOfPassingMonsterDp,
@@ -330,5 +331,9 @@ describe('other', () => {
 
     it.each(getMinRangeTestData)('getMinRange', ({ input, expected }) => {
         expect(getMinRange(input)).toEqual(expected);
+    });
+
+    it.each(getMinPalindromeTestData)('getMinPalindrome', ({ input, expected }) => {
+        expect(getMinPalindrome(input)).toBe(expected);
     });
 });
