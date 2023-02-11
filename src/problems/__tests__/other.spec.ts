@@ -20,6 +20,7 @@ import {
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
+    MessageBox,
     reverseBits,
     reverseBits2,
     unzipStr,
@@ -303,5 +304,25 @@ describe('other', () => {
 
     it.each(findKthLargestTestData)('findKthLargest', ({ input: { arr, k }, expected }) => {
         expect(findKthLargest(arr, k)).toBe(expected);
+    });
+
+    describe('MessageBox', () => {
+        const prev = console.log;
+
+        beforeAll(() => {
+            console.log = jest.fn();
+        });
+        afterAll(() => {
+            console.log = prev;
+        });
+
+        test('receive', () => {
+            const message = new MessageBox();
+
+            [3, 2, 4, 1, 6, 7, 5].forEach((val) => message.receive(val, val));
+
+            expect(console.log).toHaveBeenCalledTimes(7);
+            expect((console.log as jest.Mock).mock.calls).toEqual([[1], [2], [3], [4], [5], [6], [7]]);
+        });
     });
 });
