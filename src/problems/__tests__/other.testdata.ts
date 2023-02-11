@@ -556,3 +556,24 @@ export const findKthLargestTestData = [
         expected: 4,
     },
 ];
+
+export const getMinRangeTestData = [
+    {
+        input: [
+            [-5, 0, 1, 4, 5],
+            [3, 4, 7, 8],
+            [9, 10, 13],
+            [1, 99],
+        ],
+        expected: [1, 9],
+    },
+    {
+        input: [
+            [-100, 0, 3, 10],
+            [0, 4, 6, 7, 11],
+            [8, 9, 11, 18],
+            [200, 201, 300, 400],
+        ],
+        expected: [10, 200],
+    },
+];

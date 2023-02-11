@@ -184,6 +184,10 @@ export class SkipSet<K> {
         return curNode.key;
     }
 
+    public isEmpty() {
+        return this.head.nextNodes[0] === null;
+    }
+
     public print(width = 10) {
         let cur: SkipSetNode | null = this.head;
         while (cur) {

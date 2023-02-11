@@ -16,6 +16,7 @@ import {
     getMinEditDistance2,
     getMinMissingNumber,
     getMinMoneyOfPassingMonster,
+    getMinRange,
     getMinStrCount,
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
@@ -40,6 +41,7 @@ import {
     getAllTwoTuplesTestData,
     getAllTriplesTestData,
     findKthLargestTestData,
+    getMinRangeTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -324,5 +326,9 @@ describe('other', () => {
             expect(console.log).toHaveBeenCalledTimes(7);
             expect((console.log as jest.Mock).mock.calls).toEqual([[1], [2], [3], [4], [5], [6], [7]]);
         });
+    });
+
+    it.each(getMinRangeTestData)('getMinRange', ({ input, expected }) => {
+        expect(getMinRange(input)).toEqual(expected);
     });
 });

@@ -37,4 +37,16 @@ describe('skip-list', () => {
         expect(skipSet.first()).toBe(-1);
         expect(skipSet.last()).toBe(56);
     });
+
+    test('isEmpty', () => {
+        const skipSet = new SkipSet();
+
+        expect(skipSet.isEmpty()).toBe(true);
+
+        skipSet.add(1);
+        expect(skipSet.isEmpty()).toBe(false);
+
+        skipSet.delete(1);
+        expect(skipSet.isEmpty()).toBe(true);
+    });
 });

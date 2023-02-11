@@ -1,5 +1,6 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { getClosestMinArr } from '../algorithm/monotonous-stack';
+import { SkipSet } from '../algorithm/skip-set';
 import { TreeNode } from '../algorithm/tree';
 import { UnionSet } from '../algorithm/union-set';
 import { maxCommonFactor, swap } from '../common/index';
@@ -2164,4 +2165,57 @@ export class MessageBox<V> {
 
         this.tailMap.delete(this.waitPoint - 1);
     }
+}
+
+/* 
+给定一系列有序数组，求一个范围使得所有数组都有数字落在这个范围内，返回符合条件的最小的范围
+*/
+class MinRangeNode {
+    val: number;
+    arrIndex: number;
+    index: number;
+
+    constructor(val: number, arrIndex: number, index: number) {
+        this.val = val;
+        this.arrIndex = arrIndex;
+        this.index = index;
+    }
+}
+export function getMinRange(arr: number[][]): number[] {
+    const skipSet = new SkipSet<MinRangeNode>((a, b) => a.val - b.val);
+
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].length > 0) {
+            skipSet.add(new MinRangeNode(arr[i][0], i, 0));
+        }
+    }
+
+    let min = -Infinity;
+    let max = Infinity;
+    if (skipSet.isEmpty()) {
+        return [];
+    }
+
+    while (!skipSet.isEmpty()) {
+        const { val: minVal, arrIndex: minArrIndex, index: minIndex } = skipSet.first()!;
+        const { val: maxVal } = skipSet.last()!;
+
+        // 找到了一个更小的范围
+        if (maxVal - minVal < max - min) {
+            min = minVal;
+            max = maxVal;
+        }
+
+        // 删除最小值
+        skipSet.delete(skipSet.first()!);
+
+        // 加入最小值的下一个值
+        if (minIndex + 1 < arr[minArrIndex].length) {
+            skipSet.add(new MinRangeNode(arr[minArrIndex][minIndex + 1], minArrIndex, minIndex + 1));
+        } else {
+            break;
+        }
+    }
+
+    return [min, max];
 }
