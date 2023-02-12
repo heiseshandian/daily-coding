@@ -4,6 +4,7 @@ import {
     countEqualTree2,
     countLostNumbers,
     findKthLargest,
+    findWords,
     getAllTriples,
     getAllTwoTuples,
     getClosestSumK,
@@ -49,6 +50,7 @@ import {
     getMaxIncreasingNumTestData,
     getClosestSumKTestData,
     getClosestSumKOfMatrixTestData,
+    findWordsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -353,5 +355,9 @@ describe('other', () => {
 
     it.each(getClosestSumKOfMatrixTestData)('getClosestSumKOfMatrix', ({ input: { matrix, k }, expected }) => {
         expect(getClosestSumKOfMatrix(matrix, k)).toBe(expected);
+    });
+
+    it.each(findWordsTestData)('findWords', ({ input: { board, words }, expected }) => {
+        expect(findWords(board, words)).toEqual(expected);
     });
 });

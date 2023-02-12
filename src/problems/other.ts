@@ -3,8 +3,9 @@ import { getClosestMinArr } from '../algorithm/monotonous-stack';
 import { SkipSet } from '../algorithm/skip-set';
 import { TreeNode } from '../algorithm/tree';
 import { UnionSet } from '../algorithm/union-set';
-import { maxCommonFactor, swap } from '../common/index';
+import { getCharIndex, maxCommonFactor, swap } from '../common/index';
 import { Queue } from '../algorithm/queue';
+import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -2488,4 +2489,99 @@ export function cloneGraphNodeMap(node: UndirectedGraphNode): UndirectedGraphNod
     });
 
     return map.get(node) as UndirectedGraphNode;
+}
+
+/* 
+给定一个由字符组成的矩阵board，还有一个字符串数组words，里面有很多字符串（word）。
+在board中找word是指，从board某个位置出发，每个位置都可以走向左、右、上、下四个方向，但不能重复经过一个位置。
+返回在board中能找到哪些word。
+
+【例子】board=
+['o','a','a','n'], 
+['e','t','a','e'], 
+['i','h','k','r'], 
+['i','f','l','v']
+
+words = ["oath","pea","eat","rain"]
+输出： 【"eat"，"oath"】
+
+从第2行最右边的'e'出发，向左找到'，再向左找到't'，就搞定了"eat"
+从第1行最左边的“o’出发，向右找到’a’，向下找到“，再向下找到”，就搞定了“oath”
+*/
+export function findWords(board: string[][], words: string[]): string[] {
+    const prefixTree = new PrefixTree();
+    new Set(words).forEach((word) => {
+        prefixTree.add(word);
+    });
+
+    const result: Set<string> = new Set();
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[0].length; col++) {
+            findWordsProcess(board, row, col, prefixTree.head, '', result);
+        }
+    }
+
+    return Array.from(result);
+}
+
+function findWordsProcess(
+    board: string[][],
+    row: number,
+    col: number,
+    node: PrefixTreeNode,
+    path: string,
+    result: Set<string>
+): number {
+    const char = board[row][col];
+    if (char === '') {
+        return 0;
+    }
+
+    const index = getCharIndex(char);
+    const nextNode = node.nextNodes[index];
+    if (!nextNode || nextNode.pass === 0) {
+        return 0;
+    }
+    // 当前字符加入path
+    path = path + char;
+
+    // 当前字符走过之后设置为空，避免重复走
+    board[row][col] = '';
+
+    let fix = 0;
+    if (nextNode.end !== 0) {
+        result.add(path);
+        nextNode.end--;
+        fix++;
+    }
+
+    // 尝试上下左右四个方向
+    fix += tryNewRowCol(board, row - 1, col, nextNode, path, result);
+    fix += tryNewRowCol(board, row + 1, col, nextNode, path, result);
+    fix += tryNewRowCol(board, row, col - 1, nextNode, path, result);
+    fix += tryNewRowCol(board, row, col + 1, nextNode, path, result);
+
+    // 递归结束之后恢复现场
+    board[row][col] = char;
+    nextNode.pass -= fix;
+
+    return fix;
+}
+
+function tryNewRowCol(
+    board: string[][],
+    row: number,
+    col: number,
+    nextNode: PrefixTreeNode,
+    path: string,
+    result: Set<string>
+): number {
+    if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+        return 0;
+    }
+
+    if (nextNode) {
+        return findWordsProcess(board, row, col, nextNode, path, result);
+    }
+    return 0;
 }

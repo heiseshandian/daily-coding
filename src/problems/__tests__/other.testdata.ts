@@ -656,3 +656,40 @@ export const getClosestSumKOfMatrixTestData = [
         expected: 13,
     },
 ];
+
+export const findWordsTestData = [
+    {
+        input: {
+            board: [
+                ['o', 'a', 'a', 'n'],
+                ['e', 't', 'a', 'e'],
+                ['i', 'h', 'k', 'r'],
+                ['i', 'f', 'l', 'v'],
+            ],
+            words: ['oath', 'pea', 'eat', 'rain', 'oathi', 'oathk', 'oathf', 'oate', 'oathii', 'oathfi', 'oathfii'],
+        },
+        expected: ['oath', 'oathf', 'oathfi', 'oathfii', 'oathi', 'oathii', 'oathk', 'oate', 'eat'],
+    },
+    {
+        input: {
+            board: [
+                ['o', 'a', 'a', 'n'],
+                ['e', 't', 'a', 'e'],
+                ['i', 'h', 'k', 'r'],
+                ['i', 'f', 'l', 'v'],
+            ],
+            words: ['oath', 'pea', 'eat', 'rain'],
+        },
+        expected: ['oath', 'eat'],
+    },
+    {
+        input: {
+            board: [
+                ['a', 'b'],
+                ['c', 'd'],
+            ],
+            words: ['abcb'],
+        },
+        expected: [],
+    },
+];

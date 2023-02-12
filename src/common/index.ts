@@ -33,3 +33,7 @@ export function printBinary(n: number): string {
 export function flipACoin(): boolean {
     return Math.random() < 0.5;
 }
+
+export function getCharIndex(char: string) {
+    return char.charCodeAt(0) - 'a'.charCodeAt(0);
+}
