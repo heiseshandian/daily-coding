@@ -4,6 +4,7 @@ import { SkipSet } from '../algorithm/skip-set';
 import { TreeNode } from '../algorithm/tree';
 import { UnionSet } from '../algorithm/union-set';
 import { maxCommonFactor, swap } from '../common/index';
+import { Queue } from '../algorithm/queue';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -2426,4 +2427,66 @@ export function getClosestSumKOfMatrix(matrix: number[][], k: number): number {
     }
 
     return max;
+}
+
+/* 
+无向图节点类型如下
+
+class UndirectedGraphNode{
+    int label;
+    List<UndirectedGraphNode> neighbors;
+
+    UndirectedGraphNode(int x){
+        label=x;
+    }
+
+    neighbors=new ArrayList<UndirectedGraphNode>(); 
+}
+
+由以上的节点结构组成了一张无向图，给定一个出发点node，请你克隆整张图
+
+分析：
+1) 遍历一次拿到所有的节点对应的copy节点放入map中
+2) 再遍历一次连好所有copy节点
+*/
+class UndirectedGraphNode {
+    label: number;
+    neighbors: UndirectedGraphNode[] = [];
+
+    constructor(label: number) {
+        this.label = label;
+    }
+}
+
+export function cloneGraphNodeMap(node: UndirectedGraphNode): UndirectedGraphNode {
+    // 先遍历一次复制出所有节点放入map
+    const map: Map<UndirectedGraphNode, UndirectedGraphNode> = new Map();
+    const set: Set<UndirectedGraphNode> = new Set();
+
+    // 宽度优先遍历
+    const queue = new Queue<UndirectedGraphNode>();
+    queue.add(node);
+    set.add(node);
+
+    while (!queue.isEmpty()) {
+        const cur = queue.poll() as UndirectedGraphNode;
+        const copy = new UndirectedGraphNode(cur.label);
+        map.set(cur, copy);
+
+        cur.neighbors.forEach((neighbor) => {
+            if (set.has(neighbor)) {
+                return;
+            }
+
+            set.add(neighbor);
+            queue.add(neighbor);
+        });
+    }
+
+    map.forEach((cur) => {
+        const copy = map.get(cur) as UndirectedGraphNode;
+        copy.neighbors = cur.neighbors.map((neighbor) => map.get(neighbor) as UndirectedGraphNode);
+    });
+
+    return map.get(node) as UndirectedGraphNode;
 }
