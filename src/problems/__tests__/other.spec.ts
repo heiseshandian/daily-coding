@@ -93,6 +93,7 @@ import {
     getMinCandyTestData,
     getMinValueOfColorTestData,
     getPlusOrMinusCountTestData,
+    canSplit4PartsTestData,
 } from './other.testdata';
 import {
     countSubArr,
@@ -103,7 +104,6 @@ import {
     getMinValueOfColor2,
     getMinValueOfColorDp,
 } from '../other';
-import { canSplit4PartsTestData } from './preprocessing.testdata';
 import { getConnectedRegionsTestData, getMinMissingNumberTestData, getMinPalindromeTestData } from './other.testdata';
 import { getMinMoneyOfPassingMonsterDp4 } from '../other';
 import {
