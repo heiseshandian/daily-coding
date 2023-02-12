@@ -6,6 +6,8 @@ import {
     findKthLargest,
     getAllTriples,
     getAllTwoTuples,
+    getClosestSumK,
+    getClosestSumKOfMatrix,
     getConnectedRegions,
     getMaxA,
     getMaxIncreasingNum,
@@ -45,6 +47,8 @@ import {
     findKthLargestTestData,
     getMinRangeTestData,
     getMaxIncreasingNumTestData,
+    getClosestSumKTestData,
+    getClosestSumKOfMatrixTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -341,5 +345,13 @@ describe('other', () => {
 
     it.each(getMaxIncreasingNumTestData)('getMaxIncreasingNum', ({ input, expected }) => {
         expect(getMaxIncreasingNum(input)).toBe(expected);
+    });
+
+    it.each(getClosestSumKTestData)('getClosestSumK', ({ input: { arr, k }, expected }) => {
+        expect(getClosestSumK(arr, k)).toBe(expected);
+    });
+
+    it.each(getClosestSumKOfMatrixTestData)('getClosestSumKOfMatrix', ({ input: { matrix, k }, expected }) => {
+        expect(getClosestSumKOfMatrix(matrix, k)).toBe(expected);
     });
 });

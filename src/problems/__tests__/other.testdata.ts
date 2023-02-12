@@ -607,3 +607,52 @@ export const getMaxIncreasingNumTestData = [
         expected: 4,
     },
 ];
+
+export const getClosestSumKTestData = [
+    {
+        input: {
+            arr: [1, 3, 4, 5, 6],
+            k: 100,
+        },
+        expected: 19,
+    },
+    {
+        input: {
+            arr: [2, 3, 4, 5, 6],
+            k: 8,
+        },
+        expected: 7,
+    },
+    {
+        input: {
+            arr: [1, 3, 4, 5, 6],
+            k: 8,
+        },
+        expected: 8,
+    },
+];
+
+export const getClosestSumKOfMatrixTestData = [
+    {
+        input: {
+            matrix: [
+                [1, 3, 2, 4],
+                [4, 5, 7, 6],
+                [3, 2, 3, 3],
+            ],
+            k: 100,
+        },
+        expected: 43,
+    },
+    {
+        input: {
+            matrix: [
+                [1, 3, 2, 4],
+                [4, 5, 7, 6],
+                [3, 2, 3, 3],
+            ],
+            k: 14,
+        },
+        expected: 13,
+    },
+];

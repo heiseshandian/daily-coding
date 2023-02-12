@@ -2346,3 +2346,84 @@ function maxIncreasingProcess(arr: number[][], row: number, col: number, dp: num
     dp[row][col] = Math.max(upNext, downNext, leftNext, rightNext) + 1;
     return dp[row][col];
 }
+
+/* 
+给定一个整型数组，找到不大于k的最大子数组累加和
+
+分析：
+流程设定，求子数组必须以i位置结尾所得到的子数组中sum最接近k且小于k的值 返回全局最大值
+要求以i位置结尾所得到的子数组中sum最接近k且小于k的值，就等于求i前面的某个前缀和大于等于 sum[0-i] - k 且距离最近的
+
+比如说i位置是17，sum[0-i] = 1000
+k=100
+sum[0-14] 是前缀和中大于等于900且离900最近的，那么sum[15-17] 就是以17为结尾的子数组中sum离100最近且小于等于100的
+
+可以将i之前的前缀和存入有序表中，然后用ceil求大于等于某个值且离某个值最近的值
+*/
+export function getClosestSumK(arr: number[], k: number): number {
+    const skipSet = new SkipSet<number>();
+    // 此处的0必须加，否则就会漏掉以0结尾的子数组
+    skipSet.add(0);
+
+    let max = -Infinity;
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+
+        // 找到skipSet中离 sum - k最近的值
+        const ceil = skipSet.ceil(sum - k);
+        if (ceil !== null && ceil !== undefined) {
+            max = Math.max(max, sum - ceil);
+        }
+
+        skipSet.add(sum);
+    }
+
+    return max;
+}
+
+/* 
+给定一个整型矩阵nums和一个整数K，找到不大于K的最大子矩阵累加和
+
+分析，先解决子数组的问题，然后将矩阵压缩为数组来解决
+*/
+export function getClosestSumKOfMatrix(matrix: number[][], k: number): number {
+    // 列方向上的前缀和
+    const preSum: number[][] = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+
+    for (let j = 0; j < matrix[0].length; j++) {
+        let sum = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            sum += matrix[i][j];
+            preSum[i][j] = sum;
+        }
+    }
+
+    // 压缩层数
+    let count = 1;
+    const zeros = new Array(matrix[0].length).fill(0);
+    let max = -Infinity;
+    while (count <= matrix.length) {
+        // 从第0层开始
+        let start = 0;
+        while (start + count - 1 < matrix.length) {
+            let compressed;
+            if (start === 0) {
+                // 求0-count-1层的列前缀和
+                compressed = zeros.map((_, j) => preSum[0 + count - 1][j]);
+            } else {
+                // 求start到start+count-1层的前缀和
+                compressed = zeros.map((_, j) => {
+                    return preSum[start + count - 1][j] - preSum[start - 1][j];
+                });
+            }
+            max = Math.max(max, getClosestSumK(compressed, k));
+
+            start += count;
+        }
+
+        count++;
+    }
+
+    return max;
+}

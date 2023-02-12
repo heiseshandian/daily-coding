@@ -76,6 +76,10 @@ export class SkipSet<K> {
         return this.comparator(key1, key2) < 0;
     }
 
+    private isBiggerOrEqual(key1: K | null, key2: K | null): boolean {
+        return !this.isSmaller(key1, key2);
+    }
+
     private isSmallerOrEqual(key1: K | null, key2: K | null): boolean {
         return this.isSmaller(key1, key2) || this.isEqual(key1, key2);
     }
@@ -186,6 +190,54 @@ export class SkipSet<K> {
 
     public isEmpty() {
         return this.head.nextNodes[0] === null;
+    }
+
+    // 找到大于等于key并且距key最近的值
+    public ceil(key: K) {
+        let cur = this.head;
+        let curIndex = this.head.nextNodes.length - 1;
+        let found = null;
+        while (cur && curIndex >= 0) {
+            const next = cur.nextNodes[curIndex];
+            if (!next) {
+                curIndex--;
+                continue;
+            }
+
+            // 大于等于
+            if (this.isBiggerOrEqual(next.key, key)) {
+                found = next.key;
+                curIndex--;
+            } else {
+                cur = next;
+            }
+        }
+
+        return found;
+    }
+
+    // 找到小于等于key并且距key最近的值
+    public floor(key: K) {
+        let cur = this.head;
+        let curIndex = this.head.nextNodes.length - 1;
+        let found = null;
+        while (cur && curIndex >= 0) {
+            const next = cur.nextNodes[curIndex];
+            if (!next) {
+                curIndex--;
+                continue;
+            }
+
+            // 小于等于
+            if (this.isSmallerOrEqual(next.key, key)) {
+                found = next.key;
+                cur = next;
+            } else {
+                curIndex--;
+            }
+        }
+
+        return found;
     }
 
     public print(width = 10) {

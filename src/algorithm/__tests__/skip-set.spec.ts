@@ -49,4 +49,18 @@ describe('skip-list', () => {
         skipSet.delete(1);
         expect(skipSet.isEmpty()).toBe(true);
     });
+
+    test('ceil floor', () => {
+        const skipSet = new SkipSet();
+
+        [3, 5, 6, 7, 2, 1, 0, -1, 56, 23, 12].forEach((val) => {
+            skipSet.add(val);
+        });
+
+        expect(skipSet.ceil(4)).toBe(5);
+        expect(skipSet.floor(4)).toBe(3);
+
+        expect(skipSet.ceil(6)).toBe(6);
+        expect(skipSet.floor(6)).toBe(6);
+    });
 });
