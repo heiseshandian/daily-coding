@@ -2461,24 +2461,23 @@ class UndirectedGraphNode {
 export function cloneGraphNodeMap(node: UndirectedGraphNode): UndirectedGraphNode {
     // 先遍历一次复制出所有节点放入map
     const map: Map<UndirectedGraphNode, UndirectedGraphNode> = new Map();
-    const set: Set<UndirectedGraphNode> = new Set();
 
     // 宽度优先遍历
     const queue = new Queue<UndirectedGraphNode>();
     queue.add(node);
-    set.add(node);
+    const head = new UndirectedGraphNode(node.label);
+    map.set(node, head);
 
     while (!queue.isEmpty()) {
         const cur = queue.poll() as UndirectedGraphNode;
-        const copy = new UndirectedGraphNode(cur.label);
-        map.set(cur, copy);
 
         cur.neighbors.forEach((neighbor) => {
-            if (set.has(neighbor)) {
+            if (map.has(neighbor)) {
                 return;
             }
 
-            set.add(neighbor);
+            const copy = new UndirectedGraphNode(neighbor.label);
+            map.set(neighbor, copy);
             queue.add(neighbor);
         });
     }
