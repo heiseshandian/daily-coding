@@ -8,6 +8,7 @@ import {
     getAllTwoTuples,
     getConnectedRegions,
     getMaxA,
+    getMaxIncreasingNum,
     getMaxK,
     getMaxLenOfComposableSubArr,
     getMinCoins,
@@ -43,6 +44,7 @@ import {
     getAllTriplesTestData,
     findKthLargestTestData,
     getMinRangeTestData,
+    getMaxIncreasingNumTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -335,5 +337,9 @@ describe('other', () => {
 
     it.each(getMinPalindromeTestData)('getMinPalindrome', ({ input, expected }) => {
         expect(getMinPalindrome(input)).toBe(expected);
+    });
+
+    it.each(getMaxIncreasingNumTestData)('getMaxIncreasingNum', ({ input, expected }) => {
+        expect(getMaxIncreasingNum(input)).toBe(expected);
     });
 });

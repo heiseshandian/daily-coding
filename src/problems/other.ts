@@ -2287,3 +2287,62 @@ export function getMinPalindrome(str: string): string {
 
     return result.join('');
 }
+
+/* 
+每个位置都可以走向左、右、上、下四个方向，找到
+给定一个整型矩阵nums 其中最长的递增路径
+
+【例子】nums = [ [9,9,4], [6,6,8], [2,1,1] ] 
+输出：4 最长的递增路径为：【1，2，6，9】
+
+nums = [[3,4,5], [3,2,6], [2,2,1]]
+输出：4 最长的递增路径为：【3，4，5，6】
+
+任意位置都依赖于上下左右四个方向的位置，无法通过常规的方式得到动态规划表，直接用傻缓存法
+*/
+export function getMaxIncreasingNum(arr: number[][]): number {
+    let max = -Infinity;
+    const dp: number[][] = new Array(arr.length).fill(0).map((_) => new Array(arr[0].length).fill(undefined));
+
+    for (let row = 0; row < arr.length; row++) {
+        for (let col = 0; col < arr[0].length; col++) {
+            max = Math.max(max, maxIncreasingProcess(arr, row, col, dp));
+        }
+    }
+
+    return max;
+}
+
+// 从row和col出发走出的最长路径
+function maxIncreasingProcess(arr: number[][], row: number, col: number, dp: number[][]): number {
+    if (dp[row][col] !== undefined) {
+        return dp[row][col];
+    }
+
+    // 往上走
+    let upNext = 0;
+    if (row - 1 >= 0 && arr[row - 1][col] > arr[row][col]) {
+        upNext = maxIncreasingProcess(arr, row - 1, col, dp);
+    }
+
+    // 往下走
+    let downNext = 0;
+    if (row + 1 < arr.length && arr[row + 1][col] > arr[row][col]) {
+        downNext = maxIncreasingProcess(arr, row + 1, col, dp);
+    }
+
+    // 往左走
+    let leftNext = 0;
+    if (col - 1 >= 0 && arr[row][col - 1] > arr[row][col]) {
+        leftNext = maxIncreasingProcess(arr, row, col - 1, dp);
+    }
+
+    // 往右走
+    let rightNext = 0;
+    if (col + 1 < arr[0].length && arr[row][col + 1] > arr[row][col]) {
+        rightNext = maxIncreasingProcess(arr, row, col + 1, dp);
+    }
+
+    dp[row][col] = Math.max(upNext, downNext, leftNext, rightNext) + 1;
+    return dp[row][col];
+}
