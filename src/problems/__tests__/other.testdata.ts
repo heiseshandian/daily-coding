@@ -780,3 +780,20 @@ export const getMaxProfit4TestData = [
         expected: 9,
     },
 ];
+
+export const countSubsequenceTestData = [
+    {
+        input: {
+            s: 'rabbbit',
+            t: 'rabbit',
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            s: 'rabbabit',
+            t: 'rabbit',
+        },
+        expected: 3,
+    },
+];

@@ -117,7 +117,8 @@ import {
     getMinPalindromeTestData,
     getMaxProfitTestData,
 } from './other.testdata';
-import { getMinMoneyOfPassingMonsterDp4, getMinValue, getMaxProfit3 } from '../other';
+import { getMinMoneyOfPassingMonsterDp4, getMinValue, getMaxProfit3, countSubsequence } from '../other';
+import { countSubsequenceTestData } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -389,5 +390,9 @@ describe('other', () => {
     it.each(getMaxProfit4TestData)('getMaxProfit4', ({ input: { arr, k }, expected }) => {
         expect(getMaxProfit4(arr, k)).toBe(expected);
         expect(getMaxProfit4Dp(arr, k)).toBe(expected);
+    });
+
+    it.each(countSubsequenceTestData)('countSubsequence', ({ input: { s, t }, expected }) => {
+        expect(countSubsequence(s, t)).toBe(expected);
     });
 });

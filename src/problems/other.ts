@@ -2769,3 +2769,42 @@ export function getMaxProfit4Dp(arr: number[], k: number): number {
 
     return dp[arr.length - 1][k];
 }
+
+/* 
+给定两个字符串S和T，返回S子序列等于T的不同子序列个数有多少个？
+如果得到子序列A删除的位置与得到子序列B删除的位置不同，那么认为A和B就是不同的。
+
+【例子】
+S="rabbbit",T="rabbit"返回：3
+
+是以下三个S的不同子序列
+rabbbit 删除第一个b得到 rabbit
+rabbbit 删除第二个b得到 rabbit
+rabbbit 删除第三个b得到 rabbit
+
+样本对应模型
+*/
+export function countSubsequence(s: string, t: string) {
+    // dp[i][j] s[0-i]的字符有多少子序列等于t[0-j]
+    const dp: number[][] = new Array(s.length).fill(0).map((_) => new Array(t.length).fill(0));
+
+    // 第一列
+    for (let i = 0; i < s.length; i++) {
+        dp[i][0] = s
+            .slice(0, i + 1)
+            .split('')
+            .filter((char) => char === t[0]).length;
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i < s.length; i++) {
+        for (let j = 1; j < t.length; j++) {
+            dp[i][j] = dp[i - 1][j];
+            if (s[i] === t[j]) {
+                dp[i][j] += dp[i - 1][j - 1];
+            }
+        }
+    }
+
+    return dp[s.length - 1][t.length - 1];
+}
