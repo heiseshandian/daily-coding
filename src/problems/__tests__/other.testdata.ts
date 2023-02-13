@@ -720,3 +720,14 @@ export const getMinValueTestData = [
         expected: 1,
     },
 ];
+
+export const getMaxProfitTestData = [
+    {
+        input: [1, 3, 2, 4, 5, 0, 9],
+        expected: 9,
+    },
+    {
+        input: [1, 3, 2, 8, 5, 3, 9],
+        expected: 8,
+    },
+];

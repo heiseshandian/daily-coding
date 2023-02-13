@@ -14,6 +14,7 @@ import {
     getMaxIncreasingNum,
     getMaxK,
     getMaxLenOfComposableSubArr,
+    getMaxProfit,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -105,7 +106,12 @@ import {
     getMinValueOfColor2,
     getMinValueOfColorDp,
 } from '../other';
-import { getConnectedRegionsTestData, getMinMissingNumberTestData, getMinPalindromeTestData } from './other.testdata';
+import {
+    getConnectedRegionsTestData,
+    getMinMissingNumberTestData,
+    getMinPalindromeTestData,
+    getMaxProfitTestData,
+} from './other.testdata';
 import { getMinMoneyOfPassingMonsterDp4, getMinValue } from '../other';
 import {
     getMinMoneyOfPassingMonsterDp,
@@ -364,5 +370,9 @@ describe('other', () => {
 
     it.each(getMinValueTestData)('getMinValue', ({ input, expected }) => {
         expect(getMinValue(input)).toBe(expected);
+    });
+
+    it.each(getMaxProfitTestData)('getMaxProfit', ({ input, expected }) => {
+        expect(getMaxProfit(input)).toBe(expected);
     });
 });

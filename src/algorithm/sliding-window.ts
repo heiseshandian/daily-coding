@@ -9,17 +9,22 @@
 右边界移动时尝试更新双端队列（小于等于的元素全部出队列，因为这些元素再也不可能成为窗口最大值了）
 左边界移动时若当前双端队列头部元素已过期（已经不属于窗口）则出队列
 */
-export class MaxSlidingWindow {
+type Comparator = (last: number, right: number) => number;
+
+export class SlidingWindow {
     arr: number[];
 
     left = -1;
     right = -1;
 
+    comparator: Comparator;
+
     // 双端队列，严格从大到小
     doubleQueue: number[] = [];
 
-    constructor(arr: number[]) {
+    constructor(arr: number[], comparator: Comparator = (last, right) => last - right) {
         this.arr = arr;
+        this.comparator = comparator;
     }
 
     public moveRight() {
@@ -30,7 +35,7 @@ export class MaxSlidingWindow {
 
         while (this.doubleQueue.length !== 0) {
             const last = this.doubleQueue[this.doubleQueue.length - 1];
-            if (this.arr[last] > this.arr[this.right]) {
+            if (this.comparator(this.arr[last], this.arr[this.right]) > 0) {
                 break;
             }
             this.doubleQueue.length--;
@@ -50,7 +55,7 @@ export class MaxSlidingWindow {
         }
     }
 
-    public getMax() {
+    public peek() {
         return this.arr[this.doubleQueue[0]];
     }
 }

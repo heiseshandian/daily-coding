@@ -6,6 +6,7 @@ import { UnionSet } from '../algorithm/union-set';
 import { getCharIndex, maxCommonFactor, swap } from '../common/index';
 import { Queue } from '../algorithm/queue';
 import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
+import { SlidingWindow } from '../algorithm/sliding-window';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -2649,4 +2650,24 @@ export function getMinValue(arr: number[]): number {
     }
 
     return Math.min(arr[left], arr[right]);
+}
+
+/* 
+买卖股票问题
+
+给定数组arr代表一天的价格，问只能做一次交易的情况下如何使得获利最大
+
+分析，i号时间点卖出，则只要求出0-i范围内最小值，两者相减就是i号时间点卖出所能获得的最大收益，全局求个最大值即可
+滑动窗口来做
+*/
+export function getMaxProfit(arr: number[]): number {
+    const minSlidingWindow = new SlidingWindow(arr, (last, right) => right - last);
+    let max = -Infinity;
+
+    for (let i = 0; i < arr.length; i++) {
+        minSlidingWindow.moveRight();
+        max = Math.max(arr[i] - minSlidingWindow.peek());
+    }
+
+    return max;
 }
