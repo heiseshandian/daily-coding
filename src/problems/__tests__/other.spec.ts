@@ -17,6 +17,7 @@ import {
     getMaxProfit,
     getMaxProfit2,
     getMaxProfit4,
+    getMaxProfit4Dp,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -387,5 +388,6 @@ describe('other', () => {
 
     it.each(getMaxProfit4TestData)('getMaxProfit4', ({ input: { arr, k }, expected }) => {
         expect(getMaxProfit4(arr, k)).toBe(expected);
+        expect(getMaxProfit4Dp(arr, k)).toBe(expected);
     });
 });

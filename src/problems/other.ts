@@ -2744,3 +2744,28 @@ function getMaxProfit4Process(arr: number[], buyIndex: number, i: number, k: num
 
     return dp.get(id) as number;
 }
+
+export function getMaxProfit4Dp(arr: number[], k: number): number {
+    if (k >= arr.length >> 1) {
+        return getMaxProfit3(arr);
+    }
+
+    // dp[i][k]
+    const dp: number[][] = new Array(arr.length).fill(0).map((_) => new Array(k + 1).fill(0));
+
+    for (let restK = 1; restK <= k; restK++) {
+        let prevMax = dp[0][restK - 1] - arr[0];
+        for (let i = 1; i < arr.length; i++) {
+            // i号不卖出
+            const p1 = dp[i - 1][restK];
+            // i号卖出（买入时机就有可能是0-i的任意时刻）
+            // 通过分析具体的例子可以优化枚举行为
+            prevMax = Math.max(prevMax, dp[i][restK - 1] - arr[i]);
+            const p2 = arr[i] + prevMax;
+
+            dp[i][restK] = Math.max(p1, p2);
+        }
+    }
+
+    return dp[arr.length - 1][k];
+}
