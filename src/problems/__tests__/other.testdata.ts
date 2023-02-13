@@ -742,3 +742,41 @@ export const getMaxProfit3TestData = [
         expected: 1,
     },
 ];
+
+export const getMaxProfit4TestData = [
+    {
+        input: {
+            arr: [1, 3, 2, 4, 5, 0, 9],
+            k: 1,
+        },
+        expected: 9,
+    },
+    {
+        input: {
+            arr: [1, 3, 2, 8, 5, 3, 9],
+            k: 1,
+        },
+        expected: 8,
+    },
+    {
+        input: {
+            arr: [0, 7, 8, 4, 9],
+            k: 2,
+        },
+        expected: 13,
+    },
+    {
+        input: {
+            arr: [0, 7, 8, 4, 9],
+            k: 11,
+        },
+        expected: 13,
+    },
+    {
+        input: {
+            arr: [0, 7, 8, 4, 9],
+            k: 1,
+        },
+        expected: 9,
+    },
+];

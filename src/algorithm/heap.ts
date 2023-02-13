@@ -1,6 +1,6 @@
 import { swap } from '../common';
 
-export class Heap {
+export class MaxHeap {
     #container: number[];
 
     constructor() {

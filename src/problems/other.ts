@@ -7,6 +7,7 @@ import { getCharIndex, maxCommonFactor, swap } from '../common/index';
 import { Queue } from '../algorithm/queue';
 import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
 import { SlidingWindow } from '../algorithm/sliding-window';
+import { MaxHeap } from '../algorithm/heap';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -2698,4 +2699,48 @@ export function getMaxProfit3(arr: number[]): number {
     }
 
     return result;
+}
+
+/* 
+买卖股票问题2
+
+给定一个数组arr，从左到右表示昨天从早到晚股票的价格。作为一个事后诸葛亮，你想知道如果交易次数不超过k次，且每次交易只买卖一股，返回能挣到的最大钱数
+*/
+export function getMaxProfit4(arr: number[], k: number): number {
+    const dp: Map<string, number> = new Map();
+
+    return getMaxProfit4Process(arr, -1, 0, k, dp);
+}
+
+// 当前来到i位置，如果buyIndex不等于-1说明之前已经买入过，当前有两种选择（持有||卖出）
+// 如果buyIndex不等于-1则说明之前未买入过，当前也有两种选择（不买入||买入）
+// 从各种选择中取最大值
+function getMaxProfit4Process(arr: number[], buyIndex: number, i: number, k: number, dp: Map<string, number>): number {
+    const id = `${buyIndex}_${i}_${k}`;
+    if (dp.has(id)) {
+        return dp.get(id) as number;
+    }
+
+    if (k === 0 || i === arr.length) {
+        return 0;
+    }
+
+    // 之前没有买入过，当前可以买入或者不买入
+    if (buyIndex === -1) {
+        // 买入
+        const p1 = -arr[i] + getMaxProfit4Process(arr, i, i + 1, k, dp);
+        // 不买入
+        const p2 = getMaxProfit4Process(arr, -1, i + 1, k, dp);
+
+        dp.set(id, Math.max(0, p1, p2));
+    } else {
+        // 持有
+        const p1 = getMaxProfit4Process(arr, buyIndex, i + 1, k, dp);
+        // 卖出
+        const p2 = arr[i] + getMaxProfit4Process(arr, -1, i + 1, k - 1, dp);
+
+        dp.set(id, Math.max(0, p1, p2));
+    }
+
+    return dp.get(id) as number;
 }

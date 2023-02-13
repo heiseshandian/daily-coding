@@ -16,6 +16,7 @@ import {
     getMaxLenOfComposableSubArr,
     getMaxProfit,
     getMaxProfit2,
+    getMaxProfit4,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -55,6 +56,7 @@ import {
     findWordsTestData,
     getMinValueTestData,
     getMaxProfit3TestData,
+    getMaxProfit4TestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -381,5 +383,9 @@ describe('other', () => {
 
     it.each(getMaxProfit3TestData)('getMaxProfit3', ({ input, expected }) => {
         expect(getMaxProfit3(input)).toBe(expected);
+    });
+
+    it.each(getMaxProfit4TestData)('getMaxProfit4', ({ input: { arr, k }, expected }) => {
+        expect(getMaxProfit4(arr, k)).toBe(expected);
     });
 });
