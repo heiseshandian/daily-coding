@@ -54,6 +54,7 @@ import {
     getClosestSumKOfMatrixTestData,
     findWordsTestData,
     getMinValueTestData,
+    getMaxProfit3TestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -113,7 +114,7 @@ import {
     getMinPalindromeTestData,
     getMaxProfitTestData,
 } from './other.testdata';
-import { getMinMoneyOfPassingMonsterDp4, getMinValue } from '../other';
+import { getMinMoneyOfPassingMonsterDp4, getMinValue, getMaxProfit3 } from '../other';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -376,5 +377,9 @@ describe('other', () => {
     it.each(getMaxProfitTestData)('getMaxProfit', ({ input, expected }) => {
         expect(getMaxProfit(input)).toBe(expected);
         expect(getMaxProfit2(input)).toBe(expected);
+    });
+
+    it.each(getMaxProfit3TestData)('getMaxProfit3', ({ input, expected }) => {
+        expect(getMaxProfit3(input)).toBe(expected);
     });
 });

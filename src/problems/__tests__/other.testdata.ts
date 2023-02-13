@@ -731,3 +731,14 @@ export const getMaxProfitTestData = [
         expected: 8,
     },
 ];
+
+export const getMaxProfit3TestData = [
+    {
+        input: [0, 7, 8, 4, 9],
+        expected: 13,
+    },
+    {
+        input: [9, 8, 7, 6, 5, 6],
+        expected: 1,
+    },
+];

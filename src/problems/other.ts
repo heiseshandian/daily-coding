@@ -2683,3 +2683,21 @@ export function getMaxProfit2(arr: number[]): number {
 
     return max;
 }
+
+/* 
+买卖股票问题2
+
+给定一个数组arr，从左到右表示昨天从早到晚股票的价格。作为一个事后诸葛亮，你想知道如果随便交易，且每次交易只买卖一股，返回能挣到的最大钱数
+*/
+export function getMaxProfit3(arr: number[]): number {
+    const leftArr = new Array(arr.length).fill(0);
+
+    for (let i = 1; i < arr.length; i++) {
+        leftArr[i] = arr[i] - arr[i - 1];
+    }
+
+    return leftArr.reduce((acc, cur) => {
+        acc += cur > 0 ? cur : 0;
+        return acc;
+    }, 0);
+}
