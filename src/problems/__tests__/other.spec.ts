@@ -51,6 +51,7 @@ import {
     getClosestSumKTestData,
     getClosestSumKOfMatrixTestData,
     findWordsTestData,
+    getMinValueTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -105,7 +106,7 @@ import {
     getMinValueOfColorDp,
 } from '../other';
 import { getConnectedRegionsTestData, getMinMissingNumberTestData, getMinPalindromeTestData } from './other.testdata';
-import { getMinMoneyOfPassingMonsterDp4 } from '../other';
+import { getMinMoneyOfPassingMonsterDp4, getMinValue } from '../other';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -359,5 +360,9 @@ describe('other', () => {
 
     it.each(findWordsTestData)('findWords', ({ input: { board, words }, expected }) => {
         expect(findWords(board, words)).toEqual(expected);
+    });
+
+    it.each(getMinValueTestData)('getMinValue', ({ input, expected }) => {
+        expect(getMinValue(input)).toBe(expected);
     });
 });

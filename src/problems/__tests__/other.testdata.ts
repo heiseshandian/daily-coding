@@ -693,3 +693,30 @@ export const findWordsTestData = [
         expected: [],
     },
 ];
+
+export const getMinValueTestData = [
+    {
+        input: [2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        expected: 1,
+    },
+    {
+        input: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2],
+        expected: 1,
+    },
+    {
+        input: [2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        expected: 1,
+    },
+    {
+        input: [3, 4, 5, 0, 1, 2, 3],
+        expected: 0,
+    },
+    {
+        input: [3, 4, 5, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+        expected: 0,
+    },
+    {
+        input: [1, 2, 3],
+        expected: 1,
+    },
+];

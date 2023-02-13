@@ -2585,3 +2585,68 @@ function tryNewRowCol(
     }
     return 0;
 }
+
+/* 
+有序数组 arr可能经过一次旋转处理，也可能没有，且arr可能存在重复的数。
+
+例如，有序数组【1，2，3，4，5，6，7】，可以旋转处理成【4，5，6，7，1，2，3】等。
+给定一个可能旋转过的有序数组 arr，返回arr中的最小值。
+
+所谓数组旋转指的是把左边n个数放在右边
+
+二分未必要全局有序，只要二分之后能够通过某些标准缩小范围就可以了
+*/
+export function getMinValue(arr: number[]): number {
+    let left = 0;
+    let right = arr.length - 1;
+
+    // left到right范围上有全局最小值
+    while (left < right) {
+        if (left === right - 1) {
+            break;
+        }
+
+        // 如果左边的数组比右边的小，然后left到right范围内又必然存在全局最小，那么left必然是全局最小
+        // 因为如果旋转过arr[left]必然大于等于arr[right]
+        if (arr[left] < arr[right]) {
+            return arr[left];
+        }
+
+        // arr[left] >= arr[right] 原数组必然旋转过 全局最小在left+1到right范围内
+        left++;
+        const mid = left + ((right - left) >> 1);
+
+        // 由于数组必然旋转过，从left到right的变化幅度就是从小到大，再突然变小（全局最小），然后变大
+        // 所以如果arr[left] > arr[mid] 则最小值一定在left到mid之间
+        if (arr[left] > arr[mid]) {
+            right = mid;
+            continue;
+        }
+        if (arr[left] < arr[mid]) {
+            left = mid;
+            continue;
+        }
+        if (arr[mid] > arr[right]) {
+            left = mid;
+            continue;
+        }
+        if (arr[mid] < arr[right]) {
+            right = mid;
+            continue;
+        }
+
+        // arr[left] === arr[mid] && arr[left] === arr[right]
+        while (left < mid) {
+            if (arr[left] === arr[mid]) {
+                left++;
+            } else if (arr[left] < arr[mid]) {
+                return arr[left];
+            } else {
+                right = mid;
+                break;
+            }
+        }
+    }
+
+    return Math.min(arr[left], arr[right]);
+}
