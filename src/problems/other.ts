@@ -2671,3 +2671,15 @@ export function getMaxProfit(arr: number[]): number {
 
     return max;
 }
+
+export function getMaxProfit2(arr: number[]): number {
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (let i = 0; i < arr.length; i++) {
+        min = Math.min(min, arr[i]);
+        max = Math.max(arr[i] - min);
+    }
+
+    return max;
+}
