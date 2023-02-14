@@ -835,3 +835,39 @@ export const getCalculateMethodsTestData = [
         expected: [],
     },
 ];
+
+export const existWordTestData = [
+    {
+        input: {
+            board: [
+                ['A', 'B', 'C', 'E'],
+                ['S', 'F', 'C', 'S'],
+                ['A', 'D', 'E', 'E'],
+            ],
+            word: 'ABCCED',
+        },
+        expected: true,
+    },
+    {
+        input: {
+            board: [
+                ['A', 'B', 'C', 'E'],
+                ['S', 'F', 'C', 'S'],
+                ['A', 'D', 'E', 'E'],
+            ],
+            word: 'SEE',
+        },
+        expected: true,
+    },
+    {
+        input: {
+            board: [
+                ['A', 'B', 'C', 'E'],
+                ['S', 'F', 'C', 'S'],
+                ['A', 'D', 'E', 'E'],
+            ],
+            word: 'ABCB',
+        },
+        expected: false,
+    },
+];

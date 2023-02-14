@@ -3,6 +3,7 @@ import {
     canSplit4Parts,
     countEqualTree2,
     countLostNumbers,
+    existWord,
     findKthLargest,
     findWords,
     getAllTriples,
@@ -61,6 +62,7 @@ import {
     getMaxProfit3TestData,
     getMaxProfit4TestData,
     getCalculateMethodsTestData,
+    existWordTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -418,5 +420,9 @@ describe('other', () => {
         head.right.right = new TreeNode(7);
 
         expect(zigzagLevelOrder(head)).toEqual([[3], [20, 9], [15, 7]]);
+    });
+
+    it.each(existWordTestData)('existWord', ({ input: { board, word }, expected }) => {
+        expect(existWord(board, word)).toBe(expected);
     });
 });

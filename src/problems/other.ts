@@ -3000,3 +3000,62 @@ export function zigzagLevelOrder(head: TreeNode): number[][] {
 
     return result;
 }
+
+/* 
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, 
+where adjacent cells are horizontally or vertically neighboring. 
+The same letter cell may not be used more than once.
+*/
+export function existWord(board: string[][], word: string): boolean {
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[0].length; col++) {
+            if (existWordProcess(board, row, col, word, 0)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// 此处不可以用ow,col和i组合做记忆化搜索，因为变量不只有row,col和i，existWordProcess运行过程中我们会改变board，进而会影响函数运行结果
+function existWordProcess(board: string[][], row: number, col: number, word: string, i: number): boolean {
+    const cur = word[i];
+    if (i === word.length - 1) {
+        return board[row][col] === cur;
+    }
+
+    if (board[row][col] !== cur || board[row][col] === '') {
+        return false;
+    }
+
+    board[row][col] = '';
+
+    const next = word[i + 1];
+    // 上下左右尝试
+    let p1 = false;
+    if (row - 1 >= 0 && board[row - 1][col] === next) {
+        p1 = existWordProcess(board, row - 1, col, word, i + 1);
+    }
+
+    let p2 = false;
+    if (row + 1 < board.length && board[row + 1][col] === next) {
+        p2 = existWordProcess(board, row + 1, col, word, i + 1);
+    }
+
+    let p3 = false;
+    if (col - 1 >= 0 && board[row][col - 1] === next) {
+        p3 = existWordProcess(board, row, col - 1, word, i + 1);
+    }
+
+    let p4 = false;
+    if (col + 1 < board[0].length && board[row][col + 1] === next) {
+        p4 = existWordProcess(board, row, col + 1, word, i + 1);
+    }
+
+    board[row][col] = cur;
+
+    return p1 || p2 || p3 || p4;
+}
