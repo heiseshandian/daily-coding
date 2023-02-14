@@ -2904,3 +2904,58 @@ function parseNum(num: string): number {
 
     return parseInt(num);
 }
+
+// 在深度优先的过程中就把结果算出来，避免到最后再去计算表达式
+export function getCalculateMethods2(str: string, target: number): string[] {
+    const result: Set<string> = new Set();
+
+    // 决定第一位数字是多少
+    for (let i = 0; i < str.length; i++) {
+        const char = str.slice(0, i + 1);
+        getCalculateMethods2Dfs(str, target, char, 0, parseInt(char), i + 1, result);
+
+        // 第一位数字为0直接break，比如说00就不是合法的两位数字
+        if (str[0] === '0') {
+            break;
+        }
+    }
+
+    return Array.from(result);
+}
+
+function getCalculateMethods2Dfs(
+    str: string,
+    target: number,
+    path: string,
+    left: number,
+    toBeDetermined: number,
+    i: number,
+    result: Set<string>
+) {
+    if (i === str.length) {
+        if (left + toBeDetermined === target) {
+            result.add(path);
+        }
+
+        return;
+    }
+
+    for (let j = i; j < str.length; j++) {
+        const char = str.slice(i, j + 1);
+        const num = parseInt(char);
+
+        // 加
+        getCalculateMethods2Dfs(str, target, path + `+${char}`, left + toBeDetermined, num, j + 1, result);
+
+        // 减
+        getCalculateMethods2Dfs(str, target, path + `-${char}`, left + toBeDetermined, -num, j + 1, result);
+
+        // 乘
+        getCalculateMethods2Dfs(str, target, path + `*${char}`, left, toBeDetermined * num, j + 1, result);
+
+        // 第一位数字为0直接break
+        if (str[i] === '0') {
+            break;
+        }
+    }
+}

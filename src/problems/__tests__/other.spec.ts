@@ -119,7 +119,13 @@ import {
     getMinPalindromeTestData,
     getMaxProfitTestData,
 } from './other.testdata';
-import { getMinMoneyOfPassingMonsterDp4, getMinValue, getMaxProfit3, countSubsequence } from '../other';
+import {
+    getMinMoneyOfPassingMonsterDp4,
+    getMinValue,
+    getMaxProfit3,
+    countSubsequence,
+    getCalculateMethods2,
+} from '../other';
 import { countSubsequenceTestData } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
@@ -400,5 +406,6 @@ describe('other', () => {
 
     it.each(getCalculateMethodsTestData)('getCalculateMethods', ({ input: { str, target }, expected }) => {
         expect(getCalculateMethods(str, target).sort()).toEqual(expected.sort());
+        expect(getCalculateMethods2(str, target).sort()).toEqual(expected.sort());
     });
 });
