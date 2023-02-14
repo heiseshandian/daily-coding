@@ -7,6 +7,7 @@ import {
     findWords,
     getAllTriples,
     getAllTwoTuples,
+    getCalculateMethods,
     getClosestSumK,
     getClosestSumKOfMatrix,
     getConnectedRegions,
@@ -58,6 +59,7 @@ import {
     getMinValueTestData,
     getMaxProfit3TestData,
     getMaxProfit4TestData,
+    getCalculateMethodsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -394,5 +396,9 @@ describe('other', () => {
 
     it.each(countSubsequenceTestData)('countSubsequence', ({ input: { s, t }, expected }) => {
         expect(countSubsequence(s, t)).toBe(expected);
+    });
+
+    it.each(getCalculateMethodsTestData)('getCalculateMethods', ({ input: { str, target }, expected }) => {
+        expect(getCalculateMethods(str, target).sort()).toEqual(expected.sort());
     });
 });

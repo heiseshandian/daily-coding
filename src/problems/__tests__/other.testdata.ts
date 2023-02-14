@@ -797,3 +797,41 @@ export const countSubsequenceTestData = [
         expected: 3,
     },
 ];
+
+export const getCalculateMethodsTestData = [
+    {
+        input: {
+            str: '123',
+            target: 6,
+        },
+        expected: ['1+2+3', '1*2*3'],
+    },
+    {
+        input: {
+            str: '232',
+            target: 8,
+        },
+        expected: ['2*3+2', '2+3*2'],
+    },
+    {
+        input: {
+            str: '105',
+            target: 5,
+        },
+        expected: ['10-5', '1*0+5'],
+    },
+    {
+        input: {
+            str: '00',
+            target: 0,
+        },
+        expected: ['0*0', '0+0', '0-0'],
+    },
+    {
+        input: {
+            str: '3456237490',
+            target: 9191,
+        },
+        expected: [],
+    },
+];

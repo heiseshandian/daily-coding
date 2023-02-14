@@ -2808,3 +2808,99 @@ export function countSubsequence(s: string, t: string) {
 
     return dp[s.length - 1][t.length - 1];
 }
+
+/* 
+给定一个只由"0~~9"字符组成的字符串num，和整数target。可以用+、-和*连接，返回num得到target的所有不同方法
+Example 1:
+Input: num ="123", target = 6 
+Output:["1+2+3","1*2*3"]
+
+Example 2:
+Input: num="232",target=8 
+Output:["2*3+2","2+3*2"]
+
+Example 3:
+Input: num="105",target=5 
+Output:["1*0+5","10-5"]
+
+Example 4:
+Input: num="00", target = 0
+Output:["O+O","O-O","O*O"]
+
+Example 5:
+Input: num = "3456237490", target = 9191
+output:[]
+*/
+export function getCalculateMethods(str: string, target: number): string[] {
+    const set: Set<string> = new Set();
+    getCalculateMethodsProcess(str, target, 0, '', set);
+    return Array.from(set);
+}
+
+function getCalculateMethodsProcess(str: string, target: number, i: number, path: string, set: Set<string>) {
+    if (i === str.length) {
+        const last = path[path.length - 1];
+        if (last === '+' || path === '-' || path === '*') {
+            path = path.slice(0, path.length - 1);
+        }
+
+        if (checkTarget(path, target)) {
+            set.add(path);
+        }
+
+        return;
+    }
+
+    // 四种选择
+    getCalculateMethodsProcess(str, target, i + 1, path + `${str[i]}+`, set);
+    getCalculateMethodsProcess(str, target, i + 1, path + `${str[i]}-`, set);
+    getCalculateMethodsProcess(str, target, i + 1, path + `${str[i]}*`, set);
+    getCalculateMethodsProcess(str, target, i + 1, path + str[i], set);
+}
+
+function checkTarget(path: string, target: number): boolean {
+    const operands = path.split(/[*+-]/);
+    for (let i = 0; i < operands.length; i++) {
+        if (operands[i].length >= 2 && operands[i][0] === '0') {
+            return false;
+        }
+    }
+
+    return calculatePath(path) === target;
+}
+
+function calculatePath(path: string): number {
+    const operators: string[] = [];
+    for (let i = 0; i < path.length; i++) {
+        if (path[i] === '+' || path[i] === '-') {
+            operators.push(path[i]);
+        }
+    }
+
+    const operands = path.split(/[+-]/);
+
+    return operands.slice(1).reduce((acc, cur) => {
+        const num = parseNum(cur);
+
+        const op = operators.shift();
+        if (op === '+') {
+            acc += num;
+        } else {
+            acc -= num;
+        }
+
+        return acc;
+    }, parseNum(operands[0]));
+}
+
+function parseNum(num: string): number {
+    const shouldCalculate = num.indexOf('*') !== -1;
+    if (shouldCalculate) {
+        return num.split('*').reduce((acc, cur) => {
+            acc *= parseInt(cur);
+            return acc;
+        }, 1);
+    }
+
+    return parseInt(num);
+}
