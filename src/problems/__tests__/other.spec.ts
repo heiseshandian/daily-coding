@@ -35,6 +35,7 @@ import {
     reverseBits,
     reverseBits2,
     unzipStr,
+    zigzagLevelOrder,
 } from '../other';
 import {
     getMaxATestData,
@@ -407,5 +408,15 @@ describe('other', () => {
     it.each(getCalculateMethodsTestData)('getCalculateMethods', ({ input: { str, target }, expected }) => {
         expect(getCalculateMethods(str, target).sort()).toEqual(expected.sort());
         expect(getCalculateMethods2(str, target).sort()).toEqual(expected.sort());
+    });
+
+    test('zigzagLevelOrder', () => {
+        const head = new TreeNode(3);
+        head.left = new TreeNode(9);
+        head.right = new TreeNode(20);
+        head.right.left = new TreeNode(15);
+        head.right.right = new TreeNode(7);
+
+        expect(zigzagLevelOrder(head)).toEqual([[3], [20, 9], [15, 7]]);
     });
 });

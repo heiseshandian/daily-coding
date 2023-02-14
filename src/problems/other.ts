@@ -2959,3 +2959,44 @@ function getCalculateMethods2Dfs(
         }
     }
 }
+
+// zigzag方式打印二叉树
+export function zigzagLevelOrder(head: TreeNode): number[][] {
+    if (!head) {
+        return [];
+    }
+
+    const queue = new Queue<TreeNode>();
+    queue.add(head);
+
+    let curEnd: TreeNode | null = head;
+    let nextEnd: TreeNode | null = null;
+    const curLevelValues: number[] = [];
+    let shouldReverse = false;
+
+    const result: number[][] = [];
+
+    while (!queue.isEmpty()) {
+        let cur = queue.poll() as TreeNode;
+        curLevelValues.push(cur.val);
+
+        if (cur.left) {
+            queue.add(cur.left);
+            nextEnd = cur.left;
+        }
+        if (cur.right) {
+            queue.add(cur.right);
+            nextEnd = cur.right;
+        }
+
+        // 当前节点是当前层最后一个节点
+        if (cur === curEnd) {
+            result.push(shouldReverse ? curLevelValues.slice().reverse() : curLevelValues.slice());
+            shouldReverse = !shouldReverse;
+            curLevelValues.length = 0;
+            curEnd = nextEnd;
+        }
+    }
+
+    return result;
+}

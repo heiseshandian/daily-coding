@@ -269,7 +269,7 @@ export function preBuildNode(queue: Queue<number | null>): TreeNode | null {
 
 function recursivePreBuildNode(queue: Queue<number | null>) {
     const val = queue.poll() as number;
-    if (val === null) {
+    if (val === null || val === undefined) {
         return null;
     }
 
