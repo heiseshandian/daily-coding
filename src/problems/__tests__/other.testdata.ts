@@ -871,3 +871,20 @@ export const existWordTestData = [
         expected: false,
     },
 ];
+
+export const countJointMethodsTestData = [
+    {
+        input: {
+            str: 'aaabc',
+            arr: ['a', 'aa', 'aaa', 'bc'],
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            str: 'aaabc',
+            arr: ['a', 'aa', 'bc'],
+        },
+        expected: 3,
+    },
+];

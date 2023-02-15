@@ -2,6 +2,9 @@ import { TreeNode } from '../../algorithm/tree';
 import {
     canSplit4Parts,
     countEqualTree2,
+    countJointMethods,
+    countJointMethodsDp,
+    countJointMethodsDp2,
     countLostNumbers,
     existWord,
     findKthLargest,
@@ -63,6 +66,7 @@ import {
     getMaxProfit4TestData,
     getCalculateMethodsTestData,
     existWordTestData,
+    countJointMethodsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -424,5 +428,11 @@ describe('other', () => {
 
     it.each(existWordTestData)('existWord', ({ input: { board, word }, expected }) => {
         expect(existWord(board, word)).toBe(expected);
+    });
+
+    it.each(countJointMethodsTestData)('countJointMethods', ({ input: { str, arr }, expected }) => {
+        expect(countJointMethods(str, arr)).toBe(expected);
+        expect(countJointMethodsDp(str, arr)).toBe(expected);
+        expect(countJointMethodsDp2(str, arr)).toBe(expected);
     });
 });

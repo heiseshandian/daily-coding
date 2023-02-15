@@ -3059,3 +3059,85 @@ function existWordProcess(board: string[][], row: number, col: number, word: str
 
     return p1 || p2 || p3 || p4;
 }
+
+/* 
+给定一个字符串str，给定一组单词 arr，arr中的单词可以使用无限次，问有多少种方式arr中的单词可以拼出str
+
+例如
+str:'aaabc'
+arr:['a','aa','bc']
+
+两种方式
+a aa bc
+aa a bc
+*/
+export function countJointMethods(str: string, arr: string[]) {
+    const set: Set<string> = new Set(arr);
+
+    return countJointMethodsProcess(str, set, 0);
+}
+
+function countJointMethodsProcess(str: string, set: Set<string>, i: number): number {
+    if (i === str.length) {
+        return 1;
+    }
+
+    let count = 0;
+    for (let j = i; j < str.length; j++) {
+        const char = str.slice(i, j + 1);
+        if (set.has(char)) {
+            count += countJointMethodsProcess(str, set, j + 1);
+        }
+    }
+
+    return count;
+}
+
+export function countJointMethodsDp(str: string, arr: string[]): number {
+    const dp: number[] = new Array(str.length + 1).fill(0);
+    dp[str.length] = 1;
+    const set: Set<string> = new Set(arr);
+
+    // O(n^3) str.slice(i, j + 1) 这个操作也要消耗一个线性时间
+    for (let i = str.length - 1; i >= 0; i--) {
+        let count = 0;
+        for (let j = i; j < str.length; j++) {
+            const char = str.slice(i, j + 1);
+            if (set.has(char)) {
+                count += dp[j + 1];
+            }
+        }
+        dp[i] = count;
+    }
+
+    return dp[0];
+}
+
+// 用前缀树代替set，优化时间复杂度
+export function countJointMethodsDp2(str: string, arr: string[]): number {
+    const dp: number[] = new Array(str.length + 1).fill(0);
+    dp[str.length] = 1;
+
+    const prefixTree = new PrefixTree();
+    arr.forEach((word) => prefixTree.add(word));
+
+    for (let i = str.length - 1; i >= 0; i--) {
+        let count = 0;
+        let cur = prefixTree.head;
+
+        for (let j = i; j < str.length; j++) {
+            // 把之前生成子串的O(n) 操作变成在前缀树上移动一个节点的O(1)操作，秒啊
+            const index = getCharIndex(str[j]);
+            if (cur.nextNodes[index]) {
+                count += dp[j + 1];
+                cur = cur.nextNodes[index];
+            } else {
+                break;
+            }
+        }
+
+        dp[i] = count;
+    }
+
+    return dp[0];
+}
