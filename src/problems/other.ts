@@ -7,7 +7,7 @@ import { getCharIndex, maxCommonFactor, swap } from '../common/index';
 import { Queue } from '../algorithm/queue';
 import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
 import { SlidingWindow } from '../algorithm/sliding-window';
-import { MaxHeap } from '../algorithm/heap';
+import { SingleLinkedList } from '../algorithm/linked-list';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -3143,4 +3143,46 @@ export function countJointMethodsDp2(str: string, arr: string[]): number {
     }
 
     return dp[0];
+}
+
+/* 
+Given the head of a singly linked list and two integers left and right where left <= right, 
+reverse the nodes of the list from position left to position right, and return the reversed list.
+*/
+export function reverseBetween(head: SingleLinkedList | null, left: number, right: number): SingleLinkedList | null {
+    if (left === right) {
+        return head;
+    }
+
+    let prevLeft = null;
+    let afterRight = null;
+
+    let count = 1;
+    let cur = head;
+    while (count < left && cur) {
+        prevLeft = cur;
+        cur = cur.next;
+        count++;
+    }
+    const leftNode = cur;
+
+    let prev = null;
+    while (count <= right && cur) {
+        const next = cur.next;
+        cur.next = prev;
+        prev = cur;
+        cur = next;
+
+        afterRight = next;
+        count++;
+    }
+
+    if (prevLeft) {
+        prevLeft.next = prev;
+        leftNode!.next = afterRight;
+        return head;
+    } else {
+        leftNode!.next = afterRight;
+        return prev;
+    }
 }

@@ -36,6 +36,7 @@ import {
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
     MessageBox,
+    reverseBetween,
     reverseBits,
     reverseBits2,
     unzipStr,
@@ -133,7 +134,7 @@ import {
     countSubsequence,
     getCalculateMethods2,
 } from '../other';
-import { countSubsequenceTestData } from './other.testdata';
+import { countSubsequenceTestData, reverseBetweenTestData } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -144,6 +145,7 @@ import {
     getMinSumThatCanNotBeComposedTestData,
     countLostNumbersTestData,
 } from './other.testdata';
+import { SingleLinkedList } from '../../algorithm/linked-list';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -434,5 +436,11 @@ describe('other', () => {
         expect(countJointMethods(str, arr)).toBe(expected);
         expect(countJointMethodsDp(str, arr)).toBe(expected);
         expect(countJointMethodsDp2(str, arr)).toBe(expected);
+    });
+
+    it.each(reverseBetweenTestData)('reverseBetween', ({ input: { arr, left, right }, expected }) => {
+        const head = SingleLinkedList.from(arr);
+
+        expect(SingleLinkedList.toArray(reverseBetween(head, left, right))).toEqual(expected);
     });
 });

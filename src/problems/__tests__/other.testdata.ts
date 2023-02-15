@@ -895,3 +895,22 @@ export const countJointMethodsTestData = [
         expected: 3,
     },
 ];
+
+export const reverseBetweenTestData = [
+    {
+        input: { arr: [1, 2, 3, 4, 5], left: 2, right: 4 },
+        expected: [1, 4, 3, 2, 5],
+    },
+    {
+        input: { arr: [1], left: 1, right: 1 },
+        expected: [1],
+    },
+    {
+        input: { arr: [1, 2], left: 1, right: 2 },
+        expected: [2, 1],
+    },
+    {
+        input: { arr: [1, 2, 3], left: 1, right: 2 },
+        expected: [2, 1, 3],
+    },
+];
