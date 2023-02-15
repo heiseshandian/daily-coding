@@ -883,6 +883,13 @@ export const countJointMethodsTestData = [
     {
         input: {
             str: 'aaabc',
+            arr: ['a', 'aaa', 'bc'],
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            str: 'aaabc',
             arr: ['a', 'aa', 'bc'],
         },
         expected: 3,

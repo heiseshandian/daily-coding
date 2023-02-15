@@ -3128,12 +3128,15 @@ export function countJointMethodsDp2(str: string, arr: string[]): number {
         for (let j = i; j < str.length; j++) {
             // 把之前生成子串的O(n) 操作变成在前缀树上移动一个节点的O(1)操作，秒啊
             const index = getCharIndex(str[j]);
-            if (cur.nextNodes[index]) {
-                count += dp[j + 1];
-                cur = cur.nextNodes[index];
-            } else {
+            // 后续没有路直接终止循环
+            if (!cur.nextNodes[index]) {
                 break;
             }
+
+            if (cur.nextNodes[index].end !== 0) {
+                count += dp[j + 1];
+            }
+            cur = cur.nextNodes[index];
         }
 
         dp[i] = count;
