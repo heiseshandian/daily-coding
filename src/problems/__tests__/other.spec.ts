@@ -134,7 +134,7 @@ import {
     countSubsequence,
     getCalculateMethods2,
 } from '../other';
-import { countSubsequenceTestData, reverseBetweenTestData } from './other.testdata';
+import { countSubsequenceTestData, reverseBetweenTestData, updatePathsTestData } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -146,6 +146,7 @@ import {
     countLostNumbersTestData,
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
+import { updatePaths } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -442,5 +443,11 @@ describe('other', () => {
         const head = SingleLinkedList.from(arr);
 
         expect(SingleLinkedList.toArray(reverseBetween(head, left, right))).toEqual(expected);
+    });
+
+    it.each(updatePathsTestData)('updatePaths', ({ input, expected }) => {
+        updatePaths(input);
+
+        expect(input).toEqual(expected);
     });
 });

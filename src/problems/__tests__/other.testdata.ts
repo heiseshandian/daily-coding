@@ -914,3 +914,14 @@ export const reverseBetweenTestData = [
         expected: [2, 1, 3],
     },
 ];
+
+export const updatePathsTestData = [
+    {
+        input: [9, 1, 4, 9, 0, 4, 8, 9, 0, 1],
+        expected: [1, 1, 3, 2, 3, 0, 0, 0, 0, 0],
+    },
+    {
+        input: [4, 9, 1, 9, 1, 9, 3, 5, 4, 9],
+        expected: [1, 3, 4, 2, 0, 0, 0, 0, 0, 0],
+    },
+];

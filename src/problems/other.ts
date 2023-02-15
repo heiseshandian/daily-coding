@@ -3186,3 +3186,129 @@ export function reverseBetween(head: SingleLinkedList | null, left: number, righ
         return prev;
     }
 }
+
+/* 
+给定一个路径数组 paths，表示一张图。paths[i]==j代表城市 i 连向城市 j，如果paths[i]==i，则表示i城市是首都，
+一张图里只会有一个首都且图中除首都指向自己之外不会有环。
+
+例如， paths=【9，1，4，9，0，4，8，9，0，1】，
+由数组表示的图可以知道，城市 1 是首都，所以距离为 0，
+离首都距离为 1 的城市只有城市 9，
+离首都距离为2的城市有城市0、3 和7，
+离首都距离为3的城市有城市 4 和 8，
+离首都 距离为 4 的城市有城市2、5 和 6。
+
+所以距离为0 的城市有 1 座，
+距离为 1 的城市有1座，
+距离为2的城市有3座，
+距离为3的城市有2座，
+距离为4的城市有3 座。
+
+那么统计数组为nums=【1，1，3，2，3，0，0，0，0】，nums【i】=j代表距离为 i 的城市有j座。
+要求实现一个 void 类型的函 数，输入一个路径数组 paths，直接在原数组上调整，使之变为 nums 数组，
+即 paths=【9，1，4，9，0，4，8，9，0，1】经过这个函数处理后变成[1,1,3,2,3,0,0,0,0,0]。
+
+【要求】
+如果 paths 长度为 N，请达到时间复杂度为0（N），额外空间复杂度为0（1）。
+*/
+export function updatePaths(paths: number[]): void {
+    if (!paths || paths.length === 0) {
+        return;
+    }
+
+    toDistancePaths(paths);
+
+    toCountPaths(paths);
+}
+
+// 把原数组变成每座城市到首都的距离数组
+function toDistancePaths(paths: number[]): void {
+    // 起跳点
+    let start = 0;
+    let capital: number | undefined = undefined;
+
+    while (start < paths.length) {
+        // 跳到首都的位置记录下来
+        if (paths[start] === start) {
+            capital = start++;
+            continue;
+        }
+
+        //  已经标记过距离的位置直接跳过
+        if (paths[start] < 0) {
+            start++;
+            continue;
+        }
+
+        // 从start位置开始往外跳
+        let i = start;
+        // 从i位置要跳向的位置
+        let next = paths[i];
+        // 跳到next位置之前的位置
+        let last = i;
+        while (i !== paths[i] && paths[i] > -1) {
+            next = paths[i];
+            // 保留跳的路径信息，将来可以原路返回
+            paths[i] = last;
+
+            // 先记录下前一个位置，然后i跳到下一个位置
+            last = i;
+            i = next;
+        }
+
+        // 开始往回跳并更新距离信息，用负数表示
+        // i===capital或者paths[i]是负数
+        let distance = i === paths[i] ? 0 : paths[i];
+        i = last;
+        while (i !== start) {
+            next = paths[i];
+            paths[i] = --distance;
+            i = next;
+        }
+        paths[i] = --distance;
+
+        start++;
+    }
+
+    // 循环结束手动将首都到首都的距离更新为0
+    paths[capital!] = 0;
+}
+
+// 把距离数组变成到首都距离为i的城市有几座的统计数组
+function toCountPaths(paths: number[]): void {
+    let start = 0;
+    while (start < paths.length) {
+        // 大于等于0直接跳过（首都只有一个，也就是说paths[0]最终一定是1）
+        if (paths[start] >= 0) {
+            start++;
+            continue;
+        }
+
+        let distance = paths[start];
+        // start位置上的distance数据用完之后变成统计意义上的0
+        // 表示当前还没发现距离首都为start的城市
+        // 此处要在循环之前设置，不然可能会导致start这个位置的distance被重复记录
+        paths[start++] = 0;
+
+        let nextDistance;
+        while (distance < 0) {
+            const index = Math.abs(distance);
+            // 更新之前先把下一个位置的distance存起来
+            nextDistance = paths[index];
+
+            if (nextDistance > 0) {
+                // 到首都长度为 Math.abs(paths[i]) 的城市之前已经统计过
+                // 现在又发现了一座
+                paths[index]++;
+            } else {
+                // 之前没统计过，现在发现了一座
+                paths[index] = 1;
+            }
+
+            distance = nextDistance;
+        }
+    }
+
+    // 最后手动更新距离为0的城市个数（有且仅有首都）
+    paths[0] = 1;
+}
