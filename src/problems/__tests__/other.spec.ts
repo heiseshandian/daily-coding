@@ -36,6 +36,8 @@ import {
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
     MessageBox,
+    minCameraCover,
+    minCameraCover2,
     reverseBetween,
     reverseBits,
     reverseBits2,
@@ -449,5 +451,40 @@ describe('other', () => {
         updatePaths(input);
 
         expect(input).toEqual(expected);
+    });
+
+    describe('minCameraCover', () => {
+        test('1 camera', () => {
+            const head = new TreeNode(0);
+            head.left = new TreeNode(0);
+            head.left.left = new TreeNode(0);
+            head.left.right = new TreeNode(0);
+
+            expect(minCameraCover(head)).toBe(1);
+            expect(minCameraCover2(head)).toBe(1);
+        });
+
+        test('2 cameras', () => {
+            const head = new TreeNode(0);
+            head.left = new TreeNode(0);
+            head.left.left = new TreeNode(0);
+            head.left.left.left = new TreeNode(0);
+            head.left.left.right = new TreeNode(0);
+
+            expect(minCameraCover(head)).toBe(2);
+            expect(minCameraCover2(head)).toBe(2);
+        });
+
+        test('3 cameras', () => {
+            const head = new TreeNode(0);
+            head.left = new TreeNode(0);
+            head.left.left = new TreeNode(0);
+            head.left.left.left = new TreeNode(0);
+            head.left.left.right = new TreeNode(0);
+            head.left.left.right.right = new TreeNode(0);
+
+            expect(minCameraCover(head)).toBe(3);
+            expect(minCameraCover2(head)).toBe(3);
+        });
     });
 });

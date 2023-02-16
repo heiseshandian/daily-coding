@@ -3312,3 +3312,115 @@ function toCountPaths(paths: number[]): void {
     // 最后手动更新距离为0的城市个数（有且仅有首都）
     paths[0] = 1;
 }
+
+/* 
+You are given the root of a binary tree. We install cameras on the tree nodes where each camera 
+at a node can monitor its parent, itself, and its immediate children.
+
+Return the minimum number of cameras needed to monitor all nodes of the tree.
+
+以x为头节点的情况分析
+1) x 没有camera 但是被子节点覆盖 noCameraCovered （此情况x的父节点可不放节点，也可放节点）
+2) x 没有camera也没有被子节点覆盖 uncovered （此情况x的父节点必须放相机）
+3) x 有camera且被覆盖 cameraCovered （此情况x的父节点可不放节点，也可放节点）
+*/
+export function minCameraCover(root: TreeNode | null): number {
+    const { uncovered, noCameraCovered, cameraCovered } = minCameraCoverProcess(root);
+
+    return Math.min(uncovered + 1, noCameraCovered, cameraCovered);
+}
+
+class MinCameraInfo {
+    // x节点未被覆盖
+    uncovered: number;
+    // x节点无camera但是被覆盖（有一个子节点放了相机）
+    noCameraCovered: number;
+    // x节点放置了相机
+    cameraCovered: number;
+
+    constructor(uncovered: number, noCameraCovered: number, cameraCovered: number) {
+        this.uncovered = uncovered;
+        this.noCameraCovered = noCameraCovered;
+        this.cameraCovered = cameraCovered;
+    }
+}
+
+function minCameraCoverProcess(node: TreeNode | null): MinCameraInfo {
+    if (!node) {
+        // 空节点天然被覆盖，uncovered已经cameraCovered都设置为无效值
+        return new MinCameraInfo(Infinity, 0, Infinity);
+    }
+
+    const left = minCameraCoverProcess(node.left);
+    const right = minCameraCoverProcess(node.right);
+
+    // 父节点必须是uncovered的状态
+    // 则左右子节点必不能是uncovered（x的父节点无法再让x的子节点变成covered状态）
+    // cameraCovered也不可以，因为一旦子节点上有一个相机，x节点就不可能是uncovered状态
+    const uncovered = left.noCameraCovered + right.noCameraCovered;
+
+    // x下方的点都被cover，x也被cover，但是x上无相机
+    const noCameraCovered = Math.min(
+        // 左右节点都有相机
+        left.cameraCovered + right.cameraCovered,
+        // 左右节点有一个有相机
+        left.noCameraCovered + right.cameraCovered,
+        left.cameraCovered + right.noCameraCovered
+    );
+
+    // 左边最少相机数+右边最少相机数+当前节点放相机
+    const cameraCovered =
+        Math.min(left.uncovered, left.noCameraCovered, left.cameraCovered) +
+        Math.min(right.uncovered, right.noCameraCovered, right.cameraCovered) +
+        1;
+
+    return new MinCameraInfo(uncovered, noCameraCovered, cameraCovered);
+}
+
+// 借助贪心策略来优化常数时间
+export function minCameraCover2(root: TreeNode | null): number {
+    const { status, cameras } = minCameraCoverProcess2(root);
+
+    return status === MinCameraStatus.Uncovered ? cameras + 1 : cameras;
+}
+
+enum MinCameraStatus {
+    Uncovered,
+    NoCameraCovered,
+    CameraCovered,
+}
+
+class MinCameraInfo2 {
+    status: MinCameraStatus;
+    cameras: number;
+
+    constructor(status: MinCameraStatus, cameras: number) {
+        this.status = status;
+        this.cameras = cameras;
+    }
+}
+
+function minCameraCoverProcess2(node: TreeNode | null): MinCameraInfo2 {
+    if (!node) {
+        // 空节点必然是无相机且被覆盖，没有其他可能性
+        return new MinCameraInfo2(MinCameraStatus.NoCameraCovered, 0);
+    }
+
+    const left = minCameraCoverProcess2(node.left);
+    const right = minCameraCoverProcess2(node.right);
+    const cameras = left.cameras + right.cameras;
+
+    // 如果子节点有一个没被覆盖则x节点必须放相机
+    // 此判断条件必须放在前面，因为如果子节点中存在未被覆盖的相机则x节点必须要放相机，没有其他可能性
+    if (left.status === MinCameraStatus.Uncovered || right.status === MinCameraStatus.Uncovered) {
+        return new MinCameraInfo2(MinCameraStatus.CameraCovered, cameras + 1);
+    }
+
+    // 如果子节点中有一个有相机，则x节点必返回无相机但被覆盖
+    if (left.status === MinCameraStatus.CameraCovered || right.status === MinCameraStatus.CameraCovered) {
+        return new MinCameraInfo2(MinCameraStatus.NoCameraCovered, cameras);
+    }
+
+    // 上面两个循环都没进入说明两个子节点都是没相机但是被cover的状态，则x节点必然返回uncovered状态
+    return new MinCameraInfo2(MinCameraStatus.Uncovered, cameras);
+}
