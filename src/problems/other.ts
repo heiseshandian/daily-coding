@@ -428,12 +428,13 @@ export function getMinCandy4(arr: number[]): number {
         // 更新左坡（不包括坡顶平台）
         let leftCountIndex = 0;
         let leftCandy = 1;
+        const endOfLeft = start + leftCount - topCount;
         while (leftCountIndex < leftCount - topCount) {
             let firstIndex = start + leftCountIndex;
             let firstValue = newArr[firstIndex];
 
             let k = 0;
-            while (firstIndex + k < newArr.length && newArr[firstIndex + k] === firstValue) {
+            while (firstIndex + k < endOfLeft && newArr[firstIndex + k] === firstValue) {
                 newArr[firstIndex + k++] = leftCandy;
             }
 
@@ -451,12 +452,13 @@ export function getMinCandy4(arr: number[]): number {
         // 更新右坡（坡顶下一个到坡底前一个，因为右坡坡底要算作下一个坡的开始）
         let rightCountIndex = 0;
         let rightCandy = 1;
-        while (rightCountIndex < rightMax - 2) {
+        const endOfRight = start + leftCountIndex + rightCount - 2;
+        while (rightCountIndex < rightCount - 2) {
             let firstIndex = start + leftCountIndex + rightCountIndex;
             let firstValue = newArr[firstIndex];
 
             let k = 0;
-            while (firstIndex + k < newArr.length && newArr[firstIndex + k] === firstValue) {
+            while (firstIndex + k < endOfRight && newArr[firstIndex + k] === firstValue) {
                 newArr[firstIndex + k++] = rightMax - rightCandy;
             }
 
