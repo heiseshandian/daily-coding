@@ -181,22 +181,15 @@ export function getMinValueOfColor2(arr: number[][]): number {
 }
 
 /* 
-题目2（来自网易）
+分糖果问题1
+
 给定一个正数数组arr，表示每个小朋友的得分
 任何两个相邻的小朋友，如果得分一样，怎么分糖果无所谓，但如果得分不一样，分数大的一定要比分数少的多拿一些糖果
 假设所有的小朋友坐成一个环形，返回在不破坏上一条规则的情况下，需要的最少糖果数
 */
 export function getMinCandy(arr: number[]): number {
     // 找到局部最小值，局部最小分得的糖果一定是1
-    let minIndex = -1;
-    for (let i = 0; i < arr.length; i++) {
-        const prev = i > 0 ? i - 1 : arr.length - 1;
-        const next = i < arr.length ? i + 1 : 0;
-        if (arr[i] <= arr[prev] && arr[i] <= arr[next]) {
-            minIndex = i;
-            break;
-        }
-    }
+    const minIndex = getLocalMinFromCircle(arr);
 
     // 局部最小卡在两边
     const newArr = arr.slice(minIndex, arr.length).concat(...arr.slice(0, minIndex + 1));
@@ -225,6 +218,77 @@ export function getMinCandy(arr: number[]): number {
 
     // 左右坡度取最大值就是最终的糖果数
     let candy = 0;
+    for (let i = 1; i < leftCandyArr.length; i++) {
+        candy += Math.max(leftCandyArr[i], rightCandyArr[i]);
+    }
+
+    return candy;
+}
+
+// 从环形数组中获取局部最小的位置
+// 所谓局部最小指的就是 x 比前后位置的数都要小
+function getLocalMinFromCircle(arr: number[]): number {
+    let minIndex = -1;
+    for (let i = 0; i < arr.length; i++) {
+        const prev = i > 0 ? i - 1 : arr.length - 1;
+        const next = i < arr.length ? i + 1 : 0;
+        if (arr[i] <= arr[prev] && arr[i] <= arr[next]) {
+            minIndex = i;
+            break;
+        }
+    }
+
+    return minIndex;
+}
+
+/* 
+分糖果问题2
+
+给定一个正数数组arr，表示每个小朋友的得分
+1）任何两个相邻的小朋友，如果得分一样，分的糖果数必须一样，
+2）如果得分不一样，分数大的一定要比分数少的多拿一些糖果
+
+假设所有的小朋友坐成一个环形，返回在不破坏上述规则的情况下，需要的最少糖果数
+*/
+export function getMinCandy2(arr: number[]): number {
+    // 获取局部最小
+    const minIndex = getLocalMinFromCircle(arr);
+
+    // 局部最小卡在两边
+    const newArr = arr.slice(minIndex, arr.length).concat(...arr.slice(0, minIndex + 1));
+
+    // 从左侧的坡度来看每个小孩子应该分多少糖果
+    const leftCandyArr = [1];
+    for (let i = 1; i < newArr.length; i++) {
+        const lastCandy = leftCandyArr[leftCandyArr.length - 1];
+        if (newArr[i] > newArr[i - 1]) {
+            // 比左边大，糖果加一
+            leftCandyArr.push(lastCandy + 1);
+        } else if (newArr[i] === newArr[i - 1]) {
+            // 和左边一样，糖果不变
+            leftCandyArr.push(lastCandy);
+        } else {
+            // 比左边小，糖果变成1
+            leftCandyArr.push(1);
+        }
+    }
+
+    // 从右侧的坡度来看每个小孩子应该分多少糖果
+    const rightCandyArr = [1];
+    for (let i = newArr.length - 2; i >= 0; i--) {
+        const lastCandy = rightCandyArr[rightCandyArr.length - 1];
+        if (newArr[i] > newArr[i + 1]) {
+            rightCandyArr.push(lastCandy + 1);
+        } else if (newArr[i] === newArr[i + 1]) {
+            rightCandyArr.push(lastCandy);
+        } else {
+            rightCandyArr.push(1);
+        }
+    }
+    rightCandyArr.reverse();
+
+    let candy = 0;
+    // 略过第一个局部最小（预处理的时候两边都加了局部最小，最后结算的时候去掉一个）
     for (let i = 1; i < leftCandyArr.length; i++) {
         candy += Math.max(leftCandyArr[i], rightCandyArr[i]);
     }

@@ -40,6 +40,21 @@ export const getMinCandyTestData = [
     },
 ];
 
+export const getMinCandyTestData2 = [
+    {
+        input: [1, 2, 2],
+        expected: 5,
+    },
+    {
+        input: [1, 2, 5, 4, 3, 6, 4],
+        expected: 14,
+    },
+    {
+        input: [1, 2, 5, 5, 4, 3, 6, 6, 4],
+        expected: 20,
+    },
+];
+
 export const getMinBoatsTestData = [
     {
         input: {
