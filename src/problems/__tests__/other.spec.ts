@@ -140,7 +140,7 @@ import {
     countSubsequenceTestData,
     reverseBetweenTestData,
     updatePathsTestData,
-    getMinCandyTestData2,
+    getMinCandyTestData3,
 } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
@@ -153,7 +153,7 @@ import {
     countLostNumbersTestData,
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
-import { updatePaths, getMinCandy2 } from '../other';
+import { updatePaths, getMinCandy3, getMinCandy2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -164,10 +164,11 @@ describe('other', () => {
 
     it.each(getMinCandyTestData)('getMinCandy', ({ input, expected }) => {
         expect(getMinCandy(input)).toBe(expected);
+        expect(getMinCandy2(input)).toBe(expected);
     });
 
-    it.each(getMinCandyTestData2)('getMinCandy2', ({ input, expected }) => {
-        expect(getMinCandy2(input)).toBe(expected);
+    it.each(getMinCandyTestData3)('getMinCandy3', ({ input, expected }) => {
+        expect(getMinCandy3(input)).toBe(expected);
     });
 
     it.each(getMinBoatsTestData)('getMinBoats', ({ input: { arr, limit }, expected }) => {

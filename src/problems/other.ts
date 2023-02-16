@@ -216,9 +216,12 @@ export function getMinCandy(arr: number[]): number {
     }
     rightCandyArr.reverse();
 
+    const forTest = [1];
+
     // 左右坡度取最大值就是最终的糖果数
     let candy = 0;
     for (let i = 1; i < leftCandyArr.length; i++) {
+        forTest.push(Math.max(leftCandyArr[i], rightCandyArr[i]));
         candy += Math.max(leftCandyArr[i], rightCandyArr[i]);
     }
 
@@ -242,7 +245,73 @@ function getLocalMinFromCircle(arr: number[]): number {
 }
 
 /* 
-分糖果问题2
+分糖果问题3
+
+给定一个正数数组arr，表示每个小朋友的得分
+1）任何两个相邻的小朋友，如果得分一样，怎么分糖果无所谓
+2）如果得分不一样，分数大的一定要比分数少的多拿一些糖果
+
+假设所有的小朋友坐成一个环形，返回在不破坏上述规则的情况下，需要的最少糖果数
+
+要求额外空间复杂度为O(1)
+*/
+export function getMinCandy2(arr: number[]): number {
+    // 获取局部最小（局部最小的得糖数一定是1）
+    const minIndex = getLocalMinFromCircle(arr);
+
+    // 局部最小卡在两边，把环形问题变成非环形问题
+    const newArr = arr.slice(minIndex, arr.length).concat(...arr.slice(0, minIndex + 1));
+
+    let start = 0;
+    while (start < newArr.length) {
+        // 从start位置往外跳，跳完一个完整上下坡之后返回更新跳过位置的糖果数
+        let i = start + 1;
+        // 左坡最大值
+        let leftMax = 1;
+        // 右坡最大值
+        let rightMax = 1;
+
+        // 上坡阶段
+        while (i < newArr.length && newArr[i] > newArr[i - 1]) {
+            leftMax++;
+            i++;
+        }
+
+        // 下坡阶段
+        while (i < newArr.length && newArr[i] < newArr[i - 1]) {
+            rightMax++;
+            i++;
+        }
+
+        // 下坡结束开始往回更新数据
+        // 更新左坡
+        let k = 0;
+        while (k < leftMax - 1) {
+            newArr[start + k] = ++k;
+        }
+
+        // 更新坡顶
+        newArr[start + k] = Math.max(leftMax, rightMax);
+
+        // 更新右坡（坡顶下一个到坡底前一个，因为右坡坡底要算作下一个坡的开始）
+        let j = 1;
+        while (j < rightMax - 1) {
+            newArr[start + k + j] = rightMax - j++;
+        }
+
+        // 左右坡都更新完之后跳到下一个坡度的起点（也就是上一个坡的坡底）
+        start = start + k + j;
+    }
+
+    // 去掉一个局部最小
+    return newArr.slice(1).reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+}
+
+/* 
+分糖果问题3
 
 给定一个正数数组arr，表示每个小朋友的得分
 1）任何两个相邻的小朋友，如果得分一样，分的糖果数必须一样，
@@ -250,7 +319,7 @@ function getLocalMinFromCircle(arr: number[]): number {
 
 假设所有的小朋友坐成一个环形，返回在不破坏上述规则的情况下，需要的最少糖果数
 */
-export function getMinCandy2(arr: number[]): number {
+export function getMinCandy3(arr: number[]): number {
     // 获取局部最小
     const minIndex = getLocalMinFromCircle(arr);
 

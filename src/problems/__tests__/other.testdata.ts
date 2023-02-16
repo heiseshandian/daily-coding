@@ -38,9 +38,21 @@ export const getMinCandyTestData = [
         input: [1, 2, 5, 4, 3, 6, 4],
         expected: 14,
     },
+    {
+        input: [1, 2, 5, 4, 3, 6, 4, 5, 5, 6, 1, 2, 4, 5, 3, 2, 1, 4, 5, 6, 3, 2, 1, 1, 2],
+        expected: 51,
+    },
+    {
+        input: [2, 2, 2, 2],
+        expected: 4,
+    },
+    {
+        input: [2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2],
+        expected: 26,
+    },
 ];
 
-export const getMinCandyTestData2 = [
+export const getMinCandyTestData3 = [
     {
         input: [1, 2, 2],
         expected: 5,
