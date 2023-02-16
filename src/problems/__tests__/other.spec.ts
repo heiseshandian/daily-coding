@@ -153,7 +153,7 @@ import {
     countLostNumbersTestData,
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
-import { updatePaths, getMinCandy3, getMinCandy2 } from '../other';
+import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -169,6 +169,7 @@ describe('other', () => {
 
     it.each(getMinCandyTestData3)('getMinCandy3', ({ input, expected }) => {
         expect(getMinCandy3(input)).toBe(expected);
+        expect(getMinCandy4(input)).toBe(expected);
     });
 
     it.each(getMinBoatsTestData)('getMinBoats', ({ input: { arr, limit }, expected }) => {

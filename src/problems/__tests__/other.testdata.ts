@@ -65,6 +65,22 @@ export const getMinCandyTestData3 = [
         input: [1, 2, 5, 5, 4, 3, 6, 6, 4],
         expected: 20,
     },
+    {
+        input: [1, 2, 5, 4, 3, 6, 4, 5, 5, 6, 1, 2, 4, 5, 3, 2, 1, 4, 5, 6, 3, 2, 1, 1, 2],
+        expected: 53,
+    },
+    {
+        input: [2, 2, 2, 2],
+        expected: 4,
+    },
+    {
+        input: [2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2],
+        expected: 29,
+    },
+    {
+        input: [2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 3, 4, 3, 3, 3, 35, 4, 3, 2, 33, 4, 5, 6],
+        expected: 55,
+    },
 ];
 
 export const getMinBoatsTestData = [
