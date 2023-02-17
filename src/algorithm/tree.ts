@@ -21,7 +21,7 @@ export function preVisitNode(root: TreeNode | null) {
     stack.push(root);
 
     while (!stack.isEmpty()) {
-        const node = stack.pop();
+        const node = stack.pop()!;
         result.push(node);
         if (node.right) {
             stack.push(node.right);
@@ -64,7 +64,7 @@ export function postVisitNode(root: TreeNode | null) {
     stack.push(root);
 
     while (!stack.isEmpty()) {
-        const node = stack.pop();
+        const node = stack.pop()!;
         result.push(node);
         if (node.left) {
             stack.push(node.left);
@@ -111,7 +111,7 @@ export function middleVisitNode(root: TreeNode | null) {
             stack.push(node);
             node = node.left;
         } else {
-            node = stack.pop();
+            node = stack.pop()!;
             result.push(node);
             node = node.right;
         }

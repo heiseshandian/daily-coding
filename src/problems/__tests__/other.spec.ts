@@ -1,5 +1,6 @@
 import { TreeNode } from '../../algorithm/tree';
 import {
+    calculateStr,
     canSplit4Parts,
     countEqualTree2,
     countJointMethods,
@@ -154,6 +155,7 @@ import {
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
 import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4 } from '../other';
+import { calculateStrTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -497,5 +499,9 @@ describe('other', () => {
             expect(minCameraCover(head)).toBe(3);
             expect(minCameraCover2(head)).toBe(3);
         });
+    });
+
+    it.each(calculateStrTestData)('calculateStr', ({ input, expected }) => {
+        expect(calculateStr(input)).toBe(expected);
     });
 });

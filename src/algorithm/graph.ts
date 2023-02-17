@@ -102,7 +102,7 @@ export function dfsGraph(node: GraphNode): GraphNode[] | null {
     result.push(node);
 
     while (!stack.isEmpty()) {
-        const cur = stack.pop();
+        const cur = stack.pop()!;
 
         for (const nextNode of cur.nextNodes) {
             if (addedNodes.has(nextNode)) {

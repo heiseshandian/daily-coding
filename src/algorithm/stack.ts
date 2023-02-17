@@ -1,35 +1,37 @@
-import { DoubleLinkedList } from './linked-list';
-
 export class Stack<T = any> {
-    #head: DoubleLinkedList | null;
-
-    constructor() {
-        this.#head = null;
-    }
+    arr: T[] = [];
 
     public push(val: T) {
-        const newNode = new DoubleLinkedList(val, this.#head);
-        if (this.#head) {
-            this.#head.next = newNode;
-        }
-
-        this.#head = newNode;
+        this.arr.push(val);
     }
 
-    public pop(): T {
-        const val = this.#head?.val;
-        if (this.#head) {
-            this.#head = this.#head.prev;
+    public pop() {
+        if (this.isEmpty()) {
+            return;
         }
 
-        return val;
+        const result = this.arr[this.arr.length - 1];
+        this.arr.length--;
+        return result;
+    }
+
+    public popFirst() {
+        return this.arr.shift();
+    }
+
+    public pushFirst(val: T) {
+        return this.arr.unshift(val);
     }
 
     public peek() {
-        return this.#head?.val;
+        if (this.isEmpty()) {
+            return;
+        }
+
+        return this.arr[this.arr.length - 1];
     }
 
     public isEmpty() {
-        return this.#head === null;
+        return this.arr.length === 0;
     }
 }

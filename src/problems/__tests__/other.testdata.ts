@@ -968,3 +968,18 @@ export const updatePathsTestData = [
         expected: [1, 3, 4, 2, 0, 0, 0, 0, 0, 0],
     },
 ];
+
+export const calculateStrTestData = [
+    {
+        input: '48*(70-65)-43+8*1',
+        expected: 205,
+    },
+    {
+        input: '3+(-1)*4-(-4*6)',
+        expected: 23,
+    },
+    {
+        input: '3+(-1)*4-(-4/4)',
+        expected: 0,
+    },
+];

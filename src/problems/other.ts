@@ -8,6 +8,7 @@ import { Queue } from '../algorithm/queue';
 import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { SingleLinkedList } from '../algorithm/linked-list';
+import { Stack } from '../algorithm/stack';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -3668,4 +3669,89 @@ function minCameraCoverProcess2(node: TreeNode | null): MinCameraInfo2 {
 
     // 上面两个循环都没进入说明两个子节点都是没相机但是被cover的状态，则x节点必然返回uncovered状态
     return new MinCameraInfo2(MinCameraStatus.Uncovered, cameras);
+}
+
+/* 
+给定一个字符串str，str表示一个公式公式里可能有整数、加减乘除符号和左右括号返回公式的计算结果，难点在于括号可能嵌套很多层
+str="48*（70-65）-43）+8*1"，返回-1816。
+str="3+1*4"，返回7。
+str="3+（1*4）"，返回7。
+
+【说明】
+1.可以认为给定的字符串一定是正确的公式，即不需要对str做公式有效性检查
+2.如果是负数，就需要用括号括起来，比如"4+（-3）"但如果负数作为公式的开头或括号部分的开头，则可以没有括号，比如"-3*4"和"（-3*4）"都是合法的。
+3.不用考虑计算过程中会发生溢出的情况。
+*/
+export function calculateStr(str: string): number {
+    const [cur] = calculateStrProcess(str, 0);
+    return cur;
+}
+
+// 遇到右括号或终止位置结束
+function calculateStrProcess(str: string, start: number): [cur: number, end: number] {
+    let cur = 0;
+    const stack = new Stack<string | number>();
+
+    while (start < str.length && str[start] !== ')') {
+        const char = str[start];
+        // 数字
+        if (char >= '0' && char <= '9') {
+            cur = Number(cur) * 10 + Number(char);
+            start++;
+        } else if ('+-*/'.includes(char)) {
+            addNumToStack(stack, cur);
+            stack.push(char);
+            cur = 0;
+            start++;
+        } else {
+            // 左括号直接递归
+            const [subCur, subEnd] = calculateStrProcess(str, start + 1);
+            cur = subCur;
+            start = subEnd + 1;
+        }
+    }
+    // 最后的数字或者递归回来的数字要加入stack中
+    addNumToStack(stack, cur);
+
+    return [calculateStack(stack), start];
+}
+
+function calculateStack(stack: Stack<string | number>): number {
+    let leftNum = 0;
+    let op;
+    let rightNum = 0;
+
+    // Stack中只有加减运算，需要从头到尾计算
+    while (!stack.isEmpty()) {
+        leftNum = stack.popFirst() as number;
+        op = stack.popFirst();
+        rightNum = stack.popFirst() as number;
+
+        if (op === '+') {
+            stack.pushFirst(leftNum + rightNum);
+        }
+        if (op === '-') {
+            stack.pushFirst(leftNum - rightNum);
+        }
+    }
+
+    return leftNum;
+}
+
+function addNumToStack(stack: Stack<string | number>, cur: number) {
+    if (stack.isEmpty()) {
+        stack.push(cur);
+        return;
+    }
+
+    // 加入数字之前先判断顶部操作符是否*/，是的话直接计算之后将结果放回stack，从而实现*/先于+-计算
+    const op = stack.pop() as number | string;
+    if (op === '*' || op === '/') {
+        const left = stack.pop() as number;
+        stack.push(op === '*' ? left * cur : left / cur);
+        return;
+    }
+
+    stack.push(op);
+    stack.push(cur);
 }
