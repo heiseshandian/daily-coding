@@ -40,6 +40,7 @@ import {
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
     getValidParentheses,
+    longestValidParentheses,
     MessageBox,
     minCameraCover,
     minCameraCover2,
@@ -162,7 +163,7 @@ import {
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
 import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4, getMaxSizeOfAllOnes2 } from '../other';
-import { calculateStrTestData } from './other.testdata';
+import { calculateStrTestData, longestValidParenthesesTestData } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
 
 describe('other', () => {
@@ -528,5 +529,9 @@ describe('other', () => {
     it.each(getMaxSizeOfAllOnesTestData)('getMaxSizeOfAllOnes', ({ input, expected }) => {
         expect(getMaxSizeOfAllOnes(input)).toBe(expected);
         expect(getMaxSizeOfAllOnes2(input)).toBe(expected);
+    });
+
+    it.each(longestValidParenthesesTestData)('longestValidParentheses', ({ input, expected }) => {
+        expect(longestValidParentheses(input)).toBe(expected);
     });
 });

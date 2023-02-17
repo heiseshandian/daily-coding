@@ -4031,3 +4031,57 @@ export function getMaxSizeOfAllOnes2(matrix: number[][]): number {
 
     return max;
 }
+
+/* 
+Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses 
+substring
+
+Example 1:
+Input: s = "(()"
+Output: 2
+Explanation: The longest valid parentheses substring is "()".
+
+Example 2:
+Input: s = ")()())"
+Output: 4
+Explanation: The longest valid parentheses substring is "()()".
+*/
+export function longestValidParentheses(s: string): number {
+    // dp[i]子串必须以i位置结尾的情况下所形成的最长有效parentheses长度
+    const dp: number[] = new Array(s.length).fill(0);
+
+    let max = 0;
+    for (let i = 1; i < s.length; i++) {
+        // 如果当前是左括号，以左括号结尾必然不是合法的子串
+        if (s[i] === '(') {
+            dp[i] = 0;
+            continue;
+        }
+
+        if (s[i - 1] === '(') {
+            // 当前字符和前一个字符配对，合法子串长度至少为2
+            dp[i] = 2;
+        } else {
+            // 看当前字符与扣除dp[i-1]长度之后的字符是否配对，配对的话
+            // dp[i]就等于dp[i-1]+2
+            const leftIndex = i - dp[i - 1] - 1;
+            dp[i] = leftIndex >= 0 && s[leftIndex] === '(' ? dp[i - 1] + 2 : 0;
+        }
+
+        // dp[i]>0的情况下看合法子串能不能往前扩
+        if (dp[i] > 0) {
+            let k = i - dp[i];
+            let sum = 0;
+            while (k >= 0 && dp[k] > 0) {
+                sum += dp[k];
+                k = k - dp[k];
+            }
+
+            dp[i] += sum;
+        }
+
+        max = Math.max(max, dp[i]);
+    }
+
+    return max;
+}

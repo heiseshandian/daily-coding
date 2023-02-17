@@ -1068,3 +1068,26 @@ export const getMaxSizeOfAllOnesTestData = [
         expected: 6,
     },
 ];
+
+export const longestValidParenthesesTestData = [
+    {
+        input: '(()',
+        expected: 2,
+    },
+    {
+        input: '()(())',
+        expected: 6,
+    },
+    {
+        input: ')',
+        expected: 0,
+    },
+    {
+        input: ')()())',
+        expected: 4,
+    },
+    {
+        input: '(())()())',
+        expected: 8,
+    },
+];
