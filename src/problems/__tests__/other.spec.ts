@@ -20,6 +20,7 @@ import {
     getMaxIncreasingNum,
     getMaxK,
     getMaxLengthOfIncreasingSubsequence,
+    getMaxLengthOfIncreasingSubsequence2,
     getMaxLenOfComposableSubArr,
     getMaxProfit,
     getMaxProfit2,
@@ -518,6 +519,7 @@ describe('other', () => {
         'getMaxLengthOfIncreasingSubsequence',
         ({ input, expected }) => {
             expect(getMaxLengthOfIncreasingSubsequence(input)).toBe(expected);
+            expect(getMaxLengthOfIncreasingSubsequence2(input)).toBe(expected);
         }
     );
 });

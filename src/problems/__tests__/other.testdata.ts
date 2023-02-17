@@ -1028,4 +1028,8 @@ export const getMaxLengthOfIncreasingSubsequenceTestData = [
         input: [],
         expected: 0,
     },
+    {
+        input: [3, 2, 1, 2, 3, 9, 4, 3, 2, 1],
+        expected: 4,
+    },
 ];

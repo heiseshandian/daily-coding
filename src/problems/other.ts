@@ -3850,3 +3850,45 @@ export function getMaxLengthOfIncreasingSubsequence(arr: number[]): number {
 
     return max;
 }
+
+// 优化时间复杂度到 O(nlogn)
+export function getMaxLengthOfIncreasingSubsequence2(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    // end[i]:长度为i+1的子序列中最小结尾数值
+    const end = [arr[0]];
+
+    for (let i = 1; i < arr.length; i++) {
+        // 在end中二分查找大于等于arr[i]且最近的数字
+        let left = 0;
+        let right = end.length - 1;
+        let found;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+
+            // 找到直接停止
+            if (end[mid] === arr[i]) {
+                found = mid;
+                break;
+            }
+
+            if (end[mid] > arr[i]) {
+                found = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        // end数组中没有大于等于arr[i]的数字
+        if (found === undefined) {
+            end.push(arr[i]);
+        } else if (end[found] > arr[i]) {
+            end[found] = arr[i];
+        }
+    }
+
+    return end.length;
+}
