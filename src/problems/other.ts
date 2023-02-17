@@ -1464,24 +1464,27 @@ export function getMinJumpStepsDp(arr: number[]): number {
 
 // 最优解有点类似于马拉车算法中的最右的回文右边界
 export function getMinJumpSteps2(arr: number[]): number {
-    if (!arr || arr.length <= 1) {
+    if (!arr || arr.length === 0) {
         return 0;
     }
 
     let cur = 0;
-    let count = 1;
-    let mostRight = arr[0];
-    let nextMostRight = -Infinity;
+    // 一开始没有迈步，初始值设置为0
+    let count = 0;
+    // count步内能到达的最远位置
+    let curMostRight = 0;
+    // count+1步能到达的最远位置
+    let nextMostRight = arr[0];
 
-    while (cur < arr.length && mostRight < arr.length) {
-        if (cur <= mostRight) {
+    while (cur < arr.length && curMostRight < arr.length) {
+        if (cur <= curMostRight) {
             nextMostRight = Math.max(nextMostRight, arr[cur] + cur);
             cur++;
             continue;
         }
 
         count++;
-        mostRight = nextMostRight;
+        curMostRight = nextMostRight;
     }
 
     return count;

@@ -307,6 +307,10 @@ export const getMinJumpStepsTestData = [
         input: [],
         expected: 0,
     },
+    {
+        input: [0],
+        expected: 0,
+    },
 ];
 
 export const getMaxKTestData = [
