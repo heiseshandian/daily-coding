@@ -3981,3 +3981,53 @@ export function getMaxSizeOfAllOnes(matrix: number[][]): number {
 
     return max;
 }
+
+export function getMaxSizeOfAllOnes2(matrix: number[][]): number {
+    // sumOfMatrix[i][j] 表示 从0,0到i,j位置形成的矩阵和
+    const sumOfMatrix: number[][] = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+
+    sumOfMatrix[0][0] = matrix[0][0];
+
+    // 第0行
+    for (let j = 1; j < matrix[0].length; j++) {
+        sumOfMatrix[0][j] = sumOfMatrix[0][j - 1] + matrix[0][j];
+    }
+
+    // 第0列
+    for (let i = 1; i < matrix.length; i++) {
+        sumOfMatrix[i][0] = sumOfMatrix[i - 1][0] + matrix[i][0];
+    }
+
+    for (let i = 1; i < matrix.length; i++) {
+        for (let j = 1; j < matrix[0].length; j++) {
+            const leftCorner = sumOfMatrix[i - 1][j - 1];
+            const left = sumOfMatrix[i][j - 1];
+            const top = sumOfMatrix[i - 1][j];
+
+            sumOfMatrix[i][j] = left + top - leftCorner + matrix[i][j];
+        }
+    }
+
+    let max = 0;
+    // 枚举所有的起点终点所组成的矩形
+    // 如果sum等于矩形内点的个数则说明该矩形内都是1，更新max
+    for (let i1 = 0; i1 < matrix.length; i1++) {
+        for (let j1 = 0; j1 < matrix[0].length; j1++) {
+            for (let i2 = i1; i2 < matrix.length; i2++) {
+                for (let j2 = j1; j2 < matrix[0].length; j2++) {
+                    const leftCorner = i1 - 1 >= 0 && j1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j1 - 1] : 0;
+                    const left = j1 - 1 >= 0 ? sumOfMatrix[i2][j1 - 1] : 0;
+                    const top = i1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j2] : 0;
+
+                    const sumOfi1j1i2j2 = sumOfMatrix[i2][j2] + leftCorner - left - top;
+
+                    if (sumOfi1j1i2j2 === (i2 - i1 + 1) * (j2 - j1 + 1)) {
+                        max = Math.max(max, sumOfi1j1i2j2);
+                    }
+                }
+            }
+        }
+    }
+
+    return max;
+}

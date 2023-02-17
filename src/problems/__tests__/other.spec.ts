@@ -161,7 +161,7 @@ import {
     countLostNumbersTestData,
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
-import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4 } from '../other';
+import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4, getMaxSizeOfAllOnes2 } from '../other';
 import { calculateStrTestData } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
 
@@ -527,5 +527,6 @@ describe('other', () => {
 
     it.each(getMaxSizeOfAllOnesTestData)('getMaxSizeOfAllOnes', ({ input, expected }) => {
         expect(getMaxSizeOfAllOnes(input)).toBe(expected);
+        expect(getMaxSizeOfAllOnes2(input)).toBe(expected);
     });
 });
