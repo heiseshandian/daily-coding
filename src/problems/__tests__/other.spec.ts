@@ -36,6 +36,7 @@ import {
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
+    getValidParentheses,
     MessageBox,
     minCameraCover,
     minCameraCover2,
@@ -71,6 +72,7 @@ import {
     getCalculateMethodsTestData,
     existWordTestData,
     countJointMethodsTestData,
+    getValidParenthesesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -156,6 +158,7 @@ import {
 import { SingleLinkedList } from '../../algorithm/linked-list';
 import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4 } from '../other';
 import { calculateStrTestData } from './other.testdata';
+import { parenthesesComparator } from '../../common/index';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -503,5 +506,9 @@ describe('other', () => {
 
     it.each(calculateStrTestData)('calculateStr', ({ input, expected }) => {
         expect(calculateStr(input)).toBe(expected);
+    });
+
+    it.each(getValidParenthesesTestData)('getValidParentheses', ({ input, expected }) => {
+        expect(getValidParentheses(input).sort(parenthesesComparator)).toEqual(expected.sort(parenthesesComparator));
     });
 });

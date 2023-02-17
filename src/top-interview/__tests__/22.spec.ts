@@ -1,3 +1,4 @@
+import { parenthesesComparator } from '../../common';
 import { generateParenthesis } from '../22';
 
 describe('generateParenthesis', () => {
@@ -12,20 +13,7 @@ describe('generateParenthesis', () => {
         },
     ];
 
-    const comparator = (a: string, b: string) => {
-        for (let i = 0; i < a.length; i++) {
-            if (a[i] !== b[i]) {
-                if (a[i] === '(') {
-                    return -1;
-                }
-                return 1;
-            }
-        }
-
-        return 0;
-    };
-
     it.each(testData)('threeSum %j', ({ input, expected }) => {
-        expect(generateParenthesis(input).sort(comparator)).toEqual(expected.sort(comparator));
+        expect(generateParenthesis(input).sort(parenthesesComparator)).toEqual(expected.sort(parenthesesComparator));
     });
 });

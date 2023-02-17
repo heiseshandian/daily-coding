@@ -3755,3 +3755,67 @@ function addNumToStack(stack: Stack<string | number>, cur: number) {
     stack.push(op);
     stack.push(cur);
 }
+
+/* 
+Given a string s that contains parentheses, remove the minimum number of invalid parentheses to make the input string valid.
+Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
+
+Examples
+input:()())()
+output:["(())()","()()()"]
+
+https://www.bilibili.com/video/BV1RT4y1a7aK?p=69&spm_id_from=pageDriver&vd_source=7b242528b70c1c6d4ee0ca3780b547a5
+*/
+export function getValidParentheses(str: string): string[] {
+    const result: string[] = [];
+
+    removeParentheses(str, 0, 0, result, ['(', ')']);
+
+    return result;
+}
+
+function removeParentheses(
+    str: string,
+    checkIndex: number,
+    deleteIndex: number,
+    result: string[],
+    pair: string[]
+): void {
+    let count = 0;
+    for (let i = checkIndex; i < str.length; i++) {
+        // 遇到左括号就加一
+        if (str[i] === pair[0]) {
+            count++;
+        }
+        // 遇到右括号就减一
+        if (str[i] === pair[1]) {
+            count--;
+        }
+
+        // 如果count小于0则说明找到一个没有与之匹配的右括号
+        // 如果左边所有左括号和右括号都是匹配的则count必然是0
+        if (count < 0) {
+            // 从deleteIndex往右找，非连续右括号位置都可以作为独立的删除点（连续的右括号只能删除一个，因为删除哪一个得到的最终结果必然一样）
+            for (let k = deleteIndex; k < str.length; k++) {
+                const prev = k - 1 >= 0 ? str[k - 1] : '';
+                // 当前遇到的是非连续的右括号
+                if (str[k] === pair[1] && str[k] !== prev) {
+                    const newStr = str.slice(0, k) + str.slice(k + 1);
+                    removeParentheses(newStr, i, k, result, pair);
+                }
+            }
+
+            // 由递归去处理后续的非法情况，主函数不继续处理
+            return;
+        }
+    }
+
+    // 再查一次左括号多出来的情况
+    const reversed = str.split('').reverse().join('');
+    if (pair[0] === '(') {
+        removeParentheses(reversed, 0, 0, result, [')', '(']);
+    } else {
+        // 左右括号都查完之后收集答案
+        result.push(reversed);
+    }
+}

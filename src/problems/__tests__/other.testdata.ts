@@ -983,3 +983,22 @@ export const calculateStrTestData = [
         expected: 0,
     },
 ];
+
+export const getValidParenthesesTestData = [
+    // {
+    //     input: '()())()',
+    //     expected: ['(())()', '()()()'],
+    // },
+    // {
+    //     input: '((()',
+    //     expected: ['()'],
+    // },
+    {
+        input: ')()',
+        expected: ['()'],
+    },
+    {
+        input: ')(',
+        expected: [''],
+    },
+];
