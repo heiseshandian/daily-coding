@@ -4062,8 +4062,7 @@ export function longestValidParentheses(s: string): number {
             // 当前字符和前一个字符配对，合法子串长度至少为2
             dp[i] = 2;
         } else {
-            // 看当前字符与扣除dp[i-1]长度之后的字符是否配对，配对的话
-            // dp[i]就等于dp[i-1]+2
+            // 看当前字符与扣除dp[i-1]长度之后的字符是否配对，配对的话 dp[i]就等于dp[i-1]+2
             const leftIndex = i - dp[i - 1] - 1;
             dp[i] = leftIndex >= 0 && s[leftIndex] === '(' ? dp[i - 1] + 2 : 0;
         }
@@ -4071,13 +4070,7 @@ export function longestValidParentheses(s: string): number {
         // dp[i]>0的情况下看合法子串能不能往前扩
         if (dp[i] > 0) {
             let k = i - dp[i];
-            let sum = 0;
-            while (k >= 0 && dp[k] > 0) {
-                sum += dp[k];
-                k = k - dp[k];
-            }
-
-            dp[i] += sum;
+            dp[i] += k >= 0 ? dp[k] : 0;
         }
 
         max = Math.max(max, dp[i]);
