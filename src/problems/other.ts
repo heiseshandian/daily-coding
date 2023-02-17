@@ -3934,3 +3934,50 @@ function getStepSum(n: number): number {
 
     return result;
 }
+
+/* 
+给定一个整型矩阵map，其中的值只有0和1两种，求其中全是1的所有矩形区域中，最大的矩形区域为1的数量。
+
+例如：
+[[1,1,1,0]]
+其中，最大的矩形区域有3个1，所以返回3。
+
+再如：
+[
+    [1,0,1,1],
+    [1,1,1,0],
+    [1,1,1,1]
+]￼
+其中，最大的矩形区域有6个1，所以返回6。
+
+技巧总结
+单调栈，矩阵压缩
+*/
+export function getMaxSizeOfAllOnes(matrix: number[][]): number {
+    const sumArr: number[] = new Array(matrix[0].length).fill(0);
+
+    let max = -Infinity;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            sumArr[j] = matrix[i][j] === 1 ? sumArr[j] + 1 : 0;
+        }
+
+        const closestMinArr = getClosestMinArr(sumArr).map(([left, right]) => {
+            if (left === undefined) {
+                left = -1;
+            }
+            if (right === undefined) {
+                right = matrix[0].length;
+            }
+
+            return [left, right];
+        });
+
+        sumArr.forEach((cur, i) => {
+            const [leftMin, rightMin] = closestMinArr[i];
+            max = Math.max(max, cur * (rightMin - leftMin - 1));
+        });
+    }
+
+    return max;
+}

@@ -26,6 +26,7 @@ import {
     getMaxProfit2,
     getMaxProfit4,
     getMaxProfit4Dp,
+    getMaxSizeOfAllOnes,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -76,6 +77,7 @@ import {
     countJointMethodsTestData,
     getValidParenthesesTestData,
     getMaxLengthOfIncreasingSubsequenceTestData,
+    getMaxSizeOfAllOnesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -522,4 +524,8 @@ describe('other', () => {
             expect(getMaxLengthOfIncreasingSubsequence2(input)).toBe(expected);
         }
     );
+
+    it.each(getMaxSizeOfAllOnesTestData)('getMaxSizeOfAllOnes', ({ input, expected }) => {
+        expect(getMaxSizeOfAllOnes(input)).toBe(expected);
+    });
 });
