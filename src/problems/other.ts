@@ -1464,7 +1464,7 @@ export function getMinJumpStepsDp(arr: number[]): number {
 
 // 最优解有点类似于马拉车算法中的最右的回文右边界
 export function getMinJumpSteps2(arr: number[]): number {
-    if (!arr || arr.length === 0) {
+    if (!arr || arr.length <= 1) {
         return 0;
     }
 
