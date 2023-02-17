@@ -19,6 +19,7 @@ import {
     getMaxA,
     getMaxIncreasingNum,
     getMaxK,
+    getMaxLengthOfIncreasingSubsequence,
     getMaxLenOfComposableSubArr,
     getMaxProfit,
     getMaxProfit2,
@@ -73,6 +74,7 @@ import {
     existWordTestData,
     countJointMethodsTestData,
     getValidParenthesesTestData,
+    getMaxLengthOfIncreasingSubsequenceTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -511,4 +513,11 @@ describe('other', () => {
     it.each(getValidParenthesesTestData)('getValidParentheses', ({ input, expected }) => {
         expect(getValidParentheses(input).sort(parenthesesComparator)).toEqual(expected.sort(parenthesesComparator));
     });
+
+    it.each(getMaxLengthOfIncreasingSubsequenceTestData)(
+        'getMaxLengthOfIncreasingSubsequence',
+        ({ input, expected }) => {
+            expect(getMaxLengthOfIncreasingSubsequence(input)).toBe(expected);
+        }
+    );
 });

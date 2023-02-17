@@ -3819,3 +3819,34 @@ function removeParentheses(
         result.push(reversed);
     }
 }
+
+/* 
+最长递增子序列问题（不是最长递增子数组）
+
+从左到右的尝试模型，必须以i位置结尾所形成的最长递增子序列是多少
+*/
+export function getMaxLengthOfIncreasingSubsequence(arr: number[]): number {
+    if (!arr || arr.length === 0) {
+        return 0;
+    }
+
+    // 必须以i位置结尾所形成的最长递增子序列是多少
+    const dp: number[] = new Array(arr.length).fill(0);
+    dp[0] = 1;
+
+    let max = 1;
+    for (let i = 1; i < arr.length; i++) {
+        // 找到比当前数字小，且递增子序列长度最长的
+        let maxSubsequence = 0;
+        for (let k = i - 1; k >= 0; k--) {
+            if (arr[i] > arr[k]) {
+                maxSubsequence = Math.max(maxSubsequence, dp[k]);
+            }
+        }
+
+        dp[i] = maxSubsequence + 1;
+        max = Math.max(max, dp[i]);
+    }
+
+    return max;
+}

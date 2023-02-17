@@ -985,14 +985,14 @@ export const calculateStrTestData = [
 ];
 
 export const getValidParenthesesTestData = [
-    // {
-    //     input: '()())()',
-    //     expected: ['(())()', '()()()'],
-    // },
-    // {
-    //     input: '((()',
-    //     expected: ['()'],
-    // },
+    {
+        input: '()())()',
+        expected: ['(())()', '()()()'],
+    },
+    {
+        input: '((()',
+        expected: ['()'],
+    },
     {
         input: ')()',
         expected: ['()'],
@@ -1000,5 +1000,32 @@ export const getValidParenthesesTestData = [
     {
         input: ')(',
         expected: [''],
+    },
+];
+
+export const getMaxLengthOfIncreasingSubsequenceTestData = [
+    {
+        input: [4, 1, 3, 2, 3, 9, 5, 6],
+        expected: 5,
+    },
+    {
+        input: [4, 1, 3, 2, 3, 4, 9, 1, 2],
+        expected: 5,
+    },
+    {
+        input: [4, 1, 3, 2, 3, 4, 9, 1, 2, 5, 8, 9],
+        expected: 7,
+    },
+    {
+        input: [1, 1, 1, 1, 1],
+        expected: 1,
+    },
+    {
+        input: [1],
+        expected: 1,
+    },
+    {
+        input: [],
+        expected: 0,
     },
 ];
