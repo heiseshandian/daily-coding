@@ -3892,3 +3892,42 @@ export function getMaxLengthOfIncreasingSubsequence2(arr: number[]): number {
 
     return end.length;
 }
+
+/* 
+定义何为step sum？
+比如680， 680＋68＋6=754， 680的step sum叫754 给定一个正数num，判断它是不是某个数的step sum
+
+利用单调性来二分查找
+*/
+export function isStepSum(num: number) {
+    // 如果num是某个数的step sum则这个数一定在1到num之间
+    // 二分查找
+    let left = 1;
+    let right = num;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        const stepSum = getStepSum(mid);
+
+        if (stepSum === num) {
+            return true;
+        }
+
+        if (stepSum < num) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return false;
+}
+
+function getStepSum(n: number): number {
+    let result = n;
+    while (n > 0) {
+        n = Math.floor(n / 10);
+        result += n;
+    }
+
+    return result;
+}
