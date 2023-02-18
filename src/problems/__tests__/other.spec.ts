@@ -7,6 +7,7 @@ import {
     countJointMethodsDp,
     countJointMethodsDp2,
     countLostNumbers,
+    evaluationMethods,
     existWord,
     findKthLargest,
     findSubstring,
@@ -80,6 +81,7 @@ import {
     getValidParenthesesTestData,
     getMaxLengthOfIncreasingSubsequenceTestData,
     getMaxSizeOfAllOnesTestData,
+    evaluationMethodsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -546,5 +548,9 @@ describe('other', () => {
 
     it.each(findSubstringTestData)('findSubstring', ({ input: { s, words }, expected }) => {
         expect(findSubstring(s, words)).toEqual(expected);
+    });
+
+    it.each(evaluationMethodsTestData)('evaluationMethods', ({ input: { str, expectedResult }, expected }) => {
+        expect(evaluationMethods(str, expectedResult)).toBe(expected);
     });
 });

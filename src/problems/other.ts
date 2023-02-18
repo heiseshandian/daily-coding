@@ -4132,3 +4132,77 @@ export function findSubstring(s: string, words: string[]): number[] {
 
     return result;
 }
+
+/* 
+范围尝试模型
+
+给定一个字符串，长度为奇数，所有偶数位置必然是0或者1，所有奇数位置是 "& | ^" 三个逻辑符号之一
+如果通过加小括号使得最终结果是1或0，返回加小括号的方式
+
+例：
+0&1&1|1
+
+使得最终结果为1的方法数2种
+0&(1&1)|1
+0&1&1|1
+*/
+export function evaluationMethods(str: string, expectedResult: number): number {
+    const dp: Map<string, [oneMethods: number, zeroMethods: number]> = new Map();
+
+    const [oneMethods, zeroMethods] = evaluationMethodsProcess(str, 0, str.length - 1, dp);
+    return expectedResult === 1 ? oneMethods : zeroMethods;
+}
+
+/*  
+left，right位置的字符必须是数字，不能是逻辑符号(&|^)
+返回left-right范围内形成true和false的方法数
+*/
+function evaluationMethodsProcess(
+    str: string,
+    left: number,
+    right: number,
+    dp: Map<string, [oneMethods: number, zeroMethods: number]>
+): [oneMethods: number, zeroMethods: number] {
+    const id = `${left}_${right}`;
+    if (dp.has(id)) {
+        return dp.get(id)!;
+    }
+
+    if (left === right) {
+        const oneMethods = str[left] === '1' ? 1 : 0;
+        const zeroMethods = str[left] === '0' ? 1 : 0;
+
+        dp.set(id, [oneMethods, zeroMethods]);
+        return dp.get(id)!;
+    }
+
+    let oneMethods = 0;
+    let zeroMethods = 0;
+
+    // 遍历所有位置操作符作为最后结合的操作符的情况下得到的方法数，累加起来就是总方法数
+    for (let opIndex = left + 1; opIndex < right; opIndex += 2) {
+        const [leftTrueMethods, leftFalseMethods] = evaluationMethodsProcess(str, left, opIndex - 1, dp);
+        const [rightTrueMethods, rightFalseMethods] = evaluationMethodsProcess(str, opIndex + 1, right, dp);
+
+        const op = str[opIndex];
+        if (op === '&') {
+            oneMethods += leftTrueMethods * rightTrueMethods;
+            zeroMethods +=
+                leftTrueMethods * rightFalseMethods +
+                rightTrueMethods * leftFalseMethods +
+                leftFalseMethods * rightFalseMethods;
+        } else if (op === '|') {
+            oneMethods +=
+                leftTrueMethods * rightTrueMethods +
+                leftTrueMethods * rightFalseMethods +
+                rightTrueMethods * leftFalseMethods;
+            zeroMethods += leftFalseMethods * rightFalseMethods;
+        } else {
+            oneMethods += rightTrueMethods * leftFalseMethods + leftTrueMethods * rightFalseMethods;
+            zeroMethods += leftTrueMethods * rightTrueMethods + leftFalseMethods * rightFalseMethods;
+        }
+    }
+
+    dp.set(id, [oneMethods, zeroMethods]);
+    return dp.get(id)!;
+}
