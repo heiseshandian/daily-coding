@@ -1161,3 +1161,27 @@ export const findMinMovesTestData = [
         expected: -1,
     },
 ];
+
+export const kthSmallestTestData = [
+    {
+        input: {
+            matrix: [
+                [1, 5, 9],
+                [10, 11, 13],
+                [12, 13, 15],
+            ],
+            k: 8,
+        },
+        expected: 13,
+    },
+    {
+        input: {
+            matrix: [
+                [1, 2],
+                [1, 2],
+            ],
+            k: 1,
+        },
+        expected: 1,
+    },
+];

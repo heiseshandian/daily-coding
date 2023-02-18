@@ -4293,3 +4293,62 @@ export function findMinMoves(machines: number[]): number {
 
     return max;
 }
+
+/* 
+Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
+
+Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+
+You must find a solution with a memory complexity better than O(n2).
+
+Example 1:
+Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+Output: 13
+Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8th smallest number is 13
+*/
+export function kthSmallest(matrix: number[][], k: number): number {
+    let left = matrix[0][0];
+    let right = matrix[matrix.length - 1][matrix[0].length - 1];
+
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+
+        let count = 0;
+        // 从0行最后一个元素开始找
+        let row = 0;
+        let col = matrix[0].length - 1;
+        let found: number | undefined = undefined;
+        while (row < matrix.length && col >= 0) {
+            const cur = matrix[row][col];
+            if (cur <= mid) {
+                if (found === undefined) {
+                    found = cur;
+                } else {
+                    // 如果cur离mid更近则更新found
+                    found = mid - cur < mid - found ? cur : found;
+                }
+
+                // 当前行发现了col+1个小于mid的数字，继续往下找
+                count += col + 1;
+                row++;
+            } else {
+                col--;
+            }
+        }
+
+        if (count === k) {
+            return found!;
+        }
+
+        if (count > k) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    // 此处要返回left，不能返回-1
+    // 因为存在某些场景有多个第k小的数字
+    // [[1, 2],[1, 2]],k=1 那么通过上面的二分是没法正好找到k个数字的
+    return left;
+}

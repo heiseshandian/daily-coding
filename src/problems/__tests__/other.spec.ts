@@ -43,6 +43,7 @@ import {
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
     getValidParentheses,
+    kthSmallest,
     longestValidParentheses,
     MessageBox,
     minCameraCover,
@@ -84,6 +85,7 @@ import {
     getMaxSizeOfAllOnesTestData,
     evaluationMethodsTestData,
     findMinMovesTestData,
+    kthSmallestTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -558,5 +560,9 @@ describe('other', () => {
 
     it.each(findMinMovesTestData)('findMinMoves', ({ input, expected }) => {
         expect(findMinMoves(input)).toBe(expected);
+    });
+
+    it.each(kthSmallestTestData)('kthSmallest', ({ input: { matrix, k }, expected }) => {
+        expect(kthSmallest(matrix, k)).toBe(expected);
     });
 });
