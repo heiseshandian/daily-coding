@@ -4132,5 +4132,3 @@ export function findSubstring(s: string, words: string[]): number[] {
 
     return result;
 }
-
-console.log(findSubstring('aaaaaaaaaaaaaaaa', ['a', 'a']));
