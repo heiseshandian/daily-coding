@@ -162,7 +162,14 @@ import {
     countLostNumbersTestData,
 } from './other.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
-import { updatePaths, getMinCandy3, getMinCandy2, getMinCandy4, getMaxSizeOfAllOnes2 } from '../other';
+import {
+    updatePaths,
+    getMinCandy3,
+    getMinCandy2,
+    getMinCandy4,
+    getMaxSizeOfAllOnes2,
+    longestValidParentheses2,
+} from '../other';
 import { calculateStrTestData, longestValidParenthesesTestData } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
 
@@ -533,5 +540,6 @@ describe('other', () => {
 
     it.each(longestValidParenthesesTestData)('longestValidParentheses', ({ input, expected }) => {
         expect(longestValidParentheses(input)).toBe(expected);
+        expect(longestValidParentheses2(input)).toBe(expected);
     });
 });

@@ -4078,3 +4078,22 @@ export function longestValidParentheses(s: string): number {
 
     return max;
 }
+
+export function longestValidParentheses2(s: string): number {
+    const arr: number[] = [-1];
+    let max = 0;
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            arr.push(i);
+        } else {
+            arr.pop();
+            if (arr.length === 0) {
+                arr.push(i);
+            }
+        }
+
+        max = Math.max(max, i - arr[arr.length - 1]);
+    }
+
+    return max;
+}
