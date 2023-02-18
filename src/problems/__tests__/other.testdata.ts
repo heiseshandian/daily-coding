@@ -1146,3 +1146,18 @@ export const evaluationMethodsTestData = [
         expected: 2,
     },
 ];
+
+export const findMinMovesTestData = [
+    {
+        input: [1, 0, 5],
+        expected: 3,
+    },
+    {
+        input: [0, 3, 0],
+        expected: 2,
+    },
+    {
+        input: [0, 2, 0],
+        expected: -1,
+    },
+];

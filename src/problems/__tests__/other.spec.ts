@@ -10,6 +10,7 @@ import {
     evaluationMethods,
     existWord,
     findKthLargest,
+    findMinMoves,
     findSubstring,
     findWords,
     getAllTriples,
@@ -82,6 +83,7 @@ import {
     getMaxLengthOfIncreasingSubsequenceTestData,
     getMaxSizeOfAllOnesTestData,
     evaluationMethodsTestData,
+    findMinMovesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -552,5 +554,9 @@ describe('other', () => {
 
     it.each(evaluationMethodsTestData)('evaluationMethods', ({ input: { str, expectedResult }, expected }) => {
         expect(evaluationMethods(str, expectedResult)).toBe(expected);
+    });
+
+    it.each(findMinMovesTestData)('findMinMoves', ({ input, expected }) => {
+        expect(findMinMoves(input)).toBe(expected);
     });
 });

@@ -4244,3 +4244,52 @@ function probabilityOfWinningProcess(cur: number, n: number, a: number, b: numbe
 
     return win / n;
 }
+
+/* 
+You have n super washing machines on a line. Initially, each washing machine has some dresses or is empty.
+
+For each move, you could choose any m (1 <= m <= n) washing machines, 
+and pass one dress of each washing machine to one of its adjacent washing machines at the same time.
+
+Given an integer array machines representing the number of dresses in each washing machine from left to right on the line, 
+return the minimum number of moves to make all the washing machines have the same number of dresses. 
+If it is not possible to do it, return -1.
+
+单点最大瓶颈决定整体最大瓶颈
+*/
+export function findMinMoves(machines: number[]): number {
+    const preSumArr = [machines[0]];
+    for (let i = 1; i < machines.length; i++) {
+        preSumArr[i] = preSumArr[i - 1] + machines[i];
+    }
+    const sum = preSumArr[preSumArr.length - 1];
+
+    if (sum % machines.length !== 0) {
+        return -1;
+    }
+
+    const average = sum / machines.length;
+
+    let leftSum = 0;
+    let max = -Infinity;
+    for (let i = 0; i < machines.length; i++) {
+        const rightSum = sum - preSumArr[i];
+        const leftMachineCount = i;
+        const rightMachineCount = machines.length - leftMachineCount - 1;
+
+        const leftLackCloses = leftSum - leftMachineCount * average;
+        const rightLackCloses = rightSum - rightMachineCount * average;
+
+        // 同时为负数说明两边都需要i位置给衣服，而i同时又只能给一件衣服，所以i最小次数就是
+        // Math.abs(leftLackCloses) + Math.abs(rightLackCloses)
+        if (leftLackCloses < 0 && rightLackCloses < 0) {
+            max = Math.max(max, Math.abs(leftLackCloses) + Math.abs(rightLackCloses));
+        } else {
+            max = Math.max(max, Math.abs(leftLackCloses), Math.abs(rightLackCloses));
+        }
+
+        leftSum += machines[i];
+    }
+
+    return max;
+}
