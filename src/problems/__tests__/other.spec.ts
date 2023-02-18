@@ -9,6 +9,7 @@ import {
     countLostNumbers,
     existWord,
     findKthLargest,
+    findSubstring,
     findWords,
     getAllTriples,
     getAllTwoTuples,
@@ -170,7 +171,7 @@ import {
     getMaxSizeOfAllOnes2,
     longestValidParentheses2,
 } from '../other';
-import { calculateStrTestData, longestValidParenthesesTestData } from './other.testdata';
+import { calculateStrTestData, longestValidParenthesesTestData, findSubstringTestData } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
 
 describe('other', () => {
@@ -541,5 +542,9 @@ describe('other', () => {
     it.each(longestValidParenthesesTestData)('longestValidParentheses', ({ input, expected }) => {
         expect(longestValidParentheses(input)).toBe(expected);
         expect(longestValidParentheses2(input)).toBe(expected);
+    });
+
+    it.each(findSubstringTestData)('findSubstring', ({ input: { s, words }, expected }) => {
+        expect(findSubstring(s, words)).toEqual(expected);
     });
 });

@@ -1091,3 +1091,34 @@ export const longestValidParenthesesTestData = [
         expected: 8,
     },
 ];
+
+export const findSubstringTestData = [
+    {
+        input: {
+            s: 'barfoothefoobarman',
+            words: ['foo', 'bar'],
+        },
+        expected: [0, 9],
+    },
+    {
+        input: {
+            s: 'wordgoodgoodgoodbestword',
+            words: ['word', 'good', 'best', 'word'],
+        },
+        expected: [],
+    },
+    {
+        input: {
+            s: 'barfoofoobarthefoobarman',
+            words: ['bar', 'foo', 'the'],
+        },
+        expected: [6, 9, 12],
+    },
+    {
+        input: {
+            s: 'aaaaaaaaaaaaaaaa',
+            words: ['a', 'a'],
+        },
+        expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    },
+];
