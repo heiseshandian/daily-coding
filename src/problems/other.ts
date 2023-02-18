@@ -4206,3 +4206,41 @@ function evaluationMethodsProcess(
     dp.set(id, [oneMethods, zeroMethods]);
     return dp.get(id)!;
 }
+
+/* 
+谷歌面试题扩展版面值为1~N的牌组成一组，
+
+每次你从组里等概率的抽出1~N中的一张下次抽会换一个新的组，有无限组
+
+1) 当累加和<a时，你将一直抽牌
+2) 当累加和>=a且<b时，你将获胜
+3) 当累加和>=b时，你将失败
+
+给定的参数为N，a，b 返回获胜的概率，
+*/
+export function probabilityOfWinning(n: number, a: number, b: number): number {
+    if (n < 1 || a >= b || a < 0 || b < 0) {
+        return 0;
+    }
+    if (n <= b - a) {
+        return 1;
+    }
+
+    return probabilityOfWinningProcess(0, n, a, b);
+}
+
+function probabilityOfWinningProcess(cur: number, n: number, a: number, b: number): number {
+    if (cur >= a && cur < b) {
+        return 1;
+    }
+    if (cur >= b) {
+        return 0;
+    }
+
+    let win = 0;
+    for (let i = 1; i <= n; i++) {
+        win += probabilityOfWinningProcess(cur + i, n, a, b);
+    }
+
+    return win / n;
+}
