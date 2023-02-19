@@ -1253,3 +1253,24 @@ export const trapTestData = [
         expected: 9,
     },
 ];
+
+export const trapRainWaterTestData = [
+    {
+        input: [
+            [1, 4, 3, 1, 3, 2],
+            [3, 2, 1, 3, 2, 4],
+            [2, 3, 3, 2, 3, 1],
+        ],
+        expected: 4,
+    },
+    {
+        input: [
+            [3, 3, 3, 3, 3],
+            [3, 2, 2, 2, 3],
+            [3, 2, 1, 2, 3],
+            [3, 2, 2, 2, 3],
+            [3, 3, 3, 3, 3],
+        ],
+        expected: 10,
+    },
+];

@@ -54,6 +54,7 @@ import {
     reverseBits2,
     shortestBridge,
     trap,
+    trapRainWater,
     unzipStr,
     zigzagLevelOrder,
 } from '../other';
@@ -92,6 +93,7 @@ import {
     distinctSubsequenceIITestData,
     shortestBridgeTestData,
     trapTestData,
+    trapRainWaterTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -584,5 +586,9 @@ describe('other', () => {
     it.each(trapTestData)('trap', ({ input, expected }) => {
         expect(trap(input)).toBe(expected);
         expect(trap2(input)).toBe(expected);
+    });
+
+    it.each(trapRainWaterTestData)('trapRainWater', ({ input, expected }) => {
+        expect(trapRainWater(input)).toBe(expected);
     });
 });

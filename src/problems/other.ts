@@ -4500,6 +4500,8 @@ function broadcast(grid: number[][], row: number, col: number, distance: number)
 }
 
 /* 
+一维接雨水问题
+
 Given n non-negative integers representing an elevation map where the width of each bar is 1, 
 compute how much water it can trap after raining.
 
@@ -4568,4 +4570,84 @@ export function trap2(height: number[]): number {
     }
 
     return sum;
+}
+
+/* 
+二维接雨水问题
+
+Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, 
+return the volume of water it can trap after raining.
+
+Input: heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]
+Output: 4
+Explanation: After the rain, water is trapped between the blocks.
+We have two small ponds 1 and 3 units trapped.
+The total volume of water trapped is 4.
+*/
+type RainHeapNode = [val: number, row: number, col: number];
+
+export function trapRainWater(heightMap: number[][]): number {
+    const minHeap = new GenericHeap<RainHeapNode>(([a], [b]) => a - b);
+    const hasAdded: boolean[][] = new Array(heightMap.length)
+        .fill(0)
+        .map((_) => new Array(heightMap[0].length).fill(false));
+
+    // 将外边界放入minHeap
+    // 第0行（不包括最后一个位置）
+    for (let j = 0; j < heightMap[0].length - 1; j++) {
+        hasAdded[0][j] = true;
+        minHeap.push([heightMap[0][j], 0, j]);
+    }
+
+    // 最后一列（不包括最后一个位置）
+    for (let i = 0; i < heightMap.length - 1; i++) {
+        hasAdded[i][heightMap[0].length - 1] = true;
+        minHeap.push([heightMap[i][heightMap[0].length - 1], i, heightMap[0].length - 1]);
+    }
+
+    // 最后一行（不包括第一个位置）
+    for (let j = 1; j < heightMap[0].length; j++) {
+        hasAdded[heightMap.length - 1][j] = true;
+        minHeap.push([heightMap[heightMap.length - 1][j], heightMap.length - 1, j]);
+    }
+
+    // 第一列（不包括第一个位置）
+    for (let i = 1; i < heightMap.length; i++) {
+        hasAdded[i][0] = true;
+        minHeap.push([heightMap[i][0], i, 0]);
+    }
+
+    let water = 0;
+    let max = 0;
+    while (!minHeap.isEmpty()) {
+        const [minVal, row, col] = minHeap.pop();
+        if (minVal < max) {
+            water += max - minVal;
+        } else {
+            max = minVal;
+        }
+
+        // 上下左右四个方向放入minHeap
+        if (row - 1 >= 0 && !hasAdded[row - 1][col]) {
+            hasAdded[row - 1][col] = true;
+            minHeap.push([heightMap[row - 1][col], row - 1, col]);
+        }
+
+        if (row + 1 < heightMap.length && !hasAdded[row + 1][col]) {
+            hasAdded[row + 1][col] = true;
+            minHeap.push([heightMap[row + 1][col], row + 1, col]);
+        }
+
+        if (col - 1 >= 0 && !hasAdded[row][col - 1]) {
+            hasAdded[row][col - 1] = true;
+            minHeap.push([heightMap[row][col - 1], row, col - 1]);
+        }
+
+        if (col + 1 < heightMap[0].length && !hasAdded[row][col + 1]) {
+            hasAdded[row][col + 1] = true;
+            minHeap.push([heightMap[row][col + 1], row, col + 1]);
+        }
+    }
+
+    return water;
 }
