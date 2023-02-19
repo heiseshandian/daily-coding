@@ -4498,3 +4498,74 @@ function broadcast(grid: number[][], row: number, col: number, distance: number)
 
     return result;
 }
+
+/* 
+Given n non-negative integers representing an elevation map where the width of each bar is 1, 
+compute how much water it can trap after raining.
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. 
+In this case, 6 units of rain water (blue section) are being trapped.
+*/
+export function trap(height: number[]): number {
+    if (height.length <= 2) {
+        return 0;
+    }
+
+    let left = 1;
+    let right = height.length - 2;
+    let leftMax = height[0];
+    let rightMax = height[height.length - 1];
+    let sum = 0;
+    while (left <= right) {
+        if (leftMax < rightMax) {
+            sum += Math.max(leftMax - height[left], 0);
+            leftMax = Math.max(leftMax, height[left]);
+            left++;
+        } else if (leftMax === rightMax) {
+            sum += Math.max(leftMax - height[left], 0);
+            // 避免中间位置算两遍
+            if (left !== right) {
+                sum += Math.max(rightMax - height[right], 0);
+            }
+
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            left++;
+            right--;
+        } else {
+            sum += Math.max(rightMax - height[right], 0);
+            rightMax = Math.max(rightMax, height[right]);
+            right--;
+        }
+    }
+
+    return sum;
+}
+
+export function trap2(height: number[]): number {
+    if (height.length <= 2) {
+        return 0;
+    }
+
+    const leftMaxArr = [height[0]];
+    const rightMaxArr = [height[height.length - 1]];
+    for (let i = 1; i < height.length; i++) {
+        const prev = leftMaxArr[leftMaxArr.length - 1];
+        leftMaxArr.push(Math.max(prev, height[i]));
+    }
+
+    for (let i = height.length - 2; i >= 0; i--) {
+        const prev = rightMaxArr[rightMaxArr.length - 1];
+        rightMaxArr.push(Math.max(prev, height[i]));
+    }
+    rightMaxArr.reverse();
+
+    let sum = 0;
+    for (let i = 1; i < height.length - 1; i++) {
+        sum += Math.max(Math.min(leftMaxArr[i - 1], rightMaxArr[i + 1]) - height[i], 0);
+    }
+
+    return sum;
+}

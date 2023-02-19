@@ -53,6 +53,7 @@ import {
     reverseBits,
     reverseBits2,
     shortestBridge,
+    trap,
     unzipStr,
     zigzagLevelOrder,
 } from '../other';
@@ -90,6 +91,7 @@ import {
     kthSmallestTestData,
     distinctSubsequenceIITestData,
     shortestBridgeTestData,
+    trapTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -183,6 +185,7 @@ import {
 } from '../other';
 import { calculateStrTestData, longestValidParenthesesTestData, findSubstringTestData } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
+import { trap2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -576,5 +579,10 @@ describe('other', () => {
 
     it.each(shortestBridgeTestData)('shortestBridge', ({ input, expected }) => {
         expect(shortestBridge(input)).toBe(expected);
+    });
+
+    it.each(trapTestData)('trap', ({ input, expected }) => {
+        expect(trap(input)).toBe(expected);
+        expect(trap2(input)).toBe(expected);
     });
 });
