@@ -4390,3 +4390,111 @@ export function distinctSubsequenceII(s: string): number {
     // 由于all是取模之后的，如果all当前是0则all取模之前的值必然是MOD的倍数，直接取MOD即可
     return (all || MOD) - 1;
 }
+
+/* 
+You are given an n x n binary matrix grid where 1 represents land and 0 represents water.
+
+An island is a 4-directionally connected group of 1's not connected to any other 1's. There are exactly two islands in grid.
+
+You may change 0's to 1's to connect the two islands to form one island.
+
+Return the smallest number of 0's you must flip to connect the two islands.
+
+Example 1:
+Input: grid = [[0,1],[1,0]]
+Output: 1
+
+Example 2:
+Input: grid = [[0,1,0],[0,0,0],[0,0,1]]
+Output: 2
+
+// 大思路，先找出两片岛，然后分别从两片岛广播出去，然后将广播出去的区域相加，得到的点数最小的点就是最短的连接点
+*/
+type Position = [row: number, col: number];
+
+export function shortestBridge(grid: number[][]): number {
+    const distanceGrids = new Array(2)
+        .fill(0)
+        .map((_) => new Array(grid.length).fill(0).map((_) => new Array(grid[0].length).fill(0)));
+    let islandsCount = 0;
+    // 存储所有1的位置信息
+    let onePositions: Position[] = [];
+    const nextPositions: Position[] = [];
+
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] === 1) {
+                infect(grid, i, j, onePositions, distanceGrids[islandsCount]);
+
+                let distance = 2;
+                while (onePositions.length > 0) {
+                    onePositions.forEach(([row, col]) => {
+                        nextPositions.push(...broadcast(distanceGrids[islandsCount], row, col, distance));
+                    });
+                    distance++;
+
+                    onePositions = nextPositions.slice();
+                    nextPositions.length = 0;
+                }
+
+                islandsCount++;
+            }
+        }
+    }
+
+    let min = Infinity;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            min = Math.min(min, distanceGrids[0][i][j] + distanceGrids[1][i][j]);
+        }
+    }
+
+    return min - 3;
+}
+
+function infect(grid: number[][], row: number, col: number, onePositions: Position[], distanceGrid: number[][]) {
+    if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length || grid[row][col] !== 1) {
+        return;
+    }
+
+    onePositions.push([row, col]);
+    distanceGrid[row][col] = 1;
+    grid[row][col] = 2;
+
+    // 上下左右四个方向继续
+    infect(grid, row - 1, col, onePositions, distanceGrid);
+    infect(grid, row + 1, col, onePositions, distanceGrid);
+    infect(grid, row, col - 1, onePositions, distanceGrid);
+    infect(grid, row, col + 1, onePositions, distanceGrid);
+}
+
+// 从某个点扩散出去，并返回扩散得到的点
+function broadcast(grid: number[][], row: number, col: number, distance: number): Position[] {
+    const result: Position[] = [];
+
+    // 上
+    if (row - 1 >= 0 && grid[row - 1][col] === 0) {
+        grid[row - 1][col] = distance;
+        result.push([row - 1, col]);
+    }
+
+    // 下
+    if (row + 1 < grid.length && grid[row + 1][col] === 0) {
+        grid[row + 1][col] = distance;
+        result.push([row + 1, col]);
+    }
+
+    // 左
+    if (col - 1 >= 0 && grid[row][col - 1] === 0) {
+        grid[row][col - 1] = distance;
+        result.push([row, col - 1]);
+    }
+
+    // 右
+    if (col + 1 < grid[0].length && grid[row][col + 1] === 0) {
+        grid[row][col + 1] = distance;
+        result.push([row, col + 1]);
+    }
+
+    return result;
+}

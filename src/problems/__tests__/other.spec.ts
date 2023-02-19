@@ -52,6 +52,7 @@ import {
     reverseBetween,
     reverseBits,
     reverseBits2,
+    shortestBridge,
     unzipStr,
     zigzagLevelOrder,
 } from '../other';
@@ -88,6 +89,7 @@ import {
     findMinMovesTestData,
     kthSmallestTestData,
     distinctSubsequenceIITestData,
+    shortestBridgeTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -570,5 +572,9 @@ describe('other', () => {
 
     it.each(distinctSubsequenceIITestData)('distinctSubsequenceII', ({ input, expected }) => {
         expect(distinctSubsequenceII(input)).toBe(expected);
+    });
+
+    it.each(shortestBridgeTestData)('shortestBridge', ({ input, expected }) => {
+        expect(shortestBridge(input)).toBe(expected);
     });
 });
