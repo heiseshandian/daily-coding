@@ -1285,3 +1285,22 @@ export const majorityElementTestData = [
         expected: 1,
     },
 ];
+
+export const majorityElement2TestData = [
+    {
+        input: [1, 1, 2],
+        expected: [1],
+    },
+    {
+        input: [1, 1, 2, 3, 1],
+        expected: [1],
+    },
+    {
+        input: [1, 2],
+        expected: [1, 2],
+    },
+    {
+        input: [1, 2, 1, 2, 3, 3, 1],
+        expected: [1],
+    },
+];

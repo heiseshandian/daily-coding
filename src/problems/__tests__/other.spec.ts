@@ -191,7 +191,8 @@ import {
     majorityElementTestData,
 } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
-import { trap2, existWord, majorityElement } from '../other';
+import { trap2, existWord, majorityElement, majorityElement2 } from '../other';
+import { majorityElement2TestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -598,5 +599,9 @@ describe('other', () => {
 
     it.each(majorityElementTestData)('majorityElement', ({ input, expected }) => {
         expect(majorityElement(input)).toBe(expected);
+    });
+
+    it.each(majorityElement2TestData)('majorityElement2', ({ input, expected }) => {
+        expect(majorityElement2(input)).toEqual(expected);
     });
 });

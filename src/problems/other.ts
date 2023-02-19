@@ -4662,22 +4662,81 @@ You may assume that the majority element always exists in the array.
 // 如果每次消除两个不同的数字，那么最终留下来的数字必然是水王数（如果水王数一定存在的话）
 */
 export function majorityElement(arr: number[]): number {
-    let prev = arr[0];
+    let candidate = arr[0];
     let count = 0;
 
     for (let i = 0; i < arr.length; i++) {
         if (count === 0) {
-            prev = arr[i];
+            candidate = arr[i];
             count = 1;
             continue;
         }
 
-        if (prev === arr[i]) {
+        if (candidate === arr[i]) {
             count++;
         } else {
             count--;
         }
     }
 
-    return prev;
+    return candidate;
+}
+
+/* 
+https://leetcode.com/problems/majority-element-ii/
+
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+分析，大于n/3的数最多有2个，所以仿照上面的思路准备两个candidate，一次删除三个不同数字，最后留下来的就是出现次数大于n/3的
+*/
+export function majorityElement2(nums: number[]): number[] {
+    // map最多放2个数字（因为大于n/3的数字最多只有2个）
+    const map: Map<number, number> = new Map();
+
+    for (let i = 0; i < nums.length; i++) {
+        const cur = nums[i];
+        if (map.size < 2) {
+            map.set(cur, (map.get(cur) || 0) + 1);
+            continue;
+        }
+
+        const prevCount = map.get(cur);
+        // 统计不为0或者undefined说明候选中有当前数字
+        if (prevCount) {
+            map.set(cur, prevCount + 1);
+        } else {
+            // 如果之前没出现过则所有候选减1，且当前数字也丢弃（相当于同时删除3个数字）
+            for (let [candidate, count] of map) {
+                count--;
+
+                if (count === 0) {
+                    map.delete(candidate);
+                } else {
+                    map.set(candidate, count);
+                }
+            }
+        }
+    }
+
+    for (const [candidate] of map) {
+        map.set(candidate, 0);
+    }
+
+    const target = nums.length / 3;
+    const result = [];
+
+    for (let i = 0; i < nums.length; i++) {
+        const cur = nums[i];
+        if (map.has(cur)) {
+            const count = map.get(cur)! + 1;
+            if (count > target) {
+                result.push(cur);
+                map.delete(cur);
+            } else {
+                map.set(cur, count);
+            }
+        }
+    }
+
+    return result;
 }
