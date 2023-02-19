@@ -9,7 +9,6 @@ import {
     countLostNumbers,
     distinctSubsequenceII,
     evaluationMethods,
-    existWord,
     findKthLargest,
     findMinMoves,
     findSubstring,
@@ -185,9 +184,14 @@ import {
     getMaxSizeOfAllOnes2,
     longestValidParentheses2,
 } from '../other';
-import { calculateStrTestData, longestValidParenthesesTestData, findSubstringTestData } from './other.testdata';
+import {
+    calculateStrTestData,
+    longestValidParenthesesTestData,
+    findSubstringTestData,
+    majorityElementTestData,
+} from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
-import { trap2 } from '../other';
+import { trap2, existWord, majorityElement } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -590,5 +594,9 @@ describe('other', () => {
 
     it.each(trapRainWaterTestData)('trapRainWater', ({ input, expected }) => {
         expect(trapRainWater(input)).toBe(expected);
+    });
+
+    it.each(majorityElementTestData)('majorityElement', ({ input, expected }) => {
+        expect(majorityElement(input)).toBe(expected);
     });
 });

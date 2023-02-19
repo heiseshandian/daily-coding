@@ -4651,3 +4651,33 @@ export function trapRainWater(heightMap: number[][]): number {
 
     return water;
 }
+
+/* 
+https://leetcode.com/problems/majority-element/
+
+Given an array nums of size n, return the majority element.
+The majority element is the element that appears more than ⌊n / 2⌋ times. 
+You may assume that the majority element always exists in the array.
+
+// 如果每次消除两个不同的数字，那么最终留下来的数字必然是水王数（如果水王数一定存在的话）
+*/
+export function majorityElement(arr: number[]): number {
+    let prev = arr[0];
+    let count = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+        if (count === 0) {
+            prev = arr[i];
+            count = 1;
+            continue;
+        }
+
+        if (prev === arr[i]) {
+            count++;
+        } else {
+            count--;
+        }
+    }
+
+    return prev;
+}

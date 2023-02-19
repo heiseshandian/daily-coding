@@ -1274,3 +1274,14 @@ export const trapRainWaterTestData = [
         expected: 10,
     },
 ];
+
+export const majorityElementTestData = [
+    {
+        input: [1, 1, 2],
+        expected: 1,
+    },
+    {
+        input: [1, 1, 2, 3, 1],
+        expected: 1,
+    },
+];
