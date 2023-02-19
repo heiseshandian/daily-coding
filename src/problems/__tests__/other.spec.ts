@@ -7,6 +7,7 @@ import {
     countJointMethodsDp,
     countJointMethodsDp2,
     countLostNumbers,
+    distinctSubsequenceII,
     evaluationMethods,
     existWord,
     findKthLargest,
@@ -86,6 +87,7 @@ import {
     evaluationMethodsTestData,
     findMinMovesTestData,
     kthSmallestTestData,
+    distinctSubsequenceIITestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -564,5 +566,9 @@ describe('other', () => {
 
     it.each(kthSmallestTestData)('kthSmallest', ({ input: { matrix, k }, expected }) => {
         expect(kthSmallest(matrix, k)).toBe(expected);
+    });
+
+    it.each(distinctSubsequenceIITestData)('distinctSubsequenceII', ({ input, expected }) => {
+        expect(distinctSubsequenceII(input)).toBe(expected);
     });
 });

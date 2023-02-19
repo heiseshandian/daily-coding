@@ -1185,3 +1185,18 @@ export const kthSmallestTestData = [
         expected: 1,
     },
 ];
+
+export const distinctSubsequenceIITestData = [
+    {
+        input: 'abc',
+        expected: 7,
+    },
+    {
+        input: '121',
+        expected: 6,
+    },
+    {
+        input: '1211',
+        expected: 9,
+    },
+];

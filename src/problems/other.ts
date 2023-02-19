@@ -4352,3 +4352,41 @@ export function kthSmallest(matrix: number[][], k: number): number {
     // [[1, 2],[1, 2]],k=1 那么通过上面的二分是没法正好找到k个数字的
     return left;
 }
+
+/* 
+Given a string s, return the number of distinct non-empty subsequences of s. Since the answer may be very large, return it modulo 109 + 7.
+
+A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters 
+without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not.
+
+Example 1:
+Input: s = "abc"
+Output: 7
+Explanation: The 7 distinct subsequences are "a", "b", "c", "ab", "ac", "bc", and "abc".
+*/
+export function distinctSubsequenceII(s: string): number {
+    const MOD = Math.pow(10, 9) + 7;
+    // 以某个字符结尾的新增字符串有多少个
+    const map: Map<string, number> = new Map();
+
+    // 空集
+    let all = 1;
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        const newAdd = all;
+
+        // 当前字符之前未出现过
+        if (!map.has(char)) {
+            all = (all + newAdd) % MOD;
+        } else {
+            // 上一步的all是取模之后的，于是可能出现all + newAdd - map.get(char)!是个负数的情况，这里我们再加个MOD使得最终结果一定是正数
+            all = (all + newAdd - map.get(char)! + MOD) % MOD;
+        }
+
+        map.set(char, newAdd);
+    }
+
+    // 本题不算空集，减去1
+    // 由于all是取模之后的，如果all当前是0则all取模之前的值必然是MOD的倍数，直接取MOD即可
+    return (all || MOD) - 1;
+}
