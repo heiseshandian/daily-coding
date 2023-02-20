@@ -4889,3 +4889,142 @@ export function minWindow(str1: string, str2: string): string {
 
     return minStr;
 }
+
+/* 
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+
+You must do it in place.
+*/
+// 先遍历一次找到所有0的位置，然后把0所在位置的行和列都变成0，空间复杂度O(m*n)
+export function setZeroes(matrix: number[][]): void {
+    if (!matrix || matrix.length === 0) {
+        return;
+    }
+
+    let zeroIndexes = [];
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 0) {
+                zeroIndexes.push([i, j]);
+            }
+        }
+    }
+
+    zeroIndexes.forEach(([i, j]) => {
+        // i行设置为0 [i][0-matrix[0].length]
+        let index = 0;
+        while (index < matrix[0].length) {
+            matrix[i][index++] = 0;
+        }
+
+        // j列设置为0 [0-matrix.length][j]
+        index = 0;
+        while (index < matrix.length) {
+            matrix[index++][j] = 0;
+        }
+    });
+}
+
+// 用两个数组，一个数组记录行是否需要变成0，另一个数组记录列是否需要变成0，空间复杂度O(m+n)
+export function setZeroes2(matrix: number[][]): void {
+    if (!matrix || matrix.length === 0) {
+        return;
+    }
+
+    // 记录某一行是否需要变成0
+    const zeroRows: boolean[] = new Array(matrix.length).fill(false);
+    const zeroCols: boolean[] = new Array(matrix[0].length).fill(false);
+
+    // 找到需要变成0的行和列
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 0) {
+                zeroRows[i] = true;
+                zeroCols[j] = true;
+            }
+        }
+    }
+
+    // 把行变成0
+    for (let row = 0; row < zeroRows.length; row++) {
+        if (zeroRows[row] === true) {
+            for (let j = 0; j < matrix[0].length; j++) {
+                matrix[row][j] = 0;
+            }
+        }
+    }
+
+    // 把列变成0
+    for (let col = 0; col < matrix[0].length; col++) {
+        if (zeroCols[col] === true) {
+            for (let i = 0; i < matrix.length; i++) {
+                matrix[i][col] = 0;
+            }
+        }
+    }
+}
+
+// 用两个变量记录第0行和第0列是否需要变成0，然后用第0行和第0列来记录剩下的行和列是否需要变成0，空间复杂度O(1)
+export function setZeroes3(matrix: number[][]): void {
+    let row0 = false;
+    let col0 = false;
+
+    // 标记第0行是否需要变成0
+    for (let j = 0; j < matrix[0].length; j++) {
+        if (matrix[0][j] === 0) {
+            row0 = true;
+            break;
+        }
+    }
+
+    // 标记第0列是否需要变成0
+    for (let i = 0; i < matrix.length; i++) {
+        if (matrix[i][0] === 0) {
+            col0 = true;
+            break;
+        }
+    }
+
+    // 用第0行和第0列的位置来标记剩下的行和列是否需要变成0
+    for (let i = 1; i < matrix.length; i++) {
+        for (let j = 1; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 0) {
+                // 第j列需要变成0
+                matrix[0][j] = 0;
+                // 第i行需要变成0
+                matrix[i][0] = 0;
+            }
+        }
+    }
+
+    // 遍历第0行处理需要变成0的列
+    for (let j = 1; j < matrix[0].length; j++) {
+        if (matrix[0][j] === 0) {
+            for (let i = 1; i < matrix.length; i++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    // 遍历第0列处理需要变成0的行
+    for (let i = 1; i < matrix.length; i++) {
+        if (matrix[i][0] === 0) {
+            for (let j = 1; j < matrix[0].length; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    // 处理第0行
+    if (row0) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            matrix[0][j] = 0;
+        }
+    }
+
+    if (col0) {
+        for (let i = 0; i < matrix.length; i++) {
+            matrix[i][0] = 0;
+        }
+    }
+}

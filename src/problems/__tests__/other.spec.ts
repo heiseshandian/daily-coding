@@ -97,6 +97,7 @@ import {
     trapRainWaterTestData,
     mergeStonesTestData,
     minWindowTestData,
+    setZerosTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -195,7 +196,7 @@ import {
     majorityElementTestData,
 } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
-import { trap2, existWord, majorityElement, majorityElement2 } from '../other';
+import { trap2, existWord, majorityElement, majorityElement2, setZeroes, setZeroes2, setZeroes3 } from '../other';
 import { majorityElement2TestData } from './other.testdata';
 
 describe('other', () => {
@@ -615,5 +616,21 @@ describe('other', () => {
 
     it.each(minWindowTestData)('minWindow', ({ input: { str1, str2 }, expected }) => {
         expect(minWindow(str1, str2)).toBe(expected);
+    });
+
+    it.each(setZerosTestData)('setZeros', ({ input, expected }) => {
+        const clone = (input: number[][]) => input.slice().map((val) => val.slice());
+
+        const input1 = clone(input);
+        const input2 = clone(input);
+        const input3 = clone(input);
+
+        setZeroes(input1);
+        setZeroes2(input2);
+        setZeroes3(input3);
+
+        expect(input1).toEqual(expected);
+        expect(input2).toEqual(expected);
+        expect(input3).toEqual(expected);
     });
 });
