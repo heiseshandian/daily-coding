@@ -1304,3 +1304,27 @@ export const majorityElement2TestData = [
         expected: [1],
     },
 ];
+
+export const mergeStonesTestData = [
+    {
+        input: {
+            stones: [3, 2, 4, 1],
+            k: 2,
+        },
+        expected: 20,
+    },
+    {
+        input: {
+            stones: [3, 2, 4, 1],
+            k: 3,
+        },
+        expected: -1,
+    },
+    {
+        input: {
+            stones: [3, 5, 1, 2, 6],
+            k: 3,
+        },
+        expected: 25,
+    },
+];

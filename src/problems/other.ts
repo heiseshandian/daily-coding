@@ -4740,3 +4740,87 @@ export function majorityElement2(nums: number[]): number[] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/minimum-cost-to-merge-stones/
+There are n piles of stones arranged in a row. The ith pile has stones[i] stones.
+
+A move consists of merging exactly k consecutive piles into one pile, and the cost of this move is equal to the total number of stones in these k piles.
+
+Return the minimum cost to merge all piles of stones into one pile. If it is impossible, return -1.
+
+Input: stones = [3,2,4,1], k = 3
+Output: -1
+Explanation: After any merge operation, there are 2 piles left, and we can't merge anymore.  So the task is impossible.
+
+Input: stones = [3,5,1,2,6], k = 3
+Output: 25
+Explanation: We start with [3, 5, 1, 2, 6].
+We merge [5, 1, 2] for a cost of 8, and we are left with [3, 8, 6].
+We merge [3, 8, 6] for a cost of 17, and we are left with [17].
+The total cost was 25, and this is the minimum possible.
+
+// 范围尝试模型
+*/
+export function mergeStones(stones: number[], k: number): number {
+    const prefixSum = [stones[0]];
+    for (let i = 1; i < stones.length; i++) {
+        prefixSum[i] = prefixSum[i - 1] + stones[i];
+    }
+
+    // 由于最终要得到1个数，假设合并了x次，那么
+    // n-x(k-1)=1
+    // 也就是说(n-1)%(k-1)必然等于0
+    if ((stones.length - 1) % (k - 1) !== 0) {
+        return -1;
+    }
+
+    const dp: number[][][] = new Array(stones.length)
+        .fill(0)
+        .map((_) => new Array(stones.length).fill(0).map((_) => new Array(k).fill(undefined)));
+
+    return mergeStonesProcess(stones, k, 0, stones.length - 1, 1, prefixSum, dp);
+}
+
+// left到right范围上搞出part份，返回最小代价
+function mergeStonesProcess(
+    stones: number[],
+    k: number,
+    left: number,
+    right: number,
+    part: number,
+    prefixSum: number[],
+    dp: number[][][]
+): number {
+    if (dp[left][right][part] !== undefined) {
+        return dp[left][right][part];
+    }
+
+    if (left === right) {
+        dp[left][right][part] = part === 1 ? 0 : -1;
+        return dp[left][right][part];
+    }
+
+    if (part === 1) {
+        const sum = prefixSum[right] - (left - 1 >= 0 ? prefixSum[left - 1] : 0);
+        dp[left][right][part] = mergeStonesProcess(stones, k, left, right, k, prefixSum, dp) + sum;
+        return dp[left][right][part];
+    }
+
+    let cost = Infinity;
+    // part>1 且范围内不止一个数字
+    // n=left+x(k-1)-left+1=x(k-1)+1
+    // n-1=x(k-1)
+    // i每次自增k-1能够确保left到i能够最终合成一份
+    for (let i = left; i < right; i += k - 1) {
+        const leftNext = mergeStonesProcess(stones, k, left, i, 1, prefixSum, dp);
+        const rightNext = mergeStonesProcess(stones, k, i + 1, right, part - 1, prefixSum, dp);
+        if (leftNext !== -1 && rightNext !== -1) {
+            // 此处不需要对left-right的数据求和，因为目标就是在left到right上弄出part份，不是弄出一份，所以不需要再加上合并的代价
+            cost = Math.min(cost, leftNext + rightNext);
+        }
+    }
+
+    dp[left][right][part] = cost === Infinity ? -1 : cost;
+    return dp[left][right][part];
+}

@@ -45,6 +45,7 @@ import {
     getValidParentheses,
     kthSmallest,
     longestValidParentheses,
+    mergeStones,
     MessageBox,
     minCameraCover,
     minCameraCover2,
@@ -93,6 +94,7 @@ import {
     shortestBridgeTestData,
     trapTestData,
     trapRainWaterTestData,
+    mergeStonesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -603,5 +605,9 @@ describe('other', () => {
 
     it.each(majorityElement2TestData)('majorityElement2', ({ input, expected }) => {
         expect(majorityElement2(input)).toEqual(expected);
+    });
+
+    it.each(mergeStonesTestData)('mergeStones', ({ input: { stones, k }, expected }) => {
+        expect(mergeStones(stones, k)).toBe(expected);
     });
 });
