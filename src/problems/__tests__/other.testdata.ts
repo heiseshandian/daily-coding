@@ -1372,3 +1372,10 @@ export const setZerosTestData = [
         ],
     },
 ];
+
+export const countPrimesTestData = [
+    {
+        input: 10,
+        expected: 4,
+    },
+];

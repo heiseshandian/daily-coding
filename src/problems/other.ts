@@ -5028,3 +5028,35 @@ export function setZeroes3(matrix: number[][]): void {
         }
     }
 }
+
+/* 
+Given an integer n, return the number of prime numbers that are strictly less than n.
+*/
+// 插空法统计素数
+export function countPrimes(n: number): number {
+    // 要求返回的素数必须小于n
+    if (n < 3) {
+        return 0;
+    }
+
+    // 所有的偶数都不是素数，上来我们直接把count减去一半
+    let count = n >> 1;
+    // 非素数
+    const nonPrime: boolean[] = new Array(n).fill(false);
+
+    // 内层循环是从i*i开始插空的，并且i*i需要小于n，所以外层循环终止条件可以设置为i*i<n
+    for (let i = 3; i * i < n; i += 2) {
+        if (nonPrime[i]) {
+            continue;
+        }
+
+        for (let j = i * i; j < n; j += 2 * i) {
+            if (!nonPrime[j]) {
+                count--;
+                nonPrime[j] = true;
+            }
+        }
+    }
+
+    return count;
+}

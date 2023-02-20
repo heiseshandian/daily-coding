@@ -7,6 +7,7 @@ import {
     countJointMethodsDp,
     countJointMethodsDp2,
     countLostNumbers,
+    countPrimes,
     distinctSubsequenceII,
     evaluationMethods,
     findKthLargest,
@@ -98,6 +99,7 @@ import {
     mergeStonesTestData,
     minWindowTestData,
     setZerosTestData,
+    countPrimesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -632,5 +634,9 @@ describe('other', () => {
         expect(input1).toEqual(expected);
         expect(input2).toEqual(expected);
         expect(input3).toEqual(expected);
+    });
+
+    it.each(countPrimesTestData)('countPrimes', ({ input, expected }) => {
+        expect(countPrimes(input)).toBe(expected);
     });
 });
