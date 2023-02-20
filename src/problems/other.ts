@@ -4824,3 +4824,68 @@ function mergeStonesProcess(
     dp[left][right][part] = cost === Infinity ? -1 : cost;
     return dp[left][right][part];
 }
+
+/* 
+最小包含子串问题
+
+给定字符串str1 和 str2，问str1中完全包含str2所有字符的最小子串
+
+例如
+str1 ppabcdc
+str2 ccab
+
+返回5 （abcdc）
+*/
+export function minWindow(str1: string, str2: string): string {
+    const map: Map<string, number> = new Map();
+    for (let i = 0; i < str2.length; i++) {
+        map.set(str2[i], (map.get(str2[i]) || 0) + 1);
+    }
+    map.set('all', str2.length);
+
+    // (left,right]
+    let left = -1;
+    let right = -1;
+    let minStr = '';
+    while (left <= right && right !== str1.length) {
+        // 右边一直往右扩，直到all减为0
+        let prevAll = map.get('all') as number;
+        while (prevAll > 0 && right !== str1.length) {
+            const char = str1[++right];
+            if (!map.has(char)) {
+                continue;
+            }
+
+            const prev = map.get(char) as number;
+            map.set(char, prev - 1);
+            if (prev > 0) {
+                prevAll--;
+                map.set('all', prevAll);
+            }
+        }
+
+        // 左边往右扩，更新minStr
+        while (prevAll === 0 && left <= right) {
+            const found = str1.slice(left + 1, right + 1);
+            if (!minStr) {
+                minStr = found;
+            } else {
+                minStr = found.length < minStr.length ? found : minStr;
+            }
+
+            const char = str1[++left];
+            if (!map.has(char)) {
+                continue;
+            }
+
+            const prev = map.get(char) as number;
+            map.set(char, prev + 1);
+            if (prev === 0) {
+                prevAll++;
+                map.set('all', prevAll);
+            }
+        }
+    }
+
+    return minStr;
+}

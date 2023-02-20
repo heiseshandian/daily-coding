@@ -49,6 +49,7 @@ import {
     MessageBox,
     minCameraCover,
     minCameraCover2,
+    minWindow,
     reverseBetween,
     reverseBits,
     reverseBits2,
@@ -95,6 +96,7 @@ import {
     trapTestData,
     trapRainWaterTestData,
     mergeStonesTestData,
+    minWindowTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -609,5 +611,9 @@ describe('other', () => {
 
     it.each(mergeStonesTestData)('mergeStones', ({ input: { stones, k }, expected }) => {
         expect(mergeStones(stones, k)).toBe(expected);
+    });
+
+    it.each(minWindowTestData)('minWindow', ({ input: { str1, str2 }, expected }) => {
+        expect(minWindow(str1, str2)).toBe(expected);
     });
 });

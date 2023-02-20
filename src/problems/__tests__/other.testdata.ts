@@ -1328,3 +1328,20 @@ export const mergeStonesTestData = [
         expected: 25,
     },
 ];
+
+export const minWindowTestData = [
+    {
+        input: {
+            str1: 'ADOBECODEBANC',
+            str2: 'ABC',
+        },
+        expected: 'BANC',
+    },
+    {
+        input: {
+            str1: 'ab',
+            str2: 'a',
+        },
+        expected: 'a',
+    },
+];
