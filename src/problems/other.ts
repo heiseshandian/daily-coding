@@ -4795,10 +4795,7 @@ The total cost was 25, and this is the minimum possible.
 // 范围尝试模型
 */
 export function mergeStones(stones: number[], k: number): number {
-    const prefixSum = [stones[0]];
-    for (let i = 1; i < stones.length; i++) {
-        prefixSum[i] = prefixSum[i - 1] + stones[i];
-    }
+    const prefixSum = getPrefixSum(stones);
 
     // 由于最终要得到1个数，假设合并了x次，那么
     // n-x(k-1)=1
@@ -4812,6 +4809,15 @@ export function mergeStones(stones: number[], k: number): number {
         .map((_) => new Array(stones.length).fill(0).map((_) => new Array(k).fill(undefined)));
 
     return mergeStonesProcess(stones, k, 0, stones.length - 1, 1, prefixSum, dp);
+}
+
+function getPrefixSum(arr: number[]): number[] {
+    const prefixSum = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        prefixSum[i] = prefixSum[i - 1] + arr[i];
+    }
+
+    return prefixSum;
 }
 
 // left到right范围上搞出part份，返回最小代价
@@ -5158,4 +5164,155 @@ export function splitEarth(matrix: number[][]): number {
     }
 
     return maxOfMin;
+}
+
+export function splitEarth2(matrix: number[][]): number {
+    const sumOfMatrix = getSumOfMatrix(matrix);
+    const maxOfI = matrix.length - 1;
+    const maxOfJ = matrix[0].length - 1;
+
+    let maxOfMin = -Infinity;
+
+    // 暴力枚举所有竖切位置
+    for (let j1 = 0; j1 < matrix[0].length - 3; j1++) {
+        for (let j2 = j1 + 1; j2 < matrix[0].length - 2; j2++) {
+            for (let j3 = j2 + 1; j3 < matrix[0].length - 1; j3++) {
+                const topMaxOfMin = [-Infinity];
+                let split = 0;
+                for (let i = 1; i <= maxOfI; i++) {
+                    // 从split位置往右尝试扩大min的值
+                    let k = split;
+                    let found = split;
+                    let newMin = topMaxOfMin[i - 1];
+                    while (k < i) {
+                        // [0-k]属于上面，(k-i]属于下面
+                        const up = Math.min(
+                            getSumOfi1j1i2j2(sumOfMatrix, 0, 0, k, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, 0, j1 + 1, k, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, 0, j2 + 1, k, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, 0, j3 + 1, k, maxOfJ)
+                        );
+                        const down = Math.min(
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, 0, i, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j1 + 1, i, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j2 + 1, i, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j3 + 1, i, maxOfJ)
+                        );
+
+                        const min = Math.min(up, down);
+                        if (min >= newMin) {
+                            found = k;
+                            newMin = min;
+                        }
+
+                        k++;
+                    }
+
+                    split = found;
+                    topMaxOfMin[i] = newMin;
+                }
+
+                const downMaxOfMin = [-Infinity];
+                split = maxOfI - 1;
+                for (let i = maxOfI - 1; i >= 0; i--) {
+                    // 从split位置往左尝试扩大min的值
+                    let k = split;
+                    let found = split;
+                    let newMin = downMaxOfMin[0];
+
+                    while (k > i) {
+                        // (k-maxOfI] 属于下面，[i-k]属于上面
+                        const up = Math.min(
+                            getSumOfi1j1i2j2(sumOfMatrix, i, 0, k, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j1 + 1, k, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j2 + 1, k, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j3 + 1, k, maxOfJ)
+                        );
+                        const down = Math.min(
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, 0, maxOfI, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j1 + 1, maxOfI, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j2 + 1, maxOfI, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j3 + 1, maxOfI, maxOfJ)
+                        );
+
+                        const min = Math.min(up, down);
+                        if (min >= newMin) {
+                            found = k;
+                            newMin = min;
+                        }
+                        k--;
+                    }
+
+                    split = found;
+                    downMaxOfMin.unshift(newMin);
+                }
+
+                // 遍历中间一刀
+                for (let i = 2; i <= maxOfI; i++) {
+                    const topMin = topMaxOfMin[i];
+                    const downMin = downMaxOfMin[i];
+
+                    maxOfMin = Math.max(maxOfMin, Math.min(topMin, downMin));
+                }
+            }
+        }
+    }
+
+    return maxOfMin;
+}
+
+// 将数组切成两部分，使得两部分中较小的值尽可能大（或者说使得较大的值尽可能小）
+export function getMaxArrOf2PartsMin(arr: number[]): number[] {
+    const leftMaxOfMin = [-Infinity];
+    let split = 0;
+    const prefixSum = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        prefixSum[i] = prefixSum[i - 1] + arr[i];
+
+        // 从split位置往右尝试扩大min的值
+        let k = split;
+        let found = split;
+        let newMin = leftMaxOfMin[i - 1];
+        while (k < i) {
+            // [0-k]属于左边，(k-i]属于右边
+            const right = prefixSum[i] - prefixSum[k];
+            const left = prefixSum[k];
+            const min = Math.min(left, right);
+            if (min >= newMin) {
+                found = k;
+                newMin = min;
+            }
+
+            k++;
+        }
+
+        split = found;
+        leftMaxOfMin[i] = newMin;
+    }
+
+    return leftMaxOfMin;
+}
+
+export function getMaxArrOf2PartsMin2(arr: number[]): number[] {
+    const leftMaxOfMin = [-Infinity];
+    const prefixSum = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        prefixSum[i] = prefixSum[i - 1] + arr[i];
+
+        // 暴力枚举所有第一部分和第二部分
+        let k = 0;
+        let min = -Infinity;
+        // 左半部分[0-k] 右半部分(k-i]
+        while (k < i) {
+            const left = prefixSum[k];
+            const right = prefixSum[i] - prefixSum[k];
+            min = Math.max(min, Math.min(left, right));
+
+            k++;
+        }
+
+        leftMaxOfMin[i] = min;
+    }
+
+    return leftMaxOfMin;
 }

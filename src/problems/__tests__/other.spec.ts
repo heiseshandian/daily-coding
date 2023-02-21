@@ -21,6 +21,8 @@ import {
     getClosestSumKOfMatrix,
     getConnectedRegions,
     getMaxA,
+    getMaxArrOf2PartsMin,
+    getMaxArrOf2PartsMin2,
     getMaxIncreasingNum,
     getMaxK,
     getMaxLengthOfIncreasingSubsequence,
@@ -105,6 +107,7 @@ import {
     getSumOfMatrixTestData,
     getSumOfi1j1i2j2TestData,
     splitEarthTestData,
+    getMaxArrOf2PartsMinTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -214,6 +217,7 @@ import {
     getSumOfi1j1i2j2,
 } from '../other';
 import { majorityElement2TestData } from './other.testdata';
+import { splitEarth2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -668,5 +672,11 @@ describe('other', () => {
 
     it.each(splitEarthTestData)('splitEarth', ({ input, expected }) => {
         expect(splitEarth(input)).toBe(expected);
+        expect(splitEarth2(input)).toBe(expected);
+    });
+
+    it.each(getMaxArrOf2PartsMinTestData)('getMaxArrOf2PartsMin', ({ input, expected }) => {
+        expect(getMaxArrOf2PartsMin(input)).toEqual(expected);
+        expect(getMaxArrOf2PartsMin2(input)).toEqual(expected);
     });
 });
