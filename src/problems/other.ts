@@ -5092,3 +5092,70 @@ export function countPrimes(n: number): number {
 
     return count;
 }
+
+/* 
+牛牛和 15 个朋友来玩打土豪分田地的游戏，牛牛决定让你来分田地，地主的田地可以看成是一个矩形，每个位置有一个价值。分割田地的方法是横竖各切三刀，分成16份，
+作为领导干部，牛牛总是会选择其中总价值最小的一份田地，作为牛牛最好的朋友，你希望牛牛取得的田地的价值和尽可能大，你知道这个值最大可以是多少吗？
+
+输入描述：
+每个输入包含1个测试用例。每个测试用例的第一行包含两个整数n和m（1<=n，m<=75），表示田地的大小，接下来的n行，每行包含 m 个 0-9 之间的数字，表示每块位置的价值。输出描述：
+输出一行表示牛牛所能取得的最大的价值。
+
+输入例子：
+3332 
+3233 
+3332 
+2323
+
+输出例子：2
+*/
+export function splitEarth(matrix: number[][]): number {
+    const sumOfMatrix = getSumOfMatrix(matrix);
+    const maxOfI = matrix.length - 1;
+    const maxOfJ = matrix[0].length - 1;
+
+    let maxOfMin = -Infinity;
+
+    // 暴力枚举所有切割位置
+    // [0-i1] (i1,i2] (i2,i3] (i3,matrix.length-1]
+    // [0-j1] (j1,j2] (j2,j3] (j3,matrix[0].length-1]
+    for (let i1 = 0; i1 < matrix.length - 3; i1++) {
+        for (let i2 = i1 + 1; i2 < matrix.length - 2; i2++) {
+            for (let i3 = i2 + 1; i3 < matrix.length - 1; i3++) {
+                for (let j1 = 0; j1 < matrix[0].length - 3; j1++) {
+                    for (let j2 = j1 + 1; j2 < matrix[0].length - 2; j2++) {
+                        for (let j3 = j2 + 1; j3 < matrix[0].length - 1; j3++) {
+                            const allParts = [
+                                [0, 0, i1, j1],
+                                [0, j1 + 1, i1, i2],
+                                [0, j2 + 1, i1, j3],
+                                [0, j3 + 1, i1, maxOfJ],
+
+                                [i1 + 1, 0, i2, j1],
+                                [i1 + 1, j1 + 1, i2, i2],
+                                [i1 + 1, j2 + 1, i2, j3],
+                                [i1 + 1, j3 + 1, i2, maxOfJ],
+
+                                [i2 + 1, 0, i3, j1],
+                                [i2 + 1, j1 + 1, i3, i2],
+                                [i2 + 1, j2 + 1, i3, j3],
+                                [i2 + 1, j3 + 1, i3, maxOfJ],
+
+                                [i3 + 1, 0, maxOfI, j1],
+                                [i3 + 1, j1 + 1, maxOfI, i2],
+                                [i3 + 1, j2 + 1, maxOfI, j3],
+                                [i3 + 1, j3 + 1, maxOfI, maxOfJ],
+                            ].map(([valI1, valJ1, valI2, valJ2]) =>
+                                getSumOfi1j1i2j2(sumOfMatrix, valI1, valJ1, valI2, valJ2)
+                            );
+
+                            maxOfMin = Math.max(maxOfMin, Math.min(...allParts));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return maxOfMin;
+}

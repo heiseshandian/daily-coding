@@ -56,6 +56,7 @@ import {
     reverseBits,
     reverseBits2,
     shortestBridge,
+    splitEarth,
     trap,
     trapRainWater,
     unzipStr,
@@ -103,6 +104,7 @@ import {
     countPrimesTestData,
     getSumOfMatrixTestData,
     getSumOfi1j1i2j2TestData,
+    splitEarthTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -662,5 +664,9 @@ describe('other', () => {
 
     test('getSumOfi1j1i2j2 will throw error if the provided index is invalid', () => {
         expect(() => getSumOfi1j1i2j2([[]], 0, 0, 1, 1)).toThrowError('Invalid index');
+    });
+
+    it.each(splitEarthTestData)('splitEarth', ({ input, expected }) => {
+        expect(splitEarth(input)).toBe(expected);
     });
 });
