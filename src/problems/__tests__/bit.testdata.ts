@@ -14,3 +14,30 @@ export const powTestData = [
         expected: 243,
     },
 ];
+
+export const gameOfLifeTestData = [
+    {
+        input: [
+            [0, 1, 0],
+            [0, 0, 1],
+            [1, 1, 1],
+            [0, 0, 0],
+        ],
+        expected: [
+            [0, 0, 0],
+            [1, 0, 1],
+            [0, 1, 1],
+            [0, 1, 0],
+        ],
+    },
+    {
+        input: [
+            [1, 1],
+            [1, 0],
+        ],
+        expected: [
+            [1, 1],
+            [1, 1],
+        ],
+    },
+];
