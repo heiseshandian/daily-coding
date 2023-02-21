@@ -5133,22 +5133,22 @@ export function splitEarth(matrix: number[][]): number {
                         for (let j3 = j2 + 1; j3 < matrix[0].length - 1; j3++) {
                             const allParts = [
                                 [0, 0, i1, j1],
-                                [0, j1 + 1, i1, i2],
+                                [0, j1 + 1, i1, j2],
                                 [0, j2 + 1, i1, j3],
                                 [0, j3 + 1, i1, maxOfJ],
 
                                 [i1 + 1, 0, i2, j1],
-                                [i1 + 1, j1 + 1, i2, i2],
+                                [i1 + 1, j1 + 1, i2, j2],
                                 [i1 + 1, j2 + 1, i2, j3],
                                 [i1 + 1, j3 + 1, i2, maxOfJ],
 
                                 [i2 + 1, 0, i3, j1],
-                                [i2 + 1, j1 + 1, i3, i2],
+                                [i2 + 1, j1 + 1, i3, j2],
                                 [i2 + 1, j2 + 1, i3, j3],
                                 [i2 + 1, j3 + 1, i3, maxOfJ],
 
                                 [i3 + 1, 0, maxOfI, j1],
-                                [i3 + 1, j1 + 1, maxOfI, i2],
+                                [i3 + 1, j1 + 1, maxOfI, j2],
                                 [i3 + 1, j2 + 1, maxOfI, j3],
                                 [i3 + 1, j3 + 1, maxOfI, maxOfJ],
                             ].map(([valI1, valJ1, valI2, valJ2]) =>
@@ -5213,7 +5213,7 @@ export function splitEarth2(matrix: number[][]): number {
                 }
 
                 const downMaxOfMin = [-Infinity];
-                split = maxOfI - 1;
+                split = maxOfI;
                 for (let i = maxOfI - 1; i >= 0; i--) {
                     // 从split位置往左尝试扩大min的值
                     let k = split;
@@ -5221,18 +5221,18 @@ export function splitEarth2(matrix: number[][]): number {
                     let newMin = downMaxOfMin[0];
 
                     while (k > i) {
-                        // (k-maxOfI] 属于下面，[i-k]属于上面
+                        // [k-maxOfI] 属于下面，[i-k)属于上面
                         const up = Math.min(
-                            getSumOfi1j1i2j2(sumOfMatrix, i, 0, k, j1),
-                            getSumOfi1j1i2j2(sumOfMatrix, i, j1 + 1, k, j2),
-                            getSumOfi1j1i2j2(sumOfMatrix, i, j2 + 1, k, j3),
-                            getSumOfi1j1i2j2(sumOfMatrix, i, j3 + 1, k, maxOfJ)
+                            getSumOfi1j1i2j2(sumOfMatrix, i, 0, k - 1, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j1 + 1, k - 1, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j2 + 1, k - 1, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, i, j3 + 1, k - 1, maxOfJ)
                         );
                         const down = Math.min(
-                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, 0, maxOfI, j1),
-                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j1 + 1, maxOfI, j2),
-                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j2 + 1, maxOfI, j3),
-                            getSumOfi1j1i2j2(sumOfMatrix, k + 1, j3 + 1, maxOfI, maxOfJ)
+                            getSumOfi1j1i2j2(sumOfMatrix, k, 0, maxOfI, j1),
+                            getSumOfi1j1i2j2(sumOfMatrix, k, j1 + 1, maxOfI, j2),
+                            getSumOfi1j1i2j2(sumOfMatrix, k, j2 + 1, maxOfI, j3),
+                            getSumOfi1j1i2j2(sumOfMatrix, k, j3 + 1, maxOfI, maxOfJ)
                         );
 
                         const min = Math.min(up, down);
@@ -5248,9 +5248,9 @@ export function splitEarth2(matrix: number[][]): number {
                 }
 
                 // 遍历中间一刀
-                for (let i = 2; i <= maxOfI; i++) {
+                for (let i = 1; i <= maxOfI - 1; i++) {
                     const topMin = topMaxOfMin[i];
-                    const downMin = downMaxOfMin[i];
+                    const downMin = downMaxOfMin[i + 1];
 
                     maxOfMin = Math.max(maxOfMin, Math.min(topMin, downMin));
                 }
