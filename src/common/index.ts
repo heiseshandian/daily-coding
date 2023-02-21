@@ -63,5 +63,3 @@ export function generateArray(row: number, col: number, left = 1, right = 100): 
 
     return result;
 }
-
-console.log(generateArray(10, 10));
