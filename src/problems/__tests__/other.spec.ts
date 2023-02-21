@@ -48,6 +48,7 @@ import {
     getSumOfMatrix,
     getValidParentheses,
     kthSmallest,
+    lengthOfLongestSubstring,
     longestValidParentheses,
     mergeStones,
     MessageBox,
@@ -108,6 +109,7 @@ import {
     getSumOfi1j1i2j2TestData,
     splitEarthTestData,
     getMaxArrOf2PartsMinTestData,
+    lengthOfLongestSubstringTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -216,8 +218,8 @@ import {
     setZeroes3,
     getSumOfi1j1i2j2,
 } from '../other';
-import { majorityElement2TestData } from './other.testdata';
-import { splitEarth2 } from '../other';
+import { majorityElement2TestData, lengthOfLongestSubstringKDistinctTestData } from './other.testdata';
+import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -679,4 +681,16 @@ describe('other', () => {
         expect(getMaxArrOf2PartsMin(input)).toEqual(expected);
         expect(getMaxArrOf2PartsMin2(input)).toEqual(expected);
     });
+
+    it.each(lengthOfLongestSubstringTestData)('lengthOfLongestSubstring', ({ input, expected }) => {
+        expect(lengthOfLongestSubstring(input)).toBe(expected);
+        expect(lengthOfLongestSubstring2(input)).toBe(expected);
+    });
+
+    it.each(lengthOfLongestSubstringKDistinctTestData)(
+        'lengthOfLongestSubstringKDistinct',
+        ({ input: { str, k }, expected }) => {
+            expect(lengthOfLongestSubstringKDistinct(str, k)).toBe(expected);
+        }
+    );
 });

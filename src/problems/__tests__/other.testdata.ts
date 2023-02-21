@@ -1565,3 +1565,49 @@ export const getMaxArrOf2PartsMinTestData = [
     },
     { input: [50, 5, 18, 91, 53, 39, 32, 71, 64, 2], expected: [-Infinity, 5, 23, 73, 73, 92, 124, 164, 206, 208] },
 ];
+
+export const lengthOfLongestSubstringTestData = [
+    {
+        input: 'abcabcbb',
+        expected: 3,
+    },
+    {
+        input: 'bbbbb',
+        expected: 1,
+    },
+    {
+        input: 'pwwkew',
+        expected: 3,
+    },
+];
+
+export const lengthOfLongestSubstringKDistinctTestData = [
+    {
+        input: {
+            str: 'aaaccccctgbacdcd',
+            k: 2,
+        },
+        expected: 8,
+    },
+    {
+        input: {
+            str: 'aac',
+            k: 2,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            str: 'aacc',
+            k: 2,
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            str: 'aacc',
+            k: 3,
+        },
+        expected: 4,
+    },
+];

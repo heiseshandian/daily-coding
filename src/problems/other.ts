@@ -5316,3 +5316,98 @@ export function getMaxArrOf2PartsMin2(arr: number[]): number[] {
 
     return leftMaxOfMin;
 }
+
+// 给定一个字符串，返回不包含重复字符的最长子串长度
+export function lengthOfLongestSubstring(str: string): number {
+    // 某个字符最近一次出现的位置
+    const map: Map<string, number> = new Map();
+    // dp[i] 以i结尾的子串中不含重复字符的最长子串长度
+    const dp: number[] = new Array(str.length).fill(1);
+    map.set(str[0], 0);
+
+    let max = 1;
+    for (let i = 1; i < str.length; i++) {
+        // 两种可能性
+        // 1) i位置到上一个i出现的位置
+        // 2) dp[i-1] +1
+        // 两者取较小值
+        const prev = map.get(str[i]);
+        dp[i] = Math.min(dp[i - 1] + 1, i - (prev === undefined ? -1 : prev));
+        max = Math.max(max, dp[i]);
+
+        map.set(str[i], i);
+    }
+
+    return max;
+}
+
+export function lengthOfLongestSubstring2(str: string): number {
+    // 某个字符最近一次出现的位置
+    const map: Map<string, number> = new Map();
+    map.set(str[0], 0);
+    let cur = 1;
+
+    let max = 1;
+    for (let i = 1; i < str.length; i++) {
+        // 两种可能性
+        // 1) i位置到上一个i出现的位置
+        // 2) dp[i-1] +1
+        // 两者取较小值
+        const prevIndex = map.get(str[i]);
+        cur = Math.min(cur + 1, i - (prevIndex === undefined ? -1 : prevIndex));
+        max = Math.max(max, cur);
+
+        map.set(str[i], i);
+    }
+
+    return max;
+}
+
+/* 
+给定字符串s，问s中至多包含k个字符的子串中最长的是多少？
+
+分析：窗口的单调性，窗口的范围和包含的字符种类之间有单调关系（窗口越大，包含的子串字符种类只可能更多，不可能更少）
+*/
+export function lengthOfLongestSubstringKDistinct(str: string, k: number): number {
+    const map: Map<string, number> = new Map();
+
+    let left = -1;
+    let right = -1;
+    let max = -Infinity;
+
+    // 循环写的有点复杂，待优化
+    while (left <= right && right < str.length) {
+        // 字符小于等于k个的时候right往右滑动
+        while (map.size <= k && right < str.length) {
+            right++;
+
+            const char = str[right];
+            const prev = map.get(char) || 0;
+            if (prev === 0 && map.size === k) {
+                right--;
+                break;
+            }
+
+            map.set(char, prev + 1);
+        }
+
+        if (right < str.length) {
+            // 左边往右滑统计以left开头的时候子串最多能到多少
+            while (map.size === k) {
+                max = Math.max(max, right - left++);
+
+                // left位置的字符出set
+                const prev = map.get(str[left]) || 0;
+                if (prev <= 1) {
+                    map.delete(str[left]);
+                } else {
+                    map.set(str[left], prev - 1);
+                }
+            }
+        } else {
+            max = Math.max(max, str.length - 1 - left);
+        }
+    }
+
+    return max;
+}
