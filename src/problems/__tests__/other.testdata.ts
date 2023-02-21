@@ -1379,3 +1379,99 @@ export const countPrimesTestData = [
         expected: 4,
     },
 ];
+
+export const getSumOfMatrixTestData = [
+    {
+        input: [[1, 2, 3, 4]],
+        expected: [[1, 3, 6, 10]],
+    },
+    {
+        input: [[1], [3], [5], [1]],
+        expected: [[1], [4], [9], [10]],
+    },
+    {
+        input: [
+            [1, 4, 3, 2],
+            [5, 4, 3, 2],
+            [3, 2, 2, 1],
+        ],
+        expected: [
+            [1, 5, 8, 10],
+            [6, 14, 20, 24],
+            [9, 19, 27, 32],
+        ],
+    },
+];
+
+export const getSumOfi1j1i2j2TestData = [
+    {
+        input: {
+            sumOfMatrix: [
+                [1, 5, 8, 10],
+                [6, 14, 20, 24],
+                [9, 19, 27, 32],
+            ],
+            i1: 0,
+            j1: 0,
+            i2: 0,
+            j2: 0,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            sumOfMatrix: [
+                [1, 5, 8, 10],
+                [6, 14, 20, 24],
+                [9, 19, 27, 32],
+            ],
+            i1: 0,
+            j1: 0,
+            i2: 0,
+            j2: 3,
+        },
+        expected: 10,
+    },
+    {
+        input: {
+            sumOfMatrix: [
+                [1, 5, 8, 10],
+                [6, 14, 20, 24],
+                [9, 19, 27, 32],
+            ],
+            i1: 0,
+            j1: 0,
+            i2: 2,
+            j2: 0,
+        },
+        expected: 9,
+    },
+    {
+        input: {
+            sumOfMatrix: [
+                [1, 5, 8, 10],
+                [6, 14, 20, 24],
+                [9, 19, 27, 32],
+            ],
+            i1: 0,
+            j1: 1,
+            i2: 0,
+            j2: 3,
+        },
+        expected: 9,
+    },
+    {
+        input: {
+            sumOfMatrix: [
+                [1, 5, 8, 10],
+                [6, 14, 20, 24],
+                [9, 19, 27, 32],
+            ],
+            i1: 1,
+            j1: 1,
+            i2: 2,
+            j2: 3,
+        },
+        expected: 14,
+    },
+];

@@ -3984,6 +3984,34 @@ export function getMaxSizeOfAllOnes(matrix: number[][]): number {
 
 export function getMaxSizeOfAllOnes2(matrix: number[][]): number {
     // sumOfMatrix[i][j] 表示 从0,0到i,j位置形成的矩阵和
+    const sumOfMatrix: number[][] = getSumOfMatrix(matrix);
+
+    let max = 0;
+    // 枚举所有的起点终点所组成的矩形
+    // 如果sum等于矩形内点的个数则说明该矩形内都是1，更新max
+    for (let i1 = 0; i1 < matrix.length; i1++) {
+        for (let j1 = 0; j1 < matrix[0].length; j1++) {
+            for (let i2 = i1; i2 < matrix.length; i2++) {
+                for (let j2 = j1; j2 < matrix[0].length; j2++) {
+                    const leftCorner = i1 - 1 >= 0 && j1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j1 - 1] : 0;
+                    const left = j1 - 1 >= 0 ? sumOfMatrix[i2][j1 - 1] : 0;
+                    const top = i1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j2] : 0;
+
+                    const sumOfi1j1i2j2 = sumOfMatrix[i2][j2] + leftCorner - left - top;
+
+                    if (sumOfi1j1i2j2 === (i2 - i1 + 1) * (j2 - j1 + 1)) {
+                        max = Math.max(max, sumOfi1j1i2j2);
+                    }
+                }
+            }
+        }
+    }
+
+    return max;
+}
+
+// sumOfMatrix[i][j] 表示 从0,0到i,j位置形成的矩阵和
+export function getSumOfMatrix(matrix: number[][]): number[][] {
     const sumOfMatrix: number[][] = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
 
     sumOfMatrix[0][0] = matrix[0][0];
@@ -4008,28 +4036,32 @@ export function getMaxSizeOfAllOnes2(matrix: number[][]): number {
         }
     }
 
-    let max = 0;
-    // 枚举所有的起点终点所组成的矩形
-    // 如果sum等于矩形内点的个数则说明该矩形内都是1，更新max
-    for (let i1 = 0; i1 < matrix.length; i1++) {
-        for (let j1 = 0; j1 < matrix[0].length; j1++) {
-            for (let i2 = i1; i2 < matrix.length; i2++) {
-                for (let j2 = j1; j2 < matrix[0].length; j2++) {
-                    const leftCorner = i1 - 1 >= 0 && j1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j1 - 1] : 0;
-                    const left = j1 - 1 >= 0 ? sumOfMatrix[i2][j1 - 1] : 0;
-                    const top = i1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j2] : 0;
+    return sumOfMatrix;
+}
 
-                    const sumOfi1j1i2j2 = sumOfMatrix[i2][j2] + leftCorner - left - top;
-
-                    if (sumOfi1j1i2j2 === (i2 - i1 + 1) * (j2 - j1 + 1)) {
-                        max = Math.max(max, sumOfi1j1i2j2);
-                    }
-                }
-            }
-        }
+// 返回i1j1,i2j2所在子矩阵的和
+export function getSumOfi1j1i2j2(sumOfMatrix: number[][], i1: number, j1: number, i2: number, j2: number): number {
+    const maxOfI = sumOfMatrix.length - 1;
+    const maxOfJ = sumOfMatrix[0].length - 1;
+    if (
+        !isValidIndex(i1, maxOfI) ||
+        !isValidIndex(i2, maxOfI) ||
+        !isValidIndex(j1, maxOfJ) ||
+        !isValidIndex(j2, maxOfJ)
+    ) {
+        throw new Error('Invalid index');
     }
 
-    return max;
+    const leftCorner = i1 - 1 >= 0 && j1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j1 - 1] : 0;
+    const left = j1 - 1 >= 0 ? sumOfMatrix[i2][j1 - 1] : 0;
+    const top = i1 - 1 >= 0 ? sumOfMatrix[i1 - 1][j2] : 0;
+
+    const sumOfi1j1i2j2 = sumOfMatrix[i2][j2] + leftCorner - left - top;
+    return sumOfi1j1i2j2;
+}
+
+function isValidIndex(index: number, max: number): boolean {
+    return index >= 0 && index <= max;
 }
 
 /* 

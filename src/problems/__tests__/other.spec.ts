@@ -43,6 +43,7 @@ import {
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
+    getSumOfMatrix,
     getValidParentheses,
     kthSmallest,
     longestValidParentheses,
@@ -100,6 +101,8 @@ import {
     minWindowTestData,
     setZerosTestData,
     countPrimesTestData,
+    getSumOfMatrixTestData,
+    getSumOfi1j1i2j2TestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -198,7 +201,16 @@ import {
     majorityElementTestData,
 } from './other.testdata';
 import { parenthesesComparator } from '../../common/index';
-import { trap2, existWord, majorityElement, majorityElement2, setZeroes, setZeroes2, setZeroes3 } from '../other';
+import {
+    trap2,
+    existWord,
+    majorityElement,
+    majorityElement2,
+    setZeroes,
+    setZeroes2,
+    setZeroes3,
+    getSumOfi1j1i2j2,
+} from '../other';
 import { majorityElement2TestData } from './other.testdata';
 
 describe('other', () => {
@@ -638,5 +650,17 @@ describe('other', () => {
 
     it.each(countPrimesTestData)('countPrimes', ({ input, expected }) => {
         expect(countPrimes(input)).toBe(expected);
+    });
+
+    it.each(getSumOfMatrixTestData)('getSumOfMatrix', ({ input, expected }) => {
+        expect(getSumOfMatrix(input)).toEqual(expected);
+    });
+
+    it.each(getSumOfi1j1i2j2TestData)('getSumOfi1j1i2j2', ({ input: { sumOfMatrix, i1, i2, j1, j2 }, expected }) => {
+        expect(getSumOfi1j1i2j2(sumOfMatrix, i1, j1, i2, j2)).toBe(expected);
+    });
+
+    test('getSumOfi1j1i2j2 will throw error if the provided index is invalid', () => {
+        expect(() => getSumOfi1j1i2j2([[]], 0, 0, 1, 1)).toThrowError('Invalid index');
     });
 });
