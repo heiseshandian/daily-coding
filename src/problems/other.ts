@@ -5371,41 +5371,27 @@ export function lengthOfLongestSubstring2(str: string): number {
 export function lengthOfLongestSubstringKDistinct(str: string, k: number): number {
     const map: Map<string, number> = new Map();
 
-    let left = -1;
-    let right = -1;
+    // (left,right)
+    let left = 0;
+    let right = 0;
     let max = -Infinity;
 
-    // 循环写的有点复杂，待优化
     while (left <= right && right < str.length) {
-        // 字符小于等于k个的时候right往右滑动
-        while (map.size <= k && right < str.length) {
-            right++;
-
-            const char = str[right];
-            const prev = map.get(char) || 0;
-            if (prev === 0 && map.size === k) {
-                right--;
-                break;
-            }
-
-            map.set(char, prev + 1);
+        // 字符小于等于k个的时候right往右滑动，循环结束right会来到第一个违规的字符
+        while ((map.size < k || (map.size == k && (map.get(str[right]) || 0) > 0)) && right < str.length) {
+            const prev = map.get(str[right]) || 0;
+            map.set(str[right++], prev + 1);
         }
 
-        if (right < str.length) {
-            // 左边往右滑统计以left开头的时候子串最多能到多少
-            while (map.size === k) {
-                max = Math.max(max, right - left++);
+        // 左边往右滑统计以left开头的时候子串最多能到多少
+        max = Math.max(max, right - left++);
 
-                // left位置的字符出set
-                const prev = map.get(str[left]) || 0;
-                if (prev <= 1) {
-                    map.delete(str[left]);
-                } else {
-                    map.set(str[left], prev - 1);
-                }
-            }
+        // left位置的字符出set
+        const prev = map.get(str[left]) || 0;
+        if (prev <= 1) {
+            map.delete(str[left]);
         } else {
-            max = Math.max(max, str.length - 1 - left);
+            map.set(str[left], prev - 1);
         }
     }
 
