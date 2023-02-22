@@ -5397,3 +5397,45 @@ export function lengthOfLongestSubstringKDistinct(str: string, k: number): numbe
 
     return max;
 }
+
+/* 
+给定一个长度len，表示一共有几位
+所有字符都是小写（a~z），可以生成长度为1，长度为2，
+长度为3...长度为len的所有字符串
+如果把所有字符串根据字典序排序，每个字符串都有所在的位置。
+给定一个字符串str，给定len，请返回str是总序列中的第几个
+比如len=4，字典序的前几个字符串为：
+a aaa aaaaa aaab ... aaaz ... azzz b ba baaabzzz ca是这个序列中的第1个，bzzz是这个序列中的第36558个
+
+分析，比如说bzzz
+所有以a开头的字符0-2个有 1+26+26^2+26^3
+所有以b开头剩下长度为0的字符 1
+
+所有以ba-by开头剩下字符0-2个的有 (1+26+26^2)*25
+所有以bz开头剩下长度为0的字符 1
+
+所有以bza-bzy开头字符0-2个有（1+26）*25
+所有以bzz开头剩下长度为0的字符 1
+
+所有以bzza-bzzy开头的字符有（1）*25
+所有以为bzzz开头剩下长度为0的字符 1也就是字符串bzzz本身
+*/
+export function stringKth(str: string, len: number): number {
+    let result = 0;
+    for (let i = 0; i < str.length; i++) {
+        result += (str.charCodeAt(i) - 'a'.charCodeAt(0)) * stringKthF(len - i - 1) + 1;
+    }
+
+    return result;
+}
+
+// 不管以什么开头，剩下0-len所有的可能性
+function stringKthF(len: number): number {
+    // 一共有26个字母
+    let result = 1;
+    for (let i = 1, base = 26; i <= len; i++, base *= 26) {
+        result += base;
+    }
+
+    return result;
+}
