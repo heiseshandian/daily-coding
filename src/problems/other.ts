@@ -5439,3 +5439,60 @@ function stringKthF(len: number): number {
 
     return result;
 }
+
+/* 
+把一个01字符串切成多个部分，要求每一部分的0和1比例一样，同时要求尽可能多的划分
+比如：01010101
+01 01 01 01 01 这是一种切法，0和1比例为 1 ： 1 
+0101 0101 也是一种切法，0和1比例为 1：1
+两种切法都符合要求，但是那么尽可能多的划分为第一种切法，部分数为4 
+比如：00001111
+只有一种切法就是00001111整体作为一块，那么尽可能多的划分，部分数为1 
+给定一个01字符串str，假设长度为N，要求返回一个长度为N的数组ans
+其中ans[i]= stc[0...i] 这个前缀串，要求每一部分的0和1比例一样，同时要求尽可能多的划分下，部分数是多少
+输入：str="010100001"
+输出：ans=【1，1，1，2，1，2，1，1，3】
+*/
+export function getMaxPartsArray(str: string): number[] {
+    if (!str || str.length === 0) {
+        return [];
+    }
+
+    const result: number[] = [];
+    let zeroCount = 0;
+    let oneCount = 0;
+    const map: Map<number, Map<number, number>> = new Map();
+
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '0') {
+            zeroCount++;
+        } else {
+            oneCount++;
+        }
+
+        if (zeroCount === 0 || oneCount === 0) {
+            // 如果0或1出现的次数为0则之前必然没出现过类似比例
+            result[i] = 1;
+            continue;
+        }
+
+        // 根据最大公约数化简成最简比例
+        const factor = maxCommonFactor(zeroCount, oneCount);
+        const top = zeroCount / factor;
+        const down = oneCount / factor;
+
+        if (map.get(top)?.get(down)) {
+            result[i] = map.get(top)?.get(down)! + 1;
+        } else {
+            result[i] = 1;
+        }
+
+        if (!map.has(top)) {
+            map.set(top, new Map());
+        }
+        const prev = map.get(top)?.get(down) || 0;
+        map.get(top)?.set(down, prev + 1);
+    }
+
+    return result;
+}

@@ -28,6 +28,7 @@ import {
     getMaxLengthOfIncreasingSubsequence,
     getMaxLengthOfIncreasingSubsequence2,
     getMaxLenOfComposableSubArr,
+    getMaxPartsArray,
     getMaxProfit,
     getMaxProfit2,
     getMaxProfit4,
@@ -218,7 +219,11 @@ import {
     setZeroes3,
     getSumOfi1j1i2j2,
 } from '../other';
-import { majorityElement2TestData, lengthOfLongestSubstringKDistinctTestData } from './other.testdata';
+import {
+    majorityElement2TestData,
+    lengthOfLongestSubstringKDistinctTestData,
+    getMaxPartsArrayTestData,
+} from './other.testdata';
 import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
 
 describe('other', () => {
@@ -693,4 +698,8 @@ describe('other', () => {
             expect(lengthOfLongestSubstringKDistinct(str, k)).toBe(expected);
         }
     );
+
+    it.each(getMaxPartsArrayTestData)('getMaxPartsArray', ({ input, expected }) => {
+        expect(getMaxPartsArray(input)).toEqual(expected);
+    });
 });

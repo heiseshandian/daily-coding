@@ -1620,3 +1620,10 @@ export const lengthOfLongestSubstringKDistinctTestData = [
         expected: 4,
     },
 ];
+
+export const getMaxPartsArrayTestData = [
+    {
+        input: '010100001',
+        expected: [1, 1, 1, 2, 1, 2, 1, 1, 3],
+    },
+];
