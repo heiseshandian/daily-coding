@@ -46,6 +46,7 @@ import {
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
+    getSubsequenceWithBiggestDictionarySequence,
     getSumOfMatrix,
     getValidParentheses,
     kthSmallest,
@@ -225,6 +226,7 @@ import {
     getMaxPartsArrayTestData,
 } from './other.testdata';
 import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
+import { getSubsequenceWithBiggestDictionarySequenceTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -702,4 +704,11 @@ describe('other', () => {
     it.each(getMaxPartsArrayTestData)('getMaxPartsArray', ({ input, expected }) => {
         expect(getMaxPartsArray(input)).toEqual(expected);
     });
+
+    it.each(getSubsequenceWithBiggestDictionarySequenceTestData)(
+        'getSubsequenceWithBiggestDictionarySequence',
+        ({ input: { str, k }, expected }) => {
+            expect(getSubsequenceWithBiggestDictionarySequence(str, k)).toBe(expected);
+        }
+    );
 });

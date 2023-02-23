@@ -5496,3 +5496,38 @@ export function getMaxPartsArray(str: string): number[] {
 
     return result;
 }
+
+// 给定一个字符串str和一个正数k，返回长度为k的子序列中，字典序最大的子序列
+export function getSubsequenceWithBiggestDictionarySequence(str: string, k: number): string {
+    if (!str || str.length <= k) {
+        return str;
+    }
+
+    // 搞个单调栈，字母顺序从大到小，当前字符大于栈顶就一直弹出栈顶，否则入栈
+    // 如果此时栈中元素-1+剩下的元素正好等于k个则停止
+    const stack: string[] = [];
+
+    for (let i = 0; i < str.length; i++) {
+        if (stack.length === 0) {
+            stack.push(str[i]);
+        } else {
+            while (stack.length !== 0 && stack.length + str.length - i > k) {
+                const top = stack[stack.length - 1];
+
+                if (top < str[i]) {
+                    stack.length--;
+                } else {
+                    stack.push(str[i]);
+                    // 找到合适的位置之后就停止内层循环
+                    break;
+                }
+            }
+
+            if (stack.length + str.length - i === k) {
+                return stack.join('') + str.slice(i);
+            }
+        }
+    }
+
+    return stack.slice(0, k).join('');
+}

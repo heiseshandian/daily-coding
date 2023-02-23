@@ -1627,3 +1627,34 @@ export const getMaxPartsArrayTestData = [
         expected: [1, 1, 1, 2, 1, 2, 1, 1, 3],
     },
 ];
+
+export const getSubsequenceWithBiggestDictionarySequenceTestData = [
+    {
+        input: {
+            str: 'cabacd',
+            k: 5,
+        },
+        expected: 'cbacd',
+    },
+    {
+        input: {
+            str: 'cabacd',
+            k: 4,
+        },
+        expected: 'cbcd',
+    },
+    {
+        input: {
+            str: 'zsxwea',
+            k: 5,
+        },
+        expected: 'zxwea',
+    },
+    {
+        input: {
+            str: 'zsxwea',
+            k: 3,
+        },
+        expected: 'zxw',
+    },
+];
