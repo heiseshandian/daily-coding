@@ -34,6 +34,7 @@ import {
     getMaxProfit4,
     getMaxProfit4Dp,
     getMaxSizeOfAllOnes,
+    getMaxValueOfS,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -112,6 +113,7 @@ import {
     splitEarthTestData,
     getMaxArrOf2PartsMinTestData,
     lengthOfLongestSubstringTestData,
+    getMaxValueOfSTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -711,4 +713,8 @@ describe('other', () => {
             expect(getSubsequenceWithBiggestDictionarySequence(str, k)).toBe(expected);
         }
     );
+
+    it.each(getMaxValueOfSTestData)('getMaxValueOfS', ({ input, expected }) => {
+        expect(getMaxValueOfS(input)).toBe(expected);
+    });
 });

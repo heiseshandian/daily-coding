@@ -1658,3 +1658,14 @@ export const getSubsequenceWithBiggestDictionarySequenceTestData = [
         expected: 'zxw',
     },
 ];
+
+export const getMaxValueOfSTestData = [
+    {
+        input: '000001100000',
+        expected: 55,
+    },
+    {
+        input: '01010101',
+        expected: 11,
+    },
+];

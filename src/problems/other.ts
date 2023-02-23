@@ -5531,3 +5531,36 @@ export function getSubsequenceWithBiggestDictionarySequence(str: string, k: numb
 
     return stack.slice(0, k).join('');
 }
+
+/* 
+给定一个只由0和1组成的字符串S，假设下标从1开始，规定i位置的字符价值V[i]计算方式如下 :
+1 i == 1时，V[i] = 1；
+2 i > 1时，如果S[i] != S[i-1]，V[i] = 1；
+3 i > 1时，如果S[i] == S[i-1]，V[i] = V[i-1] + 1。
+你可以随意删除S中的字符，返回整个S的最大价值，（整个S的最大价值等于每个位置价值累加起来，所以不是简单求0和1的个数取较大就可以了）
+字符串长度<=5000。
+*/
+export function getMaxValueOfS(str: string): number {
+    // 这里的初始值lastVal写'0'或者'1'都无所谓，不影响最终结果
+    return getMaxValueOfSProcess(str, 0, '0', 0);
+}
+
+/* 
+当前字符来到i，上一次保留的字符是lastVal，上一次保留字符来到的价值是baseValue
+返回i以及以后能获得的最大价值
+
+有点类似于背包问题，不过是加了点限制条件，每个位置的价值依赖于前面做出的选择
+*/
+function getMaxValueOfSProcess(str: string, i: number, lastVal: string, baseValue: number): number {
+    if (str.length === i) {
+        return 0;
+    }
+
+    const curValue = str[i] === lastVal ? baseValue + 1 : 1;
+    // 保留当前字符
+    const p1 = getMaxValueOfSProcess(str, i + 1, str[i], curValue);
+    // 删除当前字符
+    const p2 = getMaxValueOfSProcess(str, i + 1, lastVal, baseValue);
+
+    return Math.max(curValue + p1, p2);
+}
