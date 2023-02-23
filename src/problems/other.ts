@@ -3860,7 +3860,7 @@ export function getMaxLengthOfIncreasingSubsequence2(arr: number[]): number {
         return 0;
     }
 
-    // end[i]:长度为i+1的子序列中最小结尾数值
+    // end[i]:以i结尾的最长递增子序列中最小结尾数值
     const end = [arr[0]];
 
     for (let i = 1; i < arr.length; i++) {

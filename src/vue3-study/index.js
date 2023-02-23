@@ -147,6 +147,117 @@ function createRenderer(options) {
         }
     }
 
+    // 快速diff算法
+    function patchKeyedChildren2(n1, n2, container) {
+        const oldChildren = n1.children;
+        const newChildren = n2.children;
+
+        // 预处理步骤，处理头部相等的节点
+        let startIndex = 0;
+        let newStartNode = newChildren[startIndex];
+        let oldStartNode = oldChildren[startIndex];
+        while (newStartNode.key === oldStartNode.key) {
+            patch(oldStartNode, newStartNode, container);
+
+            newStartNode = newChildren[++startIndex];
+            oldStartNode = oldChildren[startIndex];
+        }
+
+        // 处理尾部相等的节点
+        let newEndIndex = newChildren.length - 1;
+        let oldEndIndex = oldChildren.length - 1;
+        let newEndNode = newChildren[newEndIndex];
+        let oldEndNode = oldChildren[oldEndIndex];
+        while (newEndNode.key === oldEndNode.key) {
+            patch(oldEndNode, newEndNode, container);
+
+            newEndNode = newChildren[--newEndIndex];
+            oldEndNode = oldChildren[--oldEndIndex];
+        }
+
+        // 旧节点已处理完毕 & 还有新节点没处理
+        if (startIndex > oldEndIndex && startIndex <= newEndIndex) {
+            // [startIndex, newEndIndex]之间的所有节点都需要挂载在newEndIndex+1所对应的dom节点的前面
+            const anchorIndex = newEndIndex + 1;
+            const anchor = anchorIndex < newChildren.length ? newChildren[anchorIndex].el : null;
+
+            for (let i = startIndex; i <= newEndIndex; i++) {
+                patch(null, newChildren[i], container, anchor);
+            }
+        } else if (startIndex > newEndIndex && startIndex <= oldEndIndex) {
+            // 新节点已经处理完 & 还有旧节点需要清理
+            for (let i = startIndex; i <= oldEndIndex; i++) {
+                unmount(oldChildren[i]);
+            }
+        } else {
+            // 新旧节点都还有剩余
+            // 新节点的剩余量
+            const count = newEndIndex - startIndex + 1;
+            // 新节点中已经patch的节点数
+            let patched = 0;
+
+            // 存储新节点中所有未经过预处理节点在旧节点数组中的索引信息
+            const source = new Array(count).fill(-1);
+
+            const newKeyIndexMap = {};
+            for (let i = startIndex; i <= newEndIndex; i++) {
+                newKeyIndexMap[newChildren[i].key] = i;
+            }
+
+            // 用于标识后续是否需要移动节点
+            let moved = false;
+            // 用于记录最近一次找到的可复用的新节点索引
+            let lastFoundNewIndex = 0;
+
+            for (let i = startIndex; i <= oldEndIndex; i++) {
+                // 还有新节点没更新完
+                if (patched < count) {
+                    const k = newKeyIndexMap[oldChildren[i].key];
+                    if (k !== undefined) {
+                        patched++;
+                        patch(oldChildren[i], newChildren[k], container);
+                        source[k - startIndex] = i;
+
+                        // 如果最近找到的节点索引比上一次找到的还要小
+                        // 说明原先在oldChildren中排在后面的节点移动到前面了，此时我们加个标记后面需要调成新的顺序
+                        if (k < lastFoundNewIndex) {
+                            moved = true;
+                        } else {
+                            lastFoundNewIndex = k;
+                        }
+                    } else {
+                        unmount(oldChildren[i]);
+                    }
+                } else {
+                    // 卸载多余旧节点
+                    unmount(oldChildren[i]);
+                }
+            }
+
+            const sequence = getLongestIncreasingSubsequence(source);
+            let lastOfSequence = sequence.length - 1;
+
+            // 全新的节点应该单独处理，不应该放在moved里面执行
+            for (let i = count - 1; i >= 0; i--) {
+                const pos = i + startIndex;
+                const nextPos = pos + 1;
+                const anchor = nextPos < newChildren.length ? newChildren[nextPos].el : null;
+                if (source[i] === -1) {
+                    // source[i] === -1说明旧节点中没有节点与之对应，我们应该直接挂载这个节点
+                    patch(null, newChildren[pos], container, anchor);
+                } else if (moved) {
+                    if (i === sequence[lastOfSequence]) {
+                        // 当前节点属于最长递增子序列，不需要再移动
+                        lastOfSequence--;
+                    } else {
+                        insert(newChildren[pos], container, anchor);
+                    }
+                }
+            }
+        }
+    }
+
+    // 双端diff算法，减少dom节点移动
     function patchKeyedChildren(n1, n2, container) {
         const oldChildren = n1.children;
         const newChildren = n2.children;
@@ -370,4 +481,45 @@ function normalizeClass(classNames) {
             }, '')
             .trim();
     }
+}
+
+function getLongestIncreasingSubsequence(arr) {
+    const clone = arr.slice();
+    const result = [0];
+    let i, j, left, right, mid;
+    const len = arr.length;
+    for (i = 0; i < len; i++) {
+        const arrI = arr[i];
+        if (arrI !== 0) {
+            j = result[result.length - 1];
+            if (arr[j] < arrI) {
+                clone[i] = j;
+                result.push(i);
+                continue;
+            }
+            left = 0;
+            right = result.length - 1;
+            while (left < right) {
+                mid = (left + right) >> 1;
+                if (arr[result[mid]] < arrI) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            if (arrI < arr[result[left]]) {
+                if (left > 0) {
+                    clone[i] = result[left - 1];
+                }
+                result[left] = i;
+            }
+        }
+    }
+    left = result.length;
+    right = result[left - 1];
+    while (left-- > 0) {
+        result[left] = right;
+        right = clone[right];
+    }
+    return result;
 }
