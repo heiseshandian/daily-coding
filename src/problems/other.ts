@@ -3896,6 +3896,48 @@ export function getMaxLengthOfIncreasingSubsequence2(arr: number[]): number {
     return end.length;
 }
 
+// 存在多个的时候返回数值最大的那个
+export function getLongestIncreasingSubsequence(arr: number[]): number[] {
+    if (!arr || arr.length === 0) {
+        return [];
+    }
+
+    // end[i]:以i结尾的最长递增子序列
+    const end: number[][] = [[arr[0]]];
+    for (let i = 1; i < arr.length; i++) {
+        // 在end中二分查找大于等于arr[i]且最近的数字
+        let left = 0;
+        let right = end.length - 1;
+        let closestMaxOrEqual: number[] | undefined = undefined;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            const cur = end[mid];
+
+            // 找到直接停止
+            if (cur[cur.length - 1] === arr[i]) {
+                closestMaxOrEqual = cur;
+                break;
+            }
+
+            if (cur[cur.length - 1] > arr[i]) {
+                closestMaxOrEqual = cur;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        if (closestMaxOrEqual === undefined) {
+            const last = end[end.length - 1];
+            end.push(last.slice().concat(arr[i]));
+        } else if (closestMaxOrEqual[closestMaxOrEqual.length - 1] > arr[i]) {
+            closestMaxOrEqual[closestMaxOrEqual.length - 1] = arr[i];
+        }
+    }
+
+    return end[end.length - 1];
+}
+
 /* 
 定义何为step sum？
 比如680， 680＋68＋6=754， 680的step sum叫754 给定一个正数num，判断它是不是某个数的step sum

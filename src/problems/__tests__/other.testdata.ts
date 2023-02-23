@@ -1669,3 +1669,11 @@ export const getMaxValueOfSTestData = [
         expected: 11,
     },
 ];
+
+export const getLongestIncreasingSubsequenceTestData = [
+    { input: [93, 14, 50, 52, 13], expected: [14, 50, 52] },
+    { input: [89, 95, 77, 19, 95], expected: [89, 95] },
+    { input: [38, 26, 9, 83, 63], expected: [9, 63] },
+    { input: [100, 11, 95, 3, 51], expected: [11, 51] },
+    { input: [1, 3, 5, 8, 6, 1], expected: [1, 3, 5, 6] },
+];

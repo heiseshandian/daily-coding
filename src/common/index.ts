@@ -53,6 +53,9 @@ export const parenthesesComparator = (a: string, b: string) => {
 
 // 用于生成随机测试数据
 export function generateArray(row: number, col: number, left = 1, right = 100): number[][] {
+    row = Math.ceil(Math.random() * row);
+    col = Math.ceil(Math.random() * col);
+
     const result = new Array(row).fill(0).map((_) => new Array(col).fill(0));
 
     for (let i = 0; i < row; i++) {

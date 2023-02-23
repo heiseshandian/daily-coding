@@ -114,6 +114,7 @@ import {
     getMaxArrOf2PartsMinTestData,
     lengthOfLongestSubstringTestData,
     getMaxValueOfSTestData,
+    getLongestIncreasingSubsequenceTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -229,6 +230,7 @@ import {
 } from './other.testdata';
 import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
 import { getSubsequenceWithBiggestDictionarySequenceTestData } from './other.testdata';
+import { getLongestIncreasingSubsequence } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -716,5 +718,9 @@ describe('other', () => {
 
     it.each(getMaxValueOfSTestData)('getMaxValueOfS', ({ input, expected }) => {
         expect(getMaxValueOfS(input)).toBe(expected);
+    });
+
+    it.each(getLongestIncreasingSubsequenceTestData)('getLongestIncreasingSubsequence', ({ input, expected }) => {
+        expect(getLongestIncreasingSubsequence(input)).toEqual(expected);
     });
 });
