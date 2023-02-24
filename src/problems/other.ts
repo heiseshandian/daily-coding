@@ -5954,3 +5954,55 @@ export function minEatingSpeed(piles: number[], h: number): number {
 
     return found;
 }
+
+/* 
+https://leetcode.com/problems/uncrossed-lines/description/
+
+You are given two integer arrays nums1 and nums2. We write the integers of nums1 and nums2 (in the order they are given) on two separate horizontal lines.
+
+We may draw connecting lines: a straight line connecting two numbers nums1[i] and nums2[j] such that:
+
+nums1[i] == nums2[j], and
+the line we draw does not intersect any other connecting (non-horizontal) line.
+Note that a connecting line cannot intersect even at the endpoints (i.e., each number can only belong to one connecting line).
+
+Return the maximum number of connecting lines we can draw in this way.
+
+Input: nums1 = [1,4,2], nums2 = [1,2,4]
+Output: 2
+Explanation: We can draw 2 uncrossed lines as in the diagram.
+We cannot draw 3 uncrossed lines, because the line from nums1[1] = 4 to nums2[2] = 4 will intersect the line from nums1[2]=2 to nums2[1]=2.
+
+本质上就是个最长公共子序列问题
+*/
+export function maxUncrossedLines(nums1: number[], nums2: number[]): number {
+    // nums1[0-i] nums2[0-j] 前缀最多能有几组直线
+    const dp: number[][] = new Array(nums1.length).fill(0).map((_) => new Array(nums2.length).fill(0));
+    dp[0][0] = nums1[0] === nums2[0] ? 1 : 0;
+
+    // 第0行
+    for (let j = 1; j < nums2.length; j++) {
+        dp[0][j] = dp[0][j - 1] === 1 ? 1 : nums2[j] === nums1[0] ? 1 : 0;
+    }
+
+    // 第0列
+    for (let i = 1; i < nums1.length; i++) {
+        dp[i][0] = dp[i - 1][0] === 1 ? 1 : nums1[i] === nums2[0] ? 1 : 0;
+    }
+
+    for (let i = 1; i < nums1.length; i++) {
+        for (let j = 1; j < nums2.length; j++) {
+            // 可能性整理
+            // 1）不要j位置的数字
+            // 2）不要j位置的数字
+            // 3）i和j位置的数字都不要（这个答案一定不大于上面两个，这里直接省略）
+            // 4）i位置的数字和j位置的数字相等
+            dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+            if (nums1[i] === nums2[j]) {
+                dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - 1] + 1);
+            }
+        }
+    }
+
+    return dp[nums1.length - 1][nums2.length - 1];
+}

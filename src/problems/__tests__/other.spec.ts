@@ -58,6 +58,7 @@ import {
     kthSmallest,
     lengthOfLongestSubstring,
     longestValidParentheses,
+    maxUncrossedLines,
     mergeStones,
     MessageBox,
     minCameraCover,
@@ -126,6 +127,7 @@ import {
     getLengthOfLongestSubArrayWithSumKTestData,
     getMinDistanceTestData,
     minEatingSpeedTestData,
+    maxUncrossedLinesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -774,5 +776,9 @@ describe('other', () => {
 
     it.each(minEatingSpeedTestData)('minEatingSpeed', ({ input: { arr, h }, expected }) => {
         expect(minEatingSpeed(arr, h)).toBe(expected);
+    });
+
+    it.each(maxUncrossedLinesTestData)('maxUncrossedLines', ({ input: { nums1, nums2 }, expected }) => {
+        expect(maxUncrossedLines(nums1, nums2)).toBe(expected);
     });
 });
