@@ -1677,3 +1677,18 @@ export const getLongestIncreasingSubsequenceTestData = [
     { input: [100, 11, 95, 3, 51], expected: [11, 51] },
     { input: [1, 3, 5, 8, 6, 1], expected: [1, 3, 5, 6] },
 ];
+
+export const getMaxRemovableSubsequenceTestData = [
+    {
+        input: '0123',
+        expected: 4,
+    },
+    {
+        input: '02131',
+        expected: 4,
+    },
+    {
+        input: '02331',
+        expected: 4,
+    },
+];

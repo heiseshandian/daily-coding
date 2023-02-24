@@ -5606,3 +5606,61 @@ function getMaxValueOfSProcess(str: string, i: number, lastVal: string, baseValu
 
     return Math.max(curValue + p1, p2);
 }
+
+/* 
+一个子序列的消除规则如下：
+1）在某一个子序列中，如果"1"的左边有'0'，那么这两个字符->"01"可以消除
+2）在某一个子序列中，如果'3'的左边有'2'，那么这两个字符->"23"可以消除
+3）当这个子序列的某个部分消除之后，认为其他字符会自动贴在一起，可以继续寻找消除的机会
+
+比如，某个子序列"0231"，先消除掉"23"，那么剩下的字符贴在一起变成"01"，继续消除就没有字符了
+如果某个子序列通过最优良的方式，可以都消掉，那么这样的子序列叫做"全消子序列"
+一个只由'0'、'1'、'2'、'3'四种字符组成的字符串str，可以生成很多子序列，返回"全消子序列"的最大长度
+字符串str长度<=200
+
+范围尝试模型
+*/
+export function getMaxRemovableSubsequence(str: string): number {
+    return getMaxRemovableSubsequenceProcess(str, 0, str.length - 1);
+}
+
+// 返回str从left到right范围上可消除子序列的最大长度
+function getMaxRemovableSubsequenceProcess(str: string, left: number, right: number): number {
+    // 只有一个字符，不可以消除
+    if (left >= right) {
+        return 0;
+    }
+
+    // 只有两个字符
+    if (left === right - 1) {
+        return (str[left] === '0' && str[right] === '1') || (str[left] === '2' && str[right] === '3') ? 2 : 0;
+    }
+
+    // 第一种可能性，不要left位置的字符
+    const p1 = getMaxRemovableSubsequenceProcess(str, left + 1, right);
+    // 如果左边是1或者3那么没有可能性2
+    if (str[left] === '1' || str[left] === '3') {
+        return p1;
+    }
+
+    // 第二种可能性，要left位置的字符
+    // 如果left位置是0，则与之匹配的字符是1，如果是2则与之匹配的字符是3
+    const match = str[left] === '0' ? '1' : '3';
+    let p2 = 0;
+    for (let i = left + 1; i <= right; i++) {
+        // left.....i i+1...right
+        if (str[i] === match) {
+            p2 = Math.max(
+                p2,
+                // left+1到i-1
+                getMaxRemovableSubsequenceProcess(str, left + 1, i - 1) +
+                    // left和i
+                    2 +
+                    // i+1到right
+                    getMaxRemovableSubsequenceProcess(str, i + 1, right)
+            );
+        }
+    }
+
+    return Math.max(p1, p2);
+}

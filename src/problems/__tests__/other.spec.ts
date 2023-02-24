@@ -33,6 +33,7 @@ import {
     getMaxProfit2,
     getMaxProfit4,
     getMaxProfit4Dp,
+    getMaxRemovableSubsequence,
     getMaxSizeOfAllOnes,
     getMaxValueOfS,
     getMinCoins,
@@ -115,6 +116,7 @@ import {
     lengthOfLongestSubstringTestData,
     getMaxValueOfSTestData,
     getLongestIncreasingSubsequenceTestData,
+    getMaxRemovableSubsequenceTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -722,5 +724,9 @@ describe('other', () => {
 
     it.each(getLongestIncreasingSubsequenceTestData)('getLongestIncreasingSubsequence', ({ input, expected }) => {
         expect(getLongestIncreasingSubsequence(input)).toEqual(expected);
+    });
+
+    it.each(getMaxRemovableSubsequenceTestData)('getMaxRemovableSubsequence', ({ input, expected }) => {
+        expect(getMaxRemovableSubsequence(input)).toBe(expected);
     });
 });
