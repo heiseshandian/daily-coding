@@ -5847,3 +5847,70 @@ export function getLengthOfLongestSubArrayWithSumK2(arr: number[], k: number): n
 
     return found;
 }
+
+/* 
+最佳聚会地点
+
+给定一个矩阵，矩阵上所有位置的值都是0或者1，假设所有的1要往同一个地方（可以是0也可以是1）聚会，问所有1移动的最小代价是多少
+1）所有的1只能横向移动或者纵向移动
+
+举例
+[
+    [1,0,1]
+]
+最小距离是2，两个1都往中间走
+
+大思路，先找到最终会汇集到哪一行，然后找到最终会汇集到哪一列，那个位置就是产生最小移动代价的位置
+*/
+export function getMinDistance(matrix: number[][]): number {
+    // 找到每一行有多少个1
+    const rowOneCounts = new Array(matrix.length).fill(0);
+    // 找到每一列有多少个1
+    const colOneCounts = new Array(matrix[0].length).fill(0);
+
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 1) {
+                rowOneCounts[i]++;
+                colOneCounts[j]++;
+            }
+        }
+    }
+
+    // 先找到横向移动的最小代价
+    let left = 0;
+    let right = matrix.length - 1;
+    let total = 0;
+    let sumLeft = rowOneCounts[left];
+    let sumRight = rowOneCounts[right];
+    while (left < right) {
+        // 如果左边小，说明左边所在的行不可能是最终汇聚的行，此时sumLeft所在的行都要向下移动一步
+        // 相等的时候两边的移动代价一样，任意移动一边即可
+        if (sumLeft < sumRight) {
+            total += sumLeft;
+            sumLeft += rowOneCounts[++left];
+        } else {
+            total += sumRight;
+            sumRight += rowOneCounts[--right];
+        }
+    }
+
+    // 同样逻辑找到纵向移动的最小代价
+    left = 0;
+    right = matrix[0].length - 1;
+    sumLeft = colOneCounts[left];
+    sumRight = colOneCounts[right];
+    while (left < right) {
+        // 如果左边小，说明左边所在的行不可能是最终汇聚的行，此时sumLeft所在的行都要向下移动一步
+        // 相等的时候两边的移动代价一样，任意移动一边即可
+        if (sumLeft < sumRight) {
+            total += sumLeft;
+            sumLeft += colOneCounts[++left];
+        } else {
+            total += sumRight;
+            sumRight += colOneCounts[--right];
+        }
+    }
+
+    return total;
+}

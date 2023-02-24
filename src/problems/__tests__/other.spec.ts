@@ -41,6 +41,7 @@ import {
     getMinChanges,
     getMinCoins,
     getMinCoinsDp,
+    getMinDistance,
     getMinEditDistance,
     getMinEditDistance2,
     getMinMissingNumber,
@@ -122,6 +123,7 @@ import {
     getMaxRemovableSubsequenceTestData,
     nextPermutationTestData,
     getLengthOfLongestSubArrayWithSumKTestData,
+    getMinDistanceTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -763,4 +765,8 @@ describe('other', () => {
             expect(getLengthOfLongestSubArrayWithSumK2(arr, k)).toBe(expected);
         }
     );
+
+    it.each(getMinDistanceTestData)('getMinDistance', ({ input, expected }) => {
+        expect(getMinDistance(input)).toBe(expected);
+    });
 });

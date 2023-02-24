@@ -1781,3 +1781,32 @@ export const getLengthOfLongestSubArrayWithSumK2TestData = [
         expected: 6,
     },
 ];
+
+export const getMinDistanceTestData = [
+    {
+        input: [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+        ],
+        expected: 12,
+    },
+    {
+        input: [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+        ],
+        expected: 20,
+    },
+    {
+        input: [
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+        ],
+        expected: 19,
+    },
+];
