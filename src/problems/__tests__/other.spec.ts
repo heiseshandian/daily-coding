@@ -21,6 +21,7 @@ import {
     getClosestSumKOfMatrix,
     getConnectedRegions,
     getLengthOfLongestSubArrayWithSumK,
+    getLengthOfLongestSubArrayWithSumK2,
     getMaxA,
     getMaxArrOf2PartsMin,
     getMaxArrOf2PartsMin2,
@@ -235,7 +236,11 @@ import {
     getMaxPartsArrayTestData,
 } from './other.testdata';
 import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct, nextPermutation } from '../other';
-import { getSubsequenceWithBiggestDictionarySequenceTestData, getMinChangesTestData } from './other.testdata';
+import {
+    getSubsequenceWithBiggestDictionarySequenceTestData,
+    getMinChangesTestData,
+    getLengthOfLongestSubArrayWithSumK2TestData,
+} from './other.testdata';
 import { getLongestIncreasingSubsequence } from '../other';
 
 describe('other', () => {
@@ -748,6 +753,14 @@ describe('other', () => {
         'getLengthOfLongestSubArrayWithSumK',
         ({ input: { arr, k }, expected }) => {
             expect(getLengthOfLongestSubArrayWithSumK(arr, k)).toBe(expected);
+            expect(getLengthOfLongestSubArrayWithSumK2(arr, k)).toBe(expected);
+        }
+    );
+
+    it.each(getLengthOfLongestSubArrayWithSumK2TestData)(
+        'getLengthOfLongestSubArrayWithSumK2',
+        ({ input: { arr, k }, expected }) => {
+            expect(getLengthOfLongestSubArrayWithSumK2(arr, k)).toBe(expected);
         }
     );
 });

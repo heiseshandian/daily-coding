@@ -1749,4 +1749,35 @@ export const getLengthOfLongestSubArrayWithSumKTestData = [
         },
         expected: 4,
     },
+    {
+        input: {
+            arr: [3, 6, 5],
+            k: 3,
+        },
+        expected: 1,
+    },
+];
+
+export const getLengthOfLongestSubArrayWithSumK2TestData = [
+    {
+        input: {
+            arr: [-10, 1, 1, 1, 7, 3, 4],
+            k: 3,
+        },
+        expected: 6,
+    },
+    {
+        input: {
+            arr: [10, 1, 1, 1],
+            k: 3,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            arr: [10, -1, -1, -8, 2, 1, 3, 2],
+            k: 3,
+        },
+        expected: 6,
+    },
 ];

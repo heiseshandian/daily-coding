@@ -5819,3 +5819,31 @@ export function getLengthOfLongestSubArrayWithSumK(arr: number[], k: number): nu
 
     return found;
 }
+
+/* 
+给定一个有正有负的数组，要求返回累加和为sum的最长子数组
+
+与上一题有点类似，但本题不具备单调性，因为不能用滑动窗口来解决，可以用动态规划+预处理结构来解决
+*/
+export function getLengthOfLongestSubArrayWithSumK2(arr: number[], k: number): number {
+    // 出现某个前缀和最早的位置
+    const map: Map<number, number> = new Map();
+    // 考虑0位置结尾的子串长度
+    map.set(0, -1);
+
+    let found = 0;
+    let sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+        const target = sum - k;
+        if (map.has(target)) {
+            found = Math.max(found, i - map.get(target)!);
+        }
+
+        if (!map.has(sum)) {
+            map.set(sum, i);
+        }
+    }
+
+    return found;
+}
