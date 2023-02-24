@@ -5788,3 +5788,34 @@ export function nextPermutation(nums: number[]): void {
     // 前面都比后面大，说明是全排列最后一个，回到第一个即可
     nums.reverse();
 }
+
+/* 
+给定一个正数数组，要求返回累加和为sum的最长子数组
+
+由于全部是正数，所以窗口向右的过程中子数组累加和一定会增长，存在单调性，可以用滑动窗口来解决
+*/
+export function getLengthOfLongestSubArrayWithSumK(arr: number[], k: number): number {
+    let left = 0;
+    let right = 0;
+    let sum = arr[0];
+    let found = 0;
+
+    while (right < arr.length) {
+        // [left,right]范围内正好累加和等于k
+        if (sum === k) {
+            found = Math.max(found, right - left + 1);
+            sum -= arr[left++];
+        } else if (sum < k) {
+            right++;
+            if (right === arr.length) {
+                break;
+            }
+
+            sum += arr[right];
+        } else {
+            sum -= arr[left++];
+        }
+    }
+
+    return found;
+}

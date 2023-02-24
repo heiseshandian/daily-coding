@@ -1709,20 +1709,44 @@ export const getMinChangesTestData = [
 ];
 
 export const nextPermutationTestData = [
-    // {
-    //     input: [1, 3, 2],
-    //     expected: [2, 1, 3],
-    // },
-    // {
-    //     input: [1, 1, 5],
-    //     expected: [1, 5, 1],
-    // },
-    // {
-    //     input: [3, 2, 1],
-    //     expected: [1, 2, 3],
-    // },
+    {
+        input: [1, 3, 2],
+        expected: [2, 1, 3],
+    },
+    {
+        input: [1, 1, 5],
+        expected: [1, 5, 1],
+    },
+    {
+        input: [3, 2, 1],
+        expected: [1, 2, 3],
+    },
     {
         input: [20, 12, 9, 20, 19],
         expected: [20, 12, 19, 9, 20],
+    },
+];
+
+export const getLengthOfLongestSubArrayWithSumKTestData = [
+    {
+        input: {
+            arr: [10, 1, 1, 1],
+            k: 3,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            arr: [1, 2, 3, 1, 1, 1, 2, 1],
+            k: 6,
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            arr: [1, 2, 3, 1, 1, 1, 1, 1],
+            k: 6,
+        },
+        expected: 4,
     },
 ];

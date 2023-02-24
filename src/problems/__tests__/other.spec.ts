@@ -20,6 +20,7 @@ import {
     getClosestSumK,
     getClosestSumKOfMatrix,
     getConnectedRegions,
+    getLengthOfLongestSubArrayWithSumK,
     getMaxA,
     getMaxArrOf2PartsMin,
     getMaxArrOf2PartsMin2,
@@ -119,6 +120,7 @@ import {
     getLongestIncreasingSubsequenceTestData,
     getMaxRemovableSubsequenceTestData,
     nextPermutationTestData,
+    getLengthOfLongestSubArrayWithSumKTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -741,4 +743,11 @@ describe('other', () => {
 
         expect(input).toEqual(expected);
     });
+
+    it.each(getLengthOfLongestSubArrayWithSumKTestData)(
+        'getLengthOfLongestSubArrayWithSumK',
+        ({ input: { arr, k }, expected }) => {
+            expect(getLengthOfLongestSubArrayWithSumK(arr, k)).toBe(expected);
+        }
+    );
 });
