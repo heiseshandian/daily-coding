@@ -1707,3 +1707,18 @@ export const getMinChangesTestData = [
         expected: 1,
     },
 ];
+
+export const nextPermutationTestData = [
+    {
+        input: [1, 3, 2],
+        expected: [2, 1, 3],
+    },
+    {
+        input: [1, 1, 5],
+        expected: [1, 5, 1],
+    },
+    {
+        input: [3, 2, 1],
+        expected: [1, 2, 3],
+    },
+];

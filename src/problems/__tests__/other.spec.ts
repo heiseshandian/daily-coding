@@ -118,6 +118,7 @@ import {
     getMaxValueOfSTestData,
     getLongestIncreasingSubsequenceTestData,
     getMaxRemovableSubsequenceTestData,
+    nextPermutationTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -231,7 +232,7 @@ import {
     lengthOfLongestSubstringKDistinctTestData,
     getMaxPartsArrayTestData,
 } from './other.testdata';
-import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
+import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct, nextPermutation } from '../other';
 import { getSubsequenceWithBiggestDictionarySequenceTestData, getMinChangesTestData } from './other.testdata';
 import { getLongestIncreasingSubsequence } from '../other';
 
@@ -733,5 +734,11 @@ describe('other', () => {
 
     it.each(getMinChangesTestData)('getMinChanges', ({ input, expected }) => {
         expect(getMinChanges(input)).toBe(expected);
+    });
+
+    it.each(nextPermutationTestData)('nextPermutation', ({ input, expected }) => {
+        nextPermutation(input);
+
+        expect(input).toEqual(expected);
     });
 });
