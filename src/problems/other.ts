@@ -5748,14 +5748,26 @@ Input: nums = [1,1,5]
 Output: [1,5,1]
 */
 export function nextPermutation(nums: number[]): void {
+    // 注：数组的sort默认按第一位来排序，要实现数据从小到大排列需要自己实现
+    const comparator = (a: number, b: number) => a - b;
+
     for (let i = nums.length - 1; i > 0; i--) {
         // 找到第一个后面的数比前面大的位置比如说[1,3,2]，3就是这里的i位置
         if (nums[i] > nums[i - 1]) {
             // 然后从i位置往后找比i-1位置大且最近的位置，也就是3后面的2
             let found = i;
-            for (let k = i + 1; k < nums.length; k++) {
-                if (nums[k] > nums[i - 1] && nums[k] - nums[i - 1] < nums[i] - nums[i - 1]) {
-                    found = k;
+            let left = i + 1;
+            let right = nums.length - 1;
+            while (left <= right) {
+                const mid = left + ((right - left) >> 1);
+                if (nums[mid] > nums[i - 1]) {
+                    if (nums[mid] - nums[i - 1] < nums[found] - nums[i - 1]) {
+                        found = mid;
+                    }
+
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
                 }
             }
 
@@ -5763,7 +5775,7 @@ export function nextPermutation(nums: number[]): void {
             swap(nums, found, i - 1);
 
             // 经过上一步交换i-1之后的所有位置都可以从小到大排序了
-            const sorted = nums.slice(i).sort();
+            const sorted = nums.slice(i).sort(comparator);
             for (let k = i; k < nums.length; k++) {
                 nums[k] = sorted[k - i];
             }
@@ -5772,5 +5784,5 @@ export function nextPermutation(nums: number[]): void {
     }
 
     // 前面都比后面大，说明是全排列最后一个，回到第一个即可
-    nums.sort();
+    nums.sort(comparator);
 }
