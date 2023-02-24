@@ -62,6 +62,7 @@ import {
     MessageBox,
     minCameraCover,
     minCameraCover2,
+    minEatingSpeed,
     minWindow,
     reverseBetween,
     reverseBits,
@@ -124,6 +125,7 @@ import {
     nextPermutationTestData,
     getLengthOfLongestSubArrayWithSumKTestData,
     getMinDistanceTestData,
+    minEatingSpeedTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -768,5 +770,9 @@ describe('other', () => {
 
     it.each(getMinDistanceTestData)('getMinDistance', ({ input, expected }) => {
         expect(getMinDistance(input)).toBe(expected);
+    });
+
+    it.each(minEatingSpeedTestData)('minEatingSpeed', ({ input: { arr, h }, expected }) => {
+        expect(minEatingSpeed(arr, h)).toBe(expected);
     });
 });

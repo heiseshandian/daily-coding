@@ -5914,3 +5914,43 @@ export function getMinDistance(matrix: number[][]): number {
 
     return total;
 }
+
+/*
+https://leetcode.com/problems/koko-eating-bananas/description/
+
+Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+
+Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile.
+If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+
+Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+
+Return the minimum integer k such that she can eat all the bananas within h hours.
+*/
+export function minEatingSpeed(piles: number[], h: number): number {
+    let max = -Infinity;
+    for (let i = 0; i < piles.length; i++) {
+        max = Math.max(max, piles[i]);
+    }
+
+    let left = 1;
+    let right = max;
+    let found = max;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        let sum = 0;
+        for (let i = 0; i < piles.length; i++) {
+            sum += Math.ceil(piles[i] / mid);
+        }
+
+        // 这里是小于等于，等于h的时候还是要继续往下找，因为上面的计算是向上取整的
+        if (sum <= h) {
+            found = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return found;
+}
