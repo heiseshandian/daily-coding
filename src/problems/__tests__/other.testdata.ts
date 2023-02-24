@@ -1692,3 +1692,18 @@ export const getMaxRemovableSubsequenceTestData = [
         expected: 4,
     },
 ];
+
+export const getMinChangesTestData = [
+    {
+        input: [1, 2, 3, 4],
+        expected: 0,
+    },
+    {
+        input: [7, 4, 3, 1],
+        expected: 0,
+    },
+    {
+        input: [1, 5, 3, 2, 6],
+        expected: 1,
+    },
+];

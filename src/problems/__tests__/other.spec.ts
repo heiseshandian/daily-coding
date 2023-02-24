@@ -36,6 +36,7 @@ import {
     getMaxRemovableSubsequence,
     getMaxSizeOfAllOnes,
     getMaxValueOfS,
+    getMinChanges,
     getMinCoins,
     getMinCoinsDp,
     getMinEditDistance,
@@ -231,7 +232,7 @@ import {
     getMaxPartsArrayTestData,
 } from './other.testdata';
 import { splitEarth2, lengthOfLongestSubstring2, lengthOfLongestSubstringKDistinct } from '../other';
-import { getSubsequenceWithBiggestDictionarySequenceTestData } from './other.testdata';
+import { getSubsequenceWithBiggestDictionarySequenceTestData, getMinChangesTestData } from './other.testdata';
 import { getLongestIncreasingSubsequence } from '../other';
 
 describe('other', () => {
@@ -728,5 +729,9 @@ describe('other', () => {
 
     it.each(getMaxRemovableSubsequenceTestData)('getMaxRemovableSubsequence', ({ input, expected }) => {
         expect(getMaxRemovableSubsequence(input)).toBe(expected);
+    });
+
+    it.each(getMinChangesTestData)('getMinChanges', ({ input, expected }) => {
+        expect(getMinChanges(input)).toBe(expected);
     });
 });

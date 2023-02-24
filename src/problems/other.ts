@@ -5664,3 +5664,59 @@ function getMaxRemovableSubsequenceProcess(str: string, left: number, right: num
 
     return Math.max(p1, p2);
 }
+
+/* 
+已知数组中无重复值，定义指标A等于 arr[i]-arr[i-1] 的绝对值，问至少交换多少次才能使得整个数组的指标A求和最小
+
+很显然，将数组从大到小或者从小到大排序之后指标A的和必然是最小的，
+然后我们将原数组离散化，因为数组中无重复值，所以我们将原数组离散化为 1-N上的点
+比如说 [34,2,1,5] 可以离散化为 [4,2,1,3]，原数组的交换次数与离散化后的数组交换次数必然是一模一样的
+这样问题就转变成求[4,2,1,3]变有序最少需要几次交换
+*/
+export function getMinChanges(arr: number[]): number {
+    const valIndexMap: Map<number, number> = new Map();
+    arr.forEach((val, index) => {
+        valIndexMap.set(val, index);
+    });
+
+    const copy = arr.slice();
+    copy.sort((a, b) => a - b);
+
+    const newArr = [];
+    for (let i = 0; i < copy.length; i++) {
+        // 找到i位置的值在原数组中的下标
+        const index = valIndexMap.get(copy[i]) as number;
+        // 将原数组离散化成1-N之间的数
+        newArr[index] = i + 1;
+    }
+
+    // 将离散化的数组从小到大排列统计交换次数
+    let count1 = 0;
+    const copy1 = newArr.slice();
+    let i = 0;
+    while (i < copy1.length) {
+        // [1,2,3,4]
+        if (copy1[i] !== i + 1) {
+            swap(copy1, i, copy1[i] - 1);
+            count1++;
+        } else {
+            i++;
+        }
+    }
+
+    // 将离散化的数组从大到小排列统计交换次数
+    let count2 = 0;
+    const copy2 = newArr.slice();
+    i = 0;
+    while (i < copy2.length) {
+        // [4,3,2,1]
+        if (copy2[i] !== copy2.length - i) {
+            swap(copy2, i, copy2.length - copy2[i]);
+            count2++;
+        } else {
+            i++;
+        }
+    }
+
+    return Math.min(count1, count2);
+}
