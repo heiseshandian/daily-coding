@@ -5784,5 +5784,5 @@ export function nextPermutation(nums: number[]): void {
     }
 
     // 前面都比后面大，说明是全排列最后一个，回到第一个即可
-    nums.sort(comparator);
+    nums.reverse();
 }
