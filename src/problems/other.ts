@@ -5761,7 +5761,9 @@ export function nextPermutation(nums: number[]): void {
             while (left <= right) {
                 const mid = left + ((right - left) >> 1);
                 if (nums[mid] > nums[i - 1]) {
-                    if (nums[mid] - nums[i - 1] < nums[found] - nums[i - 1]) {
+                    // 这里是小于或等于，我们要找大于i-1位置且最远的位置，这就能保证交换之后
+                    // 从i到nums.length-1位置一定是降序的（没交换之前一定是降序的，又因为我们找的是离i-1最远的位置，所以这个位置的左边一定大于i-1位置，且右边一定小于i-1位置）
+                    if (nums[mid] - nums[i - 1] <= nums[found] - nums[i - 1]) {
                         found = mid;
                     }
 
@@ -5775,7 +5777,7 @@ export function nextPermutation(nums: number[]): void {
             swap(nums, found, i - 1);
 
             // 经过上一步交换i-1之后的所有位置都可以从小到大排序了
-            const sorted = nums.slice(i).sort(comparator);
+            const sorted = nums.slice(i).reverse();
             for (let k = i; k < nums.length; k++) {
                 nums[k] = sorted[k - i];
             }
