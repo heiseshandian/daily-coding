@@ -70,6 +70,7 @@ import {
     reverseBits,
     reverseBits2,
     rotate,
+    rotateRight,
     shortestBridge,
     splitEarth,
     trap,
@@ -132,6 +133,7 @@ import {
     maxUncrossedLinesTestData,
     avoidFloodTestData,
     rotateTestData,
+    rotateRightTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -794,5 +796,10 @@ describe('other', () => {
         rotate(input);
 
         expect(input).toEqual(expected);
+    });
+
+    it.each(rotateRightTestData)('rotateRight', ({ input: { arr, k }, expected }) => {
+        const result = SingleLinkedList.toArray(rotateRight(SingleLinkedList.from(arr), k));
+        expect(result).toEqual(expected);
     });
 });

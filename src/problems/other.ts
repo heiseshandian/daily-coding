@@ -6117,3 +6117,53 @@ function rotateCircle(matrix: number[][], x1: number, x2: number) {
         matrix[j][x2] = tmp;
     }
 }
+
+/* 
+https://leetcode.com/problems/rotate-list/description/
+Given the head of a linked list, rotate the list to the right by k places.
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [4,5,1,2,3]
+
+单链表旋转
+*/
+export function rotateRight(head: SingleLinkedList | null, k: number): SingleLinkedList | null {
+    if (!head) {
+        return head;
+    }
+
+    let count = 0;
+    let cur: SingleLinkedList | null = head;
+    let tail = cur;
+    while (cur) {
+        count++;
+        tail = cur;
+        cur = cur.next;
+    }
+
+    k = k % count;
+
+    if (k === 0) {
+        return head;
+    }
+
+    // 找到倒数第k个节点，也就是count-k个节点
+    cur = head;
+    // 这里num是从1开始，不是从0开始，因为当前节点已经算一个节点
+    let num = 1;
+    while (cur && num <= count - k) {
+        num++;
+        cur = cur.next;
+    }
+
+    const newHead = cur;
+    cur = head;
+    while (cur !== newHead) {
+        tail.next = cur;
+        tail = cur!;
+        cur = cur!.next;
+    }
+    tail.next = null;
+
+    return newHead;
+}

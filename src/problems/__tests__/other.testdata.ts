@@ -1913,3 +1913,20 @@ export const rotateTestData = [
         ],
     },
 ];
+
+export const rotateRightTestData = [
+    {
+        input: {
+            arr: [1, 2, 3, 4, 5],
+            k: 2,
+        },
+        expected: [4, 5, 1, 2, 3],
+    },
+    {
+        input: {
+            arr: [0, 1, 2],
+            k: 4,
+        },
+        expected: [2, 0, 1],
+    },
+];
