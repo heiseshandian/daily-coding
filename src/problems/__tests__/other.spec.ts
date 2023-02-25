@@ -1,5 +1,6 @@
 import { TreeNode } from '../../algorithm/tree';
 import {
+    avoidFlood,
     calculateStr,
     canSplit4Parts,
     countEqualTree2,
@@ -128,6 +129,7 @@ import {
     getMinDistanceTestData,
     minEatingSpeedTestData,
     maxUncrossedLinesTestData,
+    avoidFloodTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -780,5 +782,9 @@ describe('other', () => {
 
     it.each(maxUncrossedLinesTestData)('maxUncrossedLines', ({ input: { nums1, nums2 }, expected }) => {
         expect(maxUncrossedLines(nums1, nums2)).toBe(expected);
+    });
+
+    it.each(avoidFloodTestData)('avoidFlood', ({ input, expected }) => {
+        expect(avoidFlood(input)).toEqual(expected);
     });
 });

@@ -1865,3 +1865,22 @@ export const maxUncrossedLinesTestData = [
         expected: 2,
     },
 ];
+
+export const avoidFloodTestData = [
+    {
+        input: [1, 2, 3, 4],
+        expected: [-1, -1, -1, -1],
+    },
+    {
+        input: [1, 2, 0, 0, 2, 1],
+        expected: [-1, -1, 2, 1, -1, -1],
+    },
+    {
+        input: [1, 2, 0, 1, 2],
+        expected: [],
+    },
+    {
+        input: [0, 1, 1],
+        expected: [],
+    },
+];
