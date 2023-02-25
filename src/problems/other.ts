@@ -4004,19 +4004,10 @@ export function getMaxSizeOfAllOnes(matrix: number[][]): number {
             sumArr[j] = matrix[i][j] === 1 ? sumArr[j] + 1 : 0;
         }
 
-        const closestMinArr = getClosestMinArr(sumArr).map(([left, right]) => {
-            if (left === undefined) {
-                left = -1;
-            }
-            if (right === undefined) {
-                right = matrix[0].length;
-            }
-
-            return [left, right];
-        });
+        const closestMinArr = getClosestMinArr(sumArr);
 
         sumArr.forEach((cur, i) => {
-            const [leftMin, rightMin] = closestMinArr[i];
+            const [leftMin = -1, rightMin = matrix[0].length] = closestMinArr[i];
             max = Math.max(max, cur * (rightMin - leftMin - 1));
         });
     }
