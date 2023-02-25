@@ -6083,3 +6083,37 @@ export function avoidFlood(rains: number[]): number[] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/rotate-image/
+
+You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
+
+You have to rotate the image in-place, which means you have to modify the input 2D matrix directly. 
+DO NOT allocate another 2D matrix and do the rotation.
+
+分析思路，分层或者分圈来处理矩阵问题
+*/
+export function rotate(matrix: number[][]): void {
+    let x1 = 0;
+    let x2 = matrix.length - 1;
+    while (x1 < x2) {
+        rotateCircle(matrix, x1++, x2--);
+    }
+}
+
+function rotateCircle(matrix: number[][], x1: number, x2: number) {
+    for (let j = x1; j < x2; j++) {
+        /*
+        A: (x1,j) -> D
+        B: (j,x2) -> A
+        C: (x2,x2-(j-x1)) ->B
+        D: (x2-(j-x1),x1) ->C
+        */
+        const tmp = matrix[x1][j];
+        matrix[x1][j] = matrix[x2 - (j - x1)][x1];
+        matrix[x2 - (j - x1)][x1] = matrix[x2][x2 - (j - x1)];
+        matrix[x2][x2 - (j - x1)] = matrix[j][x2];
+        matrix[j][x2] = tmp;
+    }
+}

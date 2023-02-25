@@ -69,6 +69,7 @@ import {
     reverseBetween,
     reverseBits,
     reverseBits2,
+    rotate,
     shortestBridge,
     splitEarth,
     trap,
@@ -130,6 +131,7 @@ import {
     minEatingSpeedTestData,
     maxUncrossedLinesTestData,
     avoidFloodTestData,
+    rotateTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -786,5 +788,11 @@ describe('other', () => {
 
     it.each(avoidFloodTestData)('avoidFlood', ({ input, expected }) => {
         expect(avoidFlood(input)).toEqual(expected);
+    });
+
+    it.each(rotateTestData)('rotate', ({ input, expected }) => {
+        rotate(input);
+
+        expect(input).toEqual(expected);
     });
 });
