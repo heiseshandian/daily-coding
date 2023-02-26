@@ -380,7 +380,152 @@ function createRenderer(options) {
         insert(el, container, anchor);
     }
 
+    function mountComponent(vnode, container, anchor) {
+        const componentOptions = vnode.type;
+        const {
+            render,
+            data,
+            beforeCreate,
+            created,
+            beforeMount,
+            mounted,
+            beforeUpdate,
+            updated,
+            // 组件内部定义的合法属性，比如说A组件只接收title属性，其他属性视为非法属性
+            props: propsOption,
+
+            setup,
+        } = componentOptions;
+
+        beforeCreate && beforeCreate();
+
+        // 将data变成响应式数据
+        const state = reactive(data());
+        const [props, attrs] = resolveProps(propsOption, vnode.props);
+
+        const instance = {
+            state,
+            isMounted: false,
+            // 组件渲染的内容
+            subTree: null,
+            // 这里为什么是shallow呢？
+            props: shallowReactive(props),
+        };
+
+        // 本质上就是到组件props中找到对应的处理函数执行
+        function emit(event, ...payload) {
+            // change -> onChange
+            const eventName = `on${event[0].toUpperCase()}+${event.slice(1)}`;
+            const handler = instance.props[eventName];
+
+            if (handler) {
+                handler(...payload);
+            } else {
+                console.error(`${event} 事件不存在`);
+            }
+        }
+
+        const setupContext = { attrs, emit };
+        const setupResult = setup(shallowReadonly(instance.props, setupContext));
+
+        // 用来存储setup返回的状态数据
+        let setupState = null;
+
+        if (typeof setupResult === 'function') {
+            if (render) {
+                console.error('setup 返回渲染函数，render选项将被忽略');
+            }
+            render = setupResult;
+        } else {
+            setupState = setupResult;
+        }
+
+        const renderContext = new Proxy(instance, {
+            get(target, key) {
+                const { state = {}, props } = target;
+
+                if (key in state) {
+                    return state[key];
+                } else if (key in props) {
+                    return props[key];
+                } else if (setupState && key in setupState) {
+                    return setupState[key];
+                } else {
+                    console.error('属性不存在');
+                }
+            },
+            set(target, key, value) {
+                const { state = {}, props } = target;
+
+                if (key in state) {
+                    state[key] = value;
+                } else if (setupState && key in setupState) {
+                    setupState[key] = value;
+                } else if (key in props) {
+                    console.warn(`Attempting to mutate prop "${key}". props is readonly`);
+                } else {
+                    console.error('尝试设置不存在的属性');
+                }
+            },
+        });
+
+        // 类似于我们之前把vnode挂载在_vnode上
+        vnode.component = instance;
+
+        created && created.call(renderContext);
+
+        effect(
+            () => {
+                // state作为上下文传入，这样在组件中就可以使用this获取状态信息
+                const subTree = render.call(state, state);
+
+                if (!instance.isMounted) {
+                    beforeMount && beforeMount.call(renderContext);
+                    patch(null, subTree, container, anchor);
+                    // 挂载完之后设置isMounted标记
+                    instance.isMounted = true;
+                    mounted && mounted.call(renderContext);
+                } else {
+                    beforeUpdate && beforeUpdate.call(renderContext);
+                    patch(instance.subTree, subTree, container, anchor);
+                    updated && updated.call(renderContext);
+                }
+
+                instance.subTree = subTree;
+            },
+            {
+                schedular: queueJob,
+            }
+        );
+    }
+
     return { render };
+}
+
+function patchComponent(n1, n2, anchor) {
+    // 获取组件实例，同时让新的组件虚拟节点也指向组件实例
+    // 需要将组件实例挂载到n2.component上，否则下次更新无法取得组件实例
+    const instance = (n2.component = n1.component);
+
+    const { props } = instance;
+
+    // 检测属性是否变化
+    if (hasPropsChanged(n1.props, n2.props)) {
+        const [nextProps] = resolveProps(n2.type.props, n2.props);
+
+        // 更新props
+        // props本身是浅响应式的，这里我们只需要更新值就可以触发组件更新
+        for (const k in nextProps) {
+            props[k] = nextProps[k];
+        }
+
+        // 删除不存在的props
+        for (const k in props) {
+            if (!(k in nextProps)) {
+                delete props[k];
+            }
+        }
+    }
 }
 
 const renderer = createRenderer({
@@ -522,4 +667,63 @@ function getLongestIncreasingSubsequence(arr) {
         right = clone[right];
     }
     return result;
+}
+
+let isFlushing = false;
+const p = Promise.resolve();
+// 利用set的机制自动为任务去重
+const queue = new Set();
+
+function queueJob(job) {
+    queue.add(job);
+
+    if (isFlushing) {
+        return;
+    }
+
+    isFlushing = true;
+    p.then(() => {
+        try {
+            queue.forEach((job) => job());
+        } finally {
+            isFlushing = false;
+            // 执行完毕之后需要清空队列，不过任务执行出错了怎么办？
+            queue.clear();
+        }
+    });
+}
+
+// options是组件定义的属性规范
+// propsData是组件用户使用的时候传入的实际参数
+function resolveProps(options, propsData) {
+    const props = {};
+    const attrs = {};
+
+    for (const key in propsData) {
+        // 属性规范中定义的属性以及任何事件属性都加在props中
+        if (key in options || key.startsWith('on')) {
+            props[key] = propsData[key];
+        } else {
+            attrs[key] = propsData[key];
+        }
+    }
+
+    return [props, attrs];
+}
+
+function hasPropsChanged(prevProps, nextProps) {
+    const nextKeys = Object.keys(nextProps);
+    // 长度变换属性必然发生变化了
+    if (nextKeys.length !== Object.keys(prevProps).length) {
+        return true;
+    }
+
+    for (let i = 0; i < nextKeys.length; i++) {
+        const key = nextKeys[i];
+        if (nextProps[key] !== prevProps[key]) {
+            return true;
+        }
+    }
+
+    return false;
 }
