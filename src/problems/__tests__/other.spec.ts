@@ -59,6 +59,7 @@ import {
     kthSmallest,
     lengthOfLongestSubstring,
     longestValidParentheses,
+    maxRunTime,
     maxUncrossedLines,
     mergeStones,
     MessageBox,
@@ -256,6 +257,7 @@ import {
     getLengthOfLongestSubArrayWithSumK2TestData,
 } from './other.testdata';
 import { getLongestIncreasingSubsequence } from '../other';
+import { maxRunTimeTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -807,5 +809,9 @@ describe('other', () => {
 
     it.each(reversePairsTestData)('reversePairs', ({ input, expected }) => {
         expect(reversePairs(input)).toBe(expected);
+    });
+
+    it.each(maxRunTimeTestData)('maxRunTime', ({ input: { arr, n }, expected }) => {
+        expect(maxRunTime(n, arr)).toBe(expected);
     });
 });

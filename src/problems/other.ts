@@ -6217,3 +6217,69 @@ function merge(arr: number[], left: number, mid: number, right: number) {
         arr[left + k] = tmp[k];
     }
 }
+
+/* 
+https://leetcode.com/problems/maximum-running-time-of-n-computers/description/
+You have n computers. You are given the integer n and a 0-indexed integer array batteries where the ith battery 
+can run a computer for batteries[i] minutes. You are interested in running all n computers simultaneously using the given batteries.
+
+Initially, you can insert at most one battery into each computer. After that and at any integer time moment, 
+you can remove a battery from a computer and insert another battery any number of times.
+The inserted battery can be a totally new battery or a battery from another computer. 
+You may assume that the removing and inserting processes take no time.
+
+Note that the batteries cannot be recharged.
+
+Return the maximum number of minutes you can run all the n computers simultaneously.
+
+思路：二分答案
+leetcode上测试数据电池比较大，这里使用BigInt来处理大数据
+*/
+export function maxRunTime(n: number, batteries: number[]): number {
+    batteries.sort((a, b) => a - b);
+    const prefixSum = [BigInt(batteries[0])];
+    for (let i = 1; i < batteries.length; i++) {
+        prefixSum[i] = BigInt(prefixSum[i - 1]) + BigInt(batteries[i]);
+    }
+
+    const max = prefixSum[prefixSum.length - 1] / BigInt(n);
+
+    let left = BigInt(0);
+    let right = max;
+    let found = left;
+    while (left <= right) {
+        const mid = left + (right - left) / BigInt(2);
+        if (canRunXMinutes(n, batteries, prefixSum, mid)) {
+            found = mid;
+            left = mid + BigInt(1);
+        } else {
+            right = mid - BigInt(1);
+        }
+    }
+
+    return Number(found);
+}
+
+function canRunXMinutes(n: number, batteries: number[], prefixSum: bigint[], minutes: bigint): boolean {
+    let longerBatteriesCount = 0;
+    let left = 0;
+    let right = batteries.length - 1;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        if (batteries[mid] >= minutes) {
+            longerBatteriesCount = batteries.length - mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    if (longerBatteriesCount >= n) {
+        return true;
+    }
+
+    const leftComputer = BigInt(n - longerBatteriesCount);
+    const leftBatteries = batteries.length - longerBatteriesCount;
+
+    return leftBatteries >= leftComputer && prefixSum[leftBatteries - 1] >= leftComputer * minutes;
+}

@@ -1941,3 +1941,20 @@ export const reversePairsTestData = [
         expected: 3,
     },
 ];
+
+export const maxRunTimeTestData = [
+    {
+        input: {
+            arr: [3, 3, 3],
+            n: 2,
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            arr: [1, 1, 1, 1],
+            n: 2,
+        },
+        expected: 2,
+    },
+];
