@@ -6158,3 +6158,62 @@ export function rotateRight(head: SingleLinkedList | null, k: number): SingleLin
 
     return newHead;
 }
+
+/* 
+Given an integer array nums, return the number of reverse pairs in the array.
+
+A reverse pair is a pair (i, j) where:
+
+0 <= i < j < nums.length and
+nums[i] > 2 * nums[j].
+*/
+export function reversePairs(nums: number[]): number {
+    return mergeAndCount(nums, 0, nums.length - 1);
+}
+
+function mergeAndCount(arr: number[], left: number, right: number): number {
+    if (left >= right) {
+        return 0;
+    }
+
+    const mid = left + ((right - left) >> 1);
+    let count = mergeAndCount(arr, left, mid) + mergeAndCount(arr, mid + 1, right);
+
+    let i = left;
+    let j = mid + 1;
+    // 此处i和j都不回退，虽然是两个循环不过时间复杂度是O(n)，整体时间复杂度还是O(nlogn)
+    while (i <= mid) {
+        while (j <= right && arr[i] / 2 > arr[j]) {
+            j++;
+        }
+
+        count += j - mid - 1;
+        i++;
+    }
+
+    merge(arr, left, mid, right);
+    return count;
+}
+
+function merge(arr: number[], left: number, mid: number, right: number) {
+    let i = left;
+    let j = mid + 1;
+    const tmp = new Array(right - left + 1);
+    let k = 0;
+
+    while (i <= mid && j <= right) {
+        tmp[k++] = arr[i] <= arr[j] ? arr[i++] : arr[j++];
+    }
+
+    while (i <= mid) {
+        tmp[k++] = arr[i++];
+    }
+
+    while (j <= right) {
+        tmp[k++] = arr[j++];
+    }
+
+    for (let k = 0; k < tmp.length; k++) {
+        arr[left + k] = tmp[k];
+    }
+}

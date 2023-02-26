@@ -1930,3 +1930,14 @@ export const rotateRightTestData = [
         expected: [2, 0, 1],
     },
 ];
+
+export const reversePairsTestData = [
+    {
+        input: [1, 3, 2, 3, 1],
+        expected: 2,
+    },
+    {
+        input: [2, 4, 3, 5, 1],
+        expected: 3,
+    },
+];
