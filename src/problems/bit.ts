@@ -6,6 +6,10 @@ export function pow(a: number, n: number): number {
         if ((n & 1) !== 0) {
             result *= t;
         }
+        // a
+        // a^2
+        // a^4
+        // ...
         t *= t;
         n = n >>> 1;
     }
