@@ -78,7 +78,10 @@ export const getMinCandyTestData3 = [
         expected: 29,
     },
     {
-        input: [2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 3, 4, 3, 3, 3, 35, 4, 3, 2, 33, 4, 5, 6],
+        input: [
+            2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 3, 4, 3, 3, 3, 35, 4, 3,
+            2, 33, 4, 5, 6,
+        ],
         expected: 55,
     },
 ];
@@ -713,7 +716,19 @@ export const findWordsTestData = [
                 ['i', 'h', 'k', 'r'],
                 ['i', 'f', 'l', 'v'],
             ],
-            words: ['oath', 'pea', 'eat', 'rain', 'oathi', 'oathk', 'oathf', 'oate', 'oathii', 'oathfi', 'oathfii'],
+            words: [
+                'oath',
+                'pea',
+                'eat',
+                'rain',
+                'oathi',
+                'oathk',
+                'oathf',
+                'oate',
+                'oathii',
+                'oathfi',
+                'oathfii',
+            ],
         },
         expected: ['oath', 'oathf', 'oathfi', 'oathfii', 'oathi', 'oathii', 'oathk', 'oate', 'eat'],
     },
@@ -759,7 +774,10 @@ export const getMinValueTestData = [
         expected: 0,
     },
     {
-        input: [3, 4, 5, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+        input: [
+            3, 4, 5, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            3, 3,
+        ],
         expected: 0,
     },
     {
@@ -1564,15 +1582,30 @@ export const getMaxArrOf2PartsMinTestData = [
         input: [75, 59, 80, 91, 70, 63, 28, 65, 51, 31],
         expected: [-Infinity, 59, 80, 134, 161, 214, 214, 226, 277, 305],
     },
-    { input: [16, 52, 73, 62, 77, 2, 75, 13, 4, 71], expected: [-Infinity, 16, 68, 68, 139, 141, 154, 167, 171, 203] },
-    { input: [93, 28, 47, 23, 85, 37, 75, 9, 56, 22], expected: [-Infinity, 28, 75, 93, 121, 145, 191, 191, 191, 199] },
-    { input: [19, 23, 68, 34, 22, 77, 81, 56, 45, 50], expected: [-Infinity, 19, 42, 42, 56, 110, 158, 166, 182, 232] },
-    { input: [61, 26, 59, 62, 9, 12, 81, 71, 23, 62], expected: [-Infinity, 26, 61, 87, 87, 87, 146, 173, 196, 229] },
+    {
+        input: [16, 52, 73, 62, 77, 2, 75, 13, 4, 71],
+        expected: [-Infinity, 16, 68, 68, 139, 141, 154, 167, 171, 203],
+    },
+    {
+        input: [93, 28, 47, 23, 85, 37, 75, 9, 56, 22],
+        expected: [-Infinity, 28, 75, 93, 121, 145, 191, 191, 191, 199],
+    },
+    {
+        input: [19, 23, 68, 34, 22, 77, 81, 56, 45, 50],
+        expected: [-Infinity, 19, 42, 42, 56, 110, 158, 166, 182, 232],
+    },
+    {
+        input: [61, 26, 59, 62, 9, 12, 81, 71, 23, 62],
+        expected: [-Infinity, 26, 61, 87, 87, 87, 146, 173, 196, 229],
+    },
     {
         input: [100, 2, 100, 21, 97, 82, 65, 72, 57, 99],
         expected: [-Infinity, 2, 100, 102, 118, 200, 223, 223, 276, 320],
     },
-    { input: [50, 5, 18, 91, 53, 39, 32, 71, 64, 2], expected: [-Infinity, 5, 23, 73, 73, 92, 124, 164, 206, 208] },
+    {
+        input: [50, 5, 18, 91, 53, 39, 32, 71, 64, 2],
+        expected: [-Infinity, 5, 23, 73, 73, 92, 124, 164, 206, 208],
+    },
 ];
 
 export const lengthOfLongestSubstringTestData = [
