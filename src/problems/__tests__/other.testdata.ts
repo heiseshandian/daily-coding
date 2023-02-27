@@ -2008,3 +2008,18 @@ export const leastWaitingTimeTestData = [
         expected: 2,
     },
 ];
+
+export const findSubstringInWrapRoundStringTestData = [
+    {
+        input: 'a',
+        expected: 1,
+    },
+    {
+        input: 'zab',
+        expected: 6,
+    },
+    {
+        input: 'cac',
+        expected: 2,
+    },
+];

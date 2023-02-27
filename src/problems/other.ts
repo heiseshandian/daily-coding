@@ -6459,3 +6459,50 @@ function maxServicePeople(arr: number[], time: number): number {
         return acc;
     }, 0);
 }
+
+/* 
+https://leetcode.com/problems/unique-substrings-in-wraparound-string/
+
+We define the string base to be the infinite wraparound string of "abcdefghijklmnopqrstuvwxyz", so base will look like this:
+
+"...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....".
+Given a string s, return the number of unique non-empty substrings of s are present in base.
+
+Input: s = "zab"
+Output: 6
+Explanation: There are six substrings ("z", "a", "b", "za", "ab", and "zab") of s in base.
+
+分析，考察s中以不同字符结尾的子串 ...a,...b,...c等
+如果我们能分别计算出以不同字符结尾的子串，那么去重之后的结果就是最终结果
+然后我们单独看某个字母结尾的子串，只需要统计其中最长的子串长度即可，因为最长的必然包含短的
+比如说 xyzayza xyza必然包含了yza，我们只需要根据最长的串来计算以a结尾的子串个数
+*/
+export function findSubstringInWrapRoundString(s: string): number {
+    const counts = new Array(26).fill(0);
+
+    for (let i = s.length - 1; i >= 0; ) {
+        // 考察当前字符往左可以扩多长
+        let cur = i;
+        while (cur - 1 >= 0) {
+            const leftIndex = getCharIndex(s[cur - 1]);
+            const curIndex = getCharIndex(s[cur]);
+            if (leftIndex + 1 === curIndex || leftIndex === curIndex + 25) {
+                cur--;
+            } else {
+                break;
+            }
+        }
+
+        for (let k = i; k >= cur; k--) {
+            const index = getCharIndex(s[k]);
+            counts[index] = Math.max(counts[index], k - cur + 1);
+        }
+
+        i = cur - 1;
+    }
+
+    return counts.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0);
+}

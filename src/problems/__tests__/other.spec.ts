@@ -264,8 +264,8 @@ import {
     getMinChangesTestData,
     getLengthOfLongestSubArrayWithSumK2TestData,
 } from './other.testdata';
-import { getLongestIncreasingSubsequence } from '../other';
-import { maxRunTimeTestData } from './other.testdata';
+import { getLongestIncreasingSubsequence, findSubstringInWrapRoundString } from '../other';
+import { maxRunTimeTestData, findSubstringInWrapRoundStringTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -873,4 +873,11 @@ describe('other', () => {
         expect(leastWaitingTime(arr, n)).toBe(expected);
         expect(leastWaitingTime2(arr, n)).toBe(expected);
     });
+
+    it.each(findSubstringInWrapRoundStringTestData)(
+        'findSubstringInWrapRoundString',
+        ({ input, expected }) => {
+            expect(findSubstringInWrapRoundString(input)).toBe(expected);
+        }
+    );
 });
