@@ -1958,3 +1958,20 @@ export const maxRunTimeTestData = [
         expected: 2,
     },
 ];
+
+export const leastWaitingTimeTestData = [
+    {
+        input: {
+            arr: [1, 2, 3, 5],
+            n: 5,
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            arr: [1, 2, 3, 5],
+            n: 6,
+        },
+        expected: 2,
+    },
+];

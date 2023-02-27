@@ -6283,3 +6283,28 @@ function canRunXMinutes(n: number, batteries: number[], prefixSum: bigint[], min
 
     return leftBatteries >= leftComputer && prefixSum[leftBatteries - 1] >= leftComputer * minutes;
 }
+
+/* 
+来自谷歌
+给定一个数组arr，长度为n
+表示n个服务员，每个人服务一个人的时间
+给定一个正数m，表示有m个人等位
+如果你是刚来的人，请问你需要等多久？
+假设：m远远大于n，比如n<=1000，m<=10的9次方，该怎么做？
+*/
+export function leastWaitingTime(arr: number[], m: number): number {
+    const minHeap = new GenericHeap<[serviceTime: number, freeTime: number]>(
+        ([, freeTimeA], [, freeTimeB]) => freeTimeA - freeTimeB
+    );
+    for (let i = 0; i < arr.length; i++) {
+        minHeap.push([arr[i], 0]);
+    }
+
+    while (m--) {
+        const [serviceTime, freeTime] = minHeap.pop()!;
+        minHeap.push([serviceTime, freeTime + serviceTime]);
+    }
+
+    const [, freeTime] = minHeap.pop()!;
+    return freeTime;
+}

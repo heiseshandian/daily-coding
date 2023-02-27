@@ -57,6 +57,7 @@ import {
     getSumOfMatrix,
     getValidParentheses,
     kthSmallest,
+    leastWaitingTime,
     lengthOfLongestSubstring,
     longestValidParentheses,
     maxRunTime,
@@ -137,6 +138,7 @@ import {
     rotateTestData,
     rotateRightTestData,
     reversePairsTestData,
+    leastWaitingTimeTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -813,5 +815,9 @@ describe('other', () => {
 
     it.each(maxRunTimeTestData)('maxRunTime', ({ input: { arr, n }, expected }) => {
         expect(maxRunTime(n, arr)).toBe(expected);
+    });
+
+    it.each(leastWaitingTimeTestData)('leastWaitingTime', ({ input: { arr, n }, expected }) => {
+        expect(leastWaitingTime(arr, n)).toBe(expected);
     });
 });
