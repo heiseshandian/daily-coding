@@ -6404,3 +6404,49 @@ export function getMin(arr: number[]): number {
 
     return -1;
 }
+
+/* 
+https://leetcode.com/problems/insufficient-nodes-in-root-to-leaf-paths/description/
+
+Given the root of a binary tree and an integer limit, delete all insufficient nodes in the tree simultaneously, 
+and return the root of the resulting binary tree.
+
+A node is insufficient if every root to leaf path intersecting this node has a sum strictly less than limit.
+
+A leaf is a node with no children.
+
+Input: root = [1,2,3,4,-99,-99,7,8,9,-99,-99,12,13,-99,14], limit = 1
+Output: [1,2,3,4,null,null,7,8,9,null,14]
+*/
+export function sufficientSubset(root: TreeNode | null, limit: number): TreeNode | null {
+    const canDeleteRoot = sufficientSubsetDfs(root, 0, limit);
+    if (canDeleteRoot) {
+        return null;
+    }
+
+    return root;
+}
+
+function sufficientSubsetDfs(node: TreeNode | null, sum: number, limit: number): boolean {
+    if (!node) {
+        return true;
+    }
+
+    sum += node.val;
+    // 如果当前是叶子节点就开始判断是否满足删除标准
+    if (!node.left && !node.right) {
+        return sum < limit;
+    }
+
+    const canDeleteLeft = sufficientSubsetDfs(node.left, sum, limit);
+    const canDeleteRight = sufficientSubsetDfs(node.right, sum, limit);
+
+    if (canDeleteLeft) {
+        node.left = null;
+    }
+    if (canDeleteRight) {
+        node.right = null;
+    }
+
+    return canDeleteLeft && canDeleteRight;
+}
