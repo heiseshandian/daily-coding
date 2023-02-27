@@ -46,10 +46,7 @@ function colorProcess(zeros: number[][], i: number, restRedCount: number): numbe
 
     // 如果restRedCount=0 则剩下所有石头都必须染成蓝色
     if (restRedCount === 0) {
-        return zeros.slice(i).reduce((acc, [, , blueCost]) => {
-            acc = acc + blueCost;
-            return acc;
-        }, 0);
+        return zeros.slice(i).reduce((acc, [, , blueCost]) => acc + blueCost, 0);
     }
 
     const [, redCost, blueCost] = zeros[i];
@@ -163,10 +160,7 @@ export function getMinValueOfColor2(arr: number[][]): number {
     }
 
     // 把所有无色石头都变成红色，然后从中选择从红变蓝差值最大的变成蓝色，总代价最小
-    let cost = zeros.reduce((acc, [redCost]) => {
-        acc += redCost;
-        return acc;
-    }, 0);
+    let cost = zeros.reduce((acc, [redCost]) => acc + redCost, 0);
 
     // 按照redCost-blueCost的差值从大到小排序
     zeros.sort(([redCost1, blueCost1], [redCost2, blueCost2]) => {
@@ -305,10 +299,7 @@ export function getMinCandy2(arr: number[]): number {
     }
 
     // 去掉一个局部最小
-    return newArr.slice(1).reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    return newArr.slice(1).reduce((acc, cur) => acc + cur, 0);
 }
 
 /* 
@@ -472,10 +463,7 @@ export function getMinCandy4(arr: number[]): number {
     }
 
     // 去掉一个局部最小
-    return newArr.slice(1).reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    return newArr.slice(1).reduce((acc, cur) => acc + cur, 0);
 }
 
 /* 
@@ -656,10 +644,7 @@ function plusOrMinusProcess(arr: number[], i: number, rest: number): number {
 }
 
 export function getPlusOrMinusCountDp(arr: number[], target: number): number {
-    const sum = arr.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const sum = arr.reduce((acc, cur) => acc + cur, 0);
 
     // 由于所有的数字都会取正或取负，所以所有符合条件的target组合必然等于-target组合，这里我们直接让target变成正数
     target = Math.abs(target);
@@ -697,10 +682,7 @@ export function getPlusOrMinusCountDp2(arr: number[], target: number): number {
     // 假设存在集合p和集合n，使得p-n等于target，那么集合p和n就是一种符合条件的组合
     // p-n+p+n=target+p+n => p=(target+sum)/2
     // 问题就变成怎么从arr中选数使得最终值为p，也就是一个背包问题
-    const sum = arr.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const sum = arr.reduce((acc, cur) => acc + cur, 0);
 
     const p = (target + sum) >> 1;
 
@@ -743,10 +725,7 @@ export function getPlusOrMinusCountDp2(arr: number[], target: number): number {
 */
 export function getMaxMoney(income: number[][]): number {
     // 先让所有人都去A算出一个值
-    let count = income.reduce((acc, [aMoney]) => {
-        acc += aMoney;
-        return acc;
-    }, 0);
+    let count = income.reduce((acc, [aMoney]) => acc + aMoney, 0);
 
     // 类似于石头染色问题，把所有income按照 bMoney-aMoney的差值排序，越大的改到B可以获得更大收益
     income.sort(([aMoney1, bMoney1], [aMoney2, bMoney2]) => {
@@ -1684,10 +1663,7 @@ arr=【1，2，4】。子集【1】相加产生1为min，子集{1，2，4}相加
 如果已知正数数组 arr 中肯定有1 这个数，是否能更快地得到最小不可组成和？
 */
 export function getMinSumThatCanNotBeComposed(arr: number[]): number {
-    const sum = arr.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const sum = arr.reduce((acc, cur) => acc + cur, 0);
 
     // 背包问题
     // dp[i][sum] 自由使用i以及以后的数字能否弄出sum
@@ -1974,10 +1950,7 @@ function getMinMoneyProcess(arr1: number[], arr2: number[], i: number, power: nu
 }
 
 export function getMinMoneyOfPassingMonsterDp(arr1: number[], arr2: number[]): number {
-    const maxPower = arr1.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const maxPower = arr1.reduce((acc, cur) => acc + cur, 0);
 
     // dp[i][power] 返回值dp[0][0]
     const dp: number[][] = new Array(arr1.length + 1).fill(0).map((_) => new Array(maxPower + 1).fill(0));
@@ -1998,10 +1971,7 @@ export function getMinMoneyOfPassingMonsterDp(arr1: number[], arr2: number[]): n
 
 // 数组滚动压缩空间
 export function getMinMoneyOfPassingMonsterDp2(arr1: number[], arr2: number[]): number {
-    const maxPower = arr1.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const maxPower = arr1.reduce((acc, cur) => acc + cur, 0);
 
     // dp[i][power] 返回值dp[0][0]
     const dp: number[] = new Array(maxPower + 1).fill(0);
@@ -2059,10 +2029,7 @@ export function getMinMoneyOfPassingMonsterDp3(arr1: number[], arr2: number[]): 
 }
 
 export function getMinMoneyOfPassingMonsterDp4(arr1: number[], arr2: number[]): number {
-    const maxMoney = arr2.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    const maxMoney = arr2.reduce((acc, cur) => acc + cur, 0);
 
     // dp[i][j] 通过i号怪兽，严格花j块钱所能达到的最大能力值
     const dp: number[] = new Array(maxMoney + 1).fill(-1);
@@ -3145,10 +3112,7 @@ function calculatePath(path: string): number {
 function parseNum(num: string): number {
     const shouldCalculate = num.indexOf('*') !== -1;
     if (shouldCalculate) {
-        return num.split('*').reduce((acc, cur) => {
-            acc *= parseInt(cur);
-            return acc;
-        }, 1);
+        return num.split('*').reduce((acc, cur) => acc * parseInt(cur), 1);
     }
 
     return parseInt(num);
@@ -6335,10 +6299,7 @@ export function leastWaitingTime2(arr: number[], m: number): number {
 
 // 给定服务员和服务分钟数，返回能够服务的最大人数
 function maxServicePeople(arr: number[], time: number): number {
-    return arr.reduce((acc, cur) => {
-        acc += Math.floor(time / cur) + 1;
-        return acc;
-    }, 0);
+    return arr.reduce((acc, cur) => acc + Math.floor(time / cur) + 1, 0);
 }
 
 /* 
@@ -6382,10 +6343,7 @@ export function findSubstringInWrapRoundString(s: string): number {
         i = cur - 1;
     }
 
-    return counts.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    return counts.reduce((acc, cur) => acc + cur, 0);
 }
 
 export function findSubstringInWrapRoundString2(s: string): number {
@@ -6407,8 +6365,5 @@ export function findSubstringInWrapRoundString2(s: string): number {
         counts[curIndex] = Math.max(counts[curIndex], len);
     }
 
-    return counts.reduce((acc, cur) => {
-        acc += cur;
-        return acc;
-    }, 0);
+    return counts.reduce((acc, cur) => acc + cur, 0);
 }
