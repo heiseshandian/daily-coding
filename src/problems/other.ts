@@ -6367,3 +6367,40 @@ export function findSubstringInWrapRoundString2(s: string): number {
 
     return counts.reduce((acc, cur) => acc + cur, 0);
 }
+
+/* 
+有一个数组，相邻位置的数字不等，返回局部最小的位置
+
+局部最小定义
+1) 0位置<1位置 0位置就是局部最小
+2) n-1位置<n-2位置 n-1位置就是局部最小
+3) i-1位置>i位置 && i位置<i+1位置 则i位置是局部最小
+*/
+export function getMin(arr: number[]): number {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    if (arr[0] < arr[1]) {
+        return 0;
+    }
+    if (arr[arr.length - 1] < arr[arr.length - 2]) {
+        return arr.length - 1;
+    }
+
+    let left = 0;
+    let right = arr.length - 1;
+    while (left < right) {
+        const mid = left + ((right - left) >> 1);
+
+        if (arr[mid] > arr[mid - 1]) {
+            right = mid - 1;
+        } else if (arr[mid] > arr[mid + 1]) {
+            left = mid + 1;
+        } else {
+            return mid;
+        }
+    }
+
+    return -1;
+}
