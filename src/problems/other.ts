@@ -6529,3 +6529,55 @@ export function getMaxDiff(arr: number[]): number {
 
     return maxDiff;
 }
+
+/* 
+小虎去附近的商店买苹果，奸诈的商贩使用了捆绑交易，只提供6个每袋和8个每袋的包装，包装不可拆分。
+可是小虎现在只想购买恰好n个苹果，小虎想购买尽量少的袋数方便携带。如果不能购买恰好n个苹果，小虎将不会购买。
+输入一个整数n，表示小虎想购买的个苹果，返回最小使用多少袋子。如果无论如何都不能正好装下，返回-1。
+*/
+export function getMinBags(n: number): number {
+    return getMinBagsProcess([6, 8], 0, n);
+}
+
+// 剩余重量是rest，i号和以后的袋子随便挑选，返回消费的最少袋子数
+function getMinBagsProcess(arr: number[], i: number, rest: number): number {
+    if (i === arr.length) {
+        return rest === 0 ? 0 : -1;
+    }
+
+    let count = Infinity;
+    for (let k = 0; k <= Math.floor(rest / arr[i]); k++) {
+        const next = getMinBagsProcess(arr, i + 1, rest - k * arr[i]);
+        if (next !== -1) {
+            count = Math.min(count, next + k);
+        }
+    }
+
+    return count === Infinity ? -1 : count;
+}
+
+export function getMinBagsDp(n: number): number {
+    const arr = [6, 8];
+
+    // dp[i][rest]
+    // i以及i以后的袋子可以自由选择，返回搞定rest的最少袋子数
+    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(n + 1).fill(-1));
+    // 最后一行
+    dp[arr.length][0] = 0;
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 0; rest <= n; rest++) {
+            let count = Infinity;
+            for (let k = 0; k <= Math.floor(rest / arr[i]); k++) {
+                const next = dp[i + 1][rest - k * arr[i]];
+                if (next !== -1) {
+                    count = Math.min(count, next + k);
+                }
+            }
+
+            dp[i][rest] = count === Infinity ? -1 : count;
+        }
+    }
+
+    return dp[0][n];
+}

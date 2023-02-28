@@ -2035,3 +2035,26 @@ export const getMaxDiffTestData = [
         expected: 0,
     },
 ];
+
+export const getMinBagsTestData = [
+    {
+        input: 14,
+        expected: 2,
+    },
+    {
+        input: 22,
+        expected: 3,
+    },
+    {
+        input: 108,
+        expected: 14,
+    },
+    {
+        input: 99,
+        expected: -1,
+    },
+    {
+        input: 266,
+        expected: 34,
+    },
+];

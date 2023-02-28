@@ -40,6 +40,8 @@ import {
     getMaxRemovableSubsequence,
     getMaxSizeOfAllOnes,
     getMaxValueOfS,
+    getMinBags,
+    getMinBagsDp,
     getMinChanges,
     getMinCoins,
     getMinCoinsDp,
@@ -143,6 +145,7 @@ import {
     leastWaitingTimeTestData,
     numTilePossibilitiesTestData,
     getMaxDiffTestData,
+    getMinBagsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -847,5 +850,10 @@ describe('other', () => {
 
     it.each(getMaxDiffTestData)('getMaxDiff', ({ input, expected }) => {
         expect(getMaxDiff(input)).toBe(expected);
+    });
+
+    it.each(getMinBagsTestData)('getMinBags', ({ input, expected }) => {
+        expect(getMinBags(input)).toBe(expected);
+        expect(getMinBagsDp(input)).toBe(expected);
     });
 });
