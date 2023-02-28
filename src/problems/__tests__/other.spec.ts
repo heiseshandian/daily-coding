@@ -26,6 +26,7 @@ import {
     getMaxA,
     getMaxArrOf2PartsMin,
     getMaxArrOf2PartsMin2,
+    getMaxDiff,
     getMaxIncreasingNum,
     getMaxK,
     getMaxLengthOfIncreasingSubsequence,
@@ -141,6 +142,7 @@ import {
     reversePairsTestData,
     leastWaitingTimeTestData,
     numTilePossibilitiesTestData,
+    getMaxDiffTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -841,5 +843,9 @@ describe('other', () => {
 
     it.each(numTilePossibilitiesTestData)('numTilePossibilities', ({ input, expected }) => {
         expect(numTilePossibilities(input)).toBe(expected);
+    });
+
+    it.each(getMaxDiffTestData)('getMaxDiff', ({ input, expected }) => {
+        expect(getMaxDiff(input)).toBe(expected);
     });
 });

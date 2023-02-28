@@ -2020,3 +2020,18 @@ export const numTilePossibilitiesTestData = [
         expected: 1,
     },
 ];
+
+export const getMaxDiffTestData = [
+    {
+        input: [1, 99, 78, 43, 22],
+        expected: 35,
+    },
+    {
+        input: [1, 1, 2],
+        expected: 1,
+    },
+    {
+        input: [1, 1, 1],
+        expected: 0,
+    },
+];

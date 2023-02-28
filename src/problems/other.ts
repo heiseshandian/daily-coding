@@ -6485,3 +6485,47 @@ function numTilePossibilitiesProcess(tiles: string[], i: number): number {
 
     return count;
 }
+
+/* 
+给定一个数组，求如果排序之后，相邻两数的最大差值。要求时间复杂度0（N），且要求不能用非基于比较的排序。
+
+分析，假设一共有n个数，我们准备n+1个桶，把这n个数放进n+1个桶里面，那么必然有一个桶是空的，这时候下一个非空桶的最小值减去上一个非空桶的
+最大值必然大于桶内排序之后的差值（桶内差值最大是桶的容量）
+*/
+export function getMaxDiff(arr: number[]): number {
+    let min = Infinity;
+    let max = -Infinity;
+    for (let i = 0; i < arr.length; i++) {
+        min = Math.min(min, arr[i]);
+        max = Math.max(max, arr[i]);
+    }
+    if (max === min) {
+        return 0;
+    }
+
+    const getBid = (num: number) => {
+        return Math.floor(((num - min) * arr.length) / (max - min));
+    };
+
+    const maxBuckets = new Array(arr.length + 1).fill(undefined);
+    const minBuckets = new Array(arr.length + 1).fill(undefined);
+
+    for (let i = 0; i < arr.length; i++) {
+        const bid = getBid(arr[i]);
+        maxBuckets[bid] = maxBuckets[bid] === undefined ? arr[i] : Math.max(maxBuckets[bid], arr[i]);
+        minBuckets[bid] = minBuckets[bid] === undefined ? arr[i] : Math.min(minBuckets[bid], arr[i]);
+    }
+
+    let maxDiff = -Infinity;
+    let lastMax = maxBuckets[0];
+    let i = 1;
+    while (i < minBuckets.length) {
+        if (minBuckets[i] !== undefined) {
+            maxDiff = Math.max(maxDiff, minBuckets[i] - lastMax);
+            lastMax = maxBuckets[i];
+        }
+        i++;
+    }
+
+    return maxDiff;
+}
