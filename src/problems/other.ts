@@ -6567,7 +6567,6 @@ export function getMinBagsDp(n: number): number {
 
     for (let i = arr.length - 1; i >= 0; i--) {
         for (let rest = 0; rest <= n; rest++) {
-            // TODO: 存在枚举行为，待优化
             let count = Infinity;
             for (let k = 0; k <= Math.floor(rest / arr[i]); k++) {
                 const next = dp[i + 1][rest - k * arr[i]];
@@ -6581,4 +6580,29 @@ export function getMinBagsDp(n: number): number {
     }
 
     return dp[0][n];
+}
+
+export function getMinBagsDp2(n: number): number {
+    const arr = [6, 8];
+
+    // dp[i][rest]
+    // i以及i以后的袋子可以自由选择，返回搞定rest的最少袋子数
+    const dp: number[] = new Array(n + 1).fill(-1);
+    // 最后一行
+    dp[0] = 0;
+    let prevDp = dp.slice();
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 0; rest <= n; rest++) {
+            // 通过观察优化枚举行为
+            dp[rest] = prevDp[rest];
+            if (rest - arr[i] >= 0 && dp[rest - arr[i]] >= 0) {
+                dp[rest] = dp[rest] === -1 ? dp[rest - arr[i]] + 1 : Math.min(dp[rest], dp[rest - arr[i]] + 1);
+            }
+        }
+
+        prevDp = dp.slice();
+    }
+
+    return dp[n];
 }

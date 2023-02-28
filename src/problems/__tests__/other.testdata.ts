@@ -2057,4 +2057,12 @@ export const getMinBagsTestData = [
         input: 266,
         expected: 34,
     },
+    {
+        input: 274,
+        expected: 35,
+    },
+    {
+        input: 271,
+        expected: -1,
+    },
 ];

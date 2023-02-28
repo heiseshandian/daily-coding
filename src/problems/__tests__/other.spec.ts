@@ -277,6 +277,7 @@ import {
     findSubstringInWrapRoundString2,
 } from '../other';
 import { maxRunTimeTestData, findSubstringInWrapRoundStringTestData } from './other.testdata';
+import { getMinBagsDp2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -855,5 +856,6 @@ describe('other', () => {
     it.each(getMinBagsTestData)('getMinBags', ({ input, expected }) => {
         expect(getMinBags(input)).toBe(expected);
         expect(getMinBagsDp(input)).toBe(expected);
+        expect(getMinBagsDp2(input)).toBe(expected);
     });
 });
