@@ -78,10 +78,7 @@ export const getMinCandyTestData3 = [
         expected: 29,
     },
     {
-        input: [
-            2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 3, 4, 3, 3, 3, 35, 4, 3,
-            2, 33, 4, 5, 6,
-        ],
+        input: [2, 2, 2, 2, 3, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 2, 2, 2, 3, 4, 3, 3, 3, 35, 4, 3, 2, 33, 4, 5, 6],
         expected: 55,
     },
 ];
@@ -716,19 +713,7 @@ export const findWordsTestData = [
                 ['i', 'h', 'k', 'r'],
                 ['i', 'f', 'l', 'v'],
             ],
-            words: [
-                'oath',
-                'pea',
-                'eat',
-                'rain',
-                'oathi',
-                'oathk',
-                'oathf',
-                'oate',
-                'oathii',
-                'oathfi',
-                'oathfii',
-            ],
+            words: ['oath', 'pea', 'eat', 'rain', 'oathi', 'oathk', 'oathf', 'oate', 'oathii', 'oathfi', 'oathfii'],
         },
         expected: ['oath', 'oathf', 'oathfi', 'oathfii', 'oathi', 'oathii', 'oathk', 'oate', 'eat'],
     },
@@ -774,10 +759,7 @@ export const getMinValueTestData = [
         expected: 0,
     },
     {
-        input: [
-            3, 4, 5, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3,
-        ],
+        input: [3, 4, 5, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
         expected: 0,
     },
     {
@@ -2021,5 +2003,20 @@ export const findSubstringInWrapRoundStringTestData = [
     {
         input: 'cac',
         expected: 2,
+    },
+];
+
+export const numTilePossibilitiesTestData = [
+    {
+        input: 'AAB',
+        expected: 8,
+    },
+    {
+        input: 'AAABBC',
+        expected: 188,
+    },
+    {
+        input: 'C',
+        expected: 1,
     },
 ];

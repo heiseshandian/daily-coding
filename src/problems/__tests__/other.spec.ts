@@ -68,6 +68,7 @@ import {
     minCameraCover2,
     minEatingSpeed,
     minWindow,
+    numTilePossibilities,
     reverseBetween,
     reverseBits,
     reverseBits2,
@@ -139,6 +140,7 @@ import {
     rotateRightTestData,
     reversePairsTestData,
     leastWaitingTimeTestData,
+    numTilePossibilitiesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -835,5 +837,9 @@ describe('other', () => {
     it.each(findSubstringInWrapRoundStringTestData)('findSubstringInWrapRoundString', ({ input, expected }) => {
         expect(findSubstringInWrapRoundString(input)).toBe(expected);
         expect(findSubstringInWrapRoundString2(input)).toBe(expected);
+    });
+
+    it.each(numTilePossibilitiesTestData)('numTilePossibilities', ({ input, expected }) => {
+        expect(numTilePossibilities(input)).toBe(expected);
     });
 });

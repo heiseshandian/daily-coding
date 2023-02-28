@@ -6450,3 +6450,38 @@ function sufficientSubsetDfs(node: TreeNode | null, sum: number, limit: number):
 
     return canDeleteLeft && canDeleteRight;
 }
+
+/* 
+https://leetcode.com/problems/letter-tile-possibilities/description/
+
+You have n  tiles, where each tile has one letter tiles[i] printed on it.
+
+Return the number of possible non-empty sequences of letters you can make using the letters printed on those tiles.
+
+Input: tiles = "AAB"
+Output: 8
+Explanation: The possible sequences are "A", "B", "AA", "AB", "BA", "AAB", "ABA", "BAA".
+*/
+export function numTilePossibilities(tiles: string): number {
+    return numTilePossibilitiesProcess(tiles.split(''), 0);
+}
+
+function numTilePossibilitiesProcess(tiles: string[], i: number): number {
+    if (i === tiles.length) {
+        return 0;
+    }
+
+    const set: Set<string> = new Set();
+    let count = 0;
+    for (let k = i; k < tiles.length; k++) {
+        if (!set.has(tiles[k])) {
+            set.add(tiles[k]);
+
+            swap(tiles, i, k);
+            count += numTilePossibilitiesProcess(tiles, i + 1) + 1;
+            swap(tiles, i, k);
+        }
+    }
+
+    return count;
+}
