@@ -6567,6 +6567,7 @@ export function getMinBagsDp(n: number): number {
 
     for (let i = arr.length - 1; i >= 0; i--) {
         for (let rest = 0; rest <= n; rest++) {
+            // TODO: 存在枚举行为，待优化
             let count = Infinity;
             for (let k = 0; k <= Math.floor(rest / arr[i]); k++) {
                 const next = dp[i + 1][rest - k * arr[i]];
