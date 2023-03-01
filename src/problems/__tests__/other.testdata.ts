@@ -2066,3 +2066,34 @@ export const getMinBagsTestData = [
         expected: -1,
     },
 ];
+
+export const numSubMatrixSumTargetTestData = [
+    {
+        input: {
+            matrix: [
+                [0, 1, 0],
+                [1, 1, 1],
+                [0, 1, 0],
+            ],
+            target: 0,
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            matrix: [
+                [1, -1],
+                [-1, 1],
+            ],
+            target: 0,
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            matrix: [[904]],
+            target: 0,
+        },
+        expected: 0,
+    },
+];

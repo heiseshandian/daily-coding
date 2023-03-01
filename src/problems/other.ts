@@ -6606,3 +6606,63 @@ export function getMinBagsDp2(n: number): number {
 
     return dp[n];
 }
+
+/* 
+https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/description/
+Given a matrix and a target, return the number of non-empty submatrices that sum to target.
+
+A submatrix x1, y1, x2, y2 is the set of all cells matrix[x][y] with x1 <= x <= x2 and y1 <= y <= y2.
+
+Two submatrices (x1, y1, x2, y2) and (x1', y1', x2', y2') are different if they have some coordinate that is different: for example, if x1 != x1'.
+
+Input: matrix = [[0,1,0],[1,1,1],[0,1,0]], target = 0
+Output: 4
+Explanation: The four 1x1 submatrices that only contain 0.
+*/
+export function numSubMatrixSumTarget(matrix: number[][], target: number): number {
+    const prefixSum = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+
+    // 第0行
+    for (let j = 0; j < matrix[0].length; j++) {
+        prefixSum[0][j] = matrix[0][j];
+    }
+
+    for (let j = 0; j < matrix[0].length; j++) {
+        for (let i = 1; i < matrix.length; i++) {
+            prefixSum[i][j] = prefixSum[i - 1][j] + matrix[i][j];
+        }
+    }
+
+    let count = 0;
+    for (let i1 = 0; i1 < matrix.length; i1++) {
+        for (let i2 = i1; i2 < matrix.length; i2++) {
+            const sumArr = [];
+            for (let j = 0; j < matrix[0].length; j++) {
+                sumArr[j] = prefixSum[i2][j] - (i1 - 1 >= 0 ? prefixSum[i1 - 1][j] : 0);
+            }
+
+            count += numSubarraySumTarget(sumArr, target);
+        }
+    }
+
+    return count;
+}
+
+function numSubarraySumTarget(arr: number[], target: number): number {
+    // 某个前缀和出现了几次
+    const map: Map<number, number> = new Map();
+    map.set(0, 1);
+
+    let sum = 0;
+    let count = 0;
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i];
+        if (map.has(sum - target)) {
+            count += map.get(sum - target)!;
+        }
+
+        map.set(sum, (map.get(sum) || 0) + 1);
+    }
+
+    return count;
+}

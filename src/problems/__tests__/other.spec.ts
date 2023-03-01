@@ -71,6 +71,7 @@ import {
     minCameraCover2,
     minEatingSpeed,
     minWindow,
+    numSubMatrixSumTarget,
     numTilePossibilities,
     reverseBetween,
     reverseBits,
@@ -146,6 +147,7 @@ import {
     numTilePossibilitiesTestData,
     getMaxDiffTestData,
     getMinBagsTestData,
+    numSubMatrixSumTargetTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -857,5 +859,9 @@ describe('other', () => {
         expect(getMinBags(input)).toBe(expected);
         expect(getMinBagsDp(input)).toBe(expected);
         expect(getMinBagsDp2(input)).toBe(expected);
+    });
+
+    it.each(numSubMatrixSumTargetTestData)('numSubMatrixSumTarget', ({ input: { matrix, target }, expected }) => {
+        expect(numSubMatrixSumTarget(matrix, target)).toBe(expected);
     });
 });
