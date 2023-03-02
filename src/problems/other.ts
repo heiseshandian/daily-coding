@@ -6666,3 +6666,50 @@ function numSubarraySumTarget(arr: number[], target: number): number {
 
     return count;
 }
+
+/* 
+https://leetcode.com/problems/flip-columns-for-maximum-number-of-equal-rows/
+You are given an m x n binary matrix matrix.
+
+You can choose any number of columns in the matrix and flip every cell in that column (i.e., Change the value of the cell from 0 to 1 or vice versa).
+
+Return the maximum number of rows that have all values equal after some number of flips.
+
+通过分析可知通过翻转可以使得同行都是0或者1的数字有如下特点
+1) 两行相等 
+比如说 
+001
+001
+那么，一定可以同时翻转00或者同时翻转1来使得同行都是0或者1
+
+2) 两行正好相反
+001
+110
+那么我们可以通过翻转00和1来实现同行都是0或者1
+
+基于上面的分析我们可以构建特征字符串，如果一个字符与前面的字符相等我们用0表示，不等用1表示
+001->"001"
+110->"001"
+001->"001"
+001->"001"
+
+那么原问题就变成求特征字符串的出现次数，最多的就是我们想要的答案
+*/
+export function maxEqualRowsAfterFlips(matrix: number[][]): number {
+    const map: Map<string, number> = new Map();
+
+    for (let i = 0; i < matrix.length; i++) {
+        let str = '0';
+        for (let j = 1; j < matrix[0].length; j++) {
+            str += matrix[i][j] === matrix[i][j - 1] ? '0' : '1';
+        }
+        map.set(str, (map.get(str) || 0) + 1);
+    }
+
+    let max = 0;
+    for (const [, size] of map) {
+        max = Math.max(max, size);
+    }
+
+    return max;
+}

@@ -2097,3 +2097,28 @@ export const numSubMatrixSumTargetTestData = [
         expected: 0,
     },
 ];
+
+export const maxEqualRowsAfterFlipsTestData = [
+    {
+        input: [
+            [0, 1],
+            [1, 1],
+        ],
+        expected: 1,
+    },
+    {
+        input: [
+            [0, 1],
+            [1, 0],
+        ],
+        expected: 2,
+    },
+    {
+        input: [
+            [0, 0, 0],
+            [0, 0, 1],
+            [1, 1, 0],
+        ],
+        expected: 2,
+    },
+];

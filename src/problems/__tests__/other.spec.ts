@@ -63,6 +63,7 @@ import {
     leastWaitingTime,
     lengthOfLongestSubstring,
     longestValidParentheses,
+    maxEqualRowsAfterFlips,
     maxRunTime,
     maxUncrossedLines,
     mergeStones,
@@ -148,6 +149,7 @@ import {
     getMaxDiffTestData,
     getMinBagsTestData,
     numSubMatrixSumTargetTestData,
+    maxEqualRowsAfterFlipsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -863,5 +865,9 @@ describe('other', () => {
 
     it.each(numSubMatrixSumTargetTestData)('numSubMatrixSumTarget', ({ input: { matrix, target }, expected }) => {
         expect(numSubMatrixSumTarget(matrix, target)).toBe(expected);
+    });
+
+    it.each(maxEqualRowsAfterFlipsTestData)('maxEqualRowsAfterFlips', ({ input, expected }) => {
+        expect(maxEqualRowsAfterFlips(input)).toBe(expected);
     });
 });
