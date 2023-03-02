@@ -6713,3 +6713,31 @@ export function maxEqualRowsAfterFlips(matrix: number[][]): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/is-subsequence/description/
+
+Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+
+A subsequence of a string is a new string that is formed from the original string by deleting some 
+(can be none) of the characters without disturbing the relative positions of the remaining characters. 
+(i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+
+本题直接从左到右遍历即可，两个都不回退，不用动态规划
+*/
+export function isSubsequence(s: string, t: string): boolean {
+    if (s.length === 0 || t.length === 0) {
+        return t.length >= s.length;
+    }
+
+    let sIndex = 0;
+    let tIndex = 0;
+    while (sIndex < s.length && tIndex < t.length) {
+        if (s[sIndex] === t[tIndex]) {
+            sIndex++;
+        }
+        tIndex++;
+    }
+
+    return sIndex === s.length;
+}
