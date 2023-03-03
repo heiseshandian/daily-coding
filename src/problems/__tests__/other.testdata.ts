@@ -2122,3 +2122,38 @@ export const maxEqualRowsAfterFlipsTestData = [
         expected: 2,
     },
 ];
+
+export const maxSquareSideLengthTestData = [
+    {
+        input: [
+            [0, 1, 1, 1],
+            [0, 1, 1, 1],
+        ],
+        expected: 2,
+    },
+    {
+        input: [
+            [0, 0, 0, 1],
+            [0, 1, 1, 1],
+        ],
+        expected: 0,
+    },
+    {
+        input: [
+            [1, 1, 1, 1],
+            [1, 1, 0, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+        ],
+        expected: 4,
+    },
+    {
+        input: [
+            [0, 1, 1, 1],
+            [1, 1, 0, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+        ],
+        expected: 3,
+    },
+];

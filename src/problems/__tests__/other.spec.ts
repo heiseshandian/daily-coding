@@ -65,6 +65,7 @@ import {
     longestValidParentheses,
     maxEqualRowsAfterFlips,
     maxRunTime,
+    maxSquareSideLength,
     maxUncrossedLines,
     mergeStones,
     MessageBox,
@@ -280,7 +281,11 @@ import {
     findSubstringInWrapRoundString,
     findSubstringInWrapRoundString2,
 } from '../other';
-import { maxRunTimeTestData, findSubstringInWrapRoundStringTestData } from './other.testdata';
+import {
+    maxRunTimeTestData,
+    findSubstringInWrapRoundStringTestData,
+    maxSquareSideLengthTestData,
+} from './other.testdata';
 import { getMinBagsDp2 } from '../other';
 
 describe('other', () => {
@@ -869,5 +874,9 @@ describe('other', () => {
 
     it.each(maxEqualRowsAfterFlipsTestData)('maxEqualRowsAfterFlips', ({ input, expected }) => {
         expect(maxEqualRowsAfterFlips(input)).toBe(expected);
+    });
+
+    it.each(maxSquareSideLengthTestData)('maxSquareSideLength', ({ input, expected }) => {
+        expect(maxSquareSideLength(input)).toBe(expected);
     });
 });

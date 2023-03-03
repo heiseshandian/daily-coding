@@ -6741,3 +6741,61 @@ export function isSubsequence(s: string, t: string): boolean {
 
     return sIndex === s.length;
 }
+
+/* 
+给定一个N×N的矩阵matrix，在这个矩阵中，只有0和1两种值，返回边框全是1的最大正方形的边长长度。
+
+例如 
+0 1 1 1
+0 1 0 1
+0 1 1 1
+
+边框全是1的最大正方形的边长是3
+
+利用预处理结构优化时间复杂度
+*/
+export function maxSquareSideLength(matrix: number[][]): number {
+    // 某个位置包含自身右侧有多少个连续的1
+    const rightOnes = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+    // 某个位置包含自身下侧有多少个连续的1
+    const downOnes = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+
+    for (let i = matrix.length - 1; i >= 0; i--) {
+        for (let j = matrix[0].length - 1; j >= 0; j--) {
+            const right = j + 1 < matrix[0].length ? rightOnes[i][j + 1] : 0;
+            const down = i + 1 < matrix.length ? downOnes[i + 1][j] : 0;
+
+            rightOnes[i][j] = matrix[i][j] === 1 ? right + 1 : 0;
+            downOnes[i][j] = matrix[i][j] === 1 ? down + 1 : 0;
+        }
+    }
+
+    let max = 0;
+    // 暴力遍历每个位置能否作为大正方形的左上角
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 0) {
+                continue;
+            }
+
+            const top = rightOnes[i][j];
+            const left = downOnes[i][j];
+            const maxLen = Math.min(top, left);
+            // 不考虑只有一个1的场景，边长至少要是2才能组成一个正方形
+            if (maxLen < 2) {
+                continue;
+            }
+
+            for (let len = 2; len <= maxLen; len++) {
+                const right = downOnes[i][j + len - 1];
+                const down = rightOnes[i + len - 1][j];
+
+                if (right >= len && down >= len) {
+                    max = Math.max(max, len);
+                }
+            }
+        }
+    }
+
+    return max;
+}
