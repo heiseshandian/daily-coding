@@ -5267,6 +5267,8 @@ export function getMaxArrOf2PartsMin(arr: number[]): number[] {
         prefixSum[i] = prefixSum[i - 1] + arr[i];
 
         // 从split位置往右尝试扩大min的值
+        // 因为数组都是正数，所以往右的过程中两部分中较小的部分必然是扩大的
+        // 具备单调性，所以上一次切割的位置是不回退的
         let k = split;
         let found = split;
         let newMin = leftMaxOfMin[i - 1];
@@ -5703,9 +5705,6 @@ Input: nums = [1,1,5]
 Output: [1,5,1]
 */
 export function nextPermutation(nums: number[]): void {
-    // 注：数组的sort默认按第一位来排序，要实现数据从小到大排列需要自己实现
-    const comparator = (a: number, b: number) => a - b;
-
     for (let i = nums.length - 1; i > 0; i--) {
         // 找到第一个后面的数比前面大的位置比如说[1,3,2]，3就是这里的i位置
         if (nums[i] > nums[i - 1]) {
