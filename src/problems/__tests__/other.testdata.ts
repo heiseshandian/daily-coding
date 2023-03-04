@@ -2196,3 +2196,46 @@ export const productTestData = [
         expected: [6, 0, 0, 0],
     },
 ];
+
+export const countSubArraysTestData = [
+    {
+        input: { arr: [84, 20, 54, 40, 30, 63, 94, 5, 45, 48, 49], num: 23 },
+        expected: 16,
+    },
+    {
+        input: { arr: [17, 57, 90, 69, 56, 30, 29, 40, 47, 27, 21], num: 8 },
+        expected: 14,
+    },
+    {
+        input: { arr: [26, 78, 43, 75, 23, 82, 83, 56, 41, 100, 23], num: 1 },
+        expected: 12,
+    },
+    {
+        input: { arr: [91, 66, 90, 15, 33, 87, 72, 60, 86, 79, 100], num: 14 },
+        expected: 13,
+    },
+    {
+        input: { arr: [60, 39, 4, 15, 47, 53, 84, 38, 72, 89, 72], num: 30 },
+        expected: 17,
+    },
+    {
+        input: { arr: [28, 53, 79, 81, 6, 58, 79, 14, 10, 67, 3], num: 15 },
+        expected: 13,
+    },
+    {
+        input: { arr: [43, 100, 46, 51, 84, 73, 78, 62, 43, 65, 96], num: 22 },
+        expected: 21,
+    },
+    {
+        input: { arr: [25, 68, 45, 17, 65, 93, 9, 63, 30, 18, 53], num: 28 },
+        expected: 15,
+    },
+    {
+        input: { arr: [23, 4, 83, 38, 4, 21, 35, 38, 65, 39, 33], num: 22 },
+        expected: 17,
+    },
+    {
+        input: { arr: [8, 64, 91, 39, 10, 83, 47, 13, 70, 30, 34], num: 11 },
+        expected: 12,
+    },
+];

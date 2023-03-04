@@ -2878,7 +2878,7 @@ export function getMinValue(arr: number[]): number {
 滑动窗口来做
 */
 export function getMaxProfit(arr: number[]): number {
-    const minSlidingWindow = new SlidingWindow(arr, (last, right) => right - last);
+    const minSlidingWindow = new SlidingWindow(arr, (last, right) => last - right);
     let max = -Infinity;
 
     for (let i = 0; i < arr.length; i++) {
@@ -6861,4 +6861,65 @@ export function product2(arr: number[]): number[] {
     result[0] = tmp;
 
     return result;
+}
+
+/* 
+给定数组 arr 和整数 num，共返回有多少个子数组满足如下情况：
+max(arr[i..j])-min(arr[i..j])<=num
+max（arr【i..j】）表示子数组 arr【i..j】中的最大值，min（arr【i..j】）表示子数组arr【i..j】中的最小值。
+【要求】
+如果数组长度为 N，请实现时间复杂度为 0（N）的解法。
+*/
+export function countSubArrays(arr: number[], num: number): number {
+    const qMax = new SlidingWindow(arr);
+    const qMin = new SlidingWindow(arr, (last, right) => last - right);
+
+    qMax.moveRight();
+    qMin.moveRight();
+
+    let count = 0;
+    while (qMax.right < arr.length) {
+        const max = qMax.peek();
+        const min = qMin.peek();
+
+        if (max - min > num) {
+            // 必须以left+1开头的情况下有多少个子数组达标
+            count += qMax.right - qMax.left - 1;
+
+            qMax.moveLeft();
+            qMin.moveLeft();
+        } else {
+            qMax.moveRight();
+            qMin.moveRight();
+        }
+    }
+
+    // 最后剩下的数字不管怎么组合都是符合要求的，直接按照以每一个left开头来计算总的子数组数
+    let k = qMax.right - qMax.left - 1;
+    while (k > 0) {
+        count += k;
+        k--;
+    }
+
+    return count;
+}
+
+export function countSubArrays2(arr: number[], num: number): number {
+    let count = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+        let max = arr[i];
+        let min = arr[i];
+
+        for (let j = i; j < arr.length; j++) {
+            max = Math.max(max, arr[j]);
+            min = Math.min(min, arr[j]);
+
+            if (max - min <= num) {
+                count++;
+            }
+        }
+    }
+
+    return count;
 }

@@ -9,6 +9,7 @@ import {
     countJointMethodsDp2,
     countLostNumbers,
     countPrimes,
+    countSubArrays,
     distinctSubsequenceII,
     evaluationMethods,
     findKthLargest,
@@ -153,6 +154,7 @@ import {
     numSubMatrixSumTargetTestData,
     maxEqualRowsAfterFlipsTestData,
     productTestData,
+    countSubArraysTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -288,7 +290,7 @@ import {
     findSubstringInWrapRoundStringTestData,
     maxSquareSideLengthTestData,
 } from './other.testdata';
-import { getMinBagsDp2, product2 } from '../other';
+import { getMinBagsDp2, product2, countSubArrays2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -885,5 +887,10 @@ describe('other', () => {
     it.each(productTestData)('product', ({ input, expected }) => {
         expect(product(input)).toEqual(expected);
         expect(product2(input)).toEqual(expected);
+    });
+
+    it.each(countSubArraysTestData)('countSubArrays', ({ input: { arr, num }, expected }) => {
+        expect(countSubArrays(arr, num)).toBe(expected);
+        expect(countSubArrays2(arr, num)).toBe(expected);
     });
 });

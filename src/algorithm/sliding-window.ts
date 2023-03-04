@@ -19,23 +19,20 @@ export class SlidingWindow {
 
     comparator: Comparator;
 
-    // 双端队列，严格从大到小
+    // 双端队列（严格从小到大或者从大到小），默认从大到小，即窗口内最大值
     doubleQueue: number[] = [];
 
-    constructor(arr: number[], comparator: Comparator = (last, right) => last - right) {
+    constructor(arr: number[], comparator: Comparator = (last, right) => right - last) {
         this.arr = arr;
         this.comparator = comparator;
     }
 
     public moveRight() {
-        if (this.right + 1 >= this.arr.length) {
-            return;
-        }
         this.right++;
 
         while (this.doubleQueue.length !== 0) {
             const last = this.doubleQueue[this.doubleQueue.length - 1];
-            if (this.comparator(this.arr[last], this.arr[this.right]) > 0) {
+            if (this.comparator(this.arr[last], this.arr[this.right]) < 0) {
                 break;
             }
             this.doubleQueue.length--;
