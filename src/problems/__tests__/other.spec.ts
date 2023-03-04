@@ -75,6 +75,7 @@ import {
     minWindow,
     numSubMatrixSumTarget,
     numTilePossibilities,
+    product,
     reverseBetween,
     reverseBits,
     reverseBits2,
@@ -151,6 +152,7 @@ import {
     getMinBagsTestData,
     numSubMatrixSumTargetTestData,
     maxEqualRowsAfterFlipsTestData,
+    productTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -286,7 +288,7 @@ import {
     findSubstringInWrapRoundStringTestData,
     maxSquareSideLengthTestData,
 } from './other.testdata';
-import { getMinBagsDp2 } from '../other';
+import { getMinBagsDp2, product2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -878,5 +880,10 @@ describe('other', () => {
 
     it.each(maxSquareSideLengthTestData)('maxSquareSideLength', ({ input, expected }) => {
         expect(maxSquareSideLength(input)).toBe(expected);
+    });
+
+    it.each(productTestData)('product', ({ input, expected }) => {
+        expect(product(input)).toEqual(expected);
+        expect(product2(input)).toEqual(expected);
     });
 });

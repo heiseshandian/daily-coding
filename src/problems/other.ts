@@ -6799,3 +6799,67 @@ export function maxSquareSideLength(matrix: number[][]): number {
 
     return max;
 }
+
+/* 
+给定一个整型数组arr，返回不包含本位置值的累乘数组。
+例如，arr=[2，3，1，4]，返回[12，8，24，6]，即除自己外，其他位置上的累乘。
+
+分析，如果数组中有一个0则只有0位置上是其他位置的乘积，其他位置都是0，如果数组中有不止一个0则
+所有位置都是0
+*/
+export function product(arr: number[]): number[] {
+    if (!arr || arr.length === 0) {
+        return [];
+    }
+
+    let all = 1;
+    let zeroCount = 0;
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === 0) {
+            zeroCount++;
+        } else {
+            all *= arr[i];
+        }
+    }
+
+    const result: number[] = [];
+    if (zeroCount === 0) {
+        for (let i = 0; i < arr.length; i++) {
+            result[i] = all / arr[i];
+        }
+    } else if (zeroCount === 1) {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === 0) {
+                result[i] = all;
+            } else {
+                result[i] = 0;
+            }
+        }
+    } else {
+        for (let i = 0; i < arr.length; i++) {
+            result[i] = 0;
+        }
+    }
+
+    return result;
+}
+
+export function product2(arr: number[]): number[] {
+    if (!arr || arr.length === 0) {
+        return [];
+    }
+
+    const result: number[] = [arr[0]];
+    for (let i = 1; i < arr.length; i++) {
+        result[i] = result[i - 1] * arr[i];
+    }
+
+    let tmp = 1;
+    for (let i = arr.length - 1; i > 0; i--) {
+        result[i] = result[i - 1] * tmp;
+        tmp *= arr[i];
+    }
+    result[0] = tmp;
+
+    return result;
+}
