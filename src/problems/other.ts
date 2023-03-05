@@ -6923,3 +6923,20 @@ export function countSubArrays2(arr: number[], num: number): number {
 
     return count;
 }
+
+/* 
+370003796
+给定一个非负整数 N，返回 N！结果的末尾为0 的数量。
+例如：3！=6，结果的末尾没有0，则返回0。5！=120，结果的末尾有1个0，返回1。1000000000！，结果的末尾有24999998个0，返回24999998。
+
+分析，每个2和5组合可以得到10，n的阶乘中2的因子必然比5的因子更多，所以问题就转变成就n的阶乘中有多少个5的因子
+*/
+export function countZeros(n: number): number {
+    let count = 0;
+    while (n !== 0) {
+        count += Math.floor(n / 5);
+        n = Math.floor(n / 5);
+    }
+
+    return count;
+}

@@ -10,6 +10,7 @@ import {
     countLostNumbers,
     countPrimes,
     countSubArrays,
+    countZeros,
     distinctSubsequenceII,
     evaluationMethods,
     findKthLargest,
@@ -155,6 +156,7 @@ import {
     maxEqualRowsAfterFlipsTestData,
     productTestData,
     countSubArraysTestData,
+    countZerosTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -892,5 +894,9 @@ describe('other', () => {
     it.each(countSubArraysTestData)('countSubArrays', ({ input: { arr, num }, expected }) => {
         expect(countSubArrays(arr, num)).toBe(expected);
         expect(countSubArrays2(arr, num)).toBe(expected);
+    });
+
+    it.each(countZerosTestData)('countZeros', ({ input, expected }) => {
+        expect(countZeros(input)).toBe(expected);
     });
 });

@@ -2239,3 +2239,22 @@ export const countSubArraysTestData = [
         expected: 12,
     },
 ];
+
+export const countZerosTestData = [
+    {
+        input: 5,
+        expected: 1,
+    },
+    {
+        input: 3,
+        expected: 0,
+    },
+    {
+        input: 10,
+        expected: 2,
+    },
+    {
+        input: 1000000000,
+        expected: 249999998,
+    },
+];
