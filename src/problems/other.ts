@@ -6940,3 +6940,33 @@ export function countZeros(n: number): number {
 
     return count;
 }
+
+/* 
+给定一个非负整数 N，如果用二进制数表达 N！的结果，返回最低位的 1 在哪个位置上，认为最右的位置为位置0。
+例如：1！=1，最低位的1在0位置上。2！=2，最低位的1在1位置上。100000000！，最低
+位的1在999999987位置上。
+
+这道题本质上是在问n的阶乘中有几个2的因子，因为是用2进制来表达数字，每出现一个2的因子都会把最右侧的1往左移动一位
+*/
+export function getNumOfMostRightOne(n: number): number {
+    let count = 0;
+    while (n !== 0) {
+        count += Math.floor(n / 2);
+        n = Math.floor(n / 2);
+    }
+
+    return count;
+}
+
+export function getNumOfMostRightOne2(n: number): number {
+    const num = n;
+    let ones = 0;
+
+    while (n !== 0) {
+        const mostRightOne = n & (~n + 1);
+        ones++;
+        n -= mostRightOne;
+    }
+
+    return num - ones;
+}

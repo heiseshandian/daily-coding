@@ -2258,3 +2258,18 @@ export const countZerosTestData = [
         expected: 249999998,
     },
 ];
+
+export const getNumOfMostRightOneTestData = [
+    {
+        input: 1000000000,
+        expected: 999999987,
+    },
+    {
+        input: 1,
+        expected: 0,
+    },
+    {
+        input: 2,
+        expected: 1,
+    },
+];

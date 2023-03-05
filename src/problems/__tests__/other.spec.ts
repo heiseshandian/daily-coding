@@ -157,6 +157,7 @@ import {
     productTestData,
     countSubArraysTestData,
     countZerosTestData,
+    getNumOfMostRightOneTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -292,7 +293,7 @@ import {
     findSubstringInWrapRoundStringTestData,
     maxSquareSideLengthTestData,
 } from './other.testdata';
-import { getMinBagsDp2, product2, countSubArrays2 } from '../other';
+import { getMinBagsDp2, product2, countSubArrays2, getNumOfMostRightOne, getNumOfMostRightOne2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -898,5 +899,10 @@ describe('other', () => {
 
     it.each(countZerosTestData)('countZeros', ({ input, expected }) => {
         expect(countZeros(input)).toBe(expected);
+    });
+
+    it.each(getNumOfMostRightOneTestData)('getNumOfMostRightOne', ({ input, expected }) => {
+        expect(getNumOfMostRightOne(input)).toBe(expected);
+        expect(getNumOfMostRightOne2(input)).toBe(expected);
     });
 });
