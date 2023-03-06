@@ -2273,3 +2273,20 @@ export const getNumOfMostRightOneTestData = [
         expected: 1,
     },
 ];
+
+export const getMinTimeOfDrawingTestData = [
+    {
+        input: {
+            arr: [3, 1, 4],
+            num: 2,
+        },
+        expected: 4,
+    },
+    {
+        input: {
+            arr: [1, 1, 1, 3, 1, 4],
+            num: 3,
+        },
+        expected: 4,
+    },
+];

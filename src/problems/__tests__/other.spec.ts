@@ -58,6 +58,7 @@ import {
     getMinSubArrThatShouldBeSorted,
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
+    getMinTimeOfDrawing,
     getSubsequenceWithBiggestDictionarySequence,
     getSumOfMatrix,
     getValidParentheses,
@@ -158,6 +159,7 @@ import {
     countSubArraysTestData,
     countZerosTestData,
     getNumOfMostRightOneTestData,
+    getMinTimeOfDrawingTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -904,5 +906,9 @@ describe('other', () => {
     it.each(getNumOfMostRightOneTestData)('getNumOfMostRightOne', ({ input, expected }) => {
         expect(getNumOfMostRightOne(input)).toBe(expected);
         expect(getNumOfMostRightOne2(input)).toBe(expected);
+    });
+
+    it.each(getMinTimeOfDrawingTestData)('getMinTimeOfDrawing', ({ input: { arr, num }, expected }) => {
+        expect(getMinTimeOfDrawing(arr, num)).toBe(expected);
     });
 });

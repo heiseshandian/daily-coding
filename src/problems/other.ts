@@ -6970,3 +6970,47 @@ export function getNumOfMostRightOne2(n: number): number {
 
     return num - ones;
 }
+
+/* 
+给定一个整型数组 arr，数组中的每个值都为正数，表示完成一幅画作需要的时间，再给定 一个整数 num，
+表示画匠的数量，每个画匠只能画连在一起的画作。所有的画家并行工作，请 返回完成所有的画作需要的最少时间。
+
+【举例】
+arr=[3,1,4], num=2。
+最好的分配方式为第一个画匠画3和1，所需时间为4。第二个画匠画 4，所需时间为4。因为并行工作，所以最少时间为4。
+如果分配方式为第一个画匠画3，所需时间为3。第二个画 匠画1和 4，所需的时间为5。那么最少时间为5，显然没有第一种分配方式好。所以返回 4。
+
+arr=[1,1,1,4,3], num=3。
+最好的分配方式为第一个画匠画前三个1，所需时间为3。第二个画匠画4，所需时间为 4。第三个画匠画 3，所需时间为 3。返回 4。
+*/
+export function getMinTimeOfDrawing(arr: number[], num: number): number {
+    // dp[i][j] 0-j的画由0-j的画师来负责
+    const dp: number[][] = new Array(arr.length).fill(0).map((_) => new Array(num).fill(0));
+    // 第0行
+    for (let j = 0; j < num; j++) {
+        dp[0][j] = arr[0];
+    }
+
+    const prefixSum = [arr[0]];
+    // 第0列
+    for (let i = 1; i < arr.length; i++) {
+        dp[i][0] = dp[i - 1][0] + arr[i];
+        prefixSum[i] = prefixSum[i - 1] + arr[i];
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i < arr.length; i++) {
+        for (let j = 1; j < num; j++) {
+            // j号画师负责1,2,3,4...画作
+            dp[i][j] = Infinity;
+            for (let k = i; k >= 0; k--) {
+                dp[i][j] = Math.min(
+                    dp[i][j],
+                    Math.max(prefixSum[i] - (k === 0 ? 0 : prefixSum[k - 1]), k === 0 ? 0 : dp[k - 1][j - 1])
+                );
+            }
+        }
+    }
+
+    return dp[arr.length - 1][num - 1];
+}
