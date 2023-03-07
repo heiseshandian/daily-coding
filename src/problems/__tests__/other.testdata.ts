@@ -2365,3 +2365,27 @@ export const divideTestData = [
         expected: -2147483648,
     },
 ];
+
+export const wildcardMatchTestData = [
+    {
+        input: {
+            s: 'aa',
+            p: 'a',
+        },
+        expected: false,
+    },
+    {
+        input: {
+            s: 'aa',
+            p: '*',
+        },
+        expected: true,
+    },
+    {
+        input: {
+            s: 'cb',
+            p: '?a',
+        },
+        expected: false,
+    },
+];

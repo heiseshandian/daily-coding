@@ -161,6 +161,7 @@ import {
     countZerosTestData,
     getNumOfMostRightOneTestData,
     getMinTimeOfDrawingTestData,
+    wildcardMatchTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -296,7 +297,14 @@ import {
     findSubstringInWrapRoundStringTestData,
     maxSquareSideLengthTestData,
 } from './other.testdata';
-import { getMinBagsDp2, product2, countSubArrays2, getNumOfMostRightOne, getNumOfMostRightOne2 } from '../other';
+import {
+    getMinBagsDp2,
+    product2,
+    countSubArrays2,
+    getNumOfMostRightOne,
+    getNumOfMostRightOne2,
+    wildcardMatch,
+} from '../other';
 import { divideTestData } from './other.testdata';
 
 describe('other', () => {
@@ -916,5 +924,9 @@ describe('other', () => {
 
     it.each(divideTestData)('divide', ({ input: { dividend, divisor }, expected }) => {
         expect(divide(dividend, divisor)).toBe(expected);
+    });
+
+    it.each(wildcardMatchTestData)('wildcardMatch', ({ input: { s, p }, expected }) => {
+        expect(wildcardMatch(s, p)).toBe(expected);
     });
 });

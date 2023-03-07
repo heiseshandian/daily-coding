@@ -7078,3 +7078,63 @@ function multi(a: number, times: number): number {
         return tmp + tmp;
     }
 }
+
+/* 
+https://leetcode.com/problems/wildcard-matching/description/
+
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+*/
+export function wildcardMatch(s: string, p: string): boolean {
+    if (s.length === 0) {
+        return isAllAsterisk(p) || p.length === 0;
+    }
+    if (p.length === 0) {
+        return false;
+    }
+
+    // dp[i][j] s[0-i]是否与p[0-j]匹配 返回dp[s.length-1][p.length-1]
+    const dp: boolean[][] = new Array(s.length).fill(0).map((_) => new Array(p.length).fill(false));
+    dp[0][0] = isEqual(s[0], p[0]);
+
+    // 第0行
+    for (let j = 1; j < p.length; j++) {
+        if (dp[0][j - 1] === false) {
+            break;
+        }
+
+        dp[0][j] = p[j] === '*' || (isAllAsterisk(p.slice(0, j)) && isEqual(s[0], p[j]));
+    }
+
+    // 第0列
+    for (let i = 1; i < s.length; i++) {
+        if (p[0] === '*') {
+            dp[i][0] = true;
+        }
+    }
+
+    // 此处故意先遍历列再遍历行，用于优化枚举行为
+    for (let j = 1; j < p.length; j++) {
+        for (let i = 1; i < s.length; i++) {
+            if (p[j] !== '*') {
+                dp[i][j] = dp[i - 1][j - 1] && isEqual(s[i], p[j]);
+            } else {
+                // 通过观察优化枚举行为
+                dp[i][j] = dp[i][j - 1] || dp[i - 1][j];
+            }
+        }
+    }
+
+    return dp[s.length - 1][p.length - 1];
+}
+
+function isEqual(s: string, p: string) {
+    return s === p || (s && p === '?') || p === '*';
+}
+
+function isAllAsterisk(p: string) {
+    return /^\*+$/.test(p);
+}
