@@ -306,6 +306,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData } from './other.testdata';
+import { wildcardMatch2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -928,5 +929,6 @@ describe('other', () => {
 
     it.each(wildcardMatchTestData)('wildcardMatch', ({ input: { s, p }, expected }) => {
         expect(wildcardMatch(s, p)).toBe(expected);
+        expect(wildcardMatch2(s, p)).toBe(expected);
     });
 });
