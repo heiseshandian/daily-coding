@@ -12,6 +12,7 @@ import {
     countSubArrays,
     countZeros,
     distinctSubsequenceII,
+    divide,
     evaluationMethods,
     findKthLargest,
     findMinMoves,
@@ -296,6 +297,7 @@ import {
     maxSquareSideLengthTestData,
 } from './other.testdata';
 import { getMinBagsDp2, product2, countSubArrays2, getNumOfMostRightOne, getNumOfMostRightOne2 } from '../other';
+import { divideTestData } from './other.testdata';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -910,5 +912,9 @@ describe('other', () => {
 
     it.each(getMinTimeOfDrawingTestData)('getMinTimeOfDrawing', ({ input: { arr, num }, expected }) => {
         expect(getMinTimeOfDrawing(arr, num)).toBe(expected);
+    });
+
+    it.each(divideTestData)('divide', ({ input: { dividend, divisor }, expected }) => {
+        expect(divide(dividend, divisor)).toBe(expected);
     });
 });

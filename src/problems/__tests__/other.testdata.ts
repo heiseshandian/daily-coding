@@ -2334,3 +2334,34 @@ export const getMinTimeOfDrawingTestData = [
         expected: 99,
     },
 ];
+
+export const divideTestData = [
+    {
+        input: {
+            dividend: 10,
+            divisor: 3,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            dividend: 7,
+            divisor: -3,
+        },
+        expected: -2,
+    },
+    {
+        input: {
+            dividend: -2147483648,
+            divisor: -1,
+        },
+        expected: 2147483647,
+    },
+    {
+        input: {
+            dividend: -2147483648,
+            divisor: 1,
+        },
+        expected: -2147483648,
+    },
+];

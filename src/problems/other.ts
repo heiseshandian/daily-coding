@@ -7014,3 +7014,67 @@ export function getMinTimeOfDrawing(arr: number[], num: number): number {
 
     return dp[arr.length - 1][num - 1];
 }
+
+/* 
+https://leetcode.com/problems/divide-two-integers/description/
+
+Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
+
+The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, 
+and -2.7335 would be truncated to -2.
+
+Return the quotient after dividing dividend by divisor.
+
+Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−231, 231 − 1]. 
+For this problem, if the quotient is strictly greater than 231 - 1, then return 231 - 1, and if the quotient is strictly less than -231, then return -231.
+*/
+const MAX_INT = Math.pow(2, 31) - 1;
+const MIN_INT = -Math.pow(2, 31);
+
+export function divide(dividend: number, divisor: number): number {
+    const pDividend = Math.abs(dividend);
+    const pDivisor = Math.abs(divisor);
+    if (pDividend < pDivisor) {
+        return 0;
+    }
+
+    let left = 1;
+    let right = pDividend;
+    let found = 1;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        const tmp = multi(pDivisor, mid);
+        if (tmp === pDividend) {
+            found = mid;
+            break;
+        }
+
+        if (tmp > pDividend) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+            found = mid;
+        }
+    }
+
+    return (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0)
+        ? found <= MAX_INT
+            ? found
+            : MAX_INT
+        : -found >= MIN_INT
+        ? -found
+        : MIN_INT;
+}
+
+function multi(a: number, times: number): number {
+    if (times === 1) {
+        return a;
+    }
+
+    const tmp = multi(a, times >>> 1);
+    if ((times & 1) === 1) {
+        return tmp + tmp + a;
+    } else {
+        return tmp + tmp;
+    }
+}
