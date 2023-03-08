@@ -2410,3 +2410,15 @@ export const minPathValueTestData = [
         expected: 8,
     },
 ];
+
+export const maxProfitsTestData = [
+    {
+        input: {
+            w: 3,
+            k: 2,
+            costs: [5, 4, 1, 2],
+            profits: [3, 5, 3, 2],
+        },
+        expected: 11,
+    },
+];

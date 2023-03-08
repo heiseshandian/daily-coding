@@ -164,6 +164,7 @@ import {
     getMinTimeOfDrawingTestData,
     wildcardMatchTestData,
     minPathValueTestData,
+    maxProfitsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -308,7 +309,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData } from './other.testdata';
-import { wildcardMatch2 } from '../other';
+import { wildcardMatch2, maxProfits } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -936,5 +937,9 @@ describe('other', () => {
 
     it.each(minPathValueTestData)('minPathValue', ({ input, expected }) => {
         expect(minPathValue(input)).toBe(expected);
+    });
+
+    it.each(maxProfitsTestData)('maxProfits', ({ input: { w, k, costs, profits }, expected }) => {
+        expect(maxProfits(costs, profits, w, k)).toBe(expected);
     });
 });

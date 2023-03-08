@@ -7200,3 +7200,42 @@ export function minPathValue(matrix: number[][]): number {
 
     return map[matrix.length - 1][matrix[0].length - 1];
 }
+
+/* 
+给定两个整数W和K，W代表你拥有的初始资金，K代表你最多可以做K个项目。再给定两个长度为N的正数数组costs[]和profits[]，
+代表一共有N个项目，costs[i]和profits[i]分别表示第i号项目的启动资金与做完后的利润
+（注意是利润，如果一个项目启动资金为10，利润为4，代表该项目最终的收入为 14）。
+你不能并行只能串行地做项目，并且手里拥有的资金大于或等于某个项目的启动资金时，你才能做这个项目。
+该如何选择做项目，能让你最终的收益最大？返回最后能获得的最大资金。
+
+举例
+w:3
+k:2
+costs:[5,4,1,2]
+profits:[3,5,3,2]
+
+初始资金为3，最多做2个项目，每个项目的启动资金与利润见costs和profits。最优选择为：先做2号项目，
+做完之后资金增长到6。然后做1号项目，做完之后资金增长到11。其他的任何选择都不会比这种选择好，所以返回11。
+*/
+export function maxProfits(costs: number[], profits: number[], w: number, k: number): number {
+    const arr: Array<[cost: number, profit: number]> = [];
+    for (let i = 0; i < costs.length; i++) {
+        arr.push([costs[i], profits[i]]);
+    }
+
+    // 按照利润从大到小排列
+    arr.sort(([, aProfit], [, bProfit]) => bProfit - aProfit);
+
+    while (k-- > 0) {
+        for (let i = 0; i < arr.length; i++) {
+            const [cost, profit] = arr[i];
+            if (cost <= w) {
+                w += profit;
+                arr.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    return w;
+}
