@@ -42,6 +42,10 @@ export class GenericHeap<T = number> {
         return result;
     }
 
+    public peek() {
+        return this.#container[0];
+    }
+
     #insertHeap(i: number) {
         while (i) {
             let parent = (i - 1) >> 1;

@@ -7239,3 +7239,28 @@ export function maxProfits(costs: number[], profits: number[], w: number, k: num
 
     return w;
 }
+
+export function maxProfits2(costs: number[], profits: number[], w: number, k: number): number {
+    const minCostHeap = new GenericHeap<[cost: number, profit: number]>(([aCost], [bCost]) => aCost - bCost);
+    const maxProfitHeap = new GenericHeap<[cost: number, profit: number]>(
+        ([, aProfit], [, bProfit]) => bProfit - aProfit
+    );
+
+    for (let i = 0; i < costs.length; i++) {
+        minCostHeap.push([costs[i], profits[i]]);
+    }
+
+    while (k-- > 0) {
+        while (!minCostHeap.isEmpty() && minCostHeap.peek()[0] <= w) {
+            maxProfitHeap.push(minCostHeap.pop());
+        }
+
+        if (!maxProfitHeap.isEmpty()) {
+            w += maxProfitHeap.pop()[1];
+        } else {
+            return w;
+        }
+    }
+
+    return w;
+}
