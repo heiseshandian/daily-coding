@@ -7167,3 +7167,36 @@ export function wildcardMatch2(s: string, p: string): boolean {
     }
     return j === p.length;
 }
+
+/* 
+用一个整型矩阵matrix表示一个网络，1代表有路，0代表无路，
+每一个位置只要不越界，都有上下左右4个方向，求从最左上角到最右下角的最短通路值。
+
+借助队列来做宽度优先遍历
+*/
+export function minPathValue(matrix: number[][]): number {
+    const queue = new Queue<[x: number, y: number]>();
+    const map: number[][] = new Array(matrix.length).fill(0).map((_) => new Array(matrix[0].length).fill(0));
+    queue.add([0, 0]);
+    map[0][0] = 1;
+
+    const add = (x: number, y: number, distance: number) => {
+        if (x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length && map[x][y] === 0 && matrix[x][y] === 1) {
+            queue.add([x, y]);
+            map[x][y] = distance + 1;
+        }
+    };
+
+    while (!queue.isEmpty()) {
+        const [x, y] = queue.poll()!;
+        const distance = map[x][y];
+
+        // 上下左右四个方向入队列
+        add(x - 1, y, distance);
+        add(x + 1, y, distance);
+        add(x, y - 1, distance);
+        add(x, y + 1, distance);
+    }
+
+    return map[matrix.length - 1][matrix[0].length - 1];
+}

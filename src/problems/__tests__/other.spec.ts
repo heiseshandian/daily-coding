@@ -76,6 +76,7 @@ import {
     minCameraCover,
     minCameraCover2,
     minEatingSpeed,
+    minPathValue,
     minWindow,
     numSubMatrixSumTarget,
     numTilePossibilities,
@@ -162,6 +163,7 @@ import {
     getNumOfMostRightOneTestData,
     getMinTimeOfDrawingTestData,
     wildcardMatchTestData,
+    minPathValueTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -930,5 +932,9 @@ describe('other', () => {
     it.each(wildcardMatchTestData)('wildcardMatch', ({ input: { s, p }, expected }) => {
         expect(wildcardMatch(s, p)).toBe(expected);
         expect(wildcardMatch2(s, p)).toBe(expected);
+    });
+
+    it.each(minPathValueTestData)('minPathValue', ({ input, expected }) => {
+        expect(minPathValue(input)).toBe(expected);
     });
 });

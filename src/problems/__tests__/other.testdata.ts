@@ -2389,3 +2389,24 @@ export const wildcardMatchTestData = [
         expected: false,
     },
 ];
+
+export const minPathValueTestData = [
+    {
+        input: [
+            [1, 0, 1, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 0, 1],
+            [1, 0, 1, 0, 1],
+        ],
+        expected: 12,
+    },
+    {
+        input: [
+            [1, 0, 1, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 0, 1],
+            [1, 1, 1, 1, 1],
+        ],
+        expected: 8,
+    },
+];
