@@ -75,6 +75,7 @@ import {
     MessageBox,
     minCameraCover,
     minCameraCover2,
+    minCostOfCuttingGold,
     minEatingSpeed,
     minPathValue,
     minWindow,
@@ -165,6 +166,7 @@ import {
     wildcardMatchTestData,
     minPathValueTestData,
     maxProfitsTestData,
+    minCostOfCuttingGoldTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -309,7 +311,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData } from './other.testdata';
-import { wildcardMatch2, maxProfits, maxProfits2 } from '../other';
+import { wildcardMatch2, maxProfits, maxProfits2, minCostOfCuttingGold2 } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -942,5 +944,10 @@ describe('other', () => {
     it.each(maxProfitsTestData)('maxProfits', ({ input: { w, k, costs, profits }, expected }) => {
         expect(maxProfits(costs, profits, w, k)).toBe(expected);
         expect(maxProfits2(costs, profits, w, k)).toBe(expected);
+    });
+
+    it.each(minCostOfCuttingGoldTestData)('minCostOfCuttingGold', ({ input, expected }) => {
+        expect(minCostOfCuttingGold(input)).toBe(expected);
+        expect(minCostOfCuttingGold2(input)).toBe(expected);
     });
 });

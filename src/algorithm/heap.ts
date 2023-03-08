@@ -3,8 +3,13 @@ import { swap } from '../common';
 export class MaxHeap {
     #container: number[];
 
-    constructor() {
-        this.#container = [];
+    constructor(arr: number[] = []) {
+        // 此处用slice是为了避免堆调整时影响到arr
+        this.#container = arr.slice();
+
+        for (let i = this.#container.length - 1; i >= 0; i--) {
+            heapify(this.#container, i, this.#container.length);
+        }
     }
 
     public isEmpty() {
@@ -23,6 +28,10 @@ export class MaxHeap {
         heapify(this.#container, 0, this.#container.length);
 
         return result;
+    }
+
+    public size() {
+        return this.#container.length;
     }
 }
 

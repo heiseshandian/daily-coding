@@ -2422,3 +2422,14 @@ export const maxProfitsTestData = [
         expected: 11,
     },
 ];
+
+export const minCostOfCuttingGoldTestData = [
+    {
+        input: [10, 20, 30],
+        expected: 90,
+    },
+    {
+        input: [10, 20, 30, 5],
+        expected: 115,
+    },
+];

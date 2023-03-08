@@ -9,6 +9,7 @@ import { PrefixTree, PrefixTreeNode } from '../algorithm/prefix-tree';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { SingleLinkedList } from '../algorithm/linked-list';
 import { Stack } from '../algorithm/stack';
+import { MaxHeap } from '../algorithm/heap';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -7263,4 +7264,41 @@ export function maxProfits2(costs: number[], profits: number[], w: number, k: nu
     }
 
     return w;
+}
+
+/* 
+【题目】
+给定一个正数数组arr，arr的累加和代表金条的总长度，arr的每个数代表金条要分成的长度。规定长度为K的金条一次只能分成两块，费用为K个铜板。返回把金条分出arr中的每个数字需要的最小代价。
+【举例】
+arr={10，30，20}，金条总长度为60。
+如果先分成40和20两块，将花费60个铜板，再把长度为40的金条分成10和30两块，将花费40个铜板，总花费为100个铜板；
+如果先分成10和50两块，将花费60个铜板，再把长度为50的金条分成20和30两块，将花费50个铜板，总花费为110个铜板；
+如果先分成30和30两块，将花费60个铜板，再把其中一根长度为30的金条分成10和20两块，将花费30个铜板，总花费为90个铜板。所以返回最低花费为90。
+【要求】
+如果arr长度为N，时间复杂度为O（NlogN）。*/
+export function minCostOfCuttingGold(arr: number[]): number {
+    let sum = arr.reduce((acc, cur) => acc + cur, 0);
+    const maxHeap = new MaxHeap(arr);
+
+    let result = 0;
+    while (maxHeap.size() > 1) {
+        result += sum;
+        sum -= maxHeap.pop();
+    }
+
+    return result;
+}
+
+export function minCostOfCuttingGold2(arr: number[]): number {
+    const minHeap = new GenericHeap();
+    minHeap.initHeap(arr);
+
+    let result = 0;
+    while (minHeap.size() > 1) {
+        const tmp = minHeap.pop() + minHeap.pop();
+        result += tmp;
+        minHeap.push(tmp);
+    }
+
+    return result;
 }
