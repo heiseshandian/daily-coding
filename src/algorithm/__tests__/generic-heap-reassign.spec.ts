@@ -1,4 +1,4 @@
-import { GenericHeap } from '../generic-heap';
+import { GenericHeapWithReassign } from '../generic-heap-reassign';
 import { times } from '../../common/index';
 
 describe('GenericHeap', () => {
@@ -34,7 +34,7 @@ describe('GenericHeap', () => {
     ];
 
     it.each(testData)('GenericHeap %j', ({ input, expected }) => {
-        const heap = new GenericHeap((a: Entity, b: Entity) => b.prop2 - a.prop2);
+        const heap = new GenericHeapWithReassign((a: Entity, b: Entity) => b.prop2 - a.prop2);
 
         input.forEach((val) => heap.push(val));
         expect(times(input.length, () => heap.pop())).toEqual(expected);
@@ -55,7 +55,7 @@ describe('GenericHeap', () => {
             { prop1: 4, prop2: 2 },
         ];
 
-        const heap = new GenericHeap((a: Entity, b: Entity) => b.prop2 - a.prop2);
+        const heap = new GenericHeapWithReassign((a: Entity, b: Entity) => b.prop2 - a.prop2);
         input.forEach((val) => heap.push(val));
 
         input[0].prop2 = 10;

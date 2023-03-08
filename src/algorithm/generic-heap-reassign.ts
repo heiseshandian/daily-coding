@@ -1,9 +1,11 @@
 import { swap } from '../common';
 
-type Comparator<T = number> = (a: T, b: T) => number;
+type Comparator<T> = (a: T, b: T) => number;
 
-export class GenericHeap<T = number> {
+export class GenericHeapWithReassign<T> {
     #container: Array<T> = [];
+
+    #val2IndexMap: Map<T, number> = new Map();
 
     /* 关于比较器的约定
     1. 如果返回值小于0 则排在前面
@@ -11,16 +13,8 @@ export class GenericHeap<T = number> {
     3. 如果大于0则排在后面 */
     #comparator: Comparator<T>;
 
-    constructor(comparator: Comparator<T> = (a, b) => (a as number) - (b as number)) {
+    constructor(comparator: Comparator<T>) {
         this.#comparator = comparator;
-    }
-
-    public initHeap(arr: T[]) {
-        this.#container = arr;
-
-        for (let i = this.#container.length - 1; i >= 0; i--) {
-            this.#heapify(i);
-        }
     }
 
     public isEmpty() {
@@ -29,6 +23,7 @@ export class GenericHeap<T = number> {
 
     public push(val: T) {
         this.#container.push(val);
+        this.#val2IndexMap.set(val, this.#container.length - 1);
 
         this.#insertHeap(this.#container.length - 1);
     }
@@ -39,7 +34,18 @@ export class GenericHeap<T = number> {
         this.#container.length--;
         this.#heapify(0);
 
+        this.#val2IndexMap.delete(result);
+
         return result;
+    }
+
+    public reassign(val: T) {
+        const i = this.#val2IndexMap.get(val);
+
+        if (i !== undefined) {
+            this.#insertHeap(i);
+            this.#heapify(i);
+        }
     }
 
     #insertHeap(i: number) {
@@ -75,6 +81,9 @@ export class GenericHeap<T = number> {
     }
 
     #swap(i: number, j: number) {
+        this.#val2IndexMap.set(this.#container[i], j);
+        this.#val2IndexMap.set(this.#container[j], i);
+
         swap(this.#container, i, j);
     }
 }
