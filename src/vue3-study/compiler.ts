@@ -17,11 +17,17 @@ function isAlpha(char: string): boolean {
     return /[a-zA-Z]/.test(char);
 }
 
+interface Token {
+    type: TokenType;
+    name?: string;
+    content?: string;
+}
+
 function tokenize(str: string) {
     let currentState = State.Initial;
 
     const chars: string[] = [];
-    const tokens = [];
+    const tokens: Token[] = [];
 
     while (str) {
         const char = str[0];
