@@ -3,10 +3,15 @@
 提供一个替身对象来控制对这个对象的访问，客户实际上访问的是替身对象。 
 */
 const setSrc = (() => {
-    const imageNode = document.createElement('img');
-    document.body.appendChild(imageNode);
+    const getImageNode = once(() => {
+        const imageNode = document.createElement('img');
+        document.body.appendChild(imageNode);
+
+        return imageNode;
+    });
 
     return (src: string) => {
+        const imageNode = getImageNode();
         imageNode.src = src;
     };
 })();
@@ -14,14 +19,19 @@ const setSrc = (() => {
 // 代理对象的接口与原始对象的接口完全一致，日后网络情况改善去掉代理的时候也非常方便
 // 任何使用代理对象的地方都能透明的替换成原始对象
 const setSrcProxy = (() => {
-    const toPreloadRealImg = new Image();
-    toPreloadRealImg.onload = () => {
-        // 大图加载完毕后设置到页面上
-        setSrc(toPreloadRealImg.src);
-    };
+    const getImg = once(() => {
+        const toPreloadRealImg = new Image();
+        toPreloadRealImg.onload = () => {
+            // 大图加载完毕后设置到页面上
+            setSrc(toPreloadRealImg.src);
+        };
+
+        return toPreloadRealImg;
+    });
 
     return (src: string) => {
         // 利用内存中的img对象来加载实际大图
+        const toPreloadRealImg = getImg();
         toPreloadRealImg.src = src;
 
         // 显示一个加载中的菊花图
@@ -75,35 +85,39 @@ const loadScript = once((src: string) => {
     return script;
 });
 
-const miniConsoleProxy = (() => {
-    const cachedLogs = [];
+// const miniConsoleProxy = (() => {
+//     const cachedLogs = [];
 
-    const f12Handler = (e: KeyboardEvent) => {
-        if (e.key === 'F12') {
-            const script = loadScript('real miniConsole script path');
+//     const f12Handler = (e: KeyboardEvent) => {
+//         if (e.key === 'F12') {
+//             const script = loadScript('real miniConsole script path');
 
-            script.onload = () => {
-                for (let i = 0; i < cachedLogs.length; i++) {
-                    // 使用实际的miniConsole对象来打印日志
-                }
+//             script.onload = () => {
+//                 for (let i = 0; i < cachedLogs.length; i++) {
+//                     // 使用实际的miniConsole对象来打印日志
+//                 }
 
-                // 处理完后清空cache
-                cachedLogs.length = 0;
-            };
+//                 // 处理完后清空cache
+//                 cachedLogs.length = 0;
+//             };
 
-            document.body.removeEventListener('keydown', f12Handler);
-        }
-    };
+//             document.body.removeEventListener('keydown', f12Handler);
+//         }
+//     };
 
-    document.body.addEventListener('keydown', f12Handler, false);
+//     document.body.addEventListener('keydown', f12Handler, false);
 
-    return {
-        log(...args: string[]) {
-            // 如果实际miniConsole对象存在（说明miniConsole对象已加载），直接使用miniConsole对象来处理
-            // if (miniConsole) {
-            // } else {
-            //     cachedLogs.push(args);
-            // }
-        },
-    };
-})();
+//     return {
+//         log(...args: string[]) {
+//             // 如果实际miniConsole对象存在（说明miniConsole对象已加载），直接使用miniConsole对象来处理
+//             // if (miniConsole) {
+//             // } else {
+//             //     cachedLogs.push(args);
+//             // }
+//         },
+//     };
+// })();
+
+const multi = once((...args: number[]) => {
+    return args.reduce((acc, cur) => acc * cur, 1);
+});
