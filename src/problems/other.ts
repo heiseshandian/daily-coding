@@ -7314,9 +7314,9 @@ Input: strs = ["eat","tea","tan","ate","nat","bat"]
 Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
 */
 export function groupAnagrams(strs: string[]): string[][] {
-    let map = new Map<string, string[]>();
-    for (let str of strs) {
-        let sorted = str.split('').sort().join('');
+    const map = new Map<string, string[]>();
+    for (const str of strs) {
+        const sorted = str.split('').sort().join('');
         if (!map.has(sorted)) map.set(sorted, []);
         map.get(sorted)?.push(str);
     }
