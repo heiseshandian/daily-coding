@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            #app {
+                height: 100px;
+                width: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="registerForm" method="post">
+            请输入用户名：<input type="text" name="userName"/ > 请输入密码：<input type="password" name="password"/ >
+            请输入手机号码：<input type="text" name="phoneNumber"/ >
+            <button id="submit">提交</button>
+        </form>
+        ￼
+
+        <script type="module">
+            import { validate } from './build/strategy.js';
+
+            console.log(document.getElementsByName('userName')[0].value);
+
+            document.getElementById('submit').addEventListener('click', (e) => {
+                const errorMsg = validate([
+                    {
+                        type: 0,
+                        options: {
+                            value: document.getElementsByName('userName')[0].value,
+                            errorMsg: '用户名不能为空',
+                        },
+                    },
+                    {
+                        type: 0,
+                        options: {
+                            value: document.getElementsByName('password')[0].value,
+                            errorMsg: '密码不能为空',
+                        },
+                    },
+                    {
+                        type: 1,
+                        options: {
+                            value: document.getElementsByName('password')[0].value,
+                            length: 6,
+                            errorMsg: '密码不能少于6位数',
+                        },
+                    },
+                ]);
+
+                if (errorMsg) {
+                    alert(errorMsg);
+                    e.preventDefault();
+                    return false;
+                }
+
+                // just for test
+                e.preventDefault();
+                return false;
+            });
+        </script>
+    </body>
+</html>
