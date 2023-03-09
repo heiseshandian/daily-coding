@@ -167,6 +167,7 @@ import {
     minPathValueTestData,
     maxProfitsTestData,
     minCostOfCuttingGoldTestData,
+    groupAnagramsTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -311,7 +312,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData } from './other.testdata';
-import { wildcardMatch2, maxProfits, maxProfits2, minCostOfCuttingGold2 } from '../other';
+import { wildcardMatch2, maxProfits, maxProfits2, minCostOfCuttingGold2, groupAnagrams } from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -949,5 +950,13 @@ describe('other', () => {
     it.each(minCostOfCuttingGoldTestData)('minCostOfCuttingGold', ({ input, expected }) => {
         expect(minCostOfCuttingGold(input)).toBe(expected);
         expect(minCostOfCuttingGold2(input)).toBe(expected);
+    });
+
+    it.each(groupAnagramsTestData)('groupAnagrams', ({ input, expected }) => {
+        expect(
+            groupAnagrams(input)
+                .map((val) => val.sort())
+                .sort()
+        ).toEqual(expected.map((val) => val.sort()).sort());
     });
 });
