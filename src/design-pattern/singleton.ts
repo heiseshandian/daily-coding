@@ -21,16 +21,15 @@ document.getElementById('loginBtn')?.addEventListener('click', () => {
 });
 
 // 将管理单例的逻辑从具体的业务逻辑中抽取出来
-export function getSingle<T>(fn: () => T) {
+export function getSingle<T>(fn: (...args: any[]) => T) {
     let result: T | null = null;
 
-    return function () {
+    return function (...args: any[]) {
         if (result !== null) {
             return result;
         }
 
-        // @ts-expect-error
-        result = fn.apply(this, arguments);
+        result = fn.apply(this, args);
         return result;
     };
 }
