@@ -3,6 +3,7 @@ import {
     avoidFlood,
     calculateStr,
     canSplit4Parts,
+    combinationSum,
     countEqualTree2,
     countJointMethods,
     countJointMethodsDp,
@@ -168,6 +169,7 @@ import {
     maxProfitsTestData,
     minCostOfCuttingGoldTestData,
     groupAnagramsTestData,
+    combinationSumTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -958,5 +960,9 @@ describe('other', () => {
                 .map((val) => val.sort())
                 .sort()
         ).toEqual(expected.map((val) => val.sort()).sort());
+    });
+
+    it.each(combinationSumTestData)('combinationSum', ({ input: { arr, target }, expected }) => {
+        expect(combinationSum(arr, target).sort()).toEqual(expected.sort());
     });
 });
