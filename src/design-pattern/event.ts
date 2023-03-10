@@ -19,11 +19,34 @@ export class EventBus {
         }
 
         this.clientList[key].push(fn);
+
+        // 如果存在离线消息就把之前的离线消息都发出去
+        const paramsList = this.offlineEvents[key];
+        if (paramsList && paramsList.length > 0) {
+            paramsList.forEach((params) => {
+                this.trigger(key, ...params);
+            });
+
+            paramsList.length = 0;
+        }
+
+        // 离线消息发完之后清空，避免再次接收到离线消息
+        delete this.offlineEvents[key];
     }
+
+    // 离线事件（比如说某个事件暂时还没订阅者，我们希望后面订阅的人可以收到之前发出的离线消息）
+    offlineEvents: Record<EventKey, any[][]> = {};
 
     trigger(key: EventKey, ...rest: any[]) {
         const fns = this.clientList[key];
+
+        // 暂时没有订阅者就把消息先存在离线消息队列里
         if (!fns || fns.length === 0) {
+            if (!this.offlineEvents[key]) {
+                this.offlineEvents[key] = [];
+            }
+
+            this.offlineEvents[key].push(rest);
             return;
         }
 
