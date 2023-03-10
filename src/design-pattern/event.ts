@@ -3,6 +3,13 @@ type Callback = (...args: any[]) => any;
 
 type EventKey = string | number | symbol;
 
+/* 
+注意
+
+模块之间如果用了太多的全局发布—订阅模式来通信，那么模块与模块之间的联系就被隐藏到了背后。
+我们最终会搞不清楚消息来自哪个模块，或者消息会流向哪些模块，这又会给我们的维护带来一些麻烦，
+也许某个模块的作用就是暴露一些接口给其他模块调用。
+*/
 export class EventBus {
     clientList: Record<EventKey, Callback[]> = {};
 
