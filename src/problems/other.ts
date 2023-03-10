@@ -481,8 +481,8 @@ export function getMinBoats(arr: number[], limit: number): number {
     arr.sort((a, b) => a - b);
 
     // 由于奇数和偶数不能同坐一条船所以直接将奇数和偶数分开
-    const odd = [];
-    const even = [];
+    const odd: number[] = [];
+    const even: number[] = [];
     for (let i = 0; i < arr.length; i++) {
         if ((arr[i] & 1) === 1) {
             odd.push(arr[i]);
@@ -1514,7 +1514,7 @@ export function getMaxK(arr1: number[], arr2: number[], k: number): number[] {
     const maxHeap = new MaxKNodeHeap();
     maxHeap.push(arr1[arr1.length - 1] + arr2[arr2.length - 1], arr1.length - 1, arr2.length - 1);
 
-    const result = [];
+    const result: number[] = [];
     while (result.length < k) {
         const { val, i, j } = maxHeap.pop();
         result.push(val);
@@ -1831,7 +1831,7 @@ class UnionFind {
         }
 
         let cur = node;
-        const nodes = [];
+        const nodes: UnionFindNode[] = [];
         while (cur !== this.parents.get(cur)) {
             nodes.push(cur);
             cur = this.parents.get(cur) as UnionFindNode;
@@ -3368,8 +3368,8 @@ export function reverseBetween(head: SingleLinkedList | null, left: number, righ
         return head;
     }
 
-    let prevLeft = null;
-    let afterRight = null;
+    let prevLeft: SingleLinkedList | null = null;
+    let afterRight: SingleLinkedList | null = null;
 
     let count = 1;
     let cur = head;
@@ -3380,7 +3380,7 @@ export function reverseBetween(head: SingleLinkedList | null, left: number, righ
     }
     const leftNode = cur;
 
-    let prev = null;
+    let prev: SingleLinkedList | null = null;
     while (count <= right && cur) {
         const next = cur.next;
         cur.next = prev;
@@ -4753,7 +4753,7 @@ export function majorityElement2(nums: number[]): number[] {
     }
 
     const target = nums.length / 3;
-    const result = [];
+    const result: number[] = [];
 
     for (let i = 0; i < nums.length; i++) {
         const cur = nums[i];
@@ -4937,7 +4937,7 @@ export function setZeroes(matrix: number[][]): void {
         return;
     }
 
-    let zeroIndexes = [];
+    let zeroIndexes: Array<[i: number, j: number]> = [];
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[0].length; j++) {
             if (matrix[i][j] === 0) {
@@ -5640,7 +5640,7 @@ export function getMinChanges(arr: number[]): number {
     const copy = arr.slice();
     copy.sort((a, b) => a - b);
 
-    const newArr = [];
+    const newArr: number[] = [];
     for (let i = 0; i < copy.length; i++) {
         // 找到i位置的值在原数组中的下标
         const index = valIndexMap.get(copy[i]) as number;
@@ -6636,7 +6636,7 @@ export function numSubMatrixSumTarget(matrix: number[][], target: number): numbe
     let count = 0;
     for (let i1 = 0; i1 < matrix.length; i1++) {
         for (let i2 = i1; i2 < matrix.length; i2++) {
-            const sumArr = [];
+            const sumArr: number[] = [];
             for (let j = 0; j < matrix[0].length; j++) {
                 sumArr[j] = prefixSum[i2][j] - (i1 - 1 >= 0 ? prefixSum[i1 - 1][j] : 0);
             }
