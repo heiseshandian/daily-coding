@@ -1,7 +1,7 @@
 import { getSingleClass } from './singleton';
 type Callback = (...args: any[]) => any;
 
-type EventKey = string | number | symbol;
+type DefaultEventKey = string | number | symbol;
 
 /* 
 注意
@@ -10,15 +10,15 @@ type EventKey = string | number | symbol;
 我们最终会搞不清楚消息来自哪个模块，或者消息会流向哪些模块，这又会给我们的维护带来一些麻烦，
 也许某个模块的作用就是暴露一些接口给其他模块调用。
 */
-export class EventBus {
-    clientList: Record<EventKey, Callback[]> = {};
+export class EventBus<EventKey extends DefaultEventKey = DefaultEventKey> {
+    clientList: Partial<Record<EventKey, Callback[]>> = {};
 
     listen(key: EventKey, fn: Callback) {
         if (!this.clientList[key]) {
             this.clientList[key] = [];
         }
 
-        this.clientList[key].push(fn);
+        this.clientList[key]?.push(fn);
 
         // 如果存在离线消息就把之前的离线消息都发出去
         const paramsList = this.offlineEvents[key];
@@ -35,7 +35,7 @@ export class EventBus {
     }
 
     // 离线事件（比如说某个事件暂时还没订阅者，我们希望后面订阅的人可以收到之前发出的离线消息）
-    offlineEvents: Record<EventKey, any[][]> = {};
+    offlineEvents: Partial<Record<EventKey, any[][]>> = {};
 
     trigger(key: EventKey, ...rest: any[]) {
         const fns = this.clientList[key];
@@ -46,7 +46,7 @@ export class EventBus {
                 this.offlineEvents[key] = [];
             }
 
-            this.offlineEvents[key].push(rest);
+            this.offlineEvents[key]?.push(rest);
             return;
         }
 

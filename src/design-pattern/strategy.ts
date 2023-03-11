@@ -1,3 +1,5 @@
+import { EventBus } from './event';
+
 /* 
 策略模式指的是定义一系列的算法，把它们一个个封装起来。将不变的部分和变化的部分隔开是每个设计模式的主题，
 策略模式也不例外，策略模式的目的就是将算法的使用与算法的实现分离开来。
@@ -26,7 +28,7 @@ export function calculateBonus(bonusLevel: BonusLevel, baseSalary: number): numb
     return bonusStrategies[bonusLevel](baseSalary);
 }
 
-enum AnimationType {
+export enum AnimationType {
     Linear,
     EaseIn,
     StrongEaseIn,
@@ -60,9 +62,14 @@ const Tween: Record<
     },
 };
 
-type AnimatePropName = keyof Omit<DOMRect, 'toJSON' | 'x' | 'y'>;
+export type AnimatePropName = keyof Omit<DOMRect, 'toJSON' | 'x' | 'y'>;
 
-export class Animate {
+export enum AnimateEventType {
+    AnimationStart,
+    AnimationEnd,
+}
+
+export class Animate extends EventBus<AnimateEventType> {
     dom: HTMLElement;
     startTime = 0;
     startPos = 0;
@@ -72,16 +79,24 @@ export class Animate {
     duration: number = 0;
 
     constructor(dom: HTMLElement) {
+        super();
         this.dom = dom;
     }
 
-    public start(propName: AnimatePropName, endPos: number, duration: number, animationType: AnimationType) {
+    public start(
+        propName: AnimatePropName,
+        endPos: number,
+        duration: number = 2000,
+        animationType: AnimationType = AnimationType.Linear
+    ) {
         this.startTime = Date.now();
         this.startPos = this.dom.getBoundingClientRect()[propName];
         this.propName = propName;
         this.duration = duration;
         this.animationType = animationType;
         this.endPos = endPos;
+
+        this.trigger(AnimateEventType.AnimationStart);
 
         const self = this;
         const timeId = setInterval(() => {
@@ -95,6 +110,7 @@ export class Animate {
         const currentTime = Date.now();
         if (currentTime >= this.startTime + this.duration) {
             this.update(this.endPos);
+            this.trigger(AnimateEventType.AnimationEnd);
             return false;
         }
 
@@ -102,7 +118,7 @@ export class Animate {
         const nextPos = Tween[this.animationType!](
             currentTime - this.startTime,
             this.startPos,
-            this.endPos,
+            this.endPos - this.startPos,
             this.duration
         );
         this.update(nextPos);
@@ -118,16 +134,17 @@ export class Animate {
     }
 }
 
-enum FormValidateType {
+export enum FormValidateType {
     IsNonEmpty,
     MinLength,
     IsMobile,
+    IsNumber,
 }
 
 type FormValidateOptions = { value: any; errorMsg: string; length?: number };
 
 // 表单校验规则（广义的算法）
-const FormValidateStrategies: Record<FormValidateType, (options: FormValidateOptions) => string | undefined> = {
+const FormValidateStrategies: Record<FormValidateType, (options: FormValidateOptions) => string | void> = {
     [FormValidateType.IsNonEmpty]({ value, errorMsg }) {
         if (/^\s*$/.test(value)) {
             return errorMsg;
@@ -140,6 +157,11 @@ const FormValidateStrategies: Record<FormValidateType, (options: FormValidateOpt
     },
     [FormValidateType.MinLength]({ value, length, errorMsg }) {
         if (!value || (value as string).length < length!) {
+            return errorMsg;
+        }
+    },
+    [FormValidateType.IsNumber]({ value, errorMsg }) {
+        if (!/^[0-9]+$/.test(value)) {
             return errorMsg;
         }
     },
