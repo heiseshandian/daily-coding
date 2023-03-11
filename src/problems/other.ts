@@ -7495,3 +7495,44 @@ function hasCircle(node: CourseNode, courseToNodes: CourseNode[], checked: Set<n
 
     return false;
 }
+
+export function canFinishAllCourses3(prerequisites: number[][]): boolean {
+    const idToDeps: Map<number, Set<number>> = new Map();
+
+    prerequisites.forEach(([first, last]) => {
+        if (idToDeps.has(last)) {
+            idToDeps.get(last)!.add(first);
+        } else {
+            idToDeps.set(last, new Set([first]));
+        }
+    });
+
+    const checked: Set<number> = new Set();
+    const hasCircle = (id: number, visiting: Set<number>) => {
+        if (checked.has(id)) {
+            return false;
+        }
+        if (visiting.has(id)) {
+            return true;
+        }
+        visiting.add(id);
+
+        if (idToDeps.has(id)) {
+            for (const child of idToDeps.get(id)!) {
+                if (hasCircle(child, visiting)) {
+                    return true;
+                }
+            }
+        }
+
+        checked.add(id);
+        return false;
+    };
+
+    for (const id of idToDeps.keys()) {
+        if (hasCircle(id, new Set())) {
+            return false;
+        }
+    }
+    return true;
+}

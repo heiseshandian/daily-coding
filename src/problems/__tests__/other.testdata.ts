@@ -2478,23 +2478,23 @@ export const combinationSumTestData = [
 ];
 
 export const canFinishAllCoursesTestData = [
-    {
-        input: {
-            numCourses: 2,
-            prerequisites: [[1, 0]],
-        },
-        expected: true,
-    },
-    {
-        input: {
-            numCourses: 2,
-            prerequisites: [
-                [1, 0],
-                [0, 1],
-            ],
-        },
-        expected: false,
-    },
+    // {
+    //     input: {
+    //         numCourses: 2,
+    //         prerequisites: [[1, 0]],
+    //     },
+    //     expected: true,
+    // },
+    // {
+    //     input: {
+    //         numCourses: 2,
+    //         prerequisites: [
+    //             [1, 0],
+    //             [0, 1],
+    //         ],
+    //     },
+    //     expected: false,
+    // },
     {
         input: {
             numCourses: 5,

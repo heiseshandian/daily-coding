@@ -315,6 +315,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
+import { canFinishAllCourses3 } from '../other';
 import {
     wildcardMatch2,
     maxProfits,
@@ -979,6 +980,7 @@ describe('other', () => {
         ({ input: { numCourses, prerequisites }, expected }) => {
             expect(canFinishAllCourses(numCourses, prerequisites)).toBe(expected);
             expect(canFinishAllCourses2(numCourses, prerequisites)).toBe(expected);
+            expect(canFinishAllCourses3(prerequisites)).toBe(expected);
         }
     );
 });
