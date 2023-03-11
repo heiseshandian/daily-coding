@@ -315,7 +315,14 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
-import { wildcardMatch2, maxProfits, maxProfits2, minCostOfCuttingGold2, groupAnagrams } from '../other';
+import {
+    wildcardMatch2,
+    maxProfits,
+    maxProfits2,
+    minCostOfCuttingGold2,
+    groupAnagrams,
+    canFinishAllCourses2,
+} from '../other';
 
 describe('other', () => {
     it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
@@ -971,6 +978,7 @@ describe('other', () => {
         'canFinishAllCourses',
         ({ input: { numCourses, prerequisites }, expected }) => {
             expect(canFinishAllCourses(numCourses, prerequisites)).toBe(expected);
+            expect(canFinishAllCourses2(numCourses, prerequisites)).toBe(expected);
         }
     );
 });

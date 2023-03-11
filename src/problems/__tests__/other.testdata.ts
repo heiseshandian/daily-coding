@@ -2507,4 +2507,20 @@ export const canFinishAllCoursesTestData = [
         },
         expected: true,
     },
+    {
+        input: {
+            numCourses: 20,
+            prerequisites: [
+                [0, 10],
+                [3, 18],
+                [5, 5],
+                [6, 11],
+                [11, 14],
+                [13, 1],
+                [15, 1],
+                [17, 4],
+            ],
+        },
+        expected: false,
+    },
 ];

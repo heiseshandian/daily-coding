@@ -7437,3 +7437,61 @@ function canTopSort(nodes: CourseNode[]): boolean {
     }
     return true;
 }
+
+export function canFinishAllCourses2(numCourses: number, prerequisites: number[][]): boolean {
+    const courseToNodes: CourseNode[] = [];
+
+    for (const [first, last] of prerequisites) {
+        const firstNode = courseToNodes[first] || (courseToNodes[first] = new CourseNode(first));
+        const lastNode = courseToNodes[last] || (courseToNodes[last] = new CourseNode(last));
+
+        lastNode.nextNodes.push(firstNode);
+    }
+
+    const checked: Set<number> = new Set();
+    for (let i = 0; i < numCourses; i++) {
+        if (courseToNodes[i] && hasCircle(courseToNodes[i], courseToNodes, checked)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// 使用深度优先遍历来判断某条路径上是否存在环（不可使用宽度优先遍历）
+function hasCircle(node: CourseNode, courseToNodes: CourseNode[], checked: Set<number>): boolean {
+    if (checked.has(node.id)) {
+        return false;
+    }
+
+    const stack: number[] = [];
+    stack.push(node.id);
+
+    const visitedId: Set<number> = new Set();
+    const currentStackSet: Set<number> = new Set();
+    currentStackSet.add(node.id);
+    visitedId.add(node.id);
+
+    while (stack.length > 0) {
+        const topId = stack.pop()!;
+        checked.add(topId);
+        currentStackSet.delete(topId);
+
+        for (const child of courseToNodes[topId].nextNodes) {
+            if (currentStackSet.has(child.id) || child.id === topId) {
+                return true;
+            }
+
+            if (visitedId.has(child.id)) {
+                continue;
+            }
+            visitedId.add(child.id);
+            stack.push(topId);
+            stack.push(child.id);
+            currentStackSet.add(topId);
+            currentStackSet.add(child.id);
+            break;
+        }
+    }
+
+    return false;
+}
