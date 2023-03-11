@@ -37,7 +37,7 @@ export function getSingle<T>(fn: (...args: any[]) => T) {
 export function getSingleClass<T>(ctor: { new (): T }) {
     let result: T | null = null;
 
-    return function (...args: any[]) {
+    return function () {
         if (result !== null) {
             return result;
         }

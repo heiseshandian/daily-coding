@@ -7,7 +7,7 @@
 
 迭代规则提前定义好，外部调用的时候很简单，缺点是不够灵活，比如说我们想同时迭代多个数组就比较困难
 */
-function each<T>(obj: ArrayLike<T>, callback: (cur: T, i: number, obj: ArrayLike<T>) => boolean) {
+export function each<T>(obj: ArrayLike<T>, callback: (cur: T, i: number, obj: ArrayLike<T>) => boolean) {
     for (let i = 0; i < obj.length; i++) {
         // 提前终止迭代器
         if (callback(obj[i], i, obj) === false) {
@@ -21,7 +21,7 @@ function each<T>(obj: ArrayLike<T>, callback: (cur: T, i: number, obj: ArrayLike
 
 提供迭代能力，实际迭代行为由外部自行决定，调用复杂但是使用更灵活
 */
-function createIterator<T>(obj: ArrayLike<T>) {
+export function createIterator<T>(obj: ArrayLike<T>) {
     let current = 0;
 
     return {
@@ -40,7 +40,7 @@ function createIterator<T>(obj: ArrayLike<T>) {
 
 type CustomizedIterator<T = any> = ReturnType<typeof createIterator<T>>;
 
-function isEqual(iterator1: CustomizedIterator, iterator2: CustomizedIterator) {
+export function isEqual(iterator1: CustomizedIterator, iterator2: CustomizedIterator) {
     if (iterator1.length !== iterator2.length) {
         return false;
     }
@@ -67,9 +67,10 @@ catch以及if条件分支。缺点是显而易见的。
 后来我们还增加支持了一些另外的上传方式，比如，HTML5上传，
 这时候唯一的办法是继续往getUploadObj函数里增加条件分支。
 */
-const getUploadObj = () => {
+export const getUploadObj = () => {
     try {
         // IE上传控件
+        // @ts-expect-error
         return new ActiveXObject('TXFTNActiveX.FTNUpload');
     } catch (e) {
         if (supportFlash()) {
@@ -95,6 +96,7 @@ function supportFlash(): boolean {
 
 function getActiveUploadObj() {
     try {
+        // @ts-expect-error
         return new ActiveXObject('TXFTNActiveX.FTNUpload');
     } catch (e) {
         return false;
@@ -123,7 +125,7 @@ function getFileInputUploadObj() {
 }
 
 // 使用迭代器重构 getUploadObj
-function getUploadObj2() {
+export function getUploadObj2() {
     const methods = [getActiveUploadObj, getFlashUploadObj, getFileInputUploadObj];
 
     for (let i = 0; i < methods.length; i++) {

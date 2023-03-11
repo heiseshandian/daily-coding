@@ -23,7 +23,7 @@ const setSrc = (() => {
 
 // 代理对象的接口与原始对象的接口完全一致，日后网络情况改善去掉代理的时候也非常方便
 // 任何使用代理对象的地方都能透明的替换成原始对象
-const setSrcProxy = (() => {
+export const setSrcProxy = (() => {
     const getImg = once(() => {
         const toPreloadRealImg = new Image();
         toPreloadRealImg.onload = () => {
@@ -50,7 +50,7 @@ function syncFile(id: string) {
     console.log(`${id}正在同步中~`);
 }
 
-const syncFileProxy = (() => {
+export const syncFileProxy = (() => {
     const ids: string[] = [];
     let timer: number | null = null;
 
@@ -68,7 +68,7 @@ const syncFileProxy = (() => {
     };
 })();
 
-function once<T>(fn: (...args: any[]) => T) {
+export function once<T>(fn: (...args: any[]) => T) {
     const runCache: Record<string, T> = {};
 
     return function (...args: any[]): T {
@@ -82,7 +82,7 @@ function once<T>(fn: (...args: any[]) => T) {
     };
 }
 
-const loadScript = once((src: string) => {
+export const loadScript = once((src: string) => {
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -123,6 +123,6 @@ const loadScript = once((src: string) => {
 //     };
 // })();
 
-const multi = once((...args: number[]) => {
+export const multi = once((...args: number[]) => {
     return args.reduce((acc, cur) => acc * cur, 1);
 });

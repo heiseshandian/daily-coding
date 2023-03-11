@@ -122,7 +122,7 @@ class Login extends EventBus {
 
 const getLoginInstance = getSingleClass(Login);
 
-class Header {
+export class Header {
     login: Login = getLoginInstance();
 
     init() {
@@ -132,7 +132,7 @@ class Header {
     }
 }
 
-class Address {
+export class Address {
     login: Login = getLoginInstance();
 
     init() {
