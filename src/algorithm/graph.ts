@@ -88,6 +88,33 @@ export function bfsGraph(node: GraphNode | undefined): GraphNode[] | null {
     return result;
 }
 
+export function bfsGraph2(node: GraphNode | undefined): GraphNode[] | null {
+    if (!node) {
+        return null;
+    }
+
+    const result: Set<GraphNode> = new Set([node]);
+    const visited: Set<GraphNode> = new Set();
+    bfs(node, result, visited);
+
+    return Array.from(result);
+}
+
+function bfs(node: GraphNode, result: Set<GraphNode>, visited: Set<GraphNode>) {
+    if (visited.has(node)) {
+        return;
+    }
+    visited.add(node);
+
+    node.nextNodes.forEach((child) => {
+        result.add(child);
+    });
+
+    node.nextNodes.forEach((child) => {
+        bfs(child, result, visited);
+    });
+}
+
 export function dfsGraph(node: GraphNode): GraphNode[] | null {
     if (!node) {
         return null;
@@ -119,6 +146,31 @@ export function dfsGraph(node: GraphNode): GraphNode[] | null {
     }
 
     return result;
+}
+
+export function dfsGraph2(node: GraphNode) {
+    if (!node) {
+        return null;
+    }
+
+    const result: GraphNode[] = [];
+    const visited: Set<GraphNode> = new Set();
+    dfs(node, result, visited);
+
+    return result;
+}
+
+function dfs(node: GraphNode, result: GraphNode[], visited: Set<GraphNode>) {
+    if (visited.has(node)) {
+        return;
+    }
+    visited.add(node);
+
+    result.push(node);
+
+    node.nextNodes.forEach((child) => {
+        dfs(child, result, visited);
+    });
 }
 
 export function topologicalSortGraph(graph: Graph): GraphNode[] {
@@ -242,7 +294,7 @@ function getMinDistanceNodeFromUnselectedNodes(
     distanceMap: Map<GraphNode, number>,
     selectedNodes: Set<GraphNode>
 ): GraphNode | null {
-    let minNode = null;
+    let minNode: GraphNode | null = null;
     let minDistance = Infinity;
 
     for (const [node, distance] of distanceMap) {

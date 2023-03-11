@@ -1,4 +1,4 @@
-import { bfsGraph, dfsGraph, Graph, GraphNode } from '../graph';
+import { bfsGraph, dfsGraph, Graph, GraphNode, dfsGraph2, bfsGraph2 } from '../graph';
 import { bfsGraphTestData, dfsGraphTestData } from './graph.testdata';
 
 describe('bfsGraph', () => {
@@ -6,6 +6,7 @@ describe('bfsGraph', () => {
         const graph = Graph.convertEdgeArrayToGraph(input);
 
         expect(bfsGraph(graph.nodes.get(1) as GraphNode)!.map(({ id }) => id)).toEqual(expected);
+        expect(bfsGraph2(graph.nodes.get(1) as GraphNode)!.map(({ id }) => id)).toEqual(expected);
     });
 });
 
@@ -14,5 +15,6 @@ describe('dfsGraph', () => {
         const graph = Graph.convertEdgeArrayToGraph(input);
 
         expect(dfsGraph(graph.nodes.get(1) as GraphNode)!.map(({ id }) => id)).toEqual(expected);
+        expect(dfsGraph2(graph.nodes.get(1) as GraphNode)!.map(({ id }) => id)).toEqual(expected);
     });
 });
