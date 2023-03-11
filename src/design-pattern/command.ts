@@ -221,3 +221,77 @@ export function bindActionEvents() {
         }
     });
 }
+
+/* 
+宏命令：用于封装一组命令
+
+宏命令是一组命令的集合，通过执行宏命令的方式，可以一次执行一批命令。想象一下，
+家里有一个万能遥控器，每天回家的时候，
+只要按一个特别的按钮，它就会帮我们关上房间门，顺便打开电脑并登录QQ。
+*/
+const closeDoorCommand: Command = {
+    execute() {
+        console.log('关门');
+    },
+};
+
+const openAirConditionerCommand: Command = {
+    execute() {
+        console.log('打开空调');
+    },
+};
+
+const playMusicCommand: Command = {
+    execute() {
+        console.log('播放音乐');
+    },
+};
+
+export class MacroCommand implements Command {
+    commandList: Command[] = [];
+
+    public add(command: Command) {
+        this.commandList.push(command);
+    }
+
+    public execute() {
+        for (let i = 0; i < this.commandList.length; i++) {
+            this.commandList[i].execute();
+        }
+    }
+
+    public undo() {
+        for (let i = 0; i < this.commandList.length; i++) {
+            const { undo } = this.commandList[i];
+
+            if (undo) {
+                undo.call(this.commandList[i]);
+            }
+        }
+    }
+}
+
+const macroCommand = new MacroCommand();
+macroCommand.add(closeDoorCommand);
+macroCommand.add(openAirConditionerCommand);
+macroCommand.add(playMusicCommand);
+
+macroCommand.execute();
+
+/* 
+智能命令与傻瓜命令
+
+一般来说，命令模式都会在command对象中保存一个接收者来负责真正执行客户的请求，
+这种情况下命令对象是“傻瓜式”的，它只负责把客户的请求转交给接收者来执行，
+这种模式的好处是请求发起者和请求接收者之间尽可能地得到了解耦。
+
+但是我们也可以定义一些更“聪明”的命令对象，“聪明”的命令对象可以直接实现请求，
+这样一来就不再需要接收者的存在，这种“聪明”的命令对象也叫作智能命令。
+没有接收者的智能命令，退化到和策略模式非常相近，从代码结构上已经无法分辨它们，
+能分辨的只有它们意图的不同。策略模式指向的问题域更小，所有策略对象的目标总是一致的，
+它们只是达到这个目标的不同手段，它们的内部实现是针对“算法”而言的。
+而智能命令模式指向的问题域更广，command对象解决的目标更具发散性。
+命令模式还可以完成撤销、排队等功能。
+
+如上的closeDoorCommand没有接收者，命令本身就包含了处理逻辑，这种就是智能命令
+*/
