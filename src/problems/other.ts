@@ -7357,3 +7357,83 @@ function combinationSumProcess(candidates: number[], i: number, rest: number, tm
         );
     }
 }
+
+/* 
+https://leetcode.com/problems/course-schedule/description/
+
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. 
+You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates 
+that you must take course bi first if you want to take course ai.
+
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return true if you can finish all courses. Otherwise, return false.
+
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+*/
+class CourseNode {
+    id: number;
+    nextNodes: CourseNode[] = [];
+    // 入度
+    inEdgeCount: number = 0;
+
+    constructor(id: number) {
+        this.id = id;
+    }
+}
+
+export function canFinishAllCourses(numCourses: number, prerequisites: number[][]): boolean {
+    const courseToNodes: CourseNode[] = [];
+
+    for (const [first, last] of prerequisites) {
+        const firstNode = courseToNodes[first] || (courseToNodes[first] = new CourseNode(first));
+        const lastNode = courseToNodes[last] || (courseToNodes[last] = new CourseNode(last));
+
+        lastNode.nextNodes.push(firstNode);
+        firstNode.inEdgeCount++;
+    }
+
+    const nodes: CourseNode[] = [];
+    for (let i = 0; i < numCourses; i++) {
+        if (courseToNodes[i]) {
+            nodes.push(courseToNodes[i]);
+        }
+    }
+
+    return canTopSort(nodes);
+}
+
+function canTopSort(nodes: CourseNode[]): boolean {
+    // 入度为0的节点
+    const zeroInEdgeQueue: CourseNode[] = [];
+    const inEdgeMap: Map<CourseNode, number> = new Map();
+
+    for (const node of nodes) {
+        if (node.inEdgeCount === 0) {
+            zeroInEdgeQueue.push(node);
+        }
+
+        inEdgeMap.set(node, node.inEdgeCount);
+    }
+
+    while (zeroInEdgeQueue.length > 0) {
+        const { nextNodes } = zeroInEdgeQueue.shift()!;
+
+        // 消除head的影响（nextNodes的入度都减1）
+        for (const next of nextNodes) {
+            inEdgeMap.set(next, (inEdgeMap.get(next) || 0) - 1);
+            if ((inEdgeMap.get(next) || 0) <= 0) {
+                zeroInEdgeQueue.push(next);
+            }
+        }
+    }
+
+    for (const [, inEdgeCount] of inEdgeMap) {
+        if (inEdgeCount > 0) {
+            return false;
+        }
+    }
+    return true;
+}

@@ -2,6 +2,7 @@ import { TreeNode } from '../../algorithm/tree';
 import {
     avoidFlood,
     calculateStr,
+    canFinishAllCourses,
     canSplit4Parts,
     combinationSum,
     countEqualTree2,
@@ -313,7 +314,7 @@ import {
     getNumOfMostRightOne2,
     wildcardMatch,
 } from '../other';
-import { divideTestData } from './other.testdata';
+import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
 import { wildcardMatch2, maxProfits, maxProfits2, minCostOfCuttingGold2, groupAnagrams } from '../other';
 
 describe('other', () => {
@@ -965,4 +966,11 @@ describe('other', () => {
     it.each(combinationSumTestData)('combinationSum', ({ input: { arr, target }, expected }) => {
         expect(combinationSum(arr, target).sort()).toEqual(expected.sort());
     });
+
+    it.each(canFinishAllCoursesTestData)(
+        'canFinishAllCourses',
+        ({ input: { numCourses, prerequisites }, expected }) => {
+            expect(canFinishAllCourses(numCourses, prerequisites)).toBe(expected);
+        }
+    );
 });
