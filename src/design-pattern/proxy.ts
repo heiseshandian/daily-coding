@@ -8,7 +8,7 @@ miniConsole库
 缓存代理：对于一些复杂计算，同样的参数有同样的输出结果，直接使用缓存的方式记录结果，避免重复计算
 */
 const setSrc = (() => {
-    const getImageNode = once(() => {
+    const getImageNode = cache(() => {
         const imageNode = document.createElement('img');
         document.body.appendChild(imageNode);
 
@@ -24,7 +24,7 @@ const setSrc = (() => {
 // 代理对象的接口与原始对象的接口完全一致，日后网络情况改善去掉代理的时候也非常方便
 // 任何使用代理对象的地方都能透明的替换成原始对象
 export const setSrcProxy = (() => {
-    const getImg = once(() => {
+    const getImg = cache(() => {
         const toPreloadRealImg = new Image();
         toPreloadRealImg.onload = () => {
             // 大图加载完毕后设置到页面上
@@ -68,7 +68,7 @@ export const syncFileProxy = (() => {
     };
 })();
 
-export function once<T>(fn: (...args: any[]) => T) {
+export function cache<T>(fn: (...args: any[]) => T) {
     const runCache: Record<string, T> = {};
 
     return function (...args: any[]): T {
@@ -82,7 +82,7 @@ export function once<T>(fn: (...args: any[]) => T) {
     };
 }
 
-export const loadScript = once((src: string) => {
+export const loadScript = cache((src: string) => {
     const script = document.createElement('script');
     script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -123,6 +123,6 @@ export const loadScript = once((src: string) => {
 //     };
 // })();
 
-export const multi = once((...args: number[]) => {
+export const multi = cache((...args: number[]) => {
     return args.reduce((acc, cur) => acc * cur, 1);
 });
