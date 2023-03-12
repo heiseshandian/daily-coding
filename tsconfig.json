@@ -99,7 +99,7 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
         "target": "ESNext",
         "useDefineForClassFields": true,
-        "module": "ESNext",
+        "module": "CommonJS",
         "lib": ["ESNext", "DOM"],
         "moduleResolution": "Node",
         "resolveJsonModule": true,
