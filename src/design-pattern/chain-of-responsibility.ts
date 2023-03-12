@@ -177,34 +177,32 @@ chain.run(0, false, 0);
 
 /* 
 异步的责任链
+
+此处不能使用箭头表达式，箭头表达式的this有特定的binding规则，不受call,apply传入的context影响
 */
-const fn1 = new Chain(function () {
-    console.log(1);
-    return {
-        shouldGoNext: true,
-    };
-});
+const chain1 = initChain([
+    function () {
+        console.log(1);
+        return {
+            shouldGoNext: true,
+        };
+    },
+    function () {
+        console.log(2);
+        setTimeout(() => {
+            this.next();
+        }, 1000);
 
-// 此处不能使用箭头表达式，箭头表达式的this有特定的binding规则，不受call,apply传入的context影响
-const fn2 = new Chain(function () {
-    console.log(2);
-    setTimeout(() => {
-        this.next();
-    }, 1000);
-
-    // 先返回false，异步处理完成后再手动调用next来传递到下一个节点
-    return {
-        shouldGoNext: false,
-    };
-});
-
-const fn3 = new Chain(function () {
-    console.log(3);
-    return {};
-});
-
-fn1.setNextChain(fn2).setNextChain(fn3);
-fn1.run();
+        // 先返回false，异步处理完成后再手动调用next来传递到下一个节点
+        return {
+            shouldGoNext: false,
+        };
+    },
+    function () {
+        console.log(3);
+    },
+])!;
+chain1.run();
 
 /* 
 在JavaScript开发中，职责链模式是最容易被忽视的模式之一。
