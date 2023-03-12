@@ -584,7 +584,7 @@ function getRightEdge(node: TreeNode | null): TreeNode[] {
 }
 
 function reverseRightEdge(node: TreeNode | null) {
-    let prev = null;
+    let prev: TreeNode | null = null;
     let cur: TreeNode | null = node;
     while (cur) {
         const next = cur.right;

@@ -7536,3 +7536,32 @@ export function canFinishAllCourses3(prerequisites: number[][]): boolean {
     }
     return true;
 }
+
+/* 
+https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+
+Given two integer arrays preorder and inorder where preorder is the preorder traversal 
+of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.
+*/
+export function buildTree(preOrder: number[], inOrder: number[]): TreeNode | null {
+    const inMap: Map<number, number> = new Map();
+    for (let i = 0; i < inOrder.length; i++) {
+        inMap.set(inOrder[i], i);
+    }
+
+    const build = (preStart: number, preEnd: number, inStart: number, inEnd: number) => {
+        if (preStart > preEnd || inStart > inEnd) {
+            return null;
+        }
+
+        const root = new TreeNode(preOrder[preStart]);
+        const inRoot = inMap.get(root.val)!;
+        const numsLeft = inRoot - inStart;
+        root.left = build(preStart + 1, preStart + numsLeft, inStart, inRoot - 1);
+        root.right = build(preStart + numsLeft + 1, preEnd, inRoot + 1, inEnd);
+
+        return root;
+    };
+
+    return build(0, preOrder.length - 1, 0, inOrder.length - 1);
+}
