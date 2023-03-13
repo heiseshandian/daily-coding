@@ -10,6 +10,7 @@ import { SlidingWindow } from '../algorithm/sliding-window';
 import { SingleLinkedList } from '../algorithm/linked-list';
 import { Stack } from '../algorithm/stack';
 import { MaxHeap } from '../algorithm/heap';
+import { cache } from '../design-pattern/proxy';
 /* 
 题目1（来自小红书）
 【0，4，7】 ：0表示这里石头没有颜色，如果变红代价是4，如果变蓝代价是7 
@@ -7564,4 +7565,75 @@ export function buildTree(preOrder: number[], inOrder: number[]): TreeNode | nul
     };
 
     return build(0, preOrder.length - 1, 0, inOrder.length - 1);
+}
+
+/* 
+https://leetcode.com/problems/populating-next-right-pointers-in-each-node/description/
+
+You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+*/
+class TreeNodeWithNext {
+    val: number;
+    left: TreeNodeWithNext | null = null;
+    right: TreeNodeWithNext | null = null;
+    next: TreeNodeWithNext | null = null;
+
+    constructor(val: number) {
+        this.val = val;
+    }
+}
+
+export function connect(root: TreeNodeWithNext | null): TreeNodeWithNext | null {
+    if (!root) {
+        return root;
+    }
+
+    const queue: TreeNodeWithNext[] = [root];
+
+    let prev: TreeNodeWithNext | null = null;
+    let currentLevelCount = 0;
+    let level = 0;
+
+    const pow = cache((level: number) => 1 << level);
+
+    while (queue.length > 0) {
+        const first = queue.shift()!;
+        currentLevelCount++;
+
+        if (currentLevelCount === pow(level)) {
+            // 当前节点是最左的节点
+            currentLevelCount = 0;
+            level++;
+            first.next = prev;
+            prev = null;
+        } else {
+            // 中间节点
+            first.next = prev;
+            prev = first;
+        }
+
+        if (currentLevelCount === 1) {
+            // 当前节点是最右的节点
+            prev = first;
+        }
+
+        if (first.right) {
+            queue.push(first.right);
+        }
+        if (first.left) {
+            queue.push(first.left);
+        }
+    }
+
+    return root;
 }
