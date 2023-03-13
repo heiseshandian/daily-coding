@@ -2911,7 +2911,7 @@ export function getMaxProfit2(arr: number[]): number {
 export function getMaxProfit3(arr: number[]): number {
     let result = 0;
     for (let i = 1; i < arr.length; i++) {
-        if (arr[i] - arr[i - 1] > 0) {
+        if (arr[i] > arr[i - 1]) {
             result += arr[i] - arr[i - 1];
         }
     }
