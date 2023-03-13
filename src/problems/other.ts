@@ -7728,3 +7728,23 @@ function maxPathSumProcess(node: TreeNode | null): [max: number, maxStartFromHea
 
     return [max, maxStartFromHead];
 }
+
+export function maxPathSum2(root: TreeNode | null): number {
+    let max = -Infinity;
+
+    // 只返回一个值，在递归的过程中把最大值抓取出来，比上面每次计算并返回两个值性能会好一点，也更节省内存一点
+    const getMaxFromHead = (node: TreeNode | null): number => {
+        if (!node) {
+            return 0;
+        }
+
+        const left = Math.max(0, getMaxFromHead(node.left));
+        const right = Math.max(0, getMaxFromHead(node.right));
+
+        max = Math.max(max, node.val + left + right);
+        return Math.max(node.val, node.val + left, node.val + right);
+    };
+    getMaxFromHead(root);
+
+    return max;
+}

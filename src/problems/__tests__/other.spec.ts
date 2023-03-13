@@ -318,7 +318,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
-import { canFinishAllCourses3, printEdgeNodes } from '../other';
+import { canFinishAllCourses3, printEdgeNodes, maxPathSum2 } from '../other';
 import {
     wildcardMatch2,
     maxProfits,
@@ -994,5 +994,6 @@ describe('other', () => {
 
     it.each(maxPathSumTestData)('maxPathSum', ({ input, expected }) => {
         expect(maxPathSum(preBuildNode(input))).toBe(expected);
+        expect(maxPathSum2(preBuildNode(input))).toBe(expected);
     });
 });
