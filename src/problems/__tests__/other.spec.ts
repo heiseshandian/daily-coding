@@ -68,6 +68,7 @@ import {
     kthSmallest,
     leastWaitingTime,
     lengthOfLongestSubstring,
+    longestIncreasingPath,
     longestValidParentheses,
     maxEqualRowsAfterFlips,
     maxPathSum,
@@ -174,6 +175,7 @@ import {
     combinationSumTestData,
     printEdgeNodesTestData,
     maxPathSumTestData,
+    longestIncreasingPathTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -995,5 +997,9 @@ describe('other', () => {
     it.each(maxPathSumTestData)('maxPathSum', ({ input, expected }) => {
         expect(maxPathSum(preBuildNode(input))).toBe(expected);
         expect(maxPathSum2(preBuildNode(input))).toBe(expected);
+    });
+
+    it.each(longestIncreasingPathTestData)('longestIncreasingPath', ({ input, expected }) => {
+        expect(longestIncreasingPath(input)).toBe(expected);
     });
 });

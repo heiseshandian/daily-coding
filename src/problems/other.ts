@@ -7748,3 +7748,52 @@ export function maxPathSum2(root: TreeNode | null): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/longest-increasing-path-in-a-matrix/description/
+
+Given an m x n integers matrix, return the length of the longest increasing path in matrix.
+
+From each cell, you can either move in four directions: left, right, up, or down. 
+You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
+*/
+export function longestIncreasingPath(matrix: number[][]): number {
+    let max = 1;
+
+    const dp = {};
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            max = Math.max(max, longestIncreasingPathProcess(matrix, i, j, dp));
+        }
+    }
+
+    return max;
+}
+
+// 从i，j出发走出的最长递增序列长度
+function longestIncreasingPathProcess(matrix: number[][], i: number, j: number, dp: Record<string, number>) {
+    const id = `${i}_${j}`;
+    if (dp[id]) {
+        return dp[id];
+    }
+
+    const val = matrix[i][j];
+
+    // 上下左右四个方向尝试
+    let max = 1;
+    if (i - 1 >= 0 && matrix[i - 1][j] > val) {
+        max = Math.max(max, longestIncreasingPathProcess(matrix, i - 1, j, dp) + 1);
+    }
+    if (i + 1 < matrix.length && matrix[i + 1][j] > val) {
+        max = Math.max(max, longestIncreasingPathProcess(matrix, i + 1, j, dp) + 1);
+    }
+    if (j - 1 >= 0 && matrix[i][j - 1] > val) {
+        max = Math.max(max, longestIncreasingPathProcess(matrix, i, j - 1, dp) + 1);
+    }
+    if (j + 1 < matrix[0].length && matrix[i][j + 1] > val) {
+        max = Math.max(max, longestIncreasingPathProcess(matrix, i, j + 1, dp) + 1);
+    }
+
+    dp[id] = max;
+    return max;
+}
