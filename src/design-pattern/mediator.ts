@@ -1,4 +1,3 @@
-import { EventBus } from './event';
 /* 
 面向对象设计鼓励将行为分布到各个对象中，把对象划分成更小的粒度，
 有助于增强对象的可复用性，但由于这些细粒度对象之间的联系激增，
@@ -80,9 +79,9 @@ const player2 = createPlayer('A2', Team.A);
 const player3 = createPlayer('A3', Team.A);
 
 // B队
-const player4 = createPlayer('B1', Team.B);
-const player5 = createPlayer('B2', Team.B);
-const player6 = createPlayer('B3', Team.B);
+createPlayer('B1', Team.B);
+createPlayer('B2', Team.B);
+createPlayer('B3', Team.B);
 
 [player1, player2, player3].forEach((player) => player.die());
 
