@@ -1,5 +1,5 @@
 import { getSingleClass } from './singleton';
-type Callback = (...args: any[]) => any;
+type DefaultCallback = (...args: any[]) => any;
 
 type DefaultEventKey = string | number | symbol;
 
@@ -10,7 +10,10 @@ type DefaultEventKey = string | number | symbol;
 我们最终会搞不清楚消息来自哪个模块，或者消息会流向哪些模块，这又会给我们的维护带来一些麻烦，
 也许某个模块的作用就是暴露一些接口给其他模块调用。
 */
-export class EventBus<EventKey extends DefaultEventKey = DefaultEventKey> {
+export class EventBus<
+    EventKey extends DefaultEventKey = DefaultEventKey,
+    Callback extends DefaultCallback = DefaultCallback
+> {
     clientList: Partial<Record<EventKey, Callback[]>> = {};
 
     listen(key: EventKey, fn: Callback) {
@@ -75,6 +78,8 @@ export class EventBus<EventKey extends DefaultEventKey = DefaultEventKey> {
     }
 }
 
+export const getEventBusInstance = getSingleClass(EventBus);
+
 /* 
 具体实例
 
@@ -115,7 +120,7 @@ class Login extends EventBus {
         });
     }
 
-    listen(key: LoginEventType, fn: Callback) {
+    listen(key: LoginEventType, fn: DefaultCallback) {
         this.listen(key, fn);
     }
 }
