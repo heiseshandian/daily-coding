@@ -2526,10 +2526,10 @@ export const canFinishAllCoursesTestData = [
 ];
 
 export const printEdgeNodesTestData = [
-    // {
-    //     input: [1, 2, null, null, 3, null, null],
-    //     expected: [1, 2, 3],
-    // },
+    {
+        input: [1, 2, null, null, 3, null, null],
+        expected: [1, 2, 3],
+    },
     {
         input: [
             1,
@@ -2567,5 +2567,20 @@ export const printEdgeNodesTestData = [
             null,
         ],
         expected: [1, 2, 4, 7, 11, 13, 14, 15, 16, 12, 10, 6, 3],
+    },
+];
+
+export const maxPathSumTestData = [
+    {
+        input: [1, 2, null, null, 3, null, null],
+        expected: 6,
+    },
+    {
+        input: [-10, 9, null, null, 20, 15, null, null, 7, null, null],
+        expected: 42,
+    },
+    {
+        input: [-3, -1, null, null, -2, null, null],
+        expected: -1,
     },
 ];

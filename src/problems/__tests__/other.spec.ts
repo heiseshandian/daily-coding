@@ -70,6 +70,7 @@ import {
     lengthOfLongestSubstring,
     longestValidParentheses,
     maxEqualRowsAfterFlips,
+    maxPathSum,
     maxRunTime,
     maxSquareSideLength,
     maxUncrossedLines,
@@ -172,6 +173,7 @@ import {
     groupAnagramsTestData,
     combinationSumTestData,
     printEdgeNodesTestData,
+    maxPathSumTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -988,5 +990,9 @@ describe('other', () => {
     it.each(printEdgeNodesTestData)('printEdgeNodes', ({ input, expected }) => {
         const root = preBuildNode(input);
         expect(printEdgeNodes(root)).toEqual(expected);
+    });
+
+    it.each(maxPathSumTestData)('maxPathSum', ({ input, expected }) => {
+        expect(maxPathSum(preBuildNode(input))).toBe(expected);
     });
 });

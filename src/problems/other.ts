@@ -7694,3 +7694,37 @@ export function printEdgeNodes(root: TreeNode | null): number[] {
 
     return starts.concat(ends);
 }
+
+/* 
+https://leetcode.com/problems/binary-tree-maximum-path-sum/
+
+A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. 
+A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
+
+The path sum of a path is the sum of the node's values in the path.
+
+Given the root of a binary tree, return the maximum path sum of any non-empty path.
+
+Input: root = [-10,9,20,null,null,15,7]
+Output: 42
+Explanation: The optimal path is 15 -> 20 -> 7 with a path sum of 15 + 20 + 7 = 42.
+*/
+export function maxPathSum(root: TreeNode | null): number {
+    return maxPathSumProcess(root)[0];
+}
+
+function maxPathSumProcess(node: TreeNode | null): [max: number, maxStartFromHead: number] {
+    // 对于空节点需要返回-Infinity，否则当树上都是负数的时候空节点的返回值会被当成最大值，这是不对的
+    // 因为路径要求最少要求一个节点
+    if (!node) {
+        return [-Infinity, -Infinity];
+    }
+
+    const [leftMax, leftMaxStartFromHead] = maxPathSumProcess(node.left);
+    const [rightMax, rightMaxStartFromHead] = maxPathSumProcess(node.right);
+
+    const maxStartFromHead = Math.max(node.val, node.val + leftMaxStartFromHead, node.val + rightMaxStartFromHead);
+    const max = Math.max(leftMax, rightMax, maxStartFromHead, node.val + leftMaxStartFromHead + rightMaxStartFromHead);
+
+    return [max, maxStartFromHead];
+}
