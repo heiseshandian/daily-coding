@@ -7637,3 +7637,60 @@ export function connect(root: TreeNodeWithNext | null): TreeNodeWithNext | null 
 
     return root;
 }
+
+/* 
+给定一棵二叉树的头节点head，按照如下两种标准分别实现二叉树边界节点的逆时针打印。标准一：
+1.头节点为边界节点。
+2.叶节点为边界节点。
+3.如果节点在其所在的层中是最左的或最右的，那么该节点也是边界节点。
+*/
+export function printEdgeNodes(root: TreeNode | null): number[] {
+    if (!root) {
+        return [];
+    }
+
+    const queue: Queue<TreeNode> = new Queue();
+    queue.add(root);
+    let curStart: TreeNode | null = root;
+    let curEnd: TreeNode | null = root;
+    let nextStart: TreeNode | null = null;
+    let nextEnd: TreeNode | null = null;
+
+    const starts: number[] = [];
+    const ends: number[] = [];
+    while (!queue.isEmpty()) {
+        const first = queue.poll()!;
+
+        if (first === curStart || (!first.left && !first.right && first !== curEnd)) {
+            starts.push(first.val);
+        } else if (first === curEnd) {
+            ends.unshift(first.val);
+        }
+
+        if (first.left) {
+            queue.add(first.left);
+
+            if (!nextStart) {
+                nextStart = first.left;
+            }
+            nextEnd = first.left;
+        }
+        if (first.right) {
+            queue.add(first.right);
+
+            if (!nextStart) {
+                nextStart = first.right;
+            }
+            nextEnd = first.right;
+        }
+
+        if (first === curEnd) {
+            curStart = nextStart;
+            curEnd = nextEnd;
+
+            nextStart = null;
+        }
+    }
+
+    return starts.concat(ends);
+}

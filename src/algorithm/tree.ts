@@ -3,11 +3,13 @@ import { Queue } from './queue';
 
 export class TreeNode {
     val: number;
-    left: TreeNode | null = null;
-    right: TreeNode | null = null;
+    left: TreeNode | null;
+    right: TreeNode | null;
 
-    constructor(val: number) {
+    constructor(val: number, left: TreeNode | null = null, right: TreeNode | null = null) {
         this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
 
@@ -259,7 +261,11 @@ function recursivePreSerialize(node: TreeNode | null, queue: Queue<number | null
     recursivePreSerialize(node.right, queue);
 }
 
-export function preBuildNode(queue: Queue<number | null>): TreeNode | null {
+export function preBuildNode(queue: Queue<number | null> | Array<number | null>): TreeNode | null {
+    if (Array.isArray(queue)) {
+        queue = new Queue(queue);
+    }
+
     if (!queue || queue.isEmpty()) {
         return null;
     }

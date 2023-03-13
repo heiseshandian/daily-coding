@@ -1,4 +1,4 @@
-import { TreeNode } from '../../algorithm/tree';
+import { preBuildNode, TreeNode } from '../../algorithm/tree';
 import {
     avoidFlood,
     calculateStr,
@@ -171,6 +171,7 @@ import {
     minCostOfCuttingGoldTestData,
     groupAnagramsTestData,
     combinationSumTestData,
+    printEdgeNodesTestData,
 } from './other.testdata';
 import {
     getMinCoinsDp2,
@@ -315,7 +316,7 @@ import {
     wildcardMatch,
 } from '../other';
 import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
-import { canFinishAllCourses3 } from '../other';
+import { canFinishAllCourses3, printEdgeNodes } from '../other';
 import {
     wildcardMatch2,
     maxProfits,
@@ -983,4 +984,9 @@ describe('other', () => {
             expect(canFinishAllCourses3(prerequisites)).toBe(expected);
         }
     );
+
+    it.each(printEdgeNodesTestData)('printEdgeNodes', ({ input, expected }) => {
+        const root = preBuildNode(input);
+        expect(printEdgeNodes(root)).toEqual(expected);
+    });
 });

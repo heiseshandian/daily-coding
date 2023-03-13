@@ -1,8 +1,8 @@
 export class Queue<T = any> {
     #array: Array<T>;
 
-    constructor() {
-        this.#array = [];
+    constructor(arr: T[] = []) {
+        this.#array = arr.slice();
     }
 
     public size() {

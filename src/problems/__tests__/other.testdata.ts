@@ -2478,23 +2478,23 @@ export const combinationSumTestData = [
 ];
 
 export const canFinishAllCoursesTestData = [
-    // {
-    //     input: {
-    //         numCourses: 2,
-    //         prerequisites: [[1, 0]],
-    //     },
-    //     expected: true,
-    // },
-    // {
-    //     input: {
-    //         numCourses: 2,
-    //         prerequisites: [
-    //             [1, 0],
-    //             [0, 1],
-    //         ],
-    //     },
-    //     expected: false,
-    // },
+    {
+        input: {
+            numCourses: 2,
+            prerequisites: [[1, 0]],
+        },
+        expected: true,
+    },
+    {
+        input: {
+            numCourses: 2,
+            prerequisites: [
+                [1, 0],
+                [0, 1],
+            ],
+        },
+        expected: false,
+    },
     {
         input: {
             numCourses: 5,
@@ -2522,5 +2522,50 @@ export const canFinishAllCoursesTestData = [
             ],
         },
         expected: false,
+    },
+];
+
+export const printEdgeNodesTestData = [
+    // {
+    //     input: [1, 2, null, null, 3, null, null],
+    //     expected: [1, 2, 3],
+    // },
+    {
+        input: [
+            1,
+            2,
+            null,
+            4,
+            7,
+            null,
+            null,
+            8,
+            null,
+            11,
+            13,
+            null,
+            null,
+            14,
+            null,
+            null,
+            3,
+            5,
+            9,
+            12,
+            15,
+            null,
+            null,
+            16,
+            null,
+            null,
+            null,
+            10,
+            null,
+            null,
+            6,
+            null,
+            null,
+        ],
+        expected: [1, 2, 4, 7, 11, 13, 14, 15, 16, 12, 10, 6, 3],
     },
 ];
