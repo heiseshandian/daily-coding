@@ -15,12 +15,12 @@ enum Team {
     B,
 }
 
-export class Player {
+export class Player1 {
     name: string;
     state: PlayerState = PlayerState.Live;
     team: Team;
-    partners: Player[] = [];
-    enemies: Player[] = [];
+    partners: Player1[] = [];
+    enemies: Player1[] = [];
 
     constructor(name: string, team: Team) {
         this.name = name;
@@ -50,11 +50,11 @@ export class Player {
     }
 }
 
-const createPlayer = (() => {
-    const players: Player[] = [];
+const createPlayer1 = (() => {
+    const players: Player1[] = [];
 
     return (name: string, team: Team) => {
-        const newPlayer = new Player(name, team);
+        const newPlayer = new Player1(name, team);
 
         // 通知现有所有玩家有新玩家加入
         for (let i = 0; i < players.length; i++) {
@@ -74,14 +74,14 @@ const createPlayer = (() => {
 })();
 
 // A队
-const player1 = createPlayer('A1', Team.A);
-const player2 = createPlayer('A2', Team.A);
-const player3 = createPlayer('A3', Team.A);
+const player1 = createPlayer1('A1', Team.A);
+const player2 = createPlayer1('A2', Team.A);
+const player3 = createPlayer1('A3', Team.A);
 
 // B队
-createPlayer('B1', Team.B);
-createPlayer('B2', Team.B);
-createPlayer('B3', Team.B);
+createPlayer1('B1', Team.B);
+createPlayer1('B2', Team.B);
+createPlayer1('B3', Team.B);
 
 [player1, player2, player3].forEach((player) => player.die());
 
