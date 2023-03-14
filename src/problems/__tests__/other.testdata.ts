@@ -2627,3 +2627,22 @@ export const longestIncreasingPathTestData = [
         expected: 140,
     },
 ];
+
+export const ladderLengthTestData = [
+    {
+        input: {
+            beginWord: 'hit',
+            endWord: 'cog',
+            wordList: ['hot', 'dot', 'dog', 'lot', 'log', 'cog'],
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            beginWord: 'hit',
+            endWord: 'cog',
+            wordList: ['hot', 'dot', 'dog', 'lot', 'log'],
+        },
+        expected: 0,
+    },
+];

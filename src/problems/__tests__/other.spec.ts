@@ -319,8 +319,8 @@ import {
     getNumOfMostRightOne2,
     wildcardMatch,
 } from '../other';
-import { divideTestData, canFinishAllCoursesTestData } from './other.testdata';
-import { canFinishAllCourses3, printEdgeNodes, maxPathSum2 } from '../other';
+import { divideTestData, canFinishAllCoursesTestData, ladderLengthTestData } from './other.testdata';
+import { canFinishAllCourses3, printEdgeNodes, maxPathSum2, ladderLength, ladderLength2 } from '../other';
 import {
     wildcardMatch2,
     maxProfits,
@@ -1001,5 +1001,10 @@ describe('other', () => {
 
     it.each(longestIncreasingPathTestData)('longestIncreasingPath', ({ input, expected }) => {
         expect(longestIncreasingPath(input)).toBe(expected);
+    });
+
+    it.each(ladderLengthTestData)('ladderLength', ({ input: { beginWord, endWord, wordList }, expected }) => {
+        expect(ladderLength(beginWord, endWord, wordList)).toBe(expected);
+        expect(ladderLength2(beginWord, endWord, wordList)).toBe(expected);
     });
 });

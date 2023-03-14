@@ -7797,3 +7797,118 @@ function longestIncreasingPathProcess(matrix: number[][], i: number, j: number, 
     dp[id] = max;
     return max;
 }
+
+/* 
+https://leetcode.com/problems/word-ladder/description/
+
+Word Ladder
+A transformation sequence from word beginWord to word endWord using a dictionary 
+wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:
+
+Every adjacent pair of words differs by a single letter.
+Every si for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.
+sk == endWord
+Given two words, beginWord and endWord, and a dictionary wordList, return the number of words 
+in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
+*/
+// 暴力解法
+// TODO:思考下能否用前缀树进行优化
+export function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+    if (!wordList.includes(endWord)) {
+        return 0;
+    }
+
+    const queue: string[][][] = [[getNextWords(beginWord, wordList)]];
+    let count = 1;
+    while (queue.length > 0) {
+        count++;
+        const nextWordsList = queue.shift()!;
+        for (let i = 0; i < nextWordsList.length; i++) {
+            const nextWords = nextWordsList[i];
+            if (nextWords.includes(endWord)) {
+                return count;
+            }
+        }
+
+        const words = nextWordsList.reduce((acc, cur) => {
+            for (let i = 0; i < cur.length; i++) {
+                const word = cur[i];
+                const nextWords = getNextWords(word, wordList);
+                if (nextWords.length !== 0) {
+                    acc.push(nextWords);
+                }
+            }
+
+            return acc;
+        }, [] as string[][]);
+
+        if (words.length > 0) {
+            queue.push(words);
+        }
+    }
+
+    return 0;
+}
+
+function getNextWords(beginWord: string, wordList: string[]): string[] {
+    const result: string[] = [];
+    for (let i = wordList.length - 1; i >= 0; i--) {
+        if (isValidNextWord(beginWord, wordList[i])) {
+            result.push(wordList[i]);
+            wordList.splice(i, 1);
+        }
+    }
+
+    return result;
+}
+
+function isValidNextWord(beginWord: string, nextWord: string): boolean {
+    let diffCount = 0;
+    for (let i = 0; i < beginWord.length; i++) {
+        if (beginWord[i] !== nextWord[i]) {
+            diffCount++;
+            if (diffCount > 1) {
+                break;
+            }
+        }
+    }
+
+    return diffCount === 1;
+}
+
+// 使用set的暴力解法
+export function ladderLength2(beginWord: string, endWord: string, wordList: string[]): number {
+    const wordSet = new Set(wordList);
+    if (!wordSet.has(endWord)) {
+        return 0;
+    }
+    const A_CHAR_CODE = 'a'.charCodeAt(0);
+
+    let beginSet = new Set([beginWord]);
+    let endSet = new Set([endWord]);
+    let step = 1;
+    while (beginSet.size > 0) {
+        step++;
+        const nextSet: Set<string> = new Set();
+        for (const word of beginSet) {
+            for (let i = 0; i < word.length; i++) {
+                // 暴力尝试每一个可能得后续单词
+                for (let j = 0; j < 26; j++) {
+                    const nextWord = word.slice(0, i) + String.fromCharCode(A_CHAR_CODE + j) + word.slice(i + 1);
+                    if (endSet.has(nextWord)) {
+                        return step;
+                    }
+                    if (wordSet.has(nextWord)) {
+                        nextSet.add(nextWord);
+                        wordSet.delete(nextWord);
+                    }
+                }
+            }
+        }
+        beginSet = nextSet;
+        if (beginSet.size > endSet.size) {
+            [beginSet, endSet] = [endSet, beginSet];
+        }
+    }
+    return 0;
+}
