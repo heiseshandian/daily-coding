@@ -15,11 +15,6 @@ export const getLoginLayer = (() => {
     };
 })();
 
-document.getElementById('loginBtn')?.addEventListener('click', () => {
-    const loginLayer = getLoginLayer();
-    loginLayer!.style.display = 'block';
-});
-
 // 将管理单例的逻辑从具体的业务逻辑中抽取出来
 export function getSingle<T>(fn: (...args: any[]) => T) {
     let result: T | null = null;

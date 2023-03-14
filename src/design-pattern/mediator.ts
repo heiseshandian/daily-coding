@@ -1,3 +1,4 @@
+import { getSingleClass } from './singleton';
 /* 
 面向对象设计鼓励将行为分布到各个对象中，把对象划分成更小的粒度，
 有助于增强对象的可复用性，但由于这些细粒度对象之间的联系激增，
@@ -90,3 +91,118 @@ createPlayer1('B3', Team.B);
 
 下面我们用中介者模式来重构代码
 */
+export class Player {
+    name: string;
+    team: string;
+    state: PlayerState = PlayerState.Live;
+
+    playerDirector: PlayerDirector;
+
+    constructor(name: string, team: string, playerDirector: PlayerDirector) {
+        this.name = name;
+        this.team = team;
+
+        this.playerDirector = playerDirector;
+    }
+
+    public die() {
+        this.state = PlayerState.Dead;
+        this.playerDirector.receiveMessage(PlayerMessageType.PlayerDead, this);
+    }
+
+    public changeTeam(team: string) {
+        this.playerDirector.receiveMessage(PlayerMessageType.ChangeTeam, this, team);
+    }
+
+    public win() {
+        console.log(`${this.name} won`);
+    }
+
+    public lose() {
+        console.log(`${this.name} lost`);
+    }
+}
+
+enum PlayerMessageType {
+    AddPlayer,
+    RemovePlayer,
+    ChangeTeam,
+    PlayerDead,
+}
+
+export class PlayerDirector {
+    players: Record<string, Player[]> = {};
+
+    operations: Record<PlayerMessageType, (player: Player, team?: string) => void> = {
+        [PlayerMessageType.AddPlayer]: (player: Player) => {
+            const { team } = player;
+            const partners = this.players[team] || (this.players[team] = []);
+
+            partners.push(player);
+        },
+        [PlayerMessageType.RemovePlayer]: (player: Player) => {
+            const { team } = player;
+            const partners = this.players[team];
+            if (!partners || partners.length === 0) {
+                return;
+            }
+
+            for (let i = partners.length - 1; i >= 0; i--) {
+                if (partners[i] === player) {
+                    partners.slice(i, 1);
+                }
+            }
+        },
+        [PlayerMessageType.ChangeTeam]: (player: Player, team?: string) => {
+            if (team === undefined) {
+                return;
+            }
+            this.operations[PlayerMessageType.RemovePlayer](player);
+
+            // 直接复用原始对象
+            player.team = team;
+            this.operations[PlayerMessageType.AddPlayer](player);
+        },
+        [PlayerMessageType.PlayerDead]: (player: Player) => {
+            const partners = this.players[player.team] || [];
+            const isAllDead = partners.every((partner) => partner.state === PlayerState.Dead);
+
+            if (isAllDead) {
+                // 通知本方玩家失败
+                partners.forEach((partner) => partner.lose());
+
+                // 通知所有其他队伍玩家获胜
+                for (const team of Object.keys(this.players)) {
+                    if (team !== player.team) {
+                        (this.players[team] || []).forEach((enemy) => enemy.win());
+                    }
+                }
+            }
+        },
+    };
+
+    public receiveMessage(msgType: PlayerMessageType, player: Player, team?: string) {
+        this.operations[msgType](player, team);
+    }
+}
+
+const getPlayerDirectorInstance = getSingleClass(PlayerDirector);
+
+function playerFactory(name: string, team: string): Player {
+    const playerDirector = getPlayerDirectorInstance();
+    const player = new Player(name, team, playerDirector);
+    playerDirector.receiveMessage(PlayerMessageType.AddPlayer, player);
+
+    return player;
+}
+
+// 红队
+const redPlayers = ['红1', '红2', '红3'].map((name) => playerFactory(name, 'red'));
+
+// 蓝队
+['蓝1', '蓝2'].forEach((name) => playerFactory(name, 'blue'));
+
+// 紫队
+['紫1', '紫2'].forEach((name) => playerFactory(name, 'purple'));
+
+redPlayers.forEach((player) => player.die());
