@@ -1004,7 +1004,7 @@ describe('other', () => {
     });
 
     it.each(ladderLengthTestData)('ladderLength', ({ input: { beginWord, endWord, wordList }, expected }) => {
-        expect(ladderLength(beginWord, endWord, wordList)).toBe(expected);
-        expect(ladderLength2(beginWord, endWord, wordList)).toBe(expected);
+        expect(ladderLength(beginWord, endWord, wordList.slice())).toBe(expected);
+        expect(ladderLength2(beginWord, endWord, wordList.slice())).toBe(expected);
     });
 });
