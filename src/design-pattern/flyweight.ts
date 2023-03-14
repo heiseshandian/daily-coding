@@ -67,24 +67,78 @@ class FlyweightUpload {
     uploadManager: UploadManager;
 
     // 外部状态
-    size?: number;
     name?: string;
     dom?: HTMLDivElement;
+    state?: UploadState;
 
     constructor(uploadType: UploadType, uploadManager: UploadManager) {
         this.uploadType = uploadType;
         this.uploadManager = uploadManager;
     }
 
-    deleteFile(id: number) {
+    /* 
+    状态模式
+
+    将每个状态封装成单独的类，每个状态类用于处理不同状态下的行为，当然我们这里用状态对象代替了状态类
+    本质上是一样的
+
+    状态模式和策略模式
+
+    相同点：都有上下文，策略或者状态类，上下问将请求委托给子类来执行
+
+    不同点：策略模式中的各个策略类之间是平等又平行的，它们之间没有任何联系，
+    所以客户必须熟知这些策略类的作用，以便客户可以随时主动切换算法；
+    而在状态模式中，状态和状态对应的行为是早已被封装好的，
+    状态之间的切换也早被规定完成，“改变行为”这件事情发生在状态模式内部。
+    对客户来说，并不需要了解这些细节。这正是状态模式的作用所在。
+    */
+    stateOperations: Record<
+        UploadState,
+        {
+            delFile?: (id: number) => void;
+            startOrPause?: (id: number) => void;
+        }
+    > = {
+        [UploadState.Sign]: {},
+        [UploadState.Pause]: {
+            delFile: (id: number) => {
+                this.uploadManager.remove(id);
+            },
+            startOrPause: (id: number) => {
+                this.uploadManager.updateExternalState(id, {
+                    state: UploadState.Uploading,
+                });
+            },
+        },
+        [UploadState.Uploading]: {
+            delFile: (id: number) => {
+                this.uploadManager.remove(id);
+            },
+            startOrPause: (id: number) => {
+                this.uploadManager.updateExternalState(id, {
+                    state: UploadState.Pause,
+                });
+            },
+        },
+        [UploadState.Done]: {},
+        [UploadState.Error]: {},
+    };
+
+    public deleteFile(id: number) {
         this.uploadManager.setExternalState(id, this);
 
-        if (this.size! < 3000) {
-            return this.dom?.parentNode?.removeChild(this.dom);
+        const op = this.stateOperations[this.state!];
+        if (op.delFile) {
+            op.delFile(id);
         }
+    }
 
-        if (window.confirm(`确定要删除该文件吗？${this.name}`)) {
-            return this.dom?.parentNode?.removeChild(this.dom);
+    public startOrPause(id: number) {
+        this.uploadManager.setExternalState(id, this);
+
+        const op = this.stateOperations[this.state!];
+        if (op.startOrPause) {
+            op.startOrPause(id);
         }
     }
 }
@@ -93,42 +147,83 @@ const createUploadFactory = cache((uploadType: UploadType, uploadManager: Upload
     return new FlyweightUpload(uploadType, uploadManager);
 });
 
+enum UploadState {
+    Sign,
+    Pause,
+    Uploading,
+    Done,
+    Error,
+}
+
 interface UploadItem {
-    size: number;
     name: string;
     dom: HTMLDivElement;
+
+    state: UploadState;
 }
 
 // 通过管理器管理外部状态
 class UploadManager {
     uploads: Record<number, UploadItem> = {};
 
-    public add(id: number, uploadType: UploadType, name: string, size: number) {
+    public add(id: number, uploadType: UploadType, name: string) {
         const flyweightUpload = createUploadFactory(uploadType, this);
 
-        const dom = document.createElement('div');
-        dom.innerHTML = `
-            <span>文件名称${name},文件大小${size}</span>
-            <button class="delete-file">删除</button>
-        `;
-        dom.querySelector('.delete-file')?.addEventListener('click', () => {
-            flyweightUpload.deleteFile(id);
-        });
+        const dom = this.createDom(name);
+        this.bindEvents(dom, id, flyweightUpload);
         document.body.appendChild(dom);
 
         this.uploads[id] = {
             name,
-            size,
             dom,
+            state: UploadState.Sign,
         };
+    }
+
+    public remove(id: number) {
+        if (!this.uploads[id]) {
+            return;
+        }
+
+        delete this.uploads[id];
+    }
+
+    private createDom(name: string) {
+        const dom = document.createElement('div');
+        dom.innerHTML = `
+            <span>文件名称${name}</span>
+            <button data-action="startOrPause">扫描中</button>
+            <button data-action="delFile">删除</button>
+        `;
+
+        return dom;
+    }
+
+    private bindEvents(dom: HTMLDivElement, id: number, flyweightUpload: FlyweightUpload) {
+        const startOrPauseBtn = dom.querySelector('[data-action="startOrPause"]');
+        const delBtn = dom.querySelector('[data-action="delFile"]');
+        if (startOrPauseBtn) {
+            startOrPauseBtn.addEventListener('click', () => {
+                flyweightUpload.startOrPause(id);
+            });
+        }
+        if (delBtn) {
+            delBtn.addEventListener('click', () => {
+                flyweightUpload.deleteFile(id);
+            });
+        }
     }
 
     public setExternalState(id: number, flyweightUpload: FlyweightUpload) {
         Object.assign(flyweightUpload, this.uploads[id]);
     }
 
-    public toString() {
-        return 'UploadManager';
+    public updateExternalState(id: number, uploadItem: Partial<UploadItem>) {
+        if (!this.uploads[id]) {
+            return;
+        }
+
+        Object.assign(this.uploads[id], uploadItem);
     }
 }
 
@@ -136,8 +231,8 @@ const getUploadManagerInstance = getSingleClass(UploadManager);
 
 export function flyweightStartUpload(uploadType: UploadType, files: File[]) {
     for (let i = 0; i < files.length; i++) {
-        const { name, size } = files[i];
-        getUploadManagerInstance().add(id++, uploadType, name, size);
+        const { name } = files[i];
+        getUploadManagerInstance().add(id++, uploadType, name);
     }
 }
 
