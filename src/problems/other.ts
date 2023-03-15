@@ -7912,3 +7912,34 @@ export function ladderLength2(beginWord: string, endWord: string, wordList: stri
     }
     return 0;
 }
+
+/* 
+https://leetcode.com/problems/longest-consecutive-sequence/description/
+Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+
+You must write an algorithm that runs in O(n) time.
+
+Input: nums = [0,3,7,2,5,8,4,6,0,1]
+Output: 9
+*/
+export function longestConsecutive(nums: number[]): number {
+    const set = new Set(nums);
+
+    let max = 0;
+    // 此处看似有两层循环，但实际上内层while对于所有的数字只会执行一次
+    // 因为外层做了判断 !set.has(num - 1) 只有那些可以作为连续序列起点的最小值才会进入内层循环，其他的会直接跳过
+    // 所以整体的时间复杂度还是O(1)
+    for (let num of set) {
+        if (!set.has(num - 1)) {
+            let smallest = num;
+
+            while (set.has(smallest + 1)) {
+                smallest++;
+            }
+
+            max = Math.max(max, smallest - num + 1);
+        }
+    }
+
+    return max;
+}
