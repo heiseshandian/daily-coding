@@ -180,11 +180,13 @@ interface WatchOptions {
     flush?: 'pre' | 'post' | 'sync';
 }
 
+type ReturnTypeOrT<T> = T extends (...args: any[]) => any ? ReturnType<T> : T;
+
 export function watch<T>(
     source: T,
     cb: (
-        newValue: T extends (...args: any[]) => any ? ReturnType<T> : T,
-        oldValue: T extends (...args: any[]) => any ? ReturnType<T> : T,
+        newValue: ReturnTypeOrT<T>,
+        oldValue: ReturnTypeOrT<T>,
         // 过期的副作用，主要用于处理竞态场景下判断数据是否有效，实际例子见下方
         onInvalidate: (fn: Function) => void
     ) => void,
@@ -197,8 +199,8 @@ export function watch<T>(
         getter = () => traverse(source);
     }
 
-    let oldValue: T extends (...args: any[]) => any ? ReturnType<T> : T;
-    let newValue: T extends (...args: any[]) => any ? ReturnType<T> : T;
+    let oldValue: ReturnTypeOrT<T>;
+    let newValue: ReturnTypeOrT<T>;
 
     let cleanup: Function;
     function onInvalidate(fn: Function) {
@@ -248,50 +250,3 @@ function traverse(val: any, visited = new Set()) {
 
     return val;
 }
-
-const obj = new Proxy(
-    { a: 1, b: 2 },
-    {
-        get(target, key) {
-            track(target, key);
-            return target[key];
-        },
-        set(target, key, val) {
-            target[key] = val;
-            trigger(target, key);
-            return true;
-        },
-    }
-);
-
-let id = 0;
-function getData() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(id++);
-        }, 1000 * (2 - id));
-    });
-}
-
-watch(
-    () => obj.a,
-    async (newValue, oldValue, onInvalidate) => {
-        let expired = false;
-
-        onInvalidate(() => {
-            expired = true;
-        });
-
-        const data = await getData();
-
-        if (!expired) {
-            // 由于我们在onInvalidate标记了过期的数据是否过期，所以最终多次同步调用
-            // obj.a++;只会触发一次console.log
-            console.log(data);
-        }
-    }
-);
-
-obj.a++;
-obj.a++;
-obj.a++;
