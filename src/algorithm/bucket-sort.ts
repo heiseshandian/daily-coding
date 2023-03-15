@@ -96,7 +96,7 @@ export function baseSort2(arr: number[]): number[] {
         // 从后往前遍历，如果按照入桶出桶的顺序，那么最后一个小于等于3的数字必然排在下标为2的位置
         // （因为小于等于3的一共有3个，而最后一个小于3的数字必然是最后一个入桶的），按照先入先出原则，最后一个小于3的必然最后出桶
         // 又因为小于等于3的数字一共才3个，所以最后出桶的数字必然在下标为2的位置上
-        const help = [];
+        const help: number[] = [];
         for (let i = arr.length - 1; i >= 0; i--) {
             const cur = Math.floor((arr[i] % base) / divisor);
             help[--prefixSum[cur]] = arr[i];
