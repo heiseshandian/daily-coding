@@ -7928,7 +7928,7 @@ export function longestConsecutive(nums: number[]): number {
     let max = 0;
     // 此处看似有两层循环，但实际上内层while对于所有的数字只会执行一次
     // 因为外层做了判断 !set.has(num - 1) 只有那些可以作为连续序列起点的最小值才会进入内层循环，其他的会直接跳过
-    // 所以整体的时间复杂度还是O(1)
+    // 所以整体的时间复杂度还是O(n)
     for (let num of set) {
         if (!set.has(num - 1)) {
             let smallest = num;
