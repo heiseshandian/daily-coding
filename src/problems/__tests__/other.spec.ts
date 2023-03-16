@@ -320,7 +320,13 @@ import {
     getNumOfMostRightOne2,
     wildcardMatch,
 } from '../other';
-import { divideTestData, canFinishAllCoursesTestData, ladderLengthTestData } from './other.testdata';
+import {
+    divideTestData,
+    canFinishAllCoursesTestData,
+    ladderLengthTestData,
+    flipNonEdgeOToXTestData,
+} from './other.testdata';
+import { flipNonEdgeOToX } from '../other';
 import {
     canFinishAllCourses3,
     printEdgeNodes,
@@ -1018,5 +1024,10 @@ describe('other', () => {
 
     it.each(longestConsecutiveTestData)('longestConsecutive', ({ input, expected }) => {
         expect(longestConsecutive(input)).toBe(expected);
+    });
+
+    it.each(flipNonEdgeOToXTestData)('flipNonEdgeOToX', ({ input, expected }) => {
+        flipNonEdgeOToX(input);
+        expect(input).toEqual(expected);
     });
 });

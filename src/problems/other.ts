@@ -7943,3 +7943,68 @@ export function longestConsecutive(nums: number[]): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/surrounded-regions/description/
+Given an m x n matrix board containing 'X' and 'O', capture all regions that are 4-directionally surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+*/
+/**
+ Do not return anything, modify board in-place instead.
+ */
+export function flipNonEdgeOToX(board: string[][]): void {
+    // 保护边界以及与边界相连的"O"
+    for (let j = 0; j < board[0].length; j++) {
+        protectEdgeOs(board, 0, j);
+    }
+    for (let j = 0; j < board[0].length; j++) {
+        protectEdgeOs(board, board.length - 1, j);
+    }
+    for (let i = 0; i < board.length; i++) {
+        protectEdgeOs(board, i, 0);
+    }
+    for (let i = 0; i < board.length; i++) {
+        protectEdgeOs(board, i, board[0].length - 1);
+    }
+
+    // 将其他位置的O变成X
+    for (let i = 1; i < board.length; i++) {
+        for (let j = 1; j < board[0].length; j++) {
+            if (board[i][j] === 'O') {
+                board[i][j] = 'X';
+            }
+        }
+    }
+
+    // 还原边界的O
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[0].length; j++) {
+            if (board[i][j] === 'O_Edge') {
+                board[i][j] = 'O';
+            }
+        }
+    }
+}
+
+function protectEdgeOs(board: string[][], i: number, j: number) {
+    if (board[i][j] !== 'O') {
+        return;
+    }
+
+    board[i][j] = 'O_Edge';
+
+    // 上下左右四个方向探测
+    if (i - 1 >= 0 && board[i - 1][j] === 'O') {
+        protectEdgeOs(board, i - 1, j);
+    }
+    if (i + 1 < board.length && board[i + 1][j] === 'O') {
+        protectEdgeOs(board, i + 1, j);
+    }
+    if (j - 1 >= 0 && board[i][j - 1] === 'O') {
+        protectEdgeOs(board, i, j - 1);
+    }
+    if (j + 1 < board[0].length && board[i][j + 1] === 'O') {
+        protectEdgeOs(board, i, j + 1);
+    }
+}

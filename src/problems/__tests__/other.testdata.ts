@@ -2665,3 +2665,24 @@ export const longestConsecutiveTestData = [
         expected: 2,
     },
 ];
+
+export const flipNonEdgeOToXTestData = [
+    {
+        input: [
+            ['X', 'X', 'X', 'X'],
+            ['X', 'O', 'O', 'X'],
+            ['X', 'X', 'O', 'X'],
+            ['X', 'O', 'X', 'X'],
+        ],
+        expected: [
+            ['X', 'X', 'X', 'X'],
+            ['X', 'X', 'X', 'X'],
+            ['X', 'X', 'X', 'X'],
+            ['X', 'O', 'X', 'X'],
+        ],
+    },
+    {
+        input: [['X']],
+        expected: [['X']],
+    },
+];
