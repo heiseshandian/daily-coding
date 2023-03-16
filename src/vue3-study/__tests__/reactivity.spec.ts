@@ -1,4 +1,4 @@
-import { reactive, effect } from '../reactivity';
+import { reactive, effect, computed, watch } from '../reactivity';
 
 describe('reactivity', () => {
     test('Object reactive', () => {
@@ -11,6 +11,14 @@ describe('reactivity', () => {
         // set
         original.foo = 2;
         expect(observed.foo).toBe(2);
+    });
+
+    test('Object reactive cache', () => {
+        const original = { foo: 1 };
+        const observed1 = reactive(original);
+        const observed2 = reactive(original);
+
+        expect(observed1).toBe(observed2);
     });
 
     test('basic effect', () => {
@@ -82,6 +90,64 @@ describe('reactivity', () => {
         expect(fn).not.toHaveBeenCalled();
 
         effectFn();
+        expect(fn).toHaveBeenCalled();
+    });
+
+    test('computed', () => {
+        const observed = reactive({ foo: 1, bar: 2 });
+        const computedObj = computed(() => observed.foo + observed.bar);
+        const fn = jest.fn(() => computedObj.value);
+
+        effect(fn);
+
+        expect(fn).toHaveBeenCalledTimes(1);
+        observed.foo = 2;
+        expect(fn).toHaveBeenCalledTimes(2);
+    });
+
+    test('lazy computed', () => {
+        const observed = reactive({ foo: 1, bar: 2 });
+        const getter = jest.fn(() => observed.foo + observed.bar);
+        const computedObj = computed(getter);
+
+        expect(computedObj.value).toBe(observed.foo + observed.bar);
+        expect(getter).toHaveBeenCalledTimes(1);
+
+        observed.foo = 1;
+        expect(getter).toHaveBeenCalledTimes(1);
+    });
+
+    test('watch getter', () => {
+        const observed = reactive({ bar: 2 });
+        const fn = jest.fn();
+
+        watch(() => observed.bar, fn);
+        expect(fn).not.toHaveBeenCalled();
+
+        observed.bar = 1;
+        expect(fn).toHaveBeenCalled();
+    });
+
+    test('watch getter immediate', () => {
+        const observed = reactive({ bar: 2 });
+        const fn = jest.fn();
+
+        watch(() => observed.bar, fn, { immediate: true });
+        expect(fn).toHaveBeenCalled();
+    });
+
+    test('watch object', () => {
+        const observed = reactive({
+            bar: 2,
+            inner: {
+                foo: 3,
+            },
+        });
+        const fn = jest.fn();
+
+        watch(observed, fn);
+
+        observed.inner.foo = 4;
         expect(fn).toHaveBeenCalled();
     });
 });

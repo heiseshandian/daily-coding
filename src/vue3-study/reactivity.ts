@@ -83,22 +83,57 @@ function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEff
     });
 }
 
-function createReactive<T extends object>(target: T) {
+function createReactive<T extends object>(target: T, isShallow = false) {
     return new Proxy<T>(target, {
         get(target, key, receiver) {
             track(target, key);
-            return Reflect.get(target, key, receiver);
+
+            const ret = Reflect.get(target, key, receiver);
+            if (isShallow) {
+                return ret;
+            }
+
+            if (typeof ret === 'object' && ret !== null) {
+                return reactive(ret);
+            }
+
+            return ret;
         },
         set(target, key, newValue, receiver) {
+            const oldValue = Reflect.get(target, key, receiver);
             const ret = Reflect.set(target, key, newValue, receiver);
-            trigger(target, key);
+
+            // 数据变更或者至少有一个不是NaN时才触发副作用
+            // NaN !== NaN
+            if (oldValue !== newValue && (!Number.isNaN(oldValue) || !Number.isNaN(newValue))) {
+                trigger(target, key);
+            }
+
             return ret;
         },
     });
 }
 
-export function reactive<T extends object>(target: T) {
-    return createReactive(target);
+const reactiveMap = new WeakMap<object, any>();
+const shallowReactiveMap = new WeakMap<object, any>();
+
+export function reactive<T extends object>(target: T): T {
+    // 避免多次为同一个对象创建响应式对象
+    if (reactiveMap.has(target)) {
+        return reactiveMap.get(target);
+    }
+
+    reactiveMap.set(target, createReactive(target));
+    return reactiveMap.get(target);
+}
+
+export function shallowReactive<T extends object>(target: T): T {
+    if (shallowReactiveMap.has(target)) {
+        return shallowReactiveMap.get(target);
+    }
+
+    shallowReactiveMap.set(target, createReactive(target, true));
+    return shallowReactiveMap.get(target);
 }
 
 export function effect<T extends (...args: any[]) => any>(fn: T, options: ActiveEffectOptions = {}) {
@@ -185,7 +220,7 @@ export function computed<T extends (...args: any[]) => any>(getter: T) {
                 shouldReComputed = false;
             }
 
-            // 当外部把obj.value作为放入effect的时候手动触发收集依赖
+            // 当外部把obj.value作为依赖放入effect的时候手动触发收集依赖
             track(obj, 'value');
             return value;
         },
