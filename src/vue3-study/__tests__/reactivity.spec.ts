@@ -150,4 +150,19 @@ describe('reactivity', () => {
         observed.inner.foo = 4;
         expect(fn).toHaveBeenCalled();
     });
+
+    test('watch onInvalidate', () => {
+        const observed = reactive({ bar: 2 });
+
+        const cleanup = jest.fn();
+        const fn = jest.fn((_newValue, _oldValue, onInvalidate) => {
+            onInvalidate(cleanup);
+        });
+
+        watch(observed, fn, { immediate: true });
+        expect(cleanup).not.toHaveBeenCalled();
+
+        observed.bar = 1;
+        expect(cleanup).toHaveBeenCalled();
+    });
 });
