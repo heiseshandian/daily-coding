@@ -16,14 +16,12 @@ interface ActiveEffectOptions {
     lazy?: boolean;
 }
 
-type Key = string | number | symbol;
-
 let activeEffect: ActiveEffect | null = null;
 const effectStack: ActiveEffect[] = [];
 
-const bucket: WeakMap<object, Map<Key, Set<ActiveEffect>>> = new WeakMap();
+const bucket = new WeakMap<object, Map<PropertyKey, Set<ActiveEffect>>>();
 
-function track(target: object, key: Key) {
+function track(target: object, key: PropertyKey) {
     if (!activeEffect) {
         return;
     }
@@ -40,7 +38,7 @@ function track(target: object, key: Key) {
     activeEffect.effectsList.push(effects);
 }
 
-function trigger(target: object, key: Key) {
+function trigger(target: object, key: PropertyKey) {
     const depsMap = bucket.get(target);
     if (!depsMap) {
         return;
@@ -58,19 +56,29 @@ function trigger(target: object, key: Key) {
         set.delete(i);
         set.add(i);
     }); */
-    const copy = new Set(effects);
-    copy.forEach((fn) => {
-        // 避免无限递归循环
-        // 比如说在effect中执行自增操作（一个effect同时包含set和get操作）
-        if (fn === activeEffect) {
-            return;
-        }
+    const effectsToRun = new Set<ActiveEffect>();
+    addEffectsToRun(effectsToRun, effects);
 
+    effectsToRun.forEach((fn) => {
         // 用户定义了调度器则直接把控制权交给用户定义的调度器
         if (fn.options.scheduler) {
             fn.options.scheduler(fn);
         } else {
             fn();
+        }
+    });
+}
+
+function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEffect> | undefined | null) {
+    if (!effects) {
+        return;
+    }
+
+    effects.forEach((effect) => {
+        // 避免无限递归循环
+        // 比如说在effect中执行自增操作（一个effect同时包含set和get操作）
+        if (effect !== activeEffect) {
+            effectsToRun.add(effect);
         }
     });
 }
