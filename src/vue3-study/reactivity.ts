@@ -131,6 +131,13 @@ function createReactive<T extends object>(target: T, isShallow = false) {
 
             return ret;
         },
+        // 用于拦截 key in obj操作
+        // https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-relational-operators
+        // key in obj最终会通过调用obj上的[[HasProperty]]内部方法来判断结果，所以我们可以使用has来进行拦截
+        has(target, key) {
+            track(target, key);
+            return Reflect.has(target, key);
+        },
     });
 }
 

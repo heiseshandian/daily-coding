@@ -13,6 +13,18 @@ describe('reactivity', () => {
         expect(observed.foo).toBe(2);
     });
 
+    test('key in obj', () => {
+        const original = { foo: 1 };
+        const observed = reactive(original);
+        const fn = jest.fn(() => 'foo' in observed);
+
+        effect(fn);
+        fn.mockClear();
+
+        observed.foo = 2;
+        expect(fn).toHaveBeenCalled();
+    });
+
     test('Object getter reactive', () => {
         const original = {
             foo: 1,
