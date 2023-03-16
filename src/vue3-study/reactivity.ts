@@ -90,12 +90,29 @@ function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEff
     });
 }
 
+enum ActiveTargetFlags {
+    Raw = '__v_raw__',
+}
+
 const ITERATE_KEY = Symbol();
 
-function createReactive<T extends object>(target: T, isShallow = false) {
-    return new Proxy<T>(target, {
+function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, isShallow = false, isReadonly = false) {
+    if (cacheMap.get(target)) {
+        return cacheMap.get(target);
+    }
+
+    const p = new Proxy<T>(target, {
         get(target, key, receiver) {
-            track(target, key);
+            // 支持根据特殊key来获取原始对象
+            // 用于屏蔽代理对象形成原型链导致的副作用执行多次问题
+            if (key === ActiveTargetFlags.Raw) {
+                return target;
+            }
+
+            // 对于只读属性没有任何方式来修改它们，所以也不需要添加副作用用于在属性变更的时候自动触发副作用
+            if (!isReadonly) {
+                track(target, key);
+            }
 
             /* 
             处理getter的场景
@@ -123,21 +140,28 @@ function createReactive<T extends object>(target: T, isShallow = false) {
 
             // 支持深度响应式
             if (typeof ret === 'object' && ret !== null) {
-                return reactive(ret);
+                return isReadonly ? readonly(ret) : reactive(ret);
             }
 
             return ret;
         },
         set(target, key, newValue, receiver) {
+            if (isReadonly) {
+                warnReadonly(key);
+                return true;
+            }
+
             const oldValue = Reflect.get(target, key, receiver);
             // 用于区别是否新增属性，新增属性会影响for in行为，我们需要触发ITERATE_KEY相关的副作用
             const hasOwnProp = Object.prototype.hasOwnProperty.call(target, key);
             const ret = Reflect.set(target, key, newValue, receiver);
 
-            // 数据变更或者至少有一个不是NaN时才触发副作用
-            // NaN !== NaN
-            if (oldValue !== newValue && (!Number.isNaN(oldValue) || !Number.isNaN(newValue))) {
-                trigger(target, key, hasOwnProp ? TriggerTypes.Set : TriggerTypes.Add);
+            if (receiver[ActiveTargetFlags.Raw] === target) {
+                // 数据变更或者至少有一个不是NaN时才触发副作用
+                // NaN !== NaN
+                if (oldValue !== newValue && (!Number.isNaN(oldValue) || !Number.isNaN(newValue))) {
+                    trigger(target, key, hasOwnProp ? TriggerTypes.Set : TriggerTypes.Add);
+                }
             }
 
             return ret;
@@ -157,33 +181,50 @@ function createReactive<T extends object>(target: T, isShallow = false) {
             return Reflect.ownKeys(target);
         },
         deleteProperty(target, key) {
-            // 删除属性会影响for in行为
-            trigger(target, ITERATE_KEY);
-            return Reflect.deleteProperty(target, key);
+            if (isReadonly) {
+                warnReadonly(key);
+                return true;
+            }
+
+            const hadKey = Object.prototype.hasOwnProperty.call(target, key);
+            const ret = Reflect.deleteProperty(target, key);
+
+            // 删除的key是target自身属性且删除操作成功后再触发副作用
+            if (hadKey && ret) {
+                // 删除属性会影响for in行为
+                trigger(target, ITERATE_KEY);
+            }
+            return ret;
         },
     });
+
+    cacheMap.set(target, p);
+    return p;
+}
+
+function warnReadonly(key: PropertyKey) {
+    console.warn(`${String(key)} is readonly`);
 }
 
 const reactiveMap = new WeakMap<object, any>();
 const shallowReactiveMap = new WeakMap<object, any>();
+const readonlyMap = new WeakMap<object, any>();
+const shallowReadonlyMap = new WeakMap<object, any>();
 
 export function reactive<T extends object>(target: T): T {
-    // 避免多次为同一个对象创建响应式对象
-    if (reactiveMap.has(target)) {
-        return reactiveMap.get(target);
-    }
-
-    reactiveMap.set(target, createReactive(target));
-    return reactiveMap.get(target);
+    return createReactive(target, reactiveMap);
 }
 
 export function shallowReactive<T extends object>(target: T): T {
-    if (shallowReactiveMap.has(target)) {
-        return shallowReactiveMap.get(target);
-    }
+    return createReactive(target, shallowReactiveMap, false);
+}
 
-    shallowReactiveMap.set(target, createReactive(target, true));
-    return shallowReactiveMap.get(target);
+export function readonly<T extends object>(target: T): T {
+    return createReactive(target, readonlyMap, false, true);
+}
+
+export function shallowReadonly<T extends object>(target: T): T {
+    return createReactive(target, shallowReadonlyMap, true, true);
 }
 
 export function effect<T extends (...args: any[]) => any>(fn: T, options: ActiveEffectOptions = {}) {

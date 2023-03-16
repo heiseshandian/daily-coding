@@ -1,4 +1,4 @@
-import { reactive, effect, computed, watch, flushJobs } from '../reactivity';
+import { reactive, effect, computed, watch, flushJobs, shallowReadonly, readonly } from '../reactivity';
 
 describe('reactivity', () => {
     test('Object reactive', () => {
@@ -53,6 +53,9 @@ describe('reactivity', () => {
         observed.bar = '1';
 
         expect(fn).toHaveBeenCalledTimes(2);
+
+        observed.foo = 2;
+        expect(fn).toHaveBeenCalledTimes(2);
     });
 
     test('Object getter reactive', () => {
@@ -69,6 +72,19 @@ describe('reactivity', () => {
 
         observed.foo = 2;
         expect(fn).toHaveBeenCalled();
+    });
+
+    test('proxy proto chain', () => {
+        const obj: any = {};
+        const proto: any = { bar: 1 };
+        const child = reactive(obj);
+        const parent = reactive(proto);
+        Object.setPrototypeOf(child, parent);
+        const fn = jest.fn(() => child.bar);
+        effect(fn);
+
+        child.bar = 2;
+        expect(fn).toHaveBeenCalledTimes(2);
     });
 
     test('Object reactive cache', () => {
@@ -233,5 +249,60 @@ describe('reactivity', () => {
         await flushJobs(fn);
 
         expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    describe('readonly', () => {
+        const fn = jest.fn();
+        const warn = console.warn;
+
+        beforeAll(() => {
+            console.warn = fn;
+        });
+
+        afterAll(() => {
+            console.warn = warn;
+        });
+
+        beforeEach(() => {
+            fn.mockClear();
+        });
+
+        test('shallow readonly', () => {
+            const original = {
+                foo: 1,
+                inner: {
+                    foo: 1,
+                },
+            };
+            const observed = shallowReadonly(original);
+
+            observed.foo = 3;
+            expect(observed.foo).toBe(1);
+            expect(fn).toHaveBeenCalled();
+            fn.mockClear();
+
+            observed.inner.foo = 4;
+            expect(observed.inner.foo).toBe(4);
+            expect(fn).not.toHaveBeenCalled();
+        });
+
+        test('readonly', () => {
+            const original = {
+                foo: 1,
+                inner: {
+                    foo: 1,
+                },
+            };
+            const observed = readonly(original);
+
+            observed.foo = 3;
+            expect(observed.foo).toBe(1);
+            expect(fn).toHaveBeenCalled();
+            fn.mockClear();
+
+            observed.inner.foo = 4;
+            expect(observed.inner.foo).toBe(1);
+            expect(fn).toHaveBeenCalled();
+        });
     });
 });
