@@ -83,6 +83,24 @@ function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEff
     });
 }
 
+function createReactive<T extends object>(target: T) {
+    return new Proxy<T>(target, {
+        get(target, key, receiver) {
+            track(target, key);
+            return Reflect.get(target, key, receiver);
+        },
+        set(target, key, newValue, receiver) {
+            const ret = Reflect.set(target, key, newValue, receiver);
+            trigger(target, key);
+            return ret;
+        },
+    });
+}
+
+export function reactive<T extends object>(target: T) {
+    return createReactive(target);
+}
+
 export function effect<T extends (...args: any[]) => any>(fn: T, options: ActiveEffectOptions = {}) {
     function effectFn(): ReturnType<T> {
         cleanup(effectFn as ActiveEffect);
