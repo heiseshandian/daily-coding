@@ -13,6 +13,22 @@ describe('reactivity', () => {
         expect(observed.foo).toBe(2);
     });
 
+    test('Object getter reactive', () => {
+        const original = {
+            foo: 1,
+            get bar() {
+                return this.foo;
+            },
+        };
+        const observed = reactive(original);
+        const fn = jest.fn(() => observed.bar);
+        effect(fn);
+        fn.mockClear();
+
+        observed.foo = 2;
+        expect(fn).toHaveBeenCalled();
+    });
+
     test('Object reactive cache', () => {
         const original = { foo: 1 };
         const observed1 = reactive(original);

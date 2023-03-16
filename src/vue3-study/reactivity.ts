@@ -88,11 +88,31 @@ function createReactive<T extends object>(target: T, isShallow = false) {
         get(target, key, receiver) {
             track(target, key);
 
+            /* 
+            处理getter的场景
+
+            const original = {
+                foo: 1,
+                get bar() {
+                    // 如果我们直接使用target[key]来返回值的话那么这里的this就会指向
+                    // target，而target本身不是响应式对象，所以foo就不会被当成依赖被收集起来
+                    // 从而导致修改foo的时候那些依赖于bar的副作用不会被重新执行
+                    // 而用Reflect结合receiver属性可以修改上下文对象，从而使得这里的this指向
+                    // 代理对象，从而被收集依赖
+                    return this.foo;
+                },
+            };
+            const observed = reactive(original);
+
+            // observed就是这里的receiver
+            effect(()=>observed.bar);
+            */
             const ret = Reflect.get(target, key, receiver);
             if (isShallow) {
                 return ret;
             }
 
+            // 支持深度响应式
             if (typeof ret === 'object' && ret !== null) {
                 return reactive(ret);
             }
