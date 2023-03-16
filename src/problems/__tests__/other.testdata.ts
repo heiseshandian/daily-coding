@@ -2686,3 +2686,17 @@ export const flipNonEdgeOToXTestData = [
         expected: [['X']],
     },
 ];
+
+export const partitionPalindromeTestData = [
+    {
+        input: 'aab',
+        expected: [
+            ['a', 'a', 'b'],
+            ['aa', 'b'],
+        ],
+    },
+    {
+        input: 'a',
+        expected: [['a']],
+    },
+];

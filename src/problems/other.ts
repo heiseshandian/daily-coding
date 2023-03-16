@@ -8008,3 +8008,49 @@ function protectEdgeOs(board: string[][], i: number, j: number) {
         protectEdgeOs(board, i, j + 1);
     }
 }
+
+/* 
+https://leetcode.com/problems/palindrome-partitioning/description/
+
+Given a string s, partition s such that every substring of the partition is a palindrome. 
+Return all possible palindrome partitioning of s.
+
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+*/
+export function partitionPalindrome(s: string): string[][] {
+    const result: string[][] = [];
+    partitionPalindromeProcess(s, 0, [], result);
+    return result;
+}
+
+function partitionPalindromeProcess(s: string, prevCut: number, path: string[], result: string[][]) {
+    if (prevCut === s.length) {
+        // 这里需要解构下，不然递归函数向上返回的时候path会被清空
+        result.push([...path]);
+        return;
+    }
+
+    for (let nextCut = prevCut + 1; nextCut <= s.length; nextCut++) {
+        const t = s.slice(prevCut, nextCut);
+        if (isPalindrome(t)) {
+            // 直接复用path
+            path.push(t);
+            partitionPalindromeProcess(s, nextCut, path, result);
+            // 恢复环境
+            path.pop();
+        }
+    }
+}
+
+function isPalindrome(s: string) {
+    let left = 0;
+    let right = s.length - 1;
+    while (left < right) {
+        if (s[left++] !== s[right--]) {
+            return false;
+        }
+    }
+
+    return true;
+}

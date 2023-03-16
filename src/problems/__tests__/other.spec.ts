@@ -326,7 +326,8 @@ import {
     ladderLengthTestData,
     flipNonEdgeOToXTestData,
 } from './other.testdata';
-import { flipNonEdgeOToX } from '../other';
+import { flipNonEdgeOToX, partitionPalindrome } from '../other';
+import { partitionPalindromeTestData } from './other.testdata';
 import {
     canFinishAllCourses3,
     printEdgeNodes,
@@ -1029,5 +1030,9 @@ describe('other', () => {
     it.each(flipNonEdgeOToXTestData)('flipNonEdgeOToX', ({ input, expected }) => {
         flipNonEdgeOToX(input);
         expect(input).toEqual(expected);
+    });
+
+    it.each(partitionPalindromeTestData)('partitionPalindrome', ({ input, expected }) => {
+        expect(partitionPalindrome(input)).toEqual(expected);
     });
 });
