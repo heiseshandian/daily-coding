@@ -176,11 +176,11 @@ function cleanup(effectFn: ActiveEffect) {
 
 export const flushJobs = (() => {
     // 利用set的自动去重能力，同一个微任务循环某个effect只加入一次
-    const jobs: Set<ActiveEffect> = new Set();
+    const jobs: Set<Function> = new Set();
     let isFlushing = false;
     const p = Promise.resolve();
 
-    return function (job: ActiveEffect) {
+    return function (job: Function) {
         jobs.add(job);
 
         if (isFlushing) {
@@ -193,6 +193,8 @@ export const flushJobs = (() => {
         }).finally(() => {
             isFlushing = false;
         });
+
+        return p;
     };
 })();
 

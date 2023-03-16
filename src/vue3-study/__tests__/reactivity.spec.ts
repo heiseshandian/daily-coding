@@ -1,4 +1,4 @@
-import { reactive, effect, computed, watch } from '../reactivity';
+import { reactive, effect, computed, watch, flushJobs } from '../reactivity';
 
 describe('reactivity', () => {
     test('Object reactive', () => {
@@ -164,5 +164,16 @@ describe('reactivity', () => {
 
         observed.bar = 1;
         expect(cleanup).toHaveBeenCalled();
+    });
+
+    test('flushJobs', async () => {
+        const fn = jest.fn();
+
+        flushJobs(fn);
+        flushJobs(fn);
+        flushJobs(fn);
+        await flushJobs(fn);
+
+        expect(fn).toHaveBeenCalledTimes(1);
     });
 });
