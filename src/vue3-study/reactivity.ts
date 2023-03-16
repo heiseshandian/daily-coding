@@ -22,7 +22,7 @@ const effectStack: ActiveEffect[] = [];
 const bucket = new WeakMap<object, Map<PropertyKey, Set<ActiveEffect>>>();
 
 function track(target: object, key: PropertyKey) {
-    if (!activeEffect) {
+    if (!activeEffect || !shouldTrack) {
         return;
     }
     let depsMap = bucket.get(target);
@@ -43,7 +43,7 @@ enum TriggerTypes {
     Add,
 }
 
-function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set) {
+function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set, newValue?: any) {
     const effectsMap = bucket.get(target);
     if (!effectsMap) {
         return;
@@ -64,6 +64,20 @@ function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set) {
     if (type === TriggerTypes.Add && effectsMap.has(ITERATE_KEY)) {
         const iterateEffects = effectsMap.get(ITERATE_KEY);
         addEffectsToRun(effectsToRun, iterateEffects);
+    }
+
+    if (type === TriggerTypes.Add && Array.isArray(target) && effectsMap.has('length')) {
+        const lengthEffects = effectsMap.get('length');
+        addEffectsToRun(effectsToRun, lengthEffects);
+    }
+
+    // 修改数组的length属性时候会影响数组元素
+    if (Array.isArray(target) && key === 'length') {
+        effectsMap.forEach((effects, index) => {
+            if (Number(index) >= Number(newValue)) {
+                addEffectsToRun(effectsToRun, effects);
+            }
+        });
     }
 
     effectsToRun.forEach((fn) => {
@@ -96,6 +110,39 @@ enum ActiveTargetFlags {
 
 const ITERATE_KEY = Symbol();
 
+const arrayInstrumentations: any = {};
+
+['includes', 'indexOf', 'lastIndexOf'].forEach((method) => {
+    // Array.prototype的类型声明是 readonly prototype: any[];
+    // 从而导致string类型的值无法作为索引直接使用，这里直接ignore掉
+    // @ts-ignore
+    const originalMethod = Array.prototype[method];
+    // @ts-ignore
+    arrayInstrumentations[method] = function (...args: any[]) {
+        let ret = originalMethod.apply(this, args);
+        if (ret === false || ret === -1) {
+            ret = originalMethod.apply(this[ActiveTargetFlags.Raw], args);
+        }
+
+        return ret;
+    };
+});
+
+// 避免在push时把length作为依赖收集，可能会导致无限循环
+// 而且push从语意上是修改数组内容，而不是读取内容
+let shouldTrack = true;
+['push', 'pop', 'shift', 'unshift', 'splice'].forEach((method) => {
+    // @ts-ignore
+    const originalMethod = Array.prototype[method];
+    arrayInstrumentations[method] = function (...args: any[]) {
+        shouldTrack = false;
+        let ret = originalMethod.apply(this, args);
+        shouldTrack = true;
+
+        return ret;
+    };
+});
+
 function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, isShallow = false, isReadonly = false) {
     if (cacheMap.get(target)) {
         return cacheMap.get(target);
@@ -109,8 +156,14 @@ function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, is
                 return target;
             }
 
+            // 用arrayInstrumentations内的行为重写数组行为
+            if (Array.isArray(target) && Object.prototype.hasOwnProperty.call(arrayInstrumentations, key)) {
+                return Reflect.get(arrayInstrumentations, key, receiver);
+            }
+
             // 对于只读属性没有任何方式来修改它们，所以也不需要添加副作用用于在属性变更的时候自动触发副作用
-            if (!isReadonly) {
+            // 使用for of循环的时候数组内部会调用Symbol.iterator这个特殊的key
+            if (!isReadonly && typeof key !== 'symbol') {
                 track(target, key);
             }
 
@@ -160,7 +213,7 @@ function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, is
                 // 数据变更或者至少有一个不是NaN时才触发副作用
                 // NaN !== NaN
                 if (oldValue !== newValue && (!Number.isNaN(oldValue) || !Number.isNaN(newValue))) {
-                    trigger(target, key, hasOwnProp ? TriggerTypes.Set : TriggerTypes.Add);
+                    trigger(target, key, hasOwnProp ? TriggerTypes.Set : TriggerTypes.Add, newValue);
                 }
             }
 
@@ -177,7 +230,7 @@ function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, is
         // https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-enumerate-object-properties
         // 用于拦截for in循环操作
         ownKeys(target) {
-            track(target, ITERATE_KEY);
+            track(target, Array.isArray(target) ? 'length' : ITERATE_KEY);
             return Reflect.ownKeys(target);
         },
         deleteProperty(target, key) {
