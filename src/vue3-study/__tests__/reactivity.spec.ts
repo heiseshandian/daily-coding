@@ -25,6 +25,36 @@ describe('reactivity', () => {
         expect(fn).toHaveBeenCalled();
     });
 
+    test('for in,delete key', () => {
+        const original: any = { foo: 1 };
+        const observed = reactive(original);
+        const fn = jest.fn(() => {
+            for (const _key in observed) {
+                // do nothing
+            }
+        });
+
+        effect(fn);
+        delete observed.foo;
+
+        expect(fn).toHaveBeenCalledTimes(2);
+    });
+
+    test('for in,add key', () => {
+        const original: any = { foo: 1 };
+        const observed = reactive(original);
+        const fn = jest.fn(() => {
+            for (const _key in observed) {
+                // do nothing
+            }
+        });
+
+        effect(fn);
+        observed.bar = '1';
+
+        expect(fn).toHaveBeenCalledTimes(2);
+    });
+
     test('Object getter reactive', () => {
         const original = {
             foo: 1,

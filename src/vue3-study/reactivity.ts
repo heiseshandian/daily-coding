@@ -38,16 +38,18 @@ function track(target: object, key: PropertyKey) {
     activeEffect.effectsList.push(effects);
 }
 
-function trigger(target: object, key: PropertyKey) {
-    const depsMap = bucket.get(target);
-    if (!depsMap) {
+enum TriggerTypes {
+    Set,
+    Add,
+}
+
+function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set) {
+    const effectsMap = bucket.get(target);
+    if (!effectsMap) {
         return;
     }
 
-    const effects = depsMap.get(key);
-    if (!effects) {
-        return;
-    }
+    const effects = effectsMap.get(key);
 
     /* 这里之所以需要copy是因为fn在执行的过程中会先删除依赖并重新收集依赖
     而js规范指定set中的元素被删除然后重新加入会导致循环继续执行，比如说下面的代码会进入死循环
@@ -58,6 +60,11 @@ function trigger(target: object, key: PropertyKey) {
     }); */
     const effectsToRun = new Set<ActiveEffect>();
     addEffectsToRun(effectsToRun, effects);
+
+    if (type === TriggerTypes.Add && effectsMap.has(ITERATE_KEY)) {
+        const iterateEffects = effectsMap.get(ITERATE_KEY);
+        addEffectsToRun(effectsToRun, iterateEffects);
+    }
 
     effectsToRun.forEach((fn) => {
         // 用户定义了调度器则直接把控制权交给用户定义的调度器
@@ -82,6 +89,8 @@ function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEff
         }
     });
 }
+
+const ITERATE_KEY = Symbol();
 
 function createReactive<T extends object>(target: T, isShallow = false) {
     return new Proxy<T>(target, {
@@ -121,22 +130,36 @@ function createReactive<T extends object>(target: T, isShallow = false) {
         },
         set(target, key, newValue, receiver) {
             const oldValue = Reflect.get(target, key, receiver);
+            // 用于区别是否新增属性，新增属性会影响for in行为，我们需要触发ITERATE_KEY相关的副作用
+            const hasOwnProp = Object.prototype.hasOwnProperty.call(target, key);
             const ret = Reflect.set(target, key, newValue, receiver);
 
             // 数据变更或者至少有一个不是NaN时才触发副作用
             // NaN !== NaN
             if (oldValue !== newValue && (!Number.isNaN(oldValue) || !Number.isNaN(newValue))) {
-                trigger(target, key);
+                trigger(target, key, hasOwnProp ? TriggerTypes.Set : TriggerTypes.Add);
             }
 
             return ret;
         },
-        // 用于拦截 key in obj操作
         // https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-relational-operators
+        // 用于拦截 key in obj操作
         // key in obj最终会通过调用obj上的[[HasProperty]]内部方法来判断结果，所以我们可以使用has来进行拦截
         has(target, key) {
             track(target, key);
             return Reflect.has(target, key);
+        },
+        // https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-runtime-semantics-forinofheadevaluation
+        // https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-enumerate-object-properties
+        // 用于拦截for in循环操作
+        ownKeys(target) {
+            track(target, ITERATE_KEY);
+            return Reflect.ownKeys(target);
+        },
+        deleteProperty(target, key) {
+            // 删除属性会影响for in行为
+            trigger(target, ITERATE_KEY);
+            return Reflect.deleteProperty(target, key);
         },
     });
 }
