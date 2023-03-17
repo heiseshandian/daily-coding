@@ -8054,3 +8054,125 @@ function isPalindrome(s: string) {
 
     return true;
 }
+
+/* 
+https://leetcode.com/problems/gas-station/description/
+There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].
+
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to its next (i + 1)th station. 
+You begin the journey with an empty tank at one of the gas stations.
+
+Given two integer arrays gas and cost, return the starting gas station's index if you can travel around the circuit 
+once in the clockwise direction, otherwise return -1. If there exists a solution, it is guaranteed to be unique
+
+Input: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
+Output: 3
+Explanation:
+Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+Travel to station 4. Your tank = 4 - 1 + 5 = 8
+Travel to station 0. Your tank = 8 - 2 + 1 = 7
+Travel to station 1. Your tank = 7 - 3 + 2 = 6
+Travel to station 2. Your tank = 6 - 4 + 3 = 5
+Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3.
+Therefore, return 3 as the starting index.
+
+Constraints:
+n == gas.length == cost.length
+1 <= n <= 105
+0 <= gas[i], cost[i] <= 104
+*/
+// 暴力解法，遍历每一个开始位置
+export function canCompleteCircuit(gas: number[], cost: number[]): number {
+    const starts: number[] = [];
+    // 获取可能的开始位置
+    for (let i = 0; i < gas.length; i++) {
+        if (gas[i] >= cost[i]) {
+            starts.push(i);
+        }
+    }
+
+    if (starts.length === 0) {
+        return -1;
+    }
+
+    // 枚举每一个开始位置
+    for (let i = 0; i < starts.length; i++) {
+        const start = starts[i];
+
+        let cur = start;
+        let prev = gas[cur];
+        let next = (cur + 1) % gas.length;
+        while (next !== start) {
+            if (prev < cost[cur]) {
+                break;
+            }
+            prev = prev - cost[cur] + gas[next];
+
+            cur = (cur + 1) % gas.length;
+            next = (next + 1) % gas.length;
+        }
+
+        if (next === start && prev >= cost[cur]) {
+            return start;
+        }
+    }
+
+    return -1;
+}
+
+/* 
+常见的时间复杂度优化思路
+
+1）根据数据量猜测时间复杂度（10^5）可能需要一个O(nlogn)甚至是O(n)的解法
+2）对于暴力尝试过程中已经失败的路径能否为下一次尝试加速，
+    a) 比如说分析已经尝试过的路径是否已经不可能，可以直接从未尝试过的地方继续尝试
+    b) 或者是在尝试的过程中记录一些信息，为下次尝试加速，类似kmp和manacher算法
+
+本题采取的优化策略就是分析得知已经尝试的位置不可能在作为起点位置
+假设我们可以从i-j,到j+1的时候油量变为负数，那么假设i-j之间的k点，那么从k点出发
+必然也无法到达j+1点，因为如果从i出发的话到k点的初始油量必然大于等于0，如果从k点出发初始油量
+已经是0，且从i触发无法到达j+1，那么从初始油量更少的k点出发必然也无法到达j+1，所有我们下次起点可直接从j+1开始
+整体时间复杂度O(n)
+*/
+export function canCompleteCircuit2(gas: number[], cost: number[]): number {
+    const len = gas.length;
+
+    let i = 0;
+    while (i < len) {
+        let j = 0;
+        let prev = 0;
+        while (j < len) {
+            const k = (i + j) % len;
+            prev += gas[k] - cost[k];
+            if (prev < 0) {
+                break;
+            }
+            j++;
+        }
+
+        if (j === len) {
+            return i;
+        }
+        i = i + j + 1;
+    }
+
+    return -1;
+}
+
+export function canCompleteCircuit3(gas: number[], cost: number[]): number {
+    let start = 0;
+    let tank = 0;
+    let sum = 0;
+    for (let i = 0; i < gas.length; i++) {
+        tank += gas[i] - cost[i];
+        sum += gas[i] - cost[i];
+        if (tank < 0) {
+            start = i + 1;
+            tank = 0;
+        }
+    }
+
+    // 如果sum小于0则必然不能完成环绕旅行，反之如果>=0则必然存在一个起点使得从这个起点出发可以完成旅行
+    // 而经过上面的循环start是唯一可能的起点
+    return sum < 0 ? -1 : start;
+}

@@ -2700,3 +2700,20 @@ export const partitionPalindromeTestData = [
         expected: [['a']],
     },
 ];
+
+export const canCompleteCircuitTestData = [
+    {
+        input: {
+            gas: [1, 2, 3, 4, 5],
+            cost: [3, 4, 5, 1, 2],
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            gas: [2, 3, 4],
+            cost: [3, 4, 3],
+        },
+        expected: -1,
+    },
+];

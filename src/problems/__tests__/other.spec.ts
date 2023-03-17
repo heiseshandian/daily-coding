@@ -326,8 +326,14 @@ import {
     ladderLengthTestData,
     flipNonEdgeOToXTestData,
 } from './other.testdata';
-import { flipNonEdgeOToX, partitionPalindrome } from '../other';
-import { partitionPalindromeTestData } from './other.testdata';
+import {
+    flipNonEdgeOToX,
+    partitionPalindrome,
+    canCompleteCircuit,
+    canCompleteCircuit2,
+    canCompleteCircuit3,
+} from '../other';
+import { partitionPalindromeTestData, canCompleteCircuitTestData } from './other.testdata';
 import {
     canFinishAllCourses3,
     printEdgeNodes,
@@ -1034,5 +1040,11 @@ describe('other', () => {
 
     it.each(partitionPalindromeTestData)('partitionPalindrome', ({ input, expected }) => {
         expect(partitionPalindrome(input)).toEqual(expected);
+    });
+
+    it.each(canCompleteCircuitTestData)('canCompleteCircuit', ({ input: { gas, cost }, expected }) => {
+        expect(canCompleteCircuit(gas, cost)).toBe(expected);
+        expect(canCompleteCircuit2(gas, cost)).toBe(expected);
+        expect(canCompleteCircuit3(gas, cost)).toBe(expected);
     });
 });
