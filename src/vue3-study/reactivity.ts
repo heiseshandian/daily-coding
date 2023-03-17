@@ -41,6 +41,7 @@ function track(target: object, key: PropertyKey) {
 enum TriggerTypes {
     Set,
     Add,
+    Delete,
 }
 
 function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set, newValue?: any) {
@@ -61,12 +62,14 @@ function trigger(target: object, key: PropertyKey, type = TriggerTypes.Set, newV
     const effectsToRun = new Set<ActiveEffect>();
     addEffectsToRun(effectsToRun, effects);
 
-    if (type === TriggerTypes.Add && effectsMap.has(ITERATE_KEY)) {
+    const isAddOrDelete = type === TriggerTypes.Add || type === TriggerTypes.Delete;
+
+    if (isAddOrDelete && effectsMap.has(ITERATE_KEY)) {
         const iterateEffects = effectsMap.get(ITERATE_KEY);
         addEffectsToRun(effectsToRun, iterateEffects);
     }
 
-    if (type === TriggerTypes.Add && Array.isArray(target) && effectsMap.has('length')) {
+    if (isAddOrDelete && Array.isArray(target) && effectsMap.has('length')) {
         const lengthEffects = effectsMap.get('length');
         addEffectsToRun(effectsToRun, lengthEffects);
     }
@@ -245,7 +248,7 @@ function createReactive<T extends object>(target: T, cacheMap: WeakMap<T, T>, is
             // 删除的key是target自身属性且删除操作成功后再触发副作用
             if (hadKey && ret) {
                 // 删除属性会影响for in行为
-                trigger(target, ITERATE_KEY);
+                trigger(target, Array.isArray(target) ? 'length' : ITERATE_KEY, TriggerTypes.Delete);
             }
             return ret;
         },

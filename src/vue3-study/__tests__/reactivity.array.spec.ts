@@ -34,6 +34,10 @@ describe('reactivity/array', () => {
 
         observed[2] = '1';
         expect(fn).toHaveBeenCalled();
+        fn.mockClear();
+
+        delete observed[2];
+        expect(fn).toHaveBeenCalled();
     });
 
     test('for of', () => {
