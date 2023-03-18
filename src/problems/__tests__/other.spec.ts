@@ -86,12 +86,10 @@ import {
     numSubMatrixSumTarget,
     numTilePossibilities,
     product,
-    reverseBetween,
     reverseBits,
     reverseBits2,
     reversePairs,
     rotate,
-    rotateRight,
     shortestBridge,
     splitEarth,
     trap,
@@ -154,7 +152,6 @@ import {
     maxUncrossedLinesTestData,
     avoidFloodTestData,
     rotateTestData,
-    rotateRightTestData,
     reversePairsTestData,
     leastWaitingTimeTestData,
     numTilePossibilitiesTestData,
@@ -243,12 +240,7 @@ import {
     countSubsequence,
     getCalculateMethods2,
 } from '../other';
-import {
-    countSubsequenceTestData,
-    reverseBetweenTestData,
-    updatePathsTestData,
-    getMinCandyTestData3,
-} from './other.testdata';
+import { countSubsequenceTestData, updatePathsTestData, getMinCandyTestData3 } from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -259,7 +251,6 @@ import {
     getMinSumThatCanNotBeComposedTestData,
     countLostNumbersTestData,
 } from './other.testdata';
-import { SingleLinkedList } from '../../algorithm/linked-list';
 import {
     updatePaths,
     getMinCandy3,
@@ -648,12 +639,6 @@ describe('other', () => {
         expect(countJointMethodsDp2(str, arr)).toBe(expected);
     });
 
-    it.each(reverseBetweenTestData)('reverseBetween', ({ input: { arr, left, right }, expected }) => {
-        const head = SingleLinkedList.from(arr);
-
-        expect(SingleLinkedList.toArray(reverseBetween(head, left, right))).toEqual(expected);
-    });
-
     it.each(updatePathsTestData)('updatePaths', ({ input, expected }) => {
         updatePaths(input);
 
@@ -892,11 +877,6 @@ describe('other', () => {
         rotate(input);
 
         expect(input).toEqual(expected);
-    });
-
-    it.each(rotateRightTestData)('rotateRight', ({ input: { arr, k }, expected }) => {
-        const result = SingleLinkedList.toArray(rotateRight(SingleLinkedList.from(arr), k));
-        expect(result).toEqual(expected);
     });
 
     it.each(reversePairsTestData)('reversePairs', ({ input, expected }) => {
