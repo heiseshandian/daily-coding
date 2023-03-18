@@ -109,6 +109,7 @@ function addEffectsToRun(effectsToRun: Set<ActiveEffect>, effects: Set<ActiveEff
 
 enum ActiveTargetFlags {
     Raw = '__v_raw__',
+    Raf = '__v_raf__',
 }
 
 const ITERATE_KEY = Symbol();
@@ -459,4 +460,83 @@ function traverse(val: any, visited = new Set()) {
     }
 
     return val;
+}
+
+type Ref<T = any> = {
+    value: T;
+    [ActiveTargetFlags.Raf]?: true;
+};
+
+// 用于支持基础值的响应式
+export function ref(val: any): Ref {
+    const wrapper = {
+        value: val,
+    };
+
+    // 这里之所以使用defineProperty来添加属性是为了避免外部修改或者枚举到ActiveTargetFlags.Raf这个key
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+    // 默认值一般是false或者undefined
+    Object.defineProperty(wrapper, ActiveTargetFlags.Raf, {
+        value: true,
+    });
+
+    return reactive(wrapper);
+}
+
+/* 
+用于解决响应丢失问题
+
+const obj=reactive({foo:1});
+
+const newObj={...obj}
+解构之后newObj不再具备响应性
+*/
+export function toRef<T extends object, K extends keyof T>(obj: T, key: K): Ref {
+    const wrapper = {
+        get value() {
+            return obj[key];
+        },
+        set value(val) {
+            obj[key] = val;
+        },
+    };
+
+    Object.defineProperty(wrapper, ActiveTargetFlags.Raf, {
+        value: true,
+    });
+
+    return wrapper;
+}
+
+export function toRefs<T extends object>(obj: T): Record<keyof T, Ref> {
+    const ret: any = {};
+
+    for (const key in obj) {
+        ret[key] = toRef(obj, key);
+    }
+
+    return ret;
+}
+
+// 用于支持自动脱ref
+export function proxyRefs<T extends object>(
+    target: T
+): {
+    [K in keyof T]: T[K] extends Ref<infer V> ? V : T[K];
+} {
+    return new Proxy<any>(target, {
+        get(target, key, receiver) {
+            const value = Reflect.get(target, key, receiver);
+            return (value as Ref)[ActiveTargetFlags.Raf] ? (value as Ref).value : value;
+        },
+        set(target, key, newValue, receiver) {
+            const value = target[key];
+            if ((value as Ref)[ActiveTargetFlags.Raf]) {
+                (value as Ref).value = newValue;
+                return true;
+            }
+
+            return Reflect.set(target, key, newValue, receiver);
+        },
+    });
 }
