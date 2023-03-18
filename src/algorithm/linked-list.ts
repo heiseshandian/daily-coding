@@ -9,7 +9,7 @@ export class SingleLinkedList {
 
     static toArray(head: SingleLinkedList | null) {
         let cur: SingleLinkedList | null = head;
-        const result = [];
+        const result: number[] = [];
         while (cur) {
             result.push(cur.val);
             cur = cur.next;
@@ -52,8 +52,8 @@ export class DoubleLinkedList {
 }
 
 export function reverseSingleLinkedList(head: SingleLinkedList | null) {
-    let prev = null;
-    let next = null;
+    let prev: SingleLinkedList | null = null;
+    let next: SingleLinkedList | null = null;
 
     while (head) {
         next = head.next;
@@ -66,8 +66,8 @@ export function reverseSingleLinkedList(head: SingleLinkedList | null) {
 }
 
 export function reverseDoubleLinkedList(head: DoubleLinkedList | null) {
-    let prev = null;
-    let next = null;
+    let prev: DoubleLinkedList | null = null;
+    let next: DoubleLinkedList | null = null;
 
     while (head) {
         next = head.next;
