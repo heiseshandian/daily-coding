@@ -29,6 +29,7 @@ const Fragment = Symbol();
 export interface VNode {
     type: string | object | symbol;
     props: Record<PropertyKey, any>;
+    key: PropertyKey;
     children: VNode[] | string;
     el?: RenderElement;
 }
@@ -43,7 +44,7 @@ interface RendererOptions {
     patchProps: (el: RenderElement, key: string, prevValue: any, newValue: any) => void;
     removeChild: (parent: ParentNode, child: HTMLElement) => void;
 
-    insert: (el: RenderElement, parent: HTMLElement, anchor?: HTMLElement | null) => void;
+    insert: (el: RenderElement, parent: HTMLElement, anchor?: ChildNode | null) => void;
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -63,7 +64,7 @@ export function createRenderer(options: RendererOptions) {
         container._vnode = vnode;
     }
 
-    function patch(n1: VNode | null | undefined, n2: VNode, container: RenderElement) {
+    function patch(n1: VNode | null | undefined, n2: VNode, container: RenderElement, anchor?: ChildNode | null) {
         // 如果旧节点和新节点的类型不同则没有必要patch（比如说老的n1是input，而新的n2是p，那这时候patch是没有意义的）
         // 正确的步骤是卸载旧节点然后挂载新节点
         if (n1 && n1.type !== n2.type) {
@@ -75,7 +76,7 @@ export function createRenderer(options: RendererOptions) {
 
         if (typeof type === 'string') {
             if (!n1) {
-                mountElement(n2, container);
+                mountElement(n2, container, anchor);
             } else {
                 patchElement(n1, n2);
             }
@@ -103,7 +104,7 @@ export function createRenderer(options: RendererOptions) {
         }
     }
 
-    function mountElement(vnode: VNode, container: RenderElement) {
+    function mountElement(vnode: VNode, container: RenderElement, anchor?: ChildNode | null) {
         const el = (vnode.el = createElement(vnode.type as string));
         if (vnode.props) {
             for (const key in vnode.props) {
@@ -119,7 +120,7 @@ export function createRenderer(options: RendererOptions) {
             });
         }
 
-        insert(el, container);
+        insert(el, container, anchor);
     }
 
     function patchElement(n1: VNode, n2: VNode) {
@@ -155,8 +156,58 @@ export function createRenderer(options: RendererOptions) {
 
             setElementText(container, n2.children);
         } else if (Array.isArray(n2.children)) {
+            // 简单diff算法
             if (Array.isArray(n1.children)) {
-                // diff算法
+                const oldChildren = n1.children;
+                const newChildren = n2.children;
+
+                let lastFoundIndex = 0;
+                // 通过两层for循环来找老节点中可复用的节点
+                for (let i = 0; i < newChildren.length; i++) {
+                    let found = false;
+                    for (let j = 0; j < oldChildren.length; j++) {
+                        // 在旧节点中找可以复用的节点
+                        if (newChildren[i].key === oldChildren[j].key) {
+                            found = true;
+                            patch(oldChildren[j], newChildren[i], container);
+
+                            if (j < lastFoundIndex) {
+                                const prevNode = newChildren[i - 1];
+                                if (prevNode) {
+                                    const anchor = prevNode.el!.nextSibling;
+                                    insert(newChildren[i].el!, container, anchor);
+                                }
+                            } else {
+                                lastFoundIndex = j;
+                            }
+                            break;
+                        }
+                    }
+
+                    // 如果没有找到可复用的节点说明是新增节点
+                    if (!found) {
+                        const prevVNode = newChildren[i - 1];
+                        let anchor: ChildNode | null = null;
+                        if (prevVNode) {
+                            // 如果有前一个vnode节点，则使用它的下一个兄弟节点作为锚点元素
+                            anchor = prevVNode.el!.nextSibling;
+                        } else {
+                            // 如果没有前一个vnode节点，说明即将挂载的新节点是第一个子节点
+                            // 这时我们使用容器元素的firstChild作为锚点
+                            anchor = container.firstChild;
+                        }
+
+                        patch(null, newChildren[i], container, anchor);
+                    }
+                }
+
+                // 删除不存在的节点
+                for (let i = 0; i < oldChildren.length; i++) {
+                    const has = newChildren.find((v) => v.key === oldChildren[i].key);
+                    if (!has) {
+                        unmount(oldChildren[i]);
+                    }
+                }
             } else {
                 setElementText(container, '');
                 n2.children.forEach((c) => patch(null, c, container));
