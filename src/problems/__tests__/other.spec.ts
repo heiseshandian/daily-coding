@@ -95,6 +95,7 @@ import {
     trap,
     trapRainWater,
     unzipStr,
+    wordBreak,
     zigzagLevelOrder,
 } from '../other';
 import {
@@ -240,7 +241,12 @@ import {
     countSubsequence,
     getCalculateMethods2,
 } from '../other';
-import { countSubsequenceTestData, updatePathsTestData, getMinCandyTestData3 } from './other.testdata';
+import {
+    countSubsequenceTestData,
+    updatePathsTestData,
+    getMinCandyTestData3,
+    wordBreakTestData,
+} from './other.testdata';
 import {
     getMinMoneyOfPassingMonsterDp,
     getMinMoneyOfPassingMonsterDp2,
@@ -1026,5 +1032,9 @@ describe('other', () => {
         expect(canCompleteCircuit(gas, cost)).toBe(expected);
         expect(canCompleteCircuit2(gas, cost)).toBe(expected);
         expect(canCompleteCircuit3(gas, cost)).toBe(expected);
+    });
+
+    it.each(wordBreakTestData)('wordBreak', ({ input: { s, wordDict }, expected }) => {
+        expect(wordBreak(s, wordDict)).toBe(expected);
     });
 });

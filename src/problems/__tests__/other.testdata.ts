@@ -2681,3 +2681,27 @@ export const canCompleteCircuitTestData = [
         expected: -1,
     },
 ];
+
+export const wordBreakTestData = [
+    {
+        input: {
+            s: 'leetcode',
+            wordDict: ['leet', 'code'],
+        },
+        expected: true,
+    },
+    {
+        input: {
+            s: 'applepenapple',
+            wordDict: ['apple', 'pen'],
+        },
+        expected: true,
+    },
+    {
+        input: {
+            s: 'catsandog',
+            wordDict: ['cats', 'dog', 'sand', 'and', 'cat'],
+        },
+        expected: false,
+    },
+];

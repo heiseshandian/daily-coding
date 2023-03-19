@@ -8083,3 +8083,47 @@ export function canCompleteCircuit3(gas: number[], cost: number[]): number {
     // 而经过上面的循环start是唯一可能的起点
     return sum < 0 ? -1 : start;
 }
+
+/* 
+https://leetcode.com/problems/word-break/description/
+Given a string s and a dictionary of strings wordDict, return true if s can be segmented 
+into a space-separated sequence of one or more dictionary words.
+
+Note that the same word in the dictionary may be reused multiple times in the segmentation.
+
+Input: s = "leetcode", wordDict = ["leet","code"]
+Output: true
+Explanation: Return true because "leetcode" can be segmented as "leet code".
+*/
+export function wordBreak(s: string, wordDict: string[]): boolean {
+    const set: Set<string> = new Set();
+    for (let i = 0; i < wordDict.length; i++) {
+        set.add(wordDict[i]);
+    }
+
+    const dp: boolean[] = new Array(s.length).fill(undefined);
+
+    return wordBreakProcess(s, 0, set, dp);
+}
+
+function wordBreakProcess(s: string, i: number, set: Set<string>, dp: boolean[]): boolean {
+    if (dp[i] !== undefined) {
+        return dp[i];
+    }
+
+    if (i === s.length) {
+        dp[i] = true;
+        return dp[i];
+    }
+
+    let result = false;
+    for (let k = 1; k <= 20; k++) {
+        const word = s.slice(i, i + k);
+        if (set.has(word)) {
+            result = result || wordBreakProcess(s, i + k, set, dp);
+        }
+    }
+
+    dp[i] = result;
+    return dp[i];
+}
