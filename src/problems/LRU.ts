@@ -28,17 +28,23 @@ export class LRUCache<K, V> {
     }
 
     public set(key: K, value: V) {
-        const node = new LRUNode(key, value);
+        if (this.map.has(key)) {
+            const node = this.map.get(key)!;
+            node.val = value;
+            this.doubleList.moveToTail(node);
+        } else {
+            const node = new LRUNode(key, value);
 
-        // 超过capacity需要先删除再加
-        if (this.map.size === this.capacity) {
-            // 超过capacity且删除的是头部，则头部必然不为空
-            const head = this.doubleList.deleteHead() as LRUNode<K, V>;
-            this.map.delete(head.key);
+            // 超过capacity需要先删除再加
+            if (this.map.size === this.capacity) {
+                // 超过capacity且删除的是头部，则头部必然不为空
+                const head = this.doubleList.deleteHead() as LRUNode<K, V>;
+                this.map.delete(head.key);
+            }
+
+            this.map.set(key, node);
+            this.doubleList.addNode(node);
         }
-
-        this.map.set(key, node);
-        this.doubleList.addNode(node);
     }
 }
 
