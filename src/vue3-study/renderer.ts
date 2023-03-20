@@ -221,6 +221,129 @@ export function createRenderer(options: RendererOptions) {
         }
     }
 
+    /* 
+    快速diff算法
+
+    借鉴纯文本Diff算法的预处理步骤，前后相等的部分直接跳过
+    */
+    // make ts happy(unused functions)
+    // @ts-ignore
+    function patchKeyedChildren(n1: VNode, n2: VNode, container: RenderElement) {
+        const oldChildren = n1.children as VNode[];
+        const newChildren = n2.children as VNode[];
+
+        // 处理相同的前置节点
+        let j = 0;
+        let oldNode = oldChildren[j];
+        let newNode = newChildren[j];
+        while (oldNode.key === newNode.key) {
+            patch(oldNode, newNode, container);
+            j++;
+
+            oldNode = oldChildren[j];
+            newNode = newChildren[j];
+        }
+
+        // 处理相同的后置节点
+        let oldEnd = oldChildren.length - 1;
+        let newEnd = newChildren.length - 1;
+        oldNode = oldChildren[oldEnd];
+        newNode = newChildren[newEnd];
+        while (oldNode.key === newNode.key) {
+            patch(oldNode, newNode, container);
+            oldNode = oldChildren[--oldEnd];
+            newNode = newChildren[--newEnd];
+        }
+
+        // 老节点处理完，只剩下新增节点,j-->newEnd之间的节点应该作为新节点插入
+        if (oldEnd < j && newEnd >= j) {
+            const anchorIndex = newEnd + 1;
+            const anchor = anchorIndex < newChildren.length ? newChildren[anchorIndex].el : null;
+
+            while (j <= newEnd) {
+                patch(null, newChildren[j++], container, anchor);
+            }
+        } else if (j > newEnd && j <= oldEnd) {
+            // 新节点已经处理完，只剩下需要卸载的老节点
+            while (j <= oldEnd) {
+                unmount(oldChildren[j++]);
+            }
+        } else {
+            // 新的一组子节点中剩余未处理节点的数量
+            const toBePatched = newEnd - j + 1;
+
+            /* 
+            用于存储新的组子节点在旧的一组子节点中的位置索引，并用来计算出一个最长递增子序列，可
+            用于辅助完成DOM移动操作
+            */
+            const source = new Array(toBePatched);
+            source.fill(-1);
+
+            const oldStart = j;
+            const newStart = j;
+            const newKeyIndexMap: Partial<Record<PropertyKey, number>> = {};
+            for (let k = newStart; k <= newEnd; k++) {
+                newKeyIndexMap[newChildren[k].key] = k;
+            }
+
+            // 用于判断是否需要移动节点
+            let moved = false;
+            let lastIndex = 0;
+
+            // 已经经过patch的节点
+            let patched = 0;
+
+            // 遍历旧节点中未处理的节点
+            for (let i = oldStart; i <= oldEnd; i++) {
+                if (patched >= toBePatched) {
+                    unmount(oldChildren[i]);
+                    continue;
+                }
+
+                const newIndex = newKeyIndexMap[oldChildren[i].key];
+                if (newIndex !== undefined) {
+                    patch(oldChildren[i], newChildren[newIndex], container);
+                    patched++;
+
+                    // source数组是从0开始，所以需要减去newStart修复下索引
+                    // 存储新的一组节点在老节点中的位置信息
+                    source[newIndex - newStart] = i;
+
+                    if (newIndex < lastIndex) {
+                        moved = true;
+                    } else {
+                        lastIndex = newIndex;
+                    }
+                } else {
+                    // 没有找到对应的新节点，说明需要卸载掉
+                    unmount(oldChildren[i]);
+                }
+            }
+
+            const seq = moved ? getSequence(source) : [];
+            let s = seq.length - 1;
+            // 这里之所以从后往前是因为可以利用后面先插入的节点作为锚点
+            for (let i = toBePatched - 1; i >= 0; i--) {
+                const pos = i + newStart;
+                const nextPos = pos + 1;
+                const anchor = nextPos < newChildren.length ? newChildren[nextPos].el : null;
+
+                if (source[i] === -1) {
+                    // 新增节点，需要patch并插入到正确位置
+                    patch(null, newChildren[pos], container, anchor);
+                } else if (moved) {
+                    if (s < 0 || i !== seq[s]) {
+                        // 上面已经patch过，只需要移动到正确的位置即可
+                        insert(newChildren[pos].el!, container, anchor);
+                    } else {
+                        // 当前节点属于最长递增子序列，上面已经patch过，不用移动，直接s--即可
+                        s--;
+                    }
+                }
+            }
+        }
+    }
+
     function unmount(vnode: VNode) {
         // 对于Fragment只需要逐个卸载children即可
         if (vnode.type === Fragment) {
@@ -348,4 +471,46 @@ function shouldSetAsDomProps(el: RenderElement, key: PropertyKey) {
 
     // 判断当前key是否存在于dom properties
     return key in el;
+}
+
+// 获取最长递增子序列
+function getSequence(arr: number[]): number[] {
+    const p = arr.slice();
+    const result = [0];
+    let i, j, u, v, c;
+    const len = arr.length;
+    for (i = 0; i < len; i++) {
+        const arrI = arr[i];
+        if (arrI !== 0) {
+            j = result[result.length - 1];
+            if (arr[j] < arrI) {
+                p[i] = j;
+                result.push(i);
+                continue;
+            }
+            u = 0;
+            v = result.length - 1;
+            while (u < v) {
+                c = (u + v) >> 1;
+                if (arr[result[c]] < arrI) {
+                    u = c + 1;
+                } else {
+                    v = c;
+                }
+            }
+            if (arrI < arr[result[u]]) {
+                if (u > 0) {
+                    p[i] = result[u - 1];
+                }
+                result[u] = i;
+            }
+        }
+    }
+    u = result.length;
+    v = result[u - 1];
+    while (u-- > 0) {
+        result[u] = v;
+        v = p[v];
+    }
+    return result;
 }
