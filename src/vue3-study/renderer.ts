@@ -83,8 +83,13 @@ interface ComponentInstance<T extends object = any, P extends object = any> {
     unmounted: LifeCycleHook[];
 }
 
+interface FunctionalComponent {
+    (): VNode;
+    props: any;
+}
+
 export interface VNode {
-    type: string | ComponentOptions | symbol;
+    type: string | ComponentOptions | FunctionalComponent | symbol;
     props: Record<PropertyKey, any>;
     key: PropertyKey;
     children: VNode[] | string;
@@ -157,7 +162,7 @@ export function createRenderer(options: RendererOptions) {
             } else {
                 patchChildren(n1, n2, container);
             }
-        } else if (typeof type === 'object') {
+        } else if (typeof type === 'object' || typeof type === 'function') {
             if (!n1) {
                 mountComponent(n2, container, anchor);
             } else {
@@ -167,7 +172,15 @@ export function createRenderer(options: RendererOptions) {
     }
 
     function mountComponent(vnode: VNode, container: RenderElement, anchor?: ChildNode | null) {
-        const options = vnode.type as ComponentOptions;
+        // 支持有状态组件与函数式组件
+        let options = vnode.type as ComponentOptions | FunctionalComponent;
+        if (isFunction(options)) {
+            options = {
+                render: options,
+                props: options.props,
+            };
+        }
+
         const {
             data,
             props: propsOption,
