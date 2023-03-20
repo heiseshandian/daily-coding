@@ -91,8 +91,8 @@ interface FunctionalComponent {
 export interface VNode {
     type: string | ComponentOptions | FunctionalComponent | symbol;
     props: Record<PropertyKey, any>;
-    key: PropertyKey;
-    children: VNode[] | string;
+    key?: PropertyKey;
+    children?: VNode[] | string;
     el?: RenderElement;
     component?: ComponentInstance;
 }
@@ -547,7 +547,7 @@ export function createRenderer(options: RendererOptions) {
             const newStart = j;
             const newKeyIndexMap: Partial<Record<PropertyKey, number>> = {};
             for (let k = newStart; k <= newEnd; k++) {
-                newKeyIndexMap[newChildren[k].key] = k;
+                newKeyIndexMap[newChildren[k].key!] = k;
             }
 
             // 用于判断是否需要移动节点
@@ -564,7 +564,7 @@ export function createRenderer(options: RendererOptions) {
                     continue;
                 }
 
-                const newIndex = newKeyIndexMap[oldChildren[i].key];
+                const newIndex = newKeyIndexMap[oldChildren[i].key!];
                 if (newIndex !== undefined) {
                     patch(oldChildren[i], newChildren[newIndex], container);
                     patched++;
