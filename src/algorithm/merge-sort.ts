@@ -19,7 +19,7 @@ function recursiveMergeSort(arr: number[], left: number, right: number) {
 }
 
 function merge(arr: number[], left: number, mid: number, right: number) {
-    const temp = [];
+    const temp: number[] = [];
 
     let leftIndex = left;
     let rightIndex = mid + 1;
@@ -105,7 +105,7 @@ function recursiveMinSumOfArray(arr: number[], left: number, right: number): num
 }
 
 function mergeGetMinSumOfArray(arr: number[], left: number, mid: number, right: number) {
-    const temp = [];
+    const temp: number[] = [];
     let sum = 0;
 
     let leftIndex = left;
@@ -182,7 +182,7 @@ function recursiveGetInversionPairCount(arr: number[], left: number, right: numb
 }
 
 function mergeGetInversionPairCount(arr: number[], left: number, mid: number, right: number) {
-    const temp = [];
+    const temp: number[] = [];
     let sum = 0;
 
     let leftIndex = left;

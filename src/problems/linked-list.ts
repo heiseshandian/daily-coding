@@ -151,3 +151,83 @@ export function rotateRight(head: SingleLinkedList | null, k: number): SingleLin
 
     return newHead;
 }
+
+/* 
+https://leetcode.com/problems/sort-list/description/
+
+Given the head of a linked list, return the list after sorting it in ascending order.
+链表排序
+*/
+// 时间复杂度O(nlogn) 空间复杂度O(n)
+export function sortList(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head) {
+        return head;
+    }
+
+    let cur: SingleLinkedList | null = head;
+    const nodes: SingleLinkedList[] = [];
+    while (cur) {
+        nodes.push(cur);
+        cur = cur.next;
+    }
+
+    nodes.sort((a, b) => a.val - b.val);
+
+    const newHead = nodes[0];
+
+    nodes.reduce((prev, next) => {
+        prev.next = next;
+        return next;
+    });
+    nodes[nodes.length - 1].next = null;
+
+    return newHead;
+}
+
+// 时间复杂度O(nlogn) 空间复杂度O(1)
+export function sortList2(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head || !head.next) {
+        return head;
+    }
+
+    const secondHalf = splitListInHalf(head);
+    const [left, right] = [sortList2(head), sortList2(secondHalf)];
+    return merge(left, right);
+}
+
+function splitListInHalf(head: SingleLinkedList) {
+    let slow: SingleLinkedList = head;
+    let fast: SingleLinkedList | null = head;
+    let prev: SingleLinkedList | null = null;
+    while (fast && fast.next) {
+        prev = slow;
+        slow = slow.next!;
+        fast = fast.next.next;
+    }
+
+    // 将前后两部分断连
+    if (prev) {
+        prev.next = null;
+    }
+
+    return slow;
+}
+
+function merge(list1: SingleLinkedList | null, list2: SingleLinkedList | null): SingleLinkedList | null {
+    const newHead = new SingleLinkedList(undefined);
+
+    let cur = newHead;
+    while (list1 && list2) {
+        if (list1.val <= list2.val) {
+            cur.next = list1;
+            list1 = list1.next;
+        } else {
+            cur.next = list2;
+            list2 = list2.next;
+        }
+        cur = cur.next;
+    }
+    cur.next = list1 || list2;
+
+    return newHead.next;
+}

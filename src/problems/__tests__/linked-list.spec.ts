@@ -1,5 +1,10 @@
-import { NodeWithRandom, copyRandomList, reverseBetween, rotateRight } from '../linked-list';
-import { copyRandomListTestData, reverseBetweenTestData, rotateRightTestData } from './linked-list.testdata';
+import { NodeWithRandom, copyRandomList, reverseBetween, rotateRight, sortList, sortList2 } from '../linked-list';
+import {
+    copyRandomListTestData,
+    reverseBetweenTestData,
+    rotateRightTestData,
+    sortListTestData,
+} from './linked-list.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
 describe('problems/linked-list', () => {
     describe('copyRandomList', () => {
@@ -65,5 +70,13 @@ describe('problems/linked-list', () => {
     it.each(rotateRightTestData)('rotateRight', ({ input: { arr, k }, expected }) => {
         const result = SingleLinkedList.toArray(rotateRight(SingleLinkedList.from(arr), k));
         expect(result).toEqual(expected);
+    });
+
+    it.each(sortListTestData)('sortList', ({ input, expected }) => {
+        const head1 = SingleLinkedList.from(input);
+        expect(SingleLinkedList.toArray(sortList(head1))).toEqual(expected);
+
+        const head2 = SingleLinkedList.from(input);
+        expect(SingleLinkedList.toArray(sortList2(head2))).toEqual(expected);
     });
 });

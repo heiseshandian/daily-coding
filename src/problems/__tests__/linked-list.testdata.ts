@@ -82,3 +82,22 @@ export const rotateRightTestData = [
         expected: [2, 0, 1],
     },
 ];
+
+export const sortListTestData = [
+    {
+        input: [4, 2, 1, 3],
+        expected: [1, 2, 3, 4],
+    },
+    {
+        input: [-1, 5, 3, 4, 0],
+        expected: [-1, 0, 3, 4, 5],
+    },
+    {
+        input: [],
+        expected: [],
+    },
+    {
+        input: [1],
+        expected: [1],
+    },
+];
