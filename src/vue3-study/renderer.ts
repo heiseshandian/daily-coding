@@ -473,7 +473,7 @@ function shouldSetAsDomProps(el: RenderElement, key: PropertyKey) {
     return key in el;
 }
 
-// 获取最长递增子序列
+// 返回最长递增子序列的索引信息
 function getSequence(arr: number[]): number[] {
     const p = arr.slice();
     const result = [0];
