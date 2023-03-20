@@ -1,4 +1,4 @@
-import { reactive, effect, flushJobs, shallowReactive, shallowReadonly } from './reactivity';
+import { reactive, effect, flushJobs, shallowReactive, shallowReadonly, ref } from './reactivity';
 type EventHandler = (e: Event) => any;
 
 interface Invoker {
@@ -54,6 +54,7 @@ interface SetupContext {
 }
 
 interface ComponentOptions<T extends object = any> {
+    name?: string;
     render?: (state: T) => VNode;
     data?: () => T;
     props?: any;
@@ -79,6 +80,7 @@ interface ComponentInstance<T extends object = any, P extends object = any> {
 
     // 这里仅以mounted为例
     mounted: LifeCycleHook[];
+    unmounted: LifeCycleHook[];
 }
 
 export interface VNode {
@@ -229,6 +231,7 @@ export function createRenderer(options: RendererOptions) {
             之所以是数组是因为要支持多次调用onMounted，这样可以把逻辑分散在不同的地方，实现逻辑复用
             */
             mounted: [],
+            unmounted: [],
         };
         vnode.component = instance;
 
@@ -599,6 +602,17 @@ export function createRenderer(options: RendererOptions) {
             return;
         }
 
+        // 卸载组件
+        if (typeof vnode.type === 'object') {
+            const instance = vnode.component!;
+            instance.unmounted.forEach((fn) => {
+                fn.call(instance);
+            });
+
+            unmount(instance.subTree!);
+            return;
+        }
+
         const parent = vnode.el?.parentNode;
         if (parent) {
             removeChild(parent, vnode.el!);
@@ -809,3 +823,140 @@ export function onMounted(fn: LifeCycleHook) {
         console.error('必须在setup函数内调用 onMounted');
     }
 }
+
+export function onUnmounted(fn: LifeCycleHook) {
+    if (currentInstance) {
+        currentInstance.unmounted.push(fn);
+    } else {
+        console.error('必须在setup函数内调用 onUnmounted');
+    }
+}
+
+type Loader = () => Promise<ComponentOptions>;
+
+interface DefineAsyncComponentOptions {
+    loader: () => Promise<ComponentOptions>;
+    timeout?: number;
+    errorComponent?: ComponentOptions;
+    /**
+     延迟展示loading组件的时间，在网络很好的场景下如果不延迟展示loading组件的话可能会出现
+     loading组件加载完马上就被卸载的情况，也就是loading组件会闪烁一下子，这样用户体验不太好
+     */
+    delay?: number;
+    loadingComponent?: ComponentOptions;
+    onError?: Function;
+}
+
+/* 
+异步组件
+需要考虑的问题
+1）加载失败是否展示Error组件
+2）加载中是否展示loading组件，展示loading组件的时机？网速过快的时展示loading组件可能会出现闪烁
+3）加载失败是否需要重试
+4）加载超时
+*/
+export function defineAsyncComponent(options: Loader | DefineAsyncComponentOptions): ComponentOptions {
+    if (isFunction(options)) {
+        options = {
+            loader: options,
+        };
+    }
+
+    const { loader, timeout, errorComponent, delay, loadingComponent, onError } = options;
+
+    let InnerComp: ComponentOptions | null = null;
+
+    // 重试次数
+    let retries = 0;
+    async function load() {
+        return loader().catch((err) => {
+            if (onError) {
+                return new Promise<ComponentOptions>((resolve, reject) => {
+                    const retry = () => {
+                        resolve(load());
+                        retries++;
+                    };
+
+                    const fail = () => reject(err);
+
+                    // 把控制权交给用户，让用户自行决定是否重试
+                    onError(retry, fail, retries);
+                });
+            } else {
+                throw err;
+            }
+        });
+    }
+
+    return {
+        name: 'AsyncComponentWrapper',
+        setup() {
+            const loaded = ref(false);
+            const error = ref(null);
+            const loading = ref(false);
+
+            let loadingTimer: number | null = null;
+            if (delay !== undefined) {
+                loadingTimer = window.setTimeout(() => {
+                    loading.value = true;
+                }, delay);
+            } else {
+                loading.value = true;
+            }
+
+            load()
+                .then((c) => {
+                    InnerComp = c;
+                    loaded.value = true;
+                })
+                .catch((err) => (error.value = err))
+                .finally(() => {
+                    loading.value = false;
+                    if (loadingTimer !== null) {
+                        window.clearTimeout(loadingTimer);
+                    }
+                });
+
+            let timer: number | null = null;
+            if (timeout) {
+                timer = window.setTimeout(() => {
+                    const err = new Error(`Async component timed out after ${timeout}`);
+                    error.value = err;
+                }, timeout);
+            }
+
+            onUnmounted(() => {
+                if (timer !== null) {
+                    window.clearTimeout(timer);
+                }
+            });
+
+            const placeHolder = {
+                type: TextNode,
+                children: '',
+            };
+
+            return () => {
+                if (loaded.value) {
+                    return { type: InnerComp };
+                } else if (error.value && errorComponent) {
+                    return {
+                        type: errorComponent,
+                        // 传入具体的错误信息，方便错误组件根据错误信息展示不同的ui
+                        props: {
+                            error: error.value,
+                        },
+                    };
+                } else if (loading.value && loadingComponent) {
+                    return {
+                        type: loadingComponent,
+                    };
+                } else {
+                    return placeHolder;
+                }
+            };
+        },
+    };
+}
+
+const isFunction = (val: unknown): val is Function => typeof val === 'function';
