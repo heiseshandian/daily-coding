@@ -27,7 +27,7 @@ interface RenderElement extends HTMLElement {
 const TextNode = Symbol();
 const Fragment = Symbol();
 
-type LifeCycleHook = (instance: ComponentInstance) => void;
+type LifeCycleHook = () => void;
 
 interface SetupContext {
     attrs: any;
@@ -332,7 +332,7 @@ export function createRenderer(options: RendererOptions) {
     }
 
     // 父组件props变更引发的子组件被动更新
-    function patchComponent(n1: VNode, n2: VNode, anchor?: ChildNode | null) {
+    function patchComponent(n1: VNode, n2: VNode, _anchor?: ChildNode | null) {
         const instance = (n2.component = n1.component);
         const { props } = instance!;
 
@@ -764,9 +764,9 @@ function getSequence(arr: number[]): number[] {
 }
 
 function resolveProps(propsOptions: any, propsData: any) {
-    const props = {};
+    const props: any = {};
     // 不在propsOptions中定义的选项将被解析成attrs
-    const attrs = {};
+    const attrs: any = {};
 
     // 此处仅做示意，参数类型校验等内容并未添加
     for (const key in propsData) {
@@ -802,11 +802,7 @@ function setCurrentInstance(instance: ComponentInstance) {
     currentInstance = instance;
 }
 
-function getCurrentInstance() {
-    return currentInstance;
-}
-
-function onMounted(fn: LifeCycleHook) {
+export function onMounted(fn: LifeCycleHook) {
     if (currentInstance) {
         currentInstance.mounted.push(fn);
     } else {
