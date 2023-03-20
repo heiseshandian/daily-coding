@@ -1,3 +1,4 @@
+import { reactive, effect, flushJobs, shallowReactive, shallowReadonly } from './reactivity';
 type EventHandler = (e: Event) => any;
 
 interface Invoker {
@@ -26,12 +27,67 @@ interface RenderElement extends HTMLElement {
 const TextNode = Symbol();
 const Fragment = Symbol();
 
+type LifeCycleHook = (instance: ComponentInstance) => void;
+
+interface SetupContext {
+    attrs: any;
+    /* 
+    const MyComponent={
+        name:"MyComponent",
+        setup(props,{emit}){
+            // 组件内部可以emit自定义事件
+            emit('change',1,2);
+        }
+    }
+
+    // 父组件里面可以针对MyComponent emit的事件添加处理函数
+    <MyComponent @change="handler"></MyComponent>
+    =>
+    {
+        type:MyComponent,
+        props:{
+            onChange:handler
+        }
+    }
+    */
+    emit: (eventName: string, ...rest: any[]) => void;
+}
+
+interface ComponentOptions<T extends object = any> {
+    render?: (state: T) => VNode;
+    data?: () => T;
+    props?: any;
+
+    // 返回render函数或者state对象
+    setup?: (props: any, setupContext: SetupContext) => Function | T;
+
+    // hooks
+    beforeCreate?: LifeCycleHook;
+    created?: LifeCycleHook;
+    beforeMount?: LifeCycleHook;
+    mounted?: LifeCycleHook;
+    beforeUpdate?: LifeCycleHook;
+    updated?: LifeCycleHook;
+}
+
+interface ComponentInstance<T extends object = any, P extends object = any> {
+    state: T;
+    props: P;
+    isMounted: boolean;
+    subTree: VNode | null;
+    slots?: Record<string, (props: P) => VNode>;
+
+    // 这里仅以mounted为例
+    mounted: LifeCycleHook[];
+}
+
 export interface VNode {
-    type: string | object | symbol;
+    type: string | ComponentOptions | symbol;
     props: Record<PropertyKey, any>;
     key: PropertyKey;
     children: VNode[] | string;
     el?: RenderElement;
+    component?: ComponentInstance;
 }
 
 interface RendererOptions {
@@ -99,8 +155,200 @@ export function createRenderer(options: RendererOptions) {
             } else {
                 patchChildren(n1, n2, container);
             }
+        } else if (typeof type === 'object') {
+            if (!n1) {
+                mountComponent(n2, container, anchor);
+            } else {
+                patchComponent(n1, n2, anchor);
+            }
+        }
+    }
+
+    function mountComponent(vnode: VNode, container: RenderElement, anchor?: ChildNode | null) {
+        const options = vnode.type as ComponentOptions;
+        const {
+            data,
+            props: propsOption,
+            setup,
+            beforeCreate,
+            created,
+            beforeMount,
+            mounted,
+            beforeUpdate,
+            updated,
+        } = options;
+        let { render } = options;
+        const state = data ? reactive(data()) : null;
+        const [props, attrs] = resolveProps(propsOption, vnode.props);
+
+        beforeCreate && beforeCreate.call(state);
+
+        /**
+        MyComponent定义
+        <template>
+            <div>hello vue3</div>
+            <slot name="slotA"></slot>
+        </template>
+        =>
+        render(){
+            return (_openBlock(), _createElementBlock("template", null, [
+                ...,
+                _renderSlot($slots, "slotA")
+            ]))
+        }
+
+        MyComponent使用
+        <MyComponent>
+            <template #slotA>
+                slotA content
+            </template>
+        </MyComponent>
+        =>
+        render(){
+            return (_openBlock(), _createBlock(_component_MyComponent, null, {
+                // 可以看到，在父组件中slotA是一个函数，其返回值是虚拟dom
+                // 组件的children会被编译成一个对象
+                slotA: _withCtx(() => [
+                    _createTextVNode(" slotA content ")
+                ])
+            }));
+        }
+        */
+        const slots = vnode.children || {};
+
+        const instance: ComponentInstance = {
+            state,
+            // TODO:为什么这里是shallow reactive呢？
+            props: shallowReactive(props),
+            isMounted: false,
+            subTree: null,
+            slots,
+
+            /* 
+            在setup中调用onMounted(fn)时会把相应的回调函数push进mounted数组中
+            之所以是数组是因为要支持多次调用onMounted，这样可以把逻辑分散在不同的地方，实现逻辑复用
+            */
+            mounted: [],
+        };
+        vnode.component = instance;
+
+        function emit(event: string, ...payload: any[]) {
+            // change->onChange
+            const eventName = `on${event[0].toUpperCase()}${event.slice(1)}`;
+
+            // 在resolveProps函数中需要把以on开头的属性作为props
+            const handler = instance.props[eventName];
+
+            if (handler) {
+                handler(...payload);
+            } else {
+                console.error(`${event}对应的处理函数不存在，请检查${event}是否拼写错误`);
+            }
+        }
+
+        const setupContext = { attrs, emit, slots };
+
+        // 调用setup之前需要先设置当前实例，这样在setup执行的过程中就可以把hooks和
+        // 当前实例关联起来
+        setCurrentInstance(instance);
+        const setupResult = setup && setup(shallowReadonly(instance.props), setupContext);
+
+        let setupState: any = null;
+        // setup的结果支持两种数据类型，如果是函数就会被当成render函数
+        // 否则会被当成state
+        if (typeof setupResult === 'function') {
+            if (render) {
+                console.warn('setup返回函数，render选项将被忽略');
+            }
+            render = setupResult;
         } else {
-            // 处理其他类型
+            setupState = setupResult;
+        }
+
+        const renderContext = new Proxy(instance, {
+            get(target, key) {
+                // 支持在组件中通过this.$slots.slotName(props) 的形式获取插槽内容
+                if (key === '$slots') {
+                    return slots;
+                }
+
+                const { state, props } = target;
+
+                if (key in state) {
+                    return state[key];
+                } else if (key in props) {
+                    return props[key];
+                } else if (setupState && key in setupState) {
+                    return setupState[key];
+                } else {
+                    console.warn(`${String(key)} 不存在`);
+                }
+            },
+            set(target, key, newValue) {
+                const { state, props } = target;
+
+                if (key in state) {
+                    state[key] = newValue;
+                } else if (key in props) {
+                    props[key] = newValue;
+                } else if (setupState && key in setupState) {
+                    setupState[key] = newValue;
+                } else {
+                    console.warn(`${String(key)} 不存在`);
+                }
+
+                return true;
+            },
+        });
+
+        created && created.call(renderContext);
+
+        // 将组件的render函数调用包裹在effect中，从而使得状态变更的时候副作用可以自动执行
+        effect(
+            () => {
+                const subTree: VNode = render!.call(state, state);
+
+                if (!instance.isMounted) {
+                    beforeMount && beforeMount.call(renderContext);
+                    patch(null, subTree, container, anchor);
+                    instance.isMounted = true;
+                    mounted && mounted.call(renderContext);
+
+                    instance.mounted.forEach((hook) => hook.call(renderContext));
+                } else {
+                    beforeUpdate && beforeUpdate.call(renderContext);
+                    patch(instance.subTree, subTree, container, anchor);
+                    updated && updated.call(renderContext);
+                }
+
+                instance.subTree = subTree;
+            },
+            {
+                // 正常情况下副作用函数会同步执行，这里我们通过调度将副作用放入微任务队列
+                // 从而实现多次修改状态一次渲染，优化运行时性能
+                scheduler: flushJobs,
+            }
+        );
+    }
+
+    // 父组件props变更引发的子组件被动更新
+    function patchComponent(n1: VNode, n2: VNode, anchor?: ChildNode | null) {
+        const instance = (n2.component = n1.component);
+        const { props } = instance!;
+
+        // props本身是响应式数据，对于props的修改最终会触发副作用执行
+        if (hasPropsChanged(n1.props, n2.props)) {
+            const [nextProps] = resolveProps((n2.type as ComponentOptions).props, n2.props);
+
+            // 更新props
+            for (const k in nextProps) {
+                props[k] = nextProps[k];
+            }
+
+            // 删除props
+            for (const k in props) {
+                if (!(k in nextProps)) delete props[k];
+            }
         }
     }
 
@@ -513,4 +761,55 @@ function getSequence(arr: number[]): number[] {
         v = p[v];
     }
     return result;
+}
+
+function resolveProps(propsOptions: any, propsData: any) {
+    const props = {};
+    // 不在propsOptions中定义的选项将被解析成attrs
+    const attrs = {};
+
+    // 此处仅做示意，参数类型校验等内容并未添加
+    for (const key in propsData) {
+        if (key in propsOptions || key.startsWith('on')) {
+            props[key] = propsData[key];
+        } else {
+            attrs[key] = propsData[key];
+        }
+    }
+
+    return [props, attrs];
+}
+
+function hasPropsChanged(oldProps: any, newProps: any): boolean {
+    const newKeys = Object.keys(newProps);
+    if (newKeys.length !== Object.keys(oldProps).length) {
+        return true;
+    }
+
+    for (let i = 0; i < newKeys.length; i++) {
+        const key = newKeys[i];
+        if (oldProps[key] !== newProps[key]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+let currentInstance: ComponentInstance | null = null;
+
+function setCurrentInstance(instance: ComponentInstance) {
+    currentInstance = instance;
+}
+
+function getCurrentInstance() {
+    return currentInstance;
+}
+
+function onMounted(fn: LifeCycleHook) {
+    if (currentInstance) {
+        currentInstance.mounted.push(fn);
+    } else {
+        console.error('必须在setup函数内调用 onMounted');
+    }
 }
