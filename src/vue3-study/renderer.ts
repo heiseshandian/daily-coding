@@ -51,6 +51,7 @@ interface SetupContext {
     }
     */
     emit: (eventName: string, ...rest: any[]) => void;
+    slots: any;
 }
 
 interface ComponentOptions<T extends object = any> {
@@ -61,6 +62,9 @@ interface ComponentOptions<T extends object = any> {
 
     // 返回render函数或者state对象
     setup?: (props: any, setupContext: SetupContext) => Function | T;
+
+    // KeepAlive组件特有标识
+    __isKeepAlive?: boolean;
 
     // hooks
     beforeCreate?: LifeCycleHook;
@@ -77,6 +81,14 @@ interface ComponentInstance<T extends object = any, P extends object = any> {
     isMounted: boolean;
     subTree: VNode | null;
     slots?: Record<string, (props: P) => VNode>;
+
+    // KeepAlive组件特有上下文
+    keepAliveCtx?: {
+        move: (vnode: VNode, parent: HTMLElement, anchor?: ChildNode | null) => void;
+        createElement: (tag: string) => HTMLElement;
+    };
+    _deActivate?: (vnode: VNode) => void;
+    _activate?: (vnode: VNode, container: HTMLElement, anchor?: ChildNode | null) => void;
 
     // 这里仅以mounted为例
     mounted: LifeCycleHook[];
@@ -95,6 +107,10 @@ export interface VNode {
     children?: VNode[] | string;
     el?: RenderElement;
     component?: ComponentInstance;
+
+    keptAlive?: boolean;
+    shouldKeepAlive?: boolean;
+    keepAliveInstance?: ComponentInstance;
 }
 
 interface RendererOptions {
@@ -164,7 +180,11 @@ export function createRenderer(options: RendererOptions) {
             }
         } else if (typeof type === 'object' || typeof type === 'function') {
             if (!n1) {
-                mountComponent(n2, container, anchor);
+                if (n2.keptAlive) {
+                    n2.keepAliveInstance!._activate!(n2, container, anchor);
+                } else {
+                    mountComponent(n2, container, anchor);
+                }
             } else {
                 patchComponent(n1, n2, anchor);
             }
@@ -245,7 +265,22 @@ export function createRenderer(options: RendererOptions) {
             */
             mounted: [],
             unmounted: [],
+
+            keepAliveCtx: undefined,
         };
+
+        // 只有需要keepAlive的组件才需要在组件实例上添加keepAliveCtx
+        if (options.__isKeepAlive) {
+            instance.keepAliveCtx = {
+                move(vnode, container, anchor) {
+                    if (vnode.component?.subTree?.el) {
+                        // 本质上是把组件渲染的元素移动到指定容器中
+                        insert(vnode.component?.subTree?.el, container, anchor);
+                    }
+                },
+                createElement,
+            };
+        }
         vnode.component = instance;
 
         function emit(event: string, ...payload: any[]) {
@@ -616,7 +651,13 @@ export function createRenderer(options: RendererOptions) {
         }
 
         // 卸载组件
-        if (typeof vnode.type === 'object') {
+        if (typeof vnode.type === 'object' || typeof vnode.type === 'function') {
+            // 如果是需要keep alive的组件则直接调用_deActivate将组件隐藏起来即可，不用实际卸载
+            if (vnode.shouldKeepAlive) {
+                vnode.keepAliveInstance!._deActivate!(vnode);
+                return;
+            }
+
             const instance = vnode.component!;
             instance.unmounted.forEach((fn) => {
                 fn.call(instance);
@@ -973,3 +1014,54 @@ export function defineAsyncComponent(options: Loader | DefineAsyncComponentOptio
 }
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function';
+
+export const KeepAlive: ComponentOptions = {
+    // 用于在mountElement时在组件实例上添加keepAliveCtx
+    __isKeepAlive: true,
+    setup(_props, { slots }) {
+        // key:vnode.type,value:vnode
+        const cache: Map<object | Function, VNode> = new Map();
+
+        const instance = currentInstance!;
+        const { move, createElement } = instance.keepAliveCtx!;
+
+        // 创建隐藏容器
+        const storageContainer = createElement('div');
+
+        // 用于卸载组件
+        instance._deActivate = (vnode) => {
+            move(vnode, storageContainer);
+        };
+        // 用于重新激活组件
+        instance._activate = (vnode, container, anchor) => {
+            move(vnode, container, anchor);
+        };
+
+        return () => {
+            // KeepAlive的默认插槽就是需要被keep alive的组件
+            let rawVNode: VNode = slots.default();
+            // 非组件没有组件实例，不支持被缓存
+            if (typeof rawVNode.type !== 'object' && typeof rawVNode.type !== 'function') {
+                return rawVNode;
+            }
+
+            const cachedVNode = cache.get(rawVNode.type);
+            if (cachedVNode) {
+                rawVNode.component = cachedVNode.component;
+                // 用于在patch组件时候直接跳过mountComponent流程直接调用instance._activate来激活组件
+                rawVNode.keptAlive = true;
+            } else {
+                cache.set(rawVNode.type, rawVNode);
+            }
+
+            /* 
+            用于在渲染器中根据shouldKeepAlive判断是否需要实际卸载组件
+            keepAliveInstance用于调用_deActivate方法来假卸载组件
+            */
+            rawVNode.shouldKeepAlive = true;
+            rawVNode.keepAliveInstance = instance;
+
+            return rawVNode;
+        };
+    },
+};
