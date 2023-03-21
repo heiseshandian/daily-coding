@@ -2705,3 +2705,32 @@ export const wordBreakTestData = [
         expected: false,
     },
 ];
+
+export const findOrderTestData = [
+    {
+        input: {
+            numCourses: 2,
+            prerequisites: [[1, 0]],
+        },
+        expected: [0, 1],
+    },
+    {
+        input: {
+            numCourses: 4,
+            prerequisites: [
+                [1, 0],
+                [2, 0],
+                [3, 1],
+                [3, 2],
+            ],
+        },
+        expected: [0, 2, 1, 3],
+    },
+    {
+        input: {
+            numCourses: 1,
+            prerequisites: [],
+        },
+        expected: [0],
+    },
+];

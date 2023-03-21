@@ -7365,7 +7365,7 @@ export function canFinishAllCourses2(numCourses: number, prerequisites: number[]
     return true;
 }
 
-// 使用深度优先遍历来判断某条路径上是否存在环（不可使用宽度优先遍历）
+// 使用深度优先遍历来判断某条路径上是否存在环（不可使用宽度优先遍历，因为我们是要检测某条路上是否存在环，而不是检测图本身是否存在环）
 function hasCircle(node: CourseNode, courseToNodes: CourseNode[], checked: Set<number>): boolean {
     if (checked.has(node.id)) {
         return false;
@@ -7443,6 +7443,73 @@ export function canFinishAllCourses3(prerequisites: number[][]): boolean {
         }
     }
     return true;
+}
+
+/* 
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. 
+You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return the ordering of courses you should take to finish all courses. If there are many valid answers, 
+return any of them. If it is impossible to finish all courses, return an empty array.
+*/
+export function findOrder(numCourses: number, prerequisites: number[][]): number[] {
+    const nodes: CourseNode[] = [];
+    for (let i = 0; i < prerequisites.length; i++) {
+        const [cur, prev] = prerequisites[i];
+        const curNode = nodes[cur] || (nodes[cur] = new CourseNode(cur));
+        const prevNode = nodes[prev] || (nodes[prev] = new CourseNode(prev));
+        curNode.nextNodes.push(prevNode);
+        prevNode.inEdgeCount++;
+    }
+
+    return topologicalSort(numCourses, nodes);
+}
+
+function topologicalSort(numCourses: number, nodes: CourseNode[]): number[] {
+    // 下标代表节点，值代表节点的入度
+    const inMap: number[] = [];
+    // 下标代表节点，值代表节点入度
+    const zeroInQueue: number[] = [];
+    const result: number[] = [];
+    for (let i = 0; i < numCourses; i++) {
+        if (!nodes[i]) {
+            // 没有依赖的直接放入result数组
+            result.push(i);
+            continue;
+        }
+        inMap[i] = nodes[i].inEdgeCount;
+        if (nodes[i].inEdgeCount === 0) {
+            zeroInQueue.push(i);
+        }
+    }
+
+    // 没有入度为0的点且有依赖，说明必然存在互相依赖
+    if (zeroInQueue.length === 0 && inMap.length > 0) {
+        return [];
+    }
+
+    while (zeroInQueue.length > 0) {
+        const topId = zeroInQueue.shift()!;
+        result.unshift(topId);
+        const node = nodes[topId];
+        if (!node) {
+            continue;
+        }
+
+        // 消除top的影响
+        node.nextNodes.forEach(({ id }) => {
+            inMap[id]--;
+            if (inMap[id] === 0) {
+                zeroInQueue.push(id);
+            }
+        });
+    }
+
+    if (result.length !== numCourses) {
+        return [];
+    }
+    return result;
 }
 
 /* 

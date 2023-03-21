@@ -330,7 +330,8 @@ import {
     canCompleteCircuit2,
     canCompleteCircuit3,
 } from '../other';
-import { partitionPalindromeTestData, canCompleteCircuitTestData } from './other.testdata';
+import { partitionPalindromeTestData, canCompleteCircuitTestData, findOrderTestData } from './other.testdata';
+import { findOrder } from '../other';
 import {
     canFinishAllCourses3,
     printEdgeNodes,
@@ -1036,5 +1037,9 @@ describe('other', () => {
 
     it.each(wordBreakTestData)('wordBreak', ({ input: { s, wordDict }, expected }) => {
         expect(wordBreak(s, wordDict)).toBe(expected);
+    });
+
+    it.each(findOrderTestData)('findOrder', ({ input: { numCourses, prerequisites }, expected }) => {
+        expect(findOrder(numCourses, prerequisites)).toEqual(expected);
     });
 });
