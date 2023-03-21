@@ -1015,12 +1015,35 @@ export function defineAsyncComponent(options: Loader | DefineAsyncComponentOptio
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function';
 
+interface KeepAliveProps {
+    // 配置需要缓存哪些组件
+    include?: RegExp;
+    // 配置不需要缓存哪些组件
+    exclude?: RegExp;
+    max?: number;
+}
+
 export const KeepAlive: ComponentOptions = {
     // 用于在mountElement时在组件实例上添加keepAliveCtx
     __isKeepAlive: true,
-    setup(_props, { slots }) {
+    // 指定组件可接收的props，此处是对象，resolveProps的时候需要根据props对用户实际
+    // 传入的props做类型校验
+    props: {
+        // 配置需要缓存哪些组件
+        include: RegExp,
+        // 配置不需要缓存哪些组件
+        exclude: RegExp,
+        // 允许缓存的最大组件数，避免缓存溢出
+        max: Number,
+    },
+    setup(
+        // 用户实际传入的props
+        props: KeepAliveProps,
+        { slots }
+    ) {
         // key:vnode.type,value:vnode
         const cache: Map<object | Function, VNode> = new Map();
+        const keys = new Set<object | Function>();
 
         const instance = currentInstance!;
         const { move, createElement } = instance.keepAliveCtx!;
@@ -1045,13 +1068,30 @@ export const KeepAlive: ComponentOptions = {
                 return rawVNode;
             }
 
+            const name = rawVNode.type.name;
+            if (name && ((props.include && !props.include.test(name)) || (props.exclude && props.exclude.test(name)))) {
+                return rawVNode;
+            }
+
             const cachedVNode = cache.get(rawVNode.type);
             if (cachedVNode) {
                 rawVNode.component = cachedVNode.component;
                 // 用于在patch组件时候直接跳过mountComponent流程直接调用instance._activate来激活组件
                 rawVNode.keptAlive = true;
+
+                // Set内部会自行维护插入顺序，keys.values().next()返回的是最老的缓存节点
+                // 先删除后加入是为了使得当前访问的key变成最新的（LRU算法）
+                keys.delete(rawVNode.type);
+                keys.add(rawVNode.type);
             } else {
+                if (props.max && keys.size === props.max) {
+                    const oldestKey = keys.values().next().value;
+                    keys.delete(oldestKey);
+                    cache.delete(oldestKey);
+                }
+
                 cache.set(rawVNode.type, rawVNode);
+                keys.add(rawVNode.type);
             }
 
             /* 
