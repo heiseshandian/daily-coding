@@ -73,7 +73,30 @@ interface ComponentOptions<T extends object = any> {
     mounted?: LifeCycleHook;
     beforeUpdate?: LifeCycleHook;
     updated?: LifeCycleHook;
+
+    // Teleport组件特有属性，用于标识是否Teleport组件
+    __isTeleport?: boolean;
+    // Teleport组件特有属性，用于自行处理渲染逻辑
+    process?: (
+        n1: VNode | null | undefined,
+        n2: VNode,
+        container: RenderElement,
+        internalMethods: {
+            patch: (
+                n1: VNode | null | undefined,
+                n2: VNode,
+                container: RenderElement,
+                anchor?: ChildNode | null
+            ) => void;
+            patchChildren: (n1: VNode, n2: VNode, container: RenderElement) => void;
+            unmount: (vnode: VNode) => void;
+            move: MoveFn;
+        },
+        anchor?: ChildNode | null
+    ) => void;
 }
+
+type MoveFn = (vnode: VNode, parent: HTMLElement, anchor?: ChildNode | null) => void;
 
 interface ComponentInstance<T extends object = any, P extends object = any> {
     state: T;
@@ -84,7 +107,7 @@ interface ComponentInstance<T extends object = any, P extends object = any> {
 
     // KeepAlive组件特有上下文
     keepAliveCtx?: {
-        move: (vnode: VNode, parent: HTMLElement, anchor?: ChildNode | null) => void;
+        move: MoveFn;
         createElement: (tag: string) => HTMLElement;
     };
     _deActivate?: (vnode: VNode) => void;
@@ -111,6 +134,8 @@ export interface VNode {
     keptAlive?: boolean;
     shouldKeepAlive?: boolean;
     keepAliveInstance?: ComponentInstance;
+
+    target?: HTMLElement;
 }
 
 interface RendererOptions {
@@ -178,6 +203,21 @@ export function createRenderer(options: RendererOptions) {
             } else {
                 patchChildren(n1, n2, container);
             }
+        } else if (typeof type === 'object' && type.__isTeleport) {
+            type.process?.(
+                n1,
+                n2,
+                container,
+                {
+                    patch,
+                    patchChildren,
+                    unmount,
+                    move(vnode, container, anchor) {
+                        insert(vnode.component ? vnode.component.subTree?.el! : vnode.el!, container, anchor);
+                    },
+                },
+                anchor
+            );
         } else if (typeof type === 'object' || typeof type === 'function') {
             if (!n1) {
                 if (n2.keptAlive) {
@@ -1103,5 +1143,46 @@ export const KeepAlive: ComponentOptions = {
 
             return rawVNode;
         };
+    },
+};
+
+interface TeleportProps {
+    to: string | HTMLElement;
+}
+
+/* 
+使用Teleport的组件会被编译成如下形式
+
+{
+    type:Teleport,
+    children:[
+        {type:'div',children:[...]},
+        ...
+    ]
+}
+*/
+export const Teleport: ComponentOptions = {
+    __isTeleport: true,
+    process(n1, n2, _container, { patch, patchChildren, move }, anchor) {
+        const props = n2.props as TeleportProps;
+
+        if (!n1) {
+            const target = typeof props.to === 'string' ? (document.querySelector(props.to) as HTMLElement) : props.to;
+            n2.target = target;
+
+            (n2.children as VNode[]).forEach((c) => patch(null, c, target, anchor));
+        } else {
+            const target = (n2.target = n1.target!);
+            patchChildren(n1, n2, target);
+
+            // 如果新旧to参数的值不同则需要对内容进行移动
+            if (n1.props.to !== props.to) {
+                const newTarget =
+                    typeof props.to === 'string' ? (document.querySelector(props.to) as HTMLElement) : props.to;
+
+                n2.target = newTarget;
+                (n2.children as VNode[]).forEach((c) => move(c, newTarget));
+            }
+        }
     },
 };
