@@ -136,6 +136,13 @@ export interface VNode {
     keepAliveInstance?: ComponentInstance;
 
     target?: HTMLElement;
+
+    // Transition组件特有属性
+    transition?: {
+        beforeEnter: (el: RenderElement) => void;
+        enter: (el: RenderElement) => void;
+        leave: (el: RenderElement, performRemove: Function) => void;
+    };
 }
 
 interface RendererOptions {
@@ -459,7 +466,16 @@ export function createRenderer(options: RendererOptions) {
             });
         }
 
+        const needTransition = vnode.transition;
+        if (needTransition) {
+            vnode.transition?.beforeEnter(el);
+        }
+
         insert(el, container, anchor);
+
+        if (needTransition) {
+            vnode.transition?.enter(el);
+        }
     }
 
     function patchElement(n1: VNode, n2: VNode) {
@@ -709,7 +725,12 @@ export function createRenderer(options: RendererOptions) {
 
         const parent = vnode.el?.parentNode;
         if (parent) {
-            removeChild(parent, vnode.el!);
+            if (vnode.transition) {
+                const performRemove = () => removeChild(parent, vnode.el!);
+                vnode.transition.leave(vnode.el!, performRemove);
+            } else {
+                removeChild(parent, vnode.el!);
+            }
         }
     }
 
@@ -1186,3 +1207,69 @@ export const Teleport: ComponentOptions = {
         }
     },
 };
+
+/* 
+使用Transition的组件会被编译成如下形式
+
+{
+    type:Transition,
+    children:{
+        default(){
+            // 返回vnode
+            return {...};
+        }
+    }
+}
+*/
+export const Transition: ComponentOptions = {
+    name: 'Transition',
+    setup(_props, { slots }) {
+        const vnode: VNode = slots.default();
+
+        // 此处仅示意，class直接写死，按理说需要从外部接收参数
+        vnode.transition = {
+            beforeEnter(el) {
+                el.classList.add('enter-from');
+                el.classList.add('enter-active');
+            },
+            enter(el) {
+                nextFrame(() => {
+                    el.classList.remove('enter-from');
+                    el.classList.add('enter-to');
+                    el.addEventListener('transitionend', () => {
+                        el.classList.remove('enter-to');
+                        el.classList.remove('enter-active');
+                    });
+                });
+            },
+            leave(el, performRemove) {
+                el.classList.add('leave-from');
+                el.classList.add('leave-active');
+
+                // 强制reflow，使得初始状态生效
+                document.body.offsetHeight;
+
+                nextFrame(() => {
+                    el.classList.remove('leave-from');
+                    el.classList.add('leave-to');
+
+                    el.addEventListener('transitionend', () => {
+                        el.classList.remove('leave-to');
+                        el.classList.remove('leave.active');
+                        performRemove();
+                    });
+                });
+            },
+        };
+
+        return vnode;
+    },
+};
+
+function nextFrame(fn: FrameRequestCallback) {
+    // 使用两层requestAnimationFrame，确保fn会在下一帧再执行
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=675795
+    requestAnimationFrame(() => {
+        requestAnimationFrame(fn);
+    });
+}
