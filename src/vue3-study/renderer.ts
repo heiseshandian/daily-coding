@@ -143,6 +143,9 @@ export interface VNode {
         enter: (el: RenderElement) => void;
         leave: (el: RenderElement, performRemove: Function) => void;
     };
+
+    // 编译优化相关
+    patchFlags?: PatchFlags;
 }
 
 interface RendererOptions {
@@ -484,21 +487,39 @@ export function createRenderer(options: RendererOptions) {
         const oldProps = n1.props;
         const newProps = n2.props;
 
-        // 更新或新增props
-        for (const key in newProps) {
-            if (newProps[key] !== oldProps[key]) {
-                patchProps(el!, key, oldProps?.[key], newProps[key]);
+        if (n2.patchFlags) {
+            if ((n2.patchFlags & PatchFlags.Class) !== 0) {
+                patchProps(el!, 'class', oldProps?.class, newProps.class);
+            } else if ((n2.patchFlags & PatchFlags.Style) !== 0) {
+                patchProps(el!, 'class', oldProps?.class, newProps.class);
+            }
+        } else {
+            // 更新或新增props
+            for (const key in newProps) {
+                if (newProps[key] !== oldProps[key]) {
+                    patchProps(el!, key, oldProps?.[key], newProps[key]);
+                }
+            }
+
+            // 删除属性
+            for (const key in oldProps) {
+                if (!(key in newProps)) {
+                    patchProps(el!, key, oldProps[key], null);
+                }
             }
         }
 
-        // 删除属性
-        for (const key in oldProps) {
-            if (!(key in newProps)) {
-                patchProps(el!, key, oldProps[key], null);
-            }
+        if ((n2 as Block).dynamicChildren) {
+            patchBlockChildren(n1, n2);
+        } else {
+            patchChildren(n1, n2, el!);
         }
+    }
 
-        patchChildren(n1, n2, el!);
+    function patchBlockChildren(n1: Block, n2: Block) {
+        for (let i = 0; i < n2.dynamicChildren!.length; i++) {
+            patchElement(n1.dynamicChildren![i], n2.dynamicChildren![i]);
+        }
     }
 
     function patchChildren(n1: VNode, n2: VNode, container: RenderElement) {
@@ -1272,4 +1293,66 @@ function nextFrame(fn: FrameRequestCallback) {
     requestAnimationFrame(() => {
         requestAnimationFrame(fn);
     });
+}
+
+export enum PatchFlags {
+    Text = 1,
+    Class = 1 << 1,
+    Style = 1 << 2,
+}
+
+export interface Block extends VNode {
+    dynamicChildren?: VNode[] | null;
+}
+
+export function createVNode(
+    type: VNode['type'],
+    props: VNode['props'],
+    children: VNode['children'],
+    flags?: PatchFlags
+): Block {
+    const key = props && props.key;
+    props && delete props.key;
+
+    const vnode = {
+        type,
+        key,
+        props,
+        children,
+        patchFlags: flags,
+    };
+
+    if (flags && currentDynamicChildren) {
+        currentDynamicChildren.push(vnode);
+    }
+    return vnode;
+}
+
+const dynamicChildrenStack: VNode[][] = [];
+let currentDynamicChildren: VNode[] | null | undefined = null;
+
+export function openBlock() {
+    dynamicChildrenStack.push((currentDynamicChildren = []));
+}
+
+// openBlock,createBlock使用方式
+/* 
+render(){
+    return (openBlock(),createBlock('div',null,[
+        createVNode('p',null,'foo'),
+        createVNode('p',null,ctx.title,1)
+    ]))
+}
+*/
+function closeBlock() {
+    currentDynamicChildren = dynamicChildrenStack.pop();
+}
+
+export function createBlock(type: VNode['type'], props: VNode['props'], children: VNode['children']): Block {
+    const block = createVNode(type, props, children);
+    block.dynamicChildren = currentDynamicChildren;
+
+    closeBlock();
+
+    return block;
 }
