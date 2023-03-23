@@ -1,4 +1,4 @@
-import { bagTestData, maxPointsTestData, nQueenTestData } from '../../problems/__tests__/recursion.testdata';
+import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
 import {
     countMoney,
     countMoneyDp,
@@ -15,6 +15,9 @@ import {
     getCoffeeTimeDp3,
     getMaxPointsDp,
     getMinMethodsDp,
+    getMinValueOfColor,
+    getMinValueOfColor2,
+    getMinValueOfColorDp,
 } from '../dp';
 import {
     countMoneyTestData,
@@ -23,6 +26,7 @@ import {
     getHorseMethodsTestData,
     getMinMethodsTestData,
     maxCommonSubsequenceTestData,
+    getMinValueOfColorTestData,
 } from './dp.testdata';
 import {
     getMinMethods,
@@ -106,5 +110,11 @@ describe('dp', () => {
         expect(getHorseMethods2(8, 9, a, b, k)).toBe(expected);
         expect(getHorseMethodsDp(8, 9, a, b, k)).toBe(expected);
         expect(getHorseMethodsDp2(8, 9, a, b, k)).toBe(expected);
+    });
+
+    it.each(getMinValueOfColorTestData)('getMinValueOfColor', ({ input, expected }) => {
+        expect(getMinValueOfColor(input)).toBe(expected);
+        expect(getMinValueOfColorDp(input)).toBe(expected);
+        expect(getMinValueOfColor2(input)).toBe(expected);
     });
 });
