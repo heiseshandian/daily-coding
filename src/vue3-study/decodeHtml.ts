@@ -1,5 +1,4 @@
-import { once } from '../common';
-
+import { getSingle } from '../design-pattern/singleton';
 // https://regexr.com/
 // (?:ABC) non-capturing group
 const HTML_NAMED_CHAR_REG = /&(?:#x?)?/i;
@@ -16,7 +15,7 @@ const namedCharacterReferences: any = {
     'ltcc;': '⪦',
 };
 
-const getMaxLenOfNamedCharacterReferences = once(() => {
+const getMaxLenOfNamedCharacterReferences = getSingle(() => {
     return Math.max(...Object.keys(namedCharacterReferences).map((k) => k.length));
 });
 

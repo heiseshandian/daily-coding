@@ -41,3 +41,18 @@ export const gameOfLifeTestData = [
         ],
     },
 ];
+
+export const reverseBitsTestData = [
+    {
+        input: 0xff00ff00,
+        expected: 0x00ff00ff,
+    },
+    {
+        input: 0b00000010100101000001111010011100,
+        expected: 0b00111001011110000010100101000000,
+    },
+    {
+        input: -1,
+        expected: 0b11111111111111111111111111111111,
+    },
+];

@@ -1,5 +1,7 @@
-import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
 import {
+    countConversionResult,
+    countConversionResultDp,
+    countConversionResultDp2,
     countMoney,
     countMoneyDp,
     countMoneyDp2,
@@ -13,11 +15,31 @@ import {
     getCoffeeTimeDp,
     getCoffeeTimeDp2,
     getCoffeeTimeDp3,
+    getHorseMethods,
+    getHorseMethods2,
+    getHorseMethodsDp,
+    getHorseMethodsDp2,
+    getMaxPoints,
     getMaxPointsDp,
+    getMinMethods,
     getMinMethodsDp,
     getMinValueOfColor,
     getMinValueOfColor2,
     getMinValueOfColorDp,
+    maxCommonSubsequence,
+    maxValueOfBag,
+    maxValueOfBagDp,
+    maxValueOfBagDp2,
+    getPlusOrMinusCount,
+    getPlusOrMinusCountDp,
+    getPlusOrMinusCountDp2,
+    getMaxMoney,
+    getMaxMoney2,
+    getMaxMoneyDp,
+    getMaxMoneyDp2,
+    isInterleave,
+    getMinEditDistance,
+    getMinEditDistance2,
 } from '../dp';
 import {
     countMoneyTestData,
@@ -25,26 +47,14 @@ import {
     getCoffeeTimeTestData,
     getHorseMethodsTestData,
     getMinMethodsTestData,
-    maxCommonSubsequenceTestData,
     getMinValueOfColorTestData,
+    maxCommonSubsequenceTestData,
+    getPlusOrMinusCountTestData,
+    getMaxMoneyTestData,
+    isInterleaveTestData,
+    editDistanceTestData,
 } from './dp.testdata';
-import {
-    getMinMethods,
-    maxCommonSubsequence,
-    getHorseMethods,
-    getHorseMethodsDp,
-    getHorseMethodsDp2,
-    getHorseMethods2,
-} from '../dp';
-import {
-    countConversionResult,
-    countConversionResultDp,
-    countConversionResultDp2,
-    getMaxPoints,
-    maxValueOfBag,
-    maxValueOfBagDp,
-    maxValueOfBagDp2,
-} from '../dp';
+import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
 
 describe('dp', () => {
     test('countConversionResult', () => {
@@ -116,5 +126,27 @@ describe('dp', () => {
         expect(getMinValueOfColor(input)).toBe(expected);
         expect(getMinValueOfColorDp(input)).toBe(expected);
         expect(getMinValueOfColor2(input)).toBe(expected);
+    });
+
+    it.each(getPlusOrMinusCountTestData)('getPlusOrMinusCount', ({ input: { arr, target }, expected }) => {
+        expect(getPlusOrMinusCount(arr, target)).toBe(expected);
+        expect(getPlusOrMinusCountDp(arr, target)).toBe(expected);
+        expect(getPlusOrMinusCountDp2(arr, target)).toBe(expected);
+    });
+
+    it.each(getMaxMoneyTestData)('getMaxMoney', ({ input, expected }) => {
+        expect(getMaxMoney(input)).toBe(expected);
+        expect(getMaxMoney2(input)).toBe(expected);
+        expect(getMaxMoneyDp(input)).toBe(expected);
+        expect(getMaxMoneyDp2(input)).toBe(expected);
+    });
+
+    it.each(isInterleaveTestData)('isInterleave', ({ input: { str1, str2, str3 }, expected }) => {
+        expect(isInterleave(str1, str2, str3)).toBe(expected);
+    });
+
+    it.each(editDistanceTestData)('getMinEditDistance', ({ input: { word1, word2 }, expected }) => {
+        expect(getMinEditDistance(word1, word2)).toBe(expected);
+        expect(getMinEditDistance2(word1, word2)).toBe(expected);
     });
 });

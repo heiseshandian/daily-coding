@@ -1,5 +1,5 @@
-import { gameOfLife, pow } from '../bit';
-import { gameOfLifeTestData, powTestData } from './bit.testdata';
+import { gameOfLife, pow, reverseBits, reverseBits2 } from '../bit';
+import { gameOfLifeTestData, powTestData, reverseBitsTestData } from './bit.testdata';
 
 describe('bit', () => {
     it.each(powTestData)('pow', ({ input: { a, n }, expected }) => {
@@ -10,5 +10,10 @@ describe('bit', () => {
         gameOfLife(input);
 
         expect(input).toEqual(expected);
+    });
+
+    it.each(reverseBitsTestData)('reverseBits', ({ input, expected }) => {
+        expect(reverseBits(input)).toBe(expected);
+        expect(reverseBits2(input)).toBe(expected);
     });
 });

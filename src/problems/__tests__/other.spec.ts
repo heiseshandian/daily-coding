@@ -1,37 +1,55 @@
-import { preBuildNode, TreeNode } from '../../algorithm/tree';
+import { parenthesesComparator } from '../../common/index';
 import {
     avoidFlood,
     calculateStr,
+    canCompleteCircuit,
+    canCompleteCircuit2,
+    canCompleteCircuit3,
     canFinishAllCourses,
+    canFinishAllCourses2,
+    canFinishAllCourses3,
     canSplit4Parts,
     combinationSum,
-    countEqualTree2,
     countJointMethods,
     countJointMethodsDp,
     countJointMethodsDp2,
     countLostNumbers,
     countPrimes,
+    countSubArr,
+    countSubArr2,
     countSubArrays,
+    countSubArrays2,
+    countSubsequence,
     countZeros,
     distinctSubsequenceII,
     divide,
     evaluationMethods,
+    existWord,
     findKthLargest,
     findMinMoves,
+    findOrder,
     findSubstring,
+    findSubstringInWrapRoundString,
+    findSubstringInWrapRoundString2,
     findWords,
+    flipNonEdgeOToX,
     getAllTriples,
     getAllTwoTuples,
     getCalculateMethods,
+    getCalculateMethods2,
     getClosestSumK,
     getClosestSumKOfMatrix,
     getConnectedRegions,
+    getConnectedRegions2,
     getLengthOfLongestSubArrayWithSumK,
     getLengthOfLongestSubArrayWithSumK2,
+    getLongestIncreasingSubsequence,
     getMaxA,
     getMaxArrOf2PartsMin,
     getMaxArrOf2PartsMin2,
     getMaxDiff,
+    getMaxGame,
+    getMaxGameWindow,
     getMaxIncreasingNum,
     getMaxK,
     getMaxLengthOfIncreasingSubsequence,
@@ -40,21 +58,38 @@ import {
     getMaxPartsArray,
     getMaxProfit,
     getMaxProfit2,
+    getMaxProfit3,
     getMaxProfit4,
     getMaxProfit4Dp,
     getMaxRemovableSubsequence,
+    getMaxRopePoints,
+    getMaxRopePoints2,
     getMaxSizeOfAllOnes,
+    getMaxSizeOfAllOnes2,
+    getMaxSumOfSubArr,
     getMaxValueOfS,
     getMinBags,
     getMinBagsDp,
+    getMinBagsDp2,
+    getMinBoats,
+    getMinCandy,
+    getMinCandy2,
+    getMinCandy3,
+    getMinCandy4,
     getMinChanges,
     getMinCoins,
     getMinCoinsDp,
+    getMinCoinsDp2,
     getMinDistance,
-    getMinEditDistance,
-    getMinEditDistance2,
+    getMinJumpSteps,
+    getMinJumpSteps2,
+    getMinJumpStepsDp,
     getMinMissingNumber,
     getMinMoneyOfPassingMonster,
+    getMinMoneyOfPassingMonsterDp,
+    getMinMoneyOfPassingMonsterDp2,
+    getMinMoneyOfPassingMonsterDp3,
+    getMinMoneyOfPassingMonsterDp4,
     getMinPalindrome,
     getMinRange,
     getMinStrCount,
@@ -62,283 +97,179 @@ import {
     getMinSumThatCanNotBeComposed,
     getMinSumThatCanNotBeComposed1,
     getMinTimeOfDrawing,
+    getMinValue,
+    getNthUglyNumber,
+    getNumOfMostRightOne,
+    getNumOfMostRightOne2,
     getSubsequenceWithBiggestDictionarySequence,
+    getSumOfi1j1i2j2,
     getSumOfMatrix,
     getValidParentheses,
+    groupAnagrams,
     kthSmallest,
+    ladderLength,
+    ladderLength2,
     leastWaitingTime,
+    leastWaitingTime2,
     lengthOfLongestSubstring,
+    lengthOfLongestSubstring2,
+    lengthOfLongestSubstringKDistinct,
+    longestConsecutive,
     longestIncreasingPath,
     longestValidParentheses,
+    longestValidParentheses2,
+    majorityElement,
+    majorityElement2,
+    MapWithSetAll,
     maxEqualRowsAfterFlips,
-    maxPathSum,
+    maxProfits,
+    maxProfits2,
     maxRunTime,
     maxSquareSideLength,
     maxUncrossedLines,
     mergeStones,
     MessageBox,
-    minCameraCover,
-    minCameraCover2,
     minCostOfCuttingGold,
+    minCostOfCuttingGold2,
     minEatingSpeed,
     minPathValue,
     minWindow,
+    nextPermutation,
     numSubMatrixSumTarget,
     numTilePossibilities,
+    partitionPalindrome,
     product,
-    reverseBits,
-    reverseBits2,
+    product2,
     reversePairs,
     rotate,
-    shortestBridge,
-    splitEarth,
-    trap,
-    trapRainWater,
-    unzipStr,
-    wordBreak,
-    zigzagLevelOrder,
-} from '../other';
-import {
-    getMaxATestData,
-    getMinCoinsTestData,
-    reverseBitsTestData,
-    getMinJumpStepsTestData,
-    getMaxKTestData,
-    getMinArrTestData,
-    getMinSumThatCanNotBeComposed1TestData,
-    getMinMoneyOfPassingMonsterTestData,
-    getMaxLenOfComposableSubArrTestData,
-    getMinStrCountTestData,
-    unzipStrTestData,
-    getAllTwoTuplesTestData,
-    getAllTriplesTestData,
-    findKthLargestTestData,
-    getMinRangeTestData,
-    getMaxIncreasingNumTestData,
-    getClosestSumKTestData,
-    getClosestSumKOfMatrixTestData,
-    findWordsTestData,
-    getMinValueTestData,
-    getMaxProfit3TestData,
-    getMaxProfit4TestData,
-    getCalculateMethodsTestData,
-    existWordTestData,
-    countJointMethodsTestData,
-    getValidParenthesesTestData,
-    getMaxLengthOfIncreasingSubsequenceTestData,
-    getMaxSizeOfAllOnesTestData,
-    evaluationMethodsTestData,
-    findMinMovesTestData,
-    kthSmallestTestData,
-    distinctSubsequenceIITestData,
-    shortestBridgeTestData,
-    trapTestData,
-    trapRainWaterTestData,
-    mergeStonesTestData,
-    minWindowTestData,
-    setZerosTestData,
-    countPrimesTestData,
-    getSumOfMatrixTestData,
-    getSumOfi1j1i2j2TestData,
-    splitEarthTestData,
-    getMaxArrOf2PartsMinTestData,
-    lengthOfLongestSubstringTestData,
-    getMaxValueOfSTestData,
-    getLongestIncreasingSubsequenceTestData,
-    getMaxRemovableSubsequenceTestData,
-    nextPermutationTestData,
-    getLengthOfLongestSubArrayWithSumKTestData,
-    getMinDistanceTestData,
-    minEatingSpeedTestData,
-    maxUncrossedLinesTestData,
-    avoidFloodTestData,
-    rotateTestData,
-    reversePairsTestData,
-    leastWaitingTimeTestData,
-    numTilePossibilitiesTestData,
-    getMaxDiffTestData,
-    getMinBagsTestData,
-    numSubMatrixSumTargetTestData,
-    maxEqualRowsAfterFlipsTestData,
-    productTestData,
-    countSubArraysTestData,
-    countZerosTestData,
-    getNumOfMostRightOneTestData,
-    getMinTimeOfDrawingTestData,
-    wildcardMatchTestData,
-    minPathValueTestData,
-    maxProfitsTestData,
-    minCostOfCuttingGoldTestData,
-    groupAnagramsTestData,
-    combinationSumTestData,
-    printEdgeNodesTestData,
-    maxPathSumTestData,
-    longestIncreasingPathTestData,
-    longestConsecutiveTestData,
-} from './other.testdata';
-import {
-    getMinCoinsDp2,
-    getMinJumpSteps,
-    getMinJumpStepsDp,
-    getMinJumpSteps2,
-    getNthUglyNumber,
-    getConnectedRegions2,
-} from '../other';
-import {
-    editDistanceTestData,
-    getMaxGameTestData,
-    getMaxMoneyTestData,
-    getMaxSumOfSubArrTestData,
-    isInterleaveTestData,
-} from './other.testdata';
-import {
-    countEqualTree,
-    getMaxGame,
-    getMaxGameWindow,
-    getMaxMoneyDp,
-    getMaxMoneyDp2,
-    getMaxSumOfSubArr,
-    isInterleave,
-    MapWithSetAll,
-} from '../other';
-import {
-    getMaxMoney,
-    getMaxMoney2,
-    getMaxRopePoints,
-    getMaxRopePoints2,
-    getPlusOrMinusCount,
-    getPlusOrMinusCountDp,
-    getPlusOrMinusCountDp2,
-} from '../other';
-import {
-    countSubArrTestData,
-    getMaxRopePointsTestData,
-    getMinBoatsTestData,
-    getMinCandyTestData,
-    getPlusOrMinusCountTestData,
-    canSplit4PartsTestData,
-} from './other.testdata';
-import { countSubArr, countSubArr2, getMinBoats, getMinCandy } from '../other';
-import {
-    getConnectedRegionsTestData,
-    getMinMissingNumberTestData,
-    getMinPalindromeTestData,
-    getMaxProfitTestData,
-} from './other.testdata';
-import {
-    getMinMoneyOfPassingMonsterDp4,
-    getMinValue,
-    getMaxProfit3,
-    countSubsequence,
-    getCalculateMethods2,
-} from '../other';
-import {
-    countSubsequenceTestData,
-    updatePathsTestData,
-    getMinCandyTestData3,
-    wordBreakTestData,
-} from './other.testdata';
-import {
-    getMinMoneyOfPassingMonsterDp,
-    getMinMoneyOfPassingMonsterDp2,
-    getMinMoneyOfPassingMonsterDp3,
-} from '../other';
-import {
-    getNthUglyNumberTestData,
-    getMinSumThatCanNotBeComposedTestData,
-    countLostNumbersTestData,
-} from './other.testdata';
-import {
-    updatePaths,
-    getMinCandy3,
-    getMinCandy2,
-    getMinCandy4,
-    getMaxSizeOfAllOnes2,
-    longestValidParentheses2,
-} from '../other';
-import {
-    calculateStrTestData,
-    longestValidParenthesesTestData,
-    findSubstringTestData,
-    majorityElementTestData,
-} from './other.testdata';
-import { parenthesesComparator } from '../../common/index';
-import {
-    trap2,
-    existWord,
-    majorityElement,
-    majorityElement2,
     setZeroes,
     setZeroes2,
     setZeroes3,
-    getSumOfi1j1i2j2,
-} from '../other';
-import {
-    majorityElement2TestData,
-    lengthOfLongestSubstringKDistinctTestData,
-    getMaxPartsArrayTestData,
-} from './other.testdata';
-import {
+    shortestBridge,
+    splitEarth,
     splitEarth2,
-    lengthOfLongestSubstring2,
-    lengthOfLongestSubstringKDistinct,
-    nextPermutation,
-    leastWaitingTime2,
-} from '../other';
-import {
-    getSubsequenceWithBiggestDictionarySequenceTestData,
-    getMinChangesTestData,
-    getLengthOfLongestSubArrayWithSumK2TestData,
-} from './other.testdata';
-import {
-    getLongestIncreasingSubsequence,
-    findSubstringInWrapRoundString,
-    findSubstringInWrapRoundString2,
-} from '../other';
-import {
-    maxRunTimeTestData,
-    findSubstringInWrapRoundStringTestData,
-    maxSquareSideLengthTestData,
-} from './other.testdata';
-import {
-    getMinBagsDp2,
-    product2,
-    countSubArrays2,
-    getNumOfMostRightOne,
-    getNumOfMostRightOne2,
+    trap,
+    trap2,
+    trapRainWater,
+    unzipStr,
+    updatePaths,
     wildcardMatch,
-} from '../other';
-import {
-    divideTestData,
-    canFinishAllCoursesTestData,
-    ladderLengthTestData,
-    flipNonEdgeOToXTestData,
-} from './other.testdata';
-import {
-    flipNonEdgeOToX,
-    partitionPalindrome,
-    canCompleteCircuit,
-    canCompleteCircuit2,
-    canCompleteCircuit3,
-} from '../other';
-import { partitionPalindromeTestData, canCompleteCircuitTestData, findOrderTestData } from './other.testdata';
-import { findOrder } from '../other';
-import {
-    canFinishAllCourses3,
-    printEdgeNodes,
-    maxPathSum2,
-    ladderLength,
-    ladderLength2,
-    longestConsecutive,
-} from '../other';
-import {
     wildcardMatch2,
-    maxProfits,
-    maxProfits2,
-    minCostOfCuttingGold2,
-    groupAnagrams,
-    canFinishAllCourses2,
+    wordBreak,
 } from '../other';
+import {
+    avoidFloodTestData,
+    calculateStrTestData,
+    canCompleteCircuitTestData,
+    canFinishAllCoursesTestData,
+    canSplit4PartsTestData,
+    combinationSumTestData,
+    countJointMethodsTestData,
+    countLostNumbersTestData,
+    countPrimesTestData,
+    countSubArraysTestData,
+    countSubArrTestData,
+    countSubsequenceTestData,
+    countZerosTestData,
+    distinctSubsequenceIITestData,
+    divideTestData,
+    evaluationMethodsTestData,
+    existWordTestData,
+    findKthLargestTestData,
+    findMinMovesTestData,
+    findOrderTestData,
+    findSubstringInWrapRoundStringTestData,
+    findSubstringTestData,
+    findWordsTestData,
+    flipNonEdgeOToXTestData,
+    getAllTriplesTestData,
+    getAllTwoTuplesTestData,
+    getCalculateMethodsTestData,
+    getClosestSumKOfMatrixTestData,
+    getClosestSumKTestData,
+    getConnectedRegionsTestData,
+    getLengthOfLongestSubArrayWithSumK2TestData,
+    getLengthOfLongestSubArrayWithSumKTestData,
+    getLongestIncreasingSubsequenceTestData,
+    getMaxArrOf2PartsMinTestData,
+    getMaxATestData,
+    getMaxDiffTestData,
+    getMaxGameTestData,
+    getMaxIncreasingNumTestData,
+    getMaxKTestData,
+    getMaxLengthOfIncreasingSubsequenceTestData,
+    getMaxLenOfComposableSubArrTestData,
+    getMaxPartsArrayTestData,
+    getMaxProfit3TestData,
+    getMaxProfit4TestData,
+    getMaxProfitTestData,
+    getMaxRemovableSubsequenceTestData,
+    getMaxRopePointsTestData,
+    getMaxSizeOfAllOnesTestData,
+    getMaxSumOfSubArrTestData,
+    getMaxValueOfSTestData,
+    getMinArrTestData,
+    getMinBagsTestData,
+    getMinBoatsTestData,
+    getMinCandyTestData,
+    getMinCandyTestData3,
+    getMinChangesTestData,
+    getMinCoinsTestData,
+    getMinDistanceTestData,
+    getMinJumpStepsTestData,
+    getMinMissingNumberTestData,
+    getMinMoneyOfPassingMonsterTestData,
+    getMinPalindromeTestData,
+    getMinRangeTestData,
+    getMinStrCountTestData,
+    getMinSumThatCanNotBeComposed1TestData,
+    getMinSumThatCanNotBeComposedTestData,
+    getMinTimeOfDrawingTestData,
+    getMinValueTestData,
+    getNthUglyNumberTestData,
+    getNumOfMostRightOneTestData,
+    getSubsequenceWithBiggestDictionarySequenceTestData,
+    getSumOfi1j1i2j2TestData,
+    getSumOfMatrixTestData,
+    getValidParenthesesTestData,
+    groupAnagramsTestData,
+    kthSmallestTestData,
+    ladderLengthTestData,
+    leastWaitingTimeTestData,
+    lengthOfLongestSubstringKDistinctTestData,
+    lengthOfLongestSubstringTestData,
+    longestConsecutiveTestData,
+    longestIncreasingPathTestData,
+    longestValidParenthesesTestData,
+    majorityElement2TestData,
+    majorityElementTestData,
+    maxEqualRowsAfterFlipsTestData,
+    maxProfitsTestData,
+    maxRunTimeTestData,
+    maxSquareSideLengthTestData,
+    maxUncrossedLinesTestData,
+    mergeStonesTestData,
+    minCostOfCuttingGoldTestData,
+    minEatingSpeedTestData,
+    minPathValueTestData,
+    minWindowTestData,
+    nextPermutationTestData,
+    numSubMatrixSumTargetTestData,
+    numTilePossibilitiesTestData,
+    partitionPalindromeTestData,
+    productTestData,
+    reversePairsTestData,
+    rotateTestData,
+    setZerosTestData,
+    shortestBridgeTestData,
+    splitEarthTestData,
+    trapRainWaterTestData,
+    trapTestData,
+    unzipStrTestData,
+    updatePathsTestData,
+    wildcardMatchTestData,
+    wordBreakTestData,
+} from './other.testdata';
 
 describe('other', () => {
     it.each(getMinCandyTestData)('getMinCandy', ({ input, expected }) => {
@@ -363,19 +294,6 @@ describe('other', () => {
     it.each(getMaxRopePointsTestData)('getMaxRopePoints', ({ input: { arr, rope }, expected }) => {
         expect(getMaxRopePoints(arr, rope)).toBe(expected);
         expect(getMaxRopePoints2(arr, rope)).toBe(expected);
-    });
-
-    it.each(getPlusOrMinusCountTestData)('getPlusOrMinusCount', ({ input: { arr, target }, expected }) => {
-        expect(getPlusOrMinusCount(arr, target)).toBe(expected);
-        expect(getPlusOrMinusCountDp(arr, target)).toBe(expected);
-        expect(getPlusOrMinusCountDp2(arr, target)).toBe(expected);
-    });
-
-    it.each(getMaxMoneyTestData)('getMaxMoney', ({ input, expected }) => {
-        expect(getMaxMoney(input)).toBe(expected);
-        expect(getMaxMoney2(input)).toBe(expected);
-        expect(getMaxMoneyDp(input)).toBe(expected);
-        expect(getMaxMoneyDp2(input)).toBe(expected);
     });
 
     test('MapWithSetAll', () => {
@@ -408,48 +326,6 @@ describe('other', () => {
 
     it.each(getMaxSumOfSubArrTestData)('getMaxSumOfSubArr', ({ input, expected }) => {
         expect(getMaxSumOfSubArr(input)).toBe(expected);
-    });
-
-    it.each(isInterleaveTestData)('isInterleave', ({ input: { str1, str2, str3 }, expected }) => {
-        expect(isInterleave(str1, str2, str3)).toBe(expected);
-    });
-
-    describe('countEqualTree', () => {
-        test('countEqualTree 1', () => {
-            const head = new TreeNode(1);
-            head.left = new TreeNode(2);
-            head.right = new TreeNode(3);
-
-            expect(countEqualTree(head)).toBe(2);
-            expect(countEqualTree2(head)).toBe(2);
-        });
-
-        test('countEqualTree 2', () => {
-            const head = new TreeNode(1);
-            head.left = new TreeNode(2);
-
-            expect(countEqualTree(head)).toBe(1);
-        });
-
-        test('countEqualTree 3', () => {
-            const head = new TreeNode(1);
-            head.left = new TreeNode(2);
-            head.right = new TreeNode(2);
-            head.left.left = new TreeNode(4);
-            head.right.right = new TreeNode(4);
-
-            expect(countEqualTree(head)).toBe(3);
-        });
-    });
-
-    it.each(editDistanceTestData)('getMinEditDistance', ({ input: { word1, word2 }, expected }) => {
-        expect(getMinEditDistance(word1, word2)).toBe(expected);
-        expect(getMinEditDistance2(word1, word2)).toBe(expected);
-    });
-
-    it.each(reverseBitsTestData)('reverseBits', ({ input, expected }) => {
-        expect(reverseBits(input)).toBe(expected);
-        expect(reverseBits2(input)).toBe(expected);
     });
 
     it.each(getMaxATestData)('getMaxA', ({ input, expected }) => {
@@ -611,16 +487,6 @@ describe('other', () => {
         expect(getCalculateMethods2(str, target).sort()).toEqual(expected.sort());
     });
 
-    test('zigzagLevelOrder', () => {
-        const head = new TreeNode(3);
-        head.left = new TreeNode(9);
-        head.right = new TreeNode(20);
-        head.right.left = new TreeNode(15);
-        head.right.right = new TreeNode(7);
-
-        expect(zigzagLevelOrder(head)).toEqual([[3], [20, 9], [15, 7]]);
-    });
-
     it.each(existWordTestData)('existWord', ({ input: { board, word }, expected }) => {
         expect(existWord(board, word)).toBe(expected);
     });
@@ -635,41 +501,6 @@ describe('other', () => {
         updatePaths(input);
 
         expect(input).toEqual(expected);
-    });
-
-    describe('minCameraCover', () => {
-        test('1 camera', () => {
-            const head = new TreeNode(0);
-            head.left = new TreeNode(0);
-            head.left.left = new TreeNode(0);
-            head.left.right = new TreeNode(0);
-
-            expect(minCameraCover(head)).toBe(1);
-            expect(minCameraCover2(head)).toBe(1);
-        });
-
-        test('2 cameras', () => {
-            const head = new TreeNode(0);
-            head.left = new TreeNode(0);
-            head.left.left = new TreeNode(0);
-            head.left.left.left = new TreeNode(0);
-            head.left.left.right = new TreeNode(0);
-
-            expect(minCameraCover(head)).toBe(2);
-            expect(minCameraCover2(head)).toBe(2);
-        });
-
-        test('3 cameras', () => {
-            const head = new TreeNode(0);
-            head.left = new TreeNode(0);
-            head.left.left = new TreeNode(0);
-            head.left.left.left = new TreeNode(0);
-            head.left.left.right = new TreeNode(0);
-            head.left.left.right.right = new TreeNode(0);
-
-            expect(minCameraCover(head)).toBe(3);
-            expect(minCameraCover2(head)).toBe(3);
-        });
     });
 
     it.each(calculateStrTestData)('calculateStr', ({ input, expected }) => {
@@ -981,16 +812,6 @@ describe('other', () => {
             expect(canFinishAllCourses3(prerequisites)).toBe(expected);
         }
     );
-
-    it.each(printEdgeNodesTestData)('printEdgeNodes', ({ input, expected }) => {
-        const root = preBuildNode(input);
-        expect(printEdgeNodes(root)).toEqual(expected);
-    });
-
-    it.each(maxPathSumTestData)('maxPathSum', ({ input, expected }) => {
-        expect(maxPathSum(preBuildNode(input))).toBe(expected);
-        expect(maxPathSum2(preBuildNode(input))).toBe(expected);
-    });
 
     it.each(longestIncreasingPathTestData)('longestIncreasingPath', ({ input, expected }) => {
         expect(longestIncreasingPath(input)).toBe(expected);

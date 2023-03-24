@@ -19,7 +19,7 @@ export const getLoginLayer = (() => {
 export function getSingle<T>(fn: (...args: any[]) => T) {
     let result: T | null = null;
 
-    return function (...args: any[]) {
+    return function (...args: any[]): T {
         if (result !== null) {
             return result;
         }

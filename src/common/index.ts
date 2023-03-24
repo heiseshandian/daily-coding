@@ -66,14 +66,3 @@ export function generateArray(row: number, col: number, left = 1, right = 100): 
 
     return result;
 }
-
-export function once<T>(fn: (...args: any[]) => T) {
-    let result: T | null = null;
-
-    return function (...args: any[]): T {
-        if (result) {
-            return result;
-        }
-        return (result = fn.apply(this, args));
-    };
-}

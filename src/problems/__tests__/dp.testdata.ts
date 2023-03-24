@@ -152,3 +152,97 @@ export const getMinValueOfColorTestData = [
         expected: 0,
     },
 ];
+
+export const getPlusOrMinusCountTestData = [
+    {
+        input: {
+            arr: [1, 1, 1, 1, 1, 0, 0],
+            target: 3,
+        },
+        expected: 20,
+    },
+    {
+        input: {
+            arr: [1],
+            target: 1,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            arr: [1, 2, 3],
+            target: 5,
+        },
+        expected: 0,
+    },
+    {
+        input: {
+            arr: [1, 2, 3],
+            target: 8,
+        },
+        expected: 0,
+    },
+];
+
+export const getMaxMoneyTestData = [
+    {
+        input: [
+            [1, 2],
+            [2, 4],
+            [6, 1],
+            [3, 2],
+        ],
+        expected: 15,
+    },
+];
+
+export const isInterleaveTestData = [
+    {
+        input: {
+            str1: 'aabcc',
+            str2: 'dbbca',
+            str3: 'aadbbcbcac',
+        },
+        expected: true,
+    },
+    {
+        input: {
+            str1: 'aabcc',
+            str2: 'dbbca',
+            str3: 'aadbbbaccc',
+        },
+        expected: false,
+    },
+    {
+        input: {
+            str1: '',
+            str2: '',
+            str3: '',
+        },
+        expected: true,
+    },
+];
+
+export const editDistanceTestData = [
+    {
+        input: {
+            word1: 'horse',
+            word2: 'ros',
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            word1: 'horse',
+            word2: '',
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            word1: 'intention',
+            word2: 'execution',
+        },
+        expected: 5,
+    },
+];

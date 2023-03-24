@@ -89,49 +89,6 @@ export const getMaxRopePointsTestData = [
     },
 ];
 
-export const getPlusOrMinusCountTestData = [
-    {
-        input: {
-            arr: [1, 1, 1, 1, 1, 0, 0],
-            target: 3,
-        },
-        expected: 20,
-    },
-    {
-        input: {
-            arr: [1],
-            target: 1,
-        },
-        expected: 1,
-    },
-    {
-        input: {
-            arr: [1, 2, 3],
-            target: 5,
-        },
-        expected: 0,
-    },
-    {
-        input: {
-            arr: [1, 2, 3],
-            target: 8,
-        },
-        expected: 0,
-    },
-];
-
-export const getMaxMoneyTestData = [
-    {
-        input: [
-            [1, 2],
-            [2, 4],
-            [6, 1],
-            [3, 2],
-        ],
-        expected: 15,
-    },
-];
-
 export const getMaxGameTestData = [
     {
         input: { arr: [1, 3, 7, 5], k: 2 },
@@ -159,72 +116,6 @@ export const getMaxSumOfSubArrTestData = [
     {
         input: [1, 4, 3, 2, -1, -1, 11],
         expected: 19,
-    },
-];
-
-export const isInterleaveTestData = [
-    {
-        input: {
-            str1: 'aabcc',
-            str2: 'dbbca',
-            str3: 'aadbbcbcac',
-        },
-        expected: true,
-    },
-    {
-        input: {
-            str1: 'aabcc',
-            str2: 'dbbca',
-            str3: 'aadbbbaccc',
-        },
-        expected: false,
-    },
-    {
-        input: {
-            str1: '',
-            str2: '',
-            str3: '',
-        },
-        expected: true,
-    },
-];
-
-export const editDistanceTestData = [
-    {
-        input: {
-            word1: 'horse',
-            word2: 'ros',
-        },
-        expected: 3,
-    },
-    {
-        input: {
-            word1: 'horse',
-            word2: '',
-        },
-        expected: 5,
-    },
-    {
-        input: {
-            word1: 'intention',
-            word2: 'execution',
-        },
-        expected: 5,
-    },
-];
-
-export const reverseBitsTestData = [
-    {
-        input: 0xff00ff00,
-        expected: 0x00ff00ff,
-    },
-    {
-        input: 0b00000010100101000001111010011100,
-        expected: 0b00111001011110000010100101000000,
-    },
-    {
-        input: -1,
-        expected: 0b11111111111111111111111111111111,
     },
 ];
 
@@ -2455,66 +2346,6 @@ export const canFinishAllCoursesTestData = [
             ],
         },
         expected: false,
-    },
-];
-
-export const printEdgeNodesTestData = [
-    {
-        input: [1, 2, null, null, 3, null, null],
-        expected: [1, 2, 3],
-    },
-    {
-        input: [
-            1,
-            2,
-            null,
-            4,
-            7,
-            null,
-            null,
-            8,
-            null,
-            11,
-            13,
-            null,
-            null,
-            14,
-            null,
-            null,
-            3,
-            5,
-            9,
-            12,
-            15,
-            null,
-            null,
-            16,
-            null,
-            null,
-            null,
-            10,
-            null,
-            null,
-            6,
-            null,
-            null,
-        ],
-        expected: [1, 2, 4, 7, 11, 13, 14, 15, 16, 12, 10, 6, 3],
-    },
-];
-
-export const maxPathSumTestData = [
-    {
-        input: [1, 2, null, null, 3, null, null],
-        expected: 6,
-    },
-    {
-        input: [-10, 9, null, null, 20, 15, null, null, 7, null, null],
-        expected: 42,
-    },
-    {
-        input: [-3, -1, null, null, -2, null, null],
-        expected: -1,
     },
 ];
 

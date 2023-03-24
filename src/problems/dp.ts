@@ -1136,3 +1136,360 @@ export function getMinValueOfColor2(arr: number[][]): number {
 
     return cost;
 }
+
+// 给定一组非负数字arr，和目标值target，可以随意在每个数字前添加加号或者减号使得整体的和等于target，返回所有符合条件的加减号组合
+export function getPlusOrMinusCount(arr: number[], target: number): number {
+    return plusOrMinusProcess(arr, 0, target);
+}
+
+function plusOrMinusProcess(arr: number[], i: number, rest: number): number {
+    if (i === arr.length) {
+        return rest === 0 ? 1 : 0;
+    }
+
+    // 两种选择
+    const p1 = plusOrMinusProcess(arr, i + 1, rest - arr[i]);
+    const p2 = plusOrMinusProcess(arr, i + 1, rest + arr[i]);
+
+    return p1 + p2;
+}
+
+export function getPlusOrMinusCountDp(arr: number[], target: number): number {
+    const sum = arr.reduce((acc, cur) => acc + cur, 0);
+
+    // 由于所有的数字都会取正或取负，所以所有符合条件的target组合必然等于-target组合，这里我们直接让target变成正数
+    target = Math.abs(target);
+
+    // sum的奇偶性必和target一致且target必须小于等于sum
+    if ((sum & 1) !== (target & 1) || target > sum) {
+        return 0;
+    }
+
+    // dp[i][rest]
+    // rest的取值范围是-sum到sum，由于-sum到sum是关于0 一一对应的，任意一个 dp[i][rest]都一定等于dp[i][-rest]
+    // 因为一旦有一种组合使得和等于rest那么，取反之后必然等于-rest，所以两者的组合数一定相等，这里我们直接让rest的范围从0-sum即可
+
+    // 用两个一维表滚动的方式代替二维表
+    const dp: number[] = new Array(sum + 1).fill(0);
+    dp[0] = 1;
+    let prevDp = dp.slice();
+
+    // 从下到上，从左到右填表
+    for (let i = arr.length - 1; i >= 0; i--) {
+        for (let rest = 0; rest <= sum; rest++) {
+            // 两种选择
+            const p1 = Math.abs(rest - arr[i]) <= sum ? prevDp[Math.abs(rest - arr[i])] : 0;
+            const p2 = rest + arr[i] <= sum ? prevDp[rest + arr[i]] : 0;
+
+            dp[rest] = p1 + p2;
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[target];
+}
+
+export function getPlusOrMinusCountDp2(arr: number[], target: number): number {
+    // 假设存在集合p和集合n，使得p-n等于target，那么集合p和n就是一种符合条件的组合
+    // p-n+p+n=target+p+n => p=(target+sum)/2
+    // 问题就变成怎么从arr中选数使得最终值为p，也就是一个背包问题
+    const sum = arr.reduce((acc, cur) => acc + cur, 0);
+
+    const p = (target + sum) >> 1;
+
+    // 由于p必然是个整数，所以target和sum的奇偶性必相同
+    // 且p必然小于等于sum，所以target也必然小于等于sum
+    if ((sum & 1) !== (target & 1) || Math.abs(target) > sum) {
+        return 0;
+    }
+
+    // 去掉所有的0
+    const withoutZeros = arr.filter((val) => val !== 0);
+    const zeroCount = arr.length - withoutZeros.length;
+
+    // 用两个一维表滚动的方式代替二维表
+    const dp: number[] = new Array(p + 1).fill(0);
+    dp[0] = 1;
+    let prevDp = dp.slice();
+
+    // 从下到上，从左往右填表
+    for (let i = withoutZeros.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= p; rest++) {
+            let p1 = 0;
+            if (rest - withoutZeros[i] >= 0) {
+                p1 = prevDp[rest - withoutZeros[i]];
+            }
+            const p2 = prevDp[rest];
+
+            dp[rest] = p1 + p2;
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[p] * Math.pow(2, zeroCount);
+}
+
+/* 
+题目4
+现有司机N*2人，调度中心会将所有司机平分给A、B两个区域第i个司机去A可得收入为income【i】【0】，第i个司机去B可得收入为income【i】【1】，
+返回所有调度方案中能使所有司机总收入最高的方案，是多少钱
+*/
+export function getMaxMoney(income: number[][]): number {
+    // 先让所有人都去A算出一个值
+    let count = income.reduce((acc, [aMoney]) => acc + aMoney, 0);
+
+    // 类似于石头染色问题，把所有income按照 bMoney-aMoney的差值排序，越大的改到B可以获得更大收益
+    income.sort(([aMoney1, bMoney1], [aMoney2, bMoney2]) => {
+        // 按照bMoney-aMoney从大到小排序
+        return bMoney2 - aMoney2 - (bMoney1 - aMoney1);
+    });
+
+    // 让一半人从A到B
+    const n = income.length >> 1;
+    for (let i = 0; i < n; i++) {
+        const [aMoney, bMoney] = income[i];
+        count += bMoney - aMoney;
+    }
+
+    return count;
+}
+
+export function getMaxMoney2(income: number[][]): number {
+    return getMaxMoney2Process(income, 0, income.length >> 1);
+}
+
+function getMaxMoney2Process(income: number[][], i: number, restA: number): number {
+    if (i === income.length) {
+        return restA === 0 ? 0 : -1;
+    }
+
+    if (restA === 0) {
+        // 剩下人都必须去B
+        return income.slice(i).reduce((acc, [, bMoney]) => {
+            acc += bMoney;
+            return acc;
+        }, 0);
+    }
+
+    const [aMoney, bMoney] = income[i];
+    // i去A
+    let p1 = 0;
+    const next1 = getMaxMoney2Process(income, i + 1, restA - 1);
+    if (next1 !== -1) {
+        p1 = aMoney + next1;
+    }
+
+    // i去B
+    let p2 = 0;
+    const next2 = getMaxMoney2Process(income, i + 1, restA);
+    if (next2 !== -1) {
+        p2 = bMoney + next2;
+    }
+
+    return Math.max(p1, p2);
+}
+
+export function getMaxMoneyDp(income: number[][]): number {
+    const half = income.length >> 1;
+    // dp[i][restA]
+    const dp: number[][] = new Array(income.length + 1).fill(0).map((_) => new Array(half + 1).fill(0));
+
+    for (let restA = 1; restA <= half; restA++) {
+        dp[income.length][restA] = -1;
+    }
+
+    for (let i = income.length - 1; i >= 0; i--) {
+        const [, bMoney] = income[i];
+        dp[i][0] = dp[i + 1][0] + bMoney;
+    }
+
+    // 从下到上，从左到右填表
+    for (let i = income.length - 1; i >= 0; i--) {
+        for (let restA = 1; restA <= half; restA++) {
+            const [aMoney, bMoney] = income[i];
+            // i去A
+            let p1 = 0;
+            const next1 = dp[i + 1][restA - 1];
+            if (next1 !== -1) {
+                p1 = aMoney + next1;
+            }
+
+            // i去B
+            let p2 = 0;
+            const next2 = dp[i + 1][restA];
+            if (next2 !== -1) {
+                p2 = bMoney + next2;
+            }
+
+            dp[i][restA] = Math.max(p1, p2);
+        }
+    }
+
+    return dp[0][half];
+}
+
+export function getMaxMoneyDp2(income: number[][]): number {
+    const half = income.length >> 1;
+
+    // 两个一维数组滚动代替二维数组
+    const dp: number[] = new Array(half + 1).fill(0);
+    for (let restA = 1; restA <= half; restA++) {
+        dp[restA] = -1;
+    }
+    let prevDp = dp.slice();
+
+    // 存储第0列的值
+    const bMoneySumArr = new Array(income.length + 1).fill(0);
+    for (let i = income.length - 1; i >= 0; i--) {
+        const [, bMoney] = income[i];
+        bMoneySumArr[i] = bMoneySumArr[i + 1] + bMoney;
+    }
+
+    // 从下到上，从左到右填表
+    for (let i = income.length - 1; i >= 0; i--) {
+        for (let restA = 1; restA <= half; restA++) {
+            const [aMoney, bMoney] = income[i];
+            // i去A
+            let p1 = 0;
+            const next1 = restA === 1 ? bMoneySumArr[i + 1] : prevDp[restA - 1];
+            if (next1 !== -1) {
+                p1 = aMoney + next1;
+            }
+
+            // i去B
+            let p2 = 0;
+            const next2 = restA === 1 ? bMoneySumArr[i + 1] : prevDp[restA];
+            if (next2 !== -1) {
+                p2 = bMoney + next2;
+            }
+
+            dp[restA] = Math.max(p1, p2);
+        }
+
+        prevDp = dp.slice();
+    }
+
+    return dp[half];
+}
+
+/* 
+字符串交错组成问题
+给定字符串 str1和str2已经str3
+判定str3是否str1和str2的交错组成
+
+str3是str1和str2的交错组成判定规则：
+1) str3的长度等于str1.length+str.length
+2) str3中存在子序列等于str1且扣除str1之后的子序列等于str2
+
+比如说
+str1=abc
+str2=123
+str3=a12b3c
+str4=321abc
+
+str3就是str1和str2的交错组成，但是str4就不是str1和str2的交错组成
+*/
+// 样本对应模型
+export function isInterleave(str1: string, str2: string, str3: string): boolean {
+    if (str1.length + str2.length !== str3.length) {
+        return false;
+    }
+
+    // dp[i][j] str1取前i个字符，str2取前j个字符能否交错组成 str3中 前i+j个字符
+    // dp[str1.length][str2.length]就是我们想要的结果
+    const dp: boolean[][] = new Array(str1.length + 1).fill(0).map((_) => new Array(str2.length).fill(false));
+
+    // str1取0个字符，str2取0个字符必然可以组成str3取0个字符
+    dp[0][0] = true;
+
+    // str1取0个字符
+    for (let j = 1; j <= str2.length; j++) {
+        // 取j个字符，小标是j-1
+        dp[0][j] = dp[0][j - 1] && str2[j - 1] === str3[j - 1];
+    }
+
+    // str2取0个字符
+    for (let i = 1; i <= str1.length; i++) {
+        dp[i][0] = dp[i - 1][0] && str1[i - 1] === str3[i - 1];
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= str1.length; i++) {
+        for (let j = 1; j <= str2.length; j++) {
+            // 两种可能str3 第i+j-1个字符来自str1或者str2
+            const p1 = str3[i + j - 1] === str1[i - 1] && dp[i - 1][j];
+            const p2 = str3[i + j - 1] === str2[j - 1] && dp[i][j - 1];
+            dp[i][j] = p1 || p2;
+        }
+    }
+
+    return dp[str1.length][str2.length];
+}
+
+/* 
+字符串的编辑距离问题
+可以有插入，删除和替换操作，问使得word1变成word2最少需要多少次操作
+举例
+word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+
+样本对应模型 */
+export function getMinEditDistance(word1: string, word2: string) {
+    // dp[i][j] word1取前i个字符（下标 0 到 i-1）编辑成 word2取前j个字符（0到j-1）的最小代价
+    const dp: number[][] = new Array(word1.length + 1).fill(0).map((_) => new Array(word2.length + 1).fill(0));
+
+    // word1取0个字符
+    for (let j = 0; j <= word2.length; j++) {
+        dp[0][j] = j;
+    }
+
+    // word2取0个字符
+    for (let i = 0; i <= word1.length; i++) {
+        dp[i][0] = i;
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= word1.length; i++) {
+        for (let j = 1; j <= word2.length; j++) {
+            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i - 1][j - 1] + 1, dp[i][j - 1] + 1);
+            if (word1[i - 1] === word2[j - 1]) {
+                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+            }
+        }
+    }
+
+    return dp[word1.length][word2.length];
+}
+
+// 两个一维表滚动代替二维表
+export function getMinEditDistance2(word1: string, word2: string) {
+    // word2只有0个字符
+    if (word2.length === 0) {
+        return word1.length;
+    }
+
+    // dp[i][j] word1取前i个字符（下标 0 到 i-1）编辑成 word2取前j个字符（0到j-1）的最小代价
+    const dp: number[] = new Array(word2.length + 1).fill(0);
+    // word1取0个字符
+    for (let j = 0; j <= word2.length; j++) {
+        dp[j] = j;
+    }
+    let prevDp = dp.slice();
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i <= word1.length; i++) {
+        for (let j = 1; j <= word2.length; j++) {
+            dp[j] = Math.min(prevDp[j] + 1, (j === 1 ? i - 1 : prevDp[j - 1]) + 1, (j === 1 ? i : prevDp[j - 1]) + 1);
+            if (word1[i - 1] === word2[j - 1]) {
+                dp[j] = Math.min(dp[j], j === 1 ? i - 1 : prevDp[j - 1]);
+            }
+        }
+        prevDp = dp.slice();
+    }
+
+    return dp[word2.length];
+}
