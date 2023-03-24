@@ -738,3 +738,62 @@ function printCreaseProcess(n: number, i: number, isDown: boolean) {
     console.log(isDown ? '凹' : '凸');
     printCreaseProcess(n, i + 1, false);
 }
+
+export function serializeByLevel(root: TreeNode | null): Array<number | null> {
+    if (!root) {
+        return [];
+    }
+
+    const queue: Array<TreeNode | null> = [root];
+    const result: Array<number | null> = [];
+    while (queue.length > 0) {
+        const first = queue.shift()!;
+        if (!first) {
+            result.push(null);
+        } else {
+            result.push(first.val);
+            queue.push(first.left);
+            queue.push(first.right);
+        }
+    }
+
+    // 节省空间，将末尾不需要的null去掉
+    let lastNonNull = result.length - 1;
+    while (lastNonNull >= 0 && result[lastNonNull] === null) {
+        lastNonNull--;
+    }
+
+    return result.slice(0, lastNonNull + 1);
+}
+
+export function deserializeByLevel(list: Array<number | null> | null): TreeNode | null {
+    if (!list || list.length === 0) {
+        return null;
+    }
+
+    const root = new TreeNode(list[0]!);
+    const queue: Array<TreeNode | null> = [root];
+    let curIndex = 1;
+    while (queue.length > 0) {
+        const head = queue.shift();
+        if (!head) {
+            continue;
+        }
+
+        // left
+        if (curIndex < list.length) {
+            let val = list[curIndex++];
+            head.left = val !== null ? new TreeNode(val) : null;
+            queue.push(head.left);
+        }
+
+        // right
+        if (curIndex < list.length) {
+            let val = list[curIndex++];
+            head.right = val !== null ? new TreeNode(val) : null;
+            queue.push(head.right);
+        }
+    }
+
+    return root;
+}

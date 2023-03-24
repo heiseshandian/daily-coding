@@ -1,5 +1,5 @@
 import { Queue } from '../queue';
-import { morris, morrisMid, morrisPost } from '../tree';
+import { morris, morrisMid, morrisPost, serializeByLevel, deserializeByLevel } from '../tree';
 import {
     preBuildNode,
     preVisitNode,
@@ -127,6 +127,59 @@ describe('tree', () => {
             head.left!.left = null;
 
             expect(morris(head).map(({ val }) => val)).toEqual([1, 2, 5, 1, 3, 6, 3, 7]);
+        });
+    });
+
+    describe('serializeByLevel,deserializeByLevel', () => {
+        test('[1,2,3,4,5,null,null,6]', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+            head.right = new TreeNode(3);
+
+            head.left.left = new TreeNode(4);
+            head.left.right = new TreeNode(5);
+
+            head.left.left.left = new TreeNode(6);
+
+            const list = [1, 2, 3, 4, 5, null, null, 6];
+
+            expect(serializeByLevel(head)).toEqual(list);
+            expect(deserializeByLevel(list)).toEqual(head);
+        });
+
+        test('[1,2,3,4,5,null,6]', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+            head.right = new TreeNode(3);
+
+            head.left.left = new TreeNode(4);
+            head.left.right = new TreeNode(5);
+
+            head.right.right = new TreeNode(6);
+
+            const list = [1, 2, 3, 4, 5, null, 6];
+
+            expect(serializeByLevel(head)).toEqual([1, 2, 3, 4, 5, null, 6]);
+            expect(deserializeByLevel(list)).toEqual(head);
+        });
+
+        test('[1, 2, null, 3, 6, 4, null, 7, 8, null, null, 9]', () => {
+            const head = new TreeNode(1);
+            head.left = new TreeNode(2);
+
+            head.left.left = new TreeNode(3);
+            head.left.right = new TreeNode(6);
+
+            head.left.left.left = new TreeNode(4);
+            head.left.right.left = new TreeNode(7);
+            head.left.right.right = new TreeNode(8);
+
+            head.left.right.left.left = new TreeNode(9);
+
+            const list = [1, 2, null, 3, 6, 4, null, 7, 8, null, null, 9];
+
+            expect(serializeByLevel(head)).toEqual([1, 2, null, 3, 6, 4, null, 7, 8, null, null, 9]);
+            expect(deserializeByLevel(list)).toEqual(head);
         });
     });
 });
