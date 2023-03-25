@@ -25,6 +25,7 @@ import {
     divide,
     evaluationMethods,
     existWord,
+    findDuplicate,
     findKthLargest,
     findMinMoves,
     findOrder,
@@ -175,6 +176,7 @@ import {
     divideTestData,
     evaluationMethodsTestData,
     existWordTestData,
+    findDuplicateTestData,
     findKthLargestTestData,
     findMinMovesTestData,
     findOrderTestData,
@@ -847,5 +849,9 @@ describe('other', () => {
 
     it.each(findOrderTestData)('findOrder', ({ input: { numCourses, prerequisites }, expected }) => {
         expect(findOrder(numCourses, prerequisites)).toEqual(expected);
+    });
+
+    it.each(findDuplicateTestData)('findDuplicate', ({ input, expected }) => {
+        expect(findDuplicate(input)).toBe(expected);
     });
 });

@@ -7148,3 +7148,36 @@ function wordBreakProcess(s: string, i: number, set: Set<string>, dp: boolean[])
     dp[i] = result;
     return dp[i];
 }
+
+/* 
+https://leetcode.com/problems/find-the-duplicate-number/description/
+
+Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
+
+There is only one repeated number in nums, return this repeated number.
+
+You must solve the problem without modifying the array nums and uses only constant extra space.
+
+分析，把数组看成一个链表
+假设有数组[ia,ib,ic,id]
+ia的next指向索引为ia的节点
+
+举个例子 [1,3,4,2,2]
+链表 1->3->2->4->2 
+因为有重复元素，所以必然有多个节点指向同一个元素，
+也就是说在我们想象的链表中存在环，使用快慢指针法即可解决
+*/
+export function findDuplicate(nums: number[]): number {
+    let slow = nums[0];
+    let fast = nums[nums[0]];
+    while (slow != fast) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    }
+    fast = 0;
+    while (fast != slow) {
+        fast = nums[fast];
+        slow = nums[slow];
+    }
+    return slow;
+}

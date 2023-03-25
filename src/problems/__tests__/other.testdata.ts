@@ -2534,3 +2534,18 @@ export const findOrderTestData = [
         expected: [0],
     },
 ];
+
+export const findDuplicateTestData = [
+    {
+        input: [1, 3, 4, 2, 2],
+        expected: 2,
+    },
+    {
+        input: [3, 1, 3, 4, 2],
+        expected: 3,
+    },
+    {
+        input: [3, 1, 3, 3, 2],
+        expected: 3,
+    },
+];
