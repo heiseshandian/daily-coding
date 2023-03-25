@@ -515,3 +515,59 @@ export function maxPathSum2(root: TreeNode | null): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two 
+nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+*/
+export function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {
+    if (p === null || q === null) {
+        return p || q;
+    }
+    if (root === null) {
+        return null;
+    }
+
+    const pParents: TreeNode[] = [];
+    const qParents: TreeNode[] = [];
+
+    const post = (node: TreeNode | null): [foundP: boolean, foundQ: boolean] => {
+        if (!node) {
+            return [false, false];
+        }
+
+        const [foundPL, foundQL] = post(node.left);
+        const [foundPR, foundQR] = post(node.right);
+
+        if (foundPL || foundPR) {
+            pParents.push(node);
+        }
+        if (foundQL || foundQR) {
+            qParents.push(node);
+        }
+
+        const foundP = node === p;
+        const foundQ = node === q;
+        return [foundP || foundPL || foundPR, foundQ || foundQL || foundQR];
+    };
+    post(root);
+
+    const shortParents = pParents.length < qParents.length ? pParents : qParents;
+    const shortParentsSet = new Set(shortParents);
+    const longParents = shortParents === pParents ? qParents : pParents;
+    let i = 0;
+    while (i < longParents.length) {
+        if (shortParentsSet.has(longParents[i]) || longParents[i] === p || longParents[i] === q) {
+            return longParents[i];
+        }
+        i++;
+    }
+    return null;
+}

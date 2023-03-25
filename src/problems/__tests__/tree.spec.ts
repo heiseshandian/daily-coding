@@ -16,7 +16,8 @@ import {
     maxPathSum2,
 } from '../tree';
 import { deserializeByLevel, TreeNode, preBuildNode } from '../../algorithm/tree';
-import { sufficientSubset, buildTree, printEdgeNodes } from '../tree';
+import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor } from '../tree';
+import { lowestCommonAncestorTestData } from './tree.testdata';
 describe('tree', () => {
     it.each(kthSmallestTestData)('kthSmallest', ({ input: { tree, k }, expected }) => {
         const root = deserializeByLevel(tree);
@@ -117,5 +118,28 @@ describe('tree', () => {
     it.each(maxPathSumTestData)('maxPathSum', ({ input, expected }) => {
         expect(maxPathSum(preBuildNode(input))).toBe(expected);
         expect(maxPathSum2(preBuildNode(input))).toBe(expected);
+    });
+
+    describe('lowestCommonAncestor', () => {
+        function findNode(node: TreeNode | null, val: number): TreeNode | null {
+            if (!node) {
+                return null;
+            }
+
+            const left = findNode(node.left, val);
+            const right = findNode(node.right, val);
+
+            return left || right || (node.val === val ? node : null);
+        }
+
+        it.each(lowestCommonAncestorTestData)('lowestCommonAncestor', ({ input: { root, p, q }, expected }) => {
+            const head = deserializeByLevel(root);
+            const nodeP = findNode(head, p);
+            const nodeQ = findNode(head, q);
+
+            const lca = lowestCommonAncestor(head, nodeP, nodeQ);
+
+            expect(lca?.val).toBe(expected);
+        });
     });
 });

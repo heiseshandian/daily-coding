@@ -115,3 +115,30 @@ export const maxPathSumTestData = [
         expected: -1,
     },
 ];
+
+export const lowestCommonAncestorTestData = [
+    {
+        input: {
+            root: [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4],
+            p: 5,
+            q: 1,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            root: [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4],
+            p: 5,
+            q: 4,
+        },
+        expected: 5,
+    },
+    {
+        input: {
+            root: [1, 2],
+            p: 1,
+            q: 2,
+        },
+        expected: 1,
+    },
+];
