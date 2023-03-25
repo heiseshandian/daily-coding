@@ -55,6 +55,8 @@ import {
     editDistanceTestData,
 } from './dp.testdata';
 import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
+import { numSquaresTestData } from './dp.testdata';
+import { numSquares, numSquares2 } from '../dp';
 
 describe('dp', () => {
     test('countConversionResult', () => {
@@ -148,5 +150,10 @@ describe('dp', () => {
     it.each(editDistanceTestData)('getMinEditDistance', ({ input: { word1, word2 }, expected }) => {
         expect(getMinEditDistance(word1, word2)).toBe(expected);
         expect(getMinEditDistance2(word1, word2)).toBe(expected);
+    });
+
+    it.each(numSquaresTestData)('numSquares', ({ input, expected }) => {
+        expect(numSquares(input)).toBe(expected);
+        expect(numSquares2(input)).toBe(expected);
     });
 });

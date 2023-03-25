@@ -246,3 +246,14 @@ export const editDistanceTestData = [
         expected: 5,
     },
 ];
+
+export const numSquaresTestData = [
+    {
+        input: 12,
+        expected: 3,
+    },
+    {
+        input: 13,
+        expected: 2,
+    },
+];

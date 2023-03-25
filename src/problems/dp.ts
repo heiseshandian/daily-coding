@@ -1,3 +1,4 @@
+import { cache } from '../design-pattern/proxy';
 // 从暴力递归到动态规划
 
 /* 
@@ -1492,4 +1493,72 @@ export function getMinEditDistance2(word1: string, word2: string) {
     }
 
     return dp[word2.length];
+}
+
+/* 
+https://leetcode.com/problems/perfect-squares/description/
+
+Given an integer n, return the least number of perfect square numbers that sum to n.
+
+A perfect square is an integer that is the square of an integer; in other words, it is the product of 
+some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
+*/
+export function numSquares(n: number): number {
+    const squares: number[] = [];
+    const square = cache((num: number) => num * num);
+    for (let i = 1; square(i) <= n; i++) {
+        squares.push(square(i));
+    }
+
+    // dp[i] i最少可以由几个平方数组成
+    const dp: number[] = new Array(n + 1).fill(Infinity);
+    dp[0] = 0;
+    dp[1] = 1;
+
+    for (let i = 2; i <= n; i++) {
+        for (let j = squares.length - 1; j >= 0; j--) {
+            if (i - squares[j] >= 0) {
+                dp[i] = Math.min(dp[i], dp[i - squares[j]] + 1);
+            }
+        }
+    }
+
+    return dp[n];
+}
+
+export function numSquares2(n: number): number {
+    const squares: number[] = [];
+    const square = cache((num: number) => num * num);
+    for (let i = 1; square(i) <= n; i++) {
+        squares.push(square(i));
+    }
+    if (squares[squares.length - 1] === n) {
+        return 1;
+    }
+
+    // bfs
+    const queue: number[] = [n];
+    let level = 0;
+    const visited: Set<number> = new Set([n]);
+    const squaresSet = new Set(squares);
+    while (queue.length > 0) {
+        const current = queue.slice();
+        queue.length = 0;
+        level++;
+
+        for (let i = 0; i < current.length; i++) {
+            for (let j = 0; j < squares.length; j++) {
+                const delta = current[i] - squares[j];
+                if (squaresSet.has(delta)) {
+                    return level + 1;
+                } else if (delta >= 1 && !visited.has(delta)) {
+                    visited.add(delta);
+
+                    queue.push(delta);
+                }
+            }
+        }
+    }
+
+    return level;
 }
