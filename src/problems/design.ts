@@ -1,3 +1,4 @@
+import { GenericHeap } from '../algorithm/generic-heap';
 /* 
 https://leetcode.com/problems/find-median-from-data-stream/description/
 
@@ -18,7 +19,12 @@ Input
 Output
 [null, null, null, 1.5, null, 2.0]
 */
-export class MedianFinder {
+export interface IMedianFinder {
+    addNum: (num: number) => void;
+    findMedian: () => number;
+}
+
+export class MedianFinder implements IMedianFinder {
     arr: number[] = [];
 
     addNum(num: number): void {
@@ -63,5 +69,67 @@ export class MedianFinder {
 
             return (this.arr[mid] + this.arr[left]) / 2;
         }
+    }
+}
+
+/* 
+将数组分成两部分，左半部分用大顶堆存储，右半部分用小顶堆存储
+如果总的数据有奇数个则用右半部分多存储一个
+*/
+export class MedianFinder2 implements IMedianFinder {
+    leftMaxHeap: GenericHeap = new GenericHeap((a, b) => b - a);
+    rightMinHeap: GenericHeap = new GenericHeap();
+
+    addNum(num: number) {
+        if (this.rightMinHeap.size() === 0) {
+            this.rightMinHeap.push(num);
+            return;
+        }
+        if (this.leftMaxHeap.size() === 0) {
+            // rightMin和num中较小者放入leftMaxHeap
+            const rightMin = this.rightMinHeap.peek();
+            if (num <= rightMin) {
+                this.leftMaxHeap.push(num);
+            } else {
+                this.rightMinHeap.pop();
+                this.rightMinHeap.push(num);
+                this.leftMaxHeap.push(rightMin);
+            }
+
+            return;
+        }
+
+        const leftMax = this.leftMaxHeap.peek();
+        const rightMin = this.rightMinHeap.peek();
+        const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
+
+        if (len & 1) {
+            // num 和 rightMin中较小的一个需要放进leftMaxHeap中
+            if (num <= rightMin) {
+                this.leftMaxHeap.push(num);
+            } else {
+                this.rightMinHeap.pop();
+                this.rightMinHeap.push(num);
+                this.leftMaxHeap.push(rightMin);
+            }
+        } else {
+            // num和leftMax中较大的一个需要放进rightMinHeap中
+            if (num >= leftMax) {
+                this.rightMinHeap.push(num);
+            } else {
+                this.leftMaxHeap.pop();
+                this.rightMinHeap.push(leftMax);
+                this.leftMaxHeap.push(num);
+            }
+        }
+    }
+
+    findMedian(): number {
+        const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
+        if (len & 1) {
+            return this.rightMinHeap.peek();
+        }
+
+        return (this.leftMaxHeap.peek() + this.rightMinHeap.peek()) / 2;
     }
 }
