@@ -85,26 +85,11 @@ export class MedianFinder2 implements IMedianFinder {
             this.rightMinHeap.push(num);
             return;
         }
-        if (this.leftMaxHeap.size() === 0) {
-            // rightMin和num中较小者放入leftMaxHeap
-            const rightMin = this.rightMinHeap.peek();
-            if (num <= rightMin) {
-                this.leftMaxHeap.push(num);
-            } else {
-                this.rightMinHeap.pop();
-                this.rightMinHeap.push(num);
-                this.leftMaxHeap.push(rightMin);
-            }
 
-            return;
-        }
-
-        const leftMax = this.leftMaxHeap.peek();
-        const rightMin = this.rightMinHeap.peek();
         const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
-
         if (len & 1) {
             // num 和 rightMin中较小的一个需要放进leftMaxHeap中
+            const rightMin = this.rightMinHeap.peek();
             if (num <= rightMin) {
                 this.leftMaxHeap.push(num);
             } else {
@@ -114,6 +99,7 @@ export class MedianFinder2 implements IMedianFinder {
             }
         } else {
             // num和leftMax中较大的一个需要放进rightMinHeap中
+            const leftMax = this.leftMaxHeap.peek();
             if (num >= leftMax) {
                 this.rightMinHeap.push(num);
             } else {
