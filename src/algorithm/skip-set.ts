@@ -196,7 +196,7 @@ export class SkipSet<K> {
     public ceil(key: K) {
         let cur = this.head;
         let curIndex = this.head.nextNodes.length - 1;
-        let found = null;
+        let found: K | null = null;
         while (cur && curIndex >= 0) {
             const next = cur.nextNodes[curIndex];
             if (!next) {
@@ -220,7 +220,7 @@ export class SkipSet<K> {
     public floor(key: K) {
         let cur = this.head;
         let curIndex = this.head.nextNodes.length - 1;
-        let found = null;
+        let found: K | null = null;
         while (cur && curIndex >= 0) {
             const next = cur.nextNodes[curIndex];
             if (!next) {
