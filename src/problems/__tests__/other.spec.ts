@@ -1,4 +1,6 @@
 import { parenthesesComparator } from '../../common/index';
+import { countSmallerTestData } from './other.testdata';
+import { countSmaller } from '../other';
 import {
     avoidFlood,
     calculateStr,
@@ -853,5 +855,9 @@ describe('other', () => {
 
     it.each(findDuplicateTestData)('findDuplicate', ({ input, expected }) => {
         expect(findDuplicate(input)).toBe(expected);
+    });
+
+    it.each(countSmallerTestData)('countSmaller', ({ input, expected }) => {
+        expect(countSmaller(input)).toEqual(expected);
     });
 });

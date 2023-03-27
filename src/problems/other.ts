@@ -7182,3 +7182,72 @@ export function findDuplicate(nums: number[]): number {
     }
     return slow;
 }
+
+/* 
+https://leetcode.com/problems/count-of-smaller-numbers-after-self/description/
+
+Given an integer array nums, return an integer array counts where counts[i] is the number of smaller elements to the right of nums[i].
+
+Input: nums = [5,2,6,1]
+Output: [2,1,1,0]
+Explanation:
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.
+*/
+export function countSmaller(arr: number[]): number[] {
+    const mergeSort = (left: number, right: number) => {
+        if (left === right) {
+            return;
+        }
+
+        const mid = left + ((right - left) >> 1);
+        mergeSort(left, mid);
+        mergeSort(mid + 1, right);
+        merge(left, mid, right);
+    };
+
+    const pos: number[] = new Array(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+        pos[i] = i;
+    }
+
+    const result: number[] = new Array(arr.length).fill(0);
+    const merge = (left: number, mid: number, right: number) => {
+        let i = left;
+        let j = mid + 1;
+        const tmp: number[] = [];
+        const tmpPos: number[] = [];
+
+        while (i <= mid && j <= right) {
+            if (arr[i] > arr[j]) {
+                result[pos[i]] += right - j + 1;
+                tmpPos.push(pos[i]);
+                tmp.push(arr[i++]);
+            } else {
+                tmpPos.push(pos[j]);
+                tmp.push(arr[j++]);
+            }
+        }
+
+        while (i <= mid) {
+            tmpPos.push(pos[i]);
+            tmp.push(arr[i++]);
+        }
+
+        while (j <= right) {
+            tmpPos.push(pos[j]);
+            tmp.push(arr[j++]);
+        }
+
+        for (let i = 0; i < tmp.length; i++) {
+            arr[i + left] = tmp[i];
+            pos[i + left] = tmpPos[i];
+        }
+    };
+
+    mergeSort(0, arr.length - 1);
+
+    return result;
+}

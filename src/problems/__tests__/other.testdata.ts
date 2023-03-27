@@ -2549,3 +2549,18 @@ export const findDuplicateTestData = [
         expected: 3,
     },
 ];
+
+export const countSmallerTestData = [
+    {
+        input: [5, 2, 6, 1],
+        expected: [2, 1, 1, 0],
+    },
+    {
+        input: [-1],
+        expected: [0],
+    },
+    {
+        input: [-1, -1],
+        expected: [0, 0],
+    },
+];
