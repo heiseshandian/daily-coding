@@ -2994,7 +2994,8 @@ export function getMaxLengthOfIncreasingSubsequence2(arr: number[]): number {
         return 0;
     }
 
-    // end[i]:以i结尾的最长递增子序列中最小结尾数值
+    // end[i] 所有长度为i+1的最长子序列中最小结尾数值
+    // end[0] 目前所有长度为1的子序列中最小结尾数值是arr[0]
     const end = [arr[0]];
 
     for (let i = 1; i < arr.length; i++) {
