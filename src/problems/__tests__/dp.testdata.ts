@@ -257,3 +257,27 @@ export const numSquaresTestData = [
         expected: 2,
     },
 ];
+
+export const coinChangeTestData = [
+    {
+        input: {
+            coins: [1, 2, 5],
+            amount: 11,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            coins: [2],
+            amount: 3,
+        },
+        expected: -1,
+    },
+    {
+        input: {
+            coins: [1],
+            amount: 0,
+        },
+        expected: 0,
+    },
+];

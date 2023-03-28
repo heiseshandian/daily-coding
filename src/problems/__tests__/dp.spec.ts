@@ -55,8 +55,8 @@ import {
     editDistanceTestData,
 } from './dp.testdata';
 import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
-import { numSquaresTestData } from './dp.testdata';
-import { numSquares, numSquares2 } from '../dp';
+import { numSquaresTestData, coinChangeTestData } from './dp.testdata';
+import { numSquares, numSquares2, coinChange, coinChangeDp } from '../dp';
 
 describe('dp', () => {
     test('countConversionResult', () => {
@@ -155,5 +155,10 @@ describe('dp', () => {
     it.each(numSquaresTestData)('numSquares', ({ input, expected }) => {
         expect(numSquares(input)).toBe(expected);
         expect(numSquares2(input)).toBe(expected);
+    });
+
+    it.each(coinChangeTestData)('coinChange', ({ input: { coins, amount }, expected }) => {
+        expect(coinChange(coins, amount)).toBe(expected);
+        expect(coinChangeDp(coins, amount)).toBe(expected);
     });
 });

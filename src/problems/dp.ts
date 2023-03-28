@@ -1562,3 +1562,74 @@ export function numSquares2(n: number): number {
 
     return level;
 }
+
+/* 
+https://leetcode.com/problems/coin-change/
+
+You are given an integer array coins representing coins of different 
+denominations and an integer amount representing a total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. 
+If that amount of money cannot be made up by any combination of the coins, return -1.
+
+You may assume that you have an infinite number of each kind of coin.
+
+1 <= coins.length <= 12
+1 <= coins[i] <= 2^31 - 1
+0 <= amount <= 10^4
+
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+*/
+export function coinChange(coins: number[], amount: number): number {
+    const dp: Map<string, number> = new Map();
+    return coinChangeProcess(coins, 0, amount, dp);
+}
+
+// i以及i以后的硬币自由选择，搞定rest最少需要多少硬币
+function coinChangeProcess(coins: number[], i: number, rest: number, dp: Map<string, number>) {
+    if (rest === 0) {
+        return 0;
+    }
+    if (i === coins.length) {
+        return -1;
+    }
+
+    const id = `${i}_${rest}`;
+    if (dp.has(id)) {
+        return dp.get(id)!;
+    }
+
+    let min = Infinity;
+    for (let k = 0; k <= Math.floor(rest / coins[i]); k++) {
+        const next = coinChangeProcess(coins, i + 1, rest - k * coins[i], dp);
+        if (next !== -1) {
+            min = Math.min(min, next + k);
+        }
+    }
+
+    dp.set(id, min === Infinity ? -1 : min);
+    return dp.get(id)!;
+}
+
+export function coinChangeDp(coins: number[], amount: number): number {
+    // i以及i以后的硬币自由选择，搞定rest最少需要多少硬币
+    const dp: number[][] = new Array(coins.length + 1).fill(0).map((_) => new Array(amount + 1).fill(-1));
+    for (let i = 0; i <= coins.length; i++) {
+        dp[i][0] = 0;
+    }
+
+    for (let i = coins.length - 1; i >= 0; i--) {
+        for (let rest = 1; rest <= amount; rest++) {
+            // 通过具体实例画出依赖格子优化枚举行为
+            dp[i][rest] = dp[i + 1][rest];
+            if (rest >= coins[i] && dp[i][rest - coins[i]] !== -1) {
+                dp[i][rest] =
+                    dp[i][rest] === -1 ? dp[i][rest - coins[i]] + 1 : Math.min(dp[i][rest], dp[i][rest - coins[i]] + 1);
+            }
+        }
+    }
+
+    return dp[0][amount];
+}
