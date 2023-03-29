@@ -2564,3 +2564,18 @@ export const countSmallerTestData = [
         expected: [0, 0],
     },
 ];
+
+export const wiggleSortTestData = [
+    {
+        input: [1, 5, 1, 1, 6, 4],
+        expected: [1, 6, 1, 5, 1, 4],
+    },
+    {
+        input: [1, 3, 2, 2, 3, 1],
+        expected: [2, 3, 1, 3, 1, 2],
+    },
+    {
+        input: [1, 5, 1, 1, 6],
+        expected: [1, 6, 1, 5, 1],
+    },
+];

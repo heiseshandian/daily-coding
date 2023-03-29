@@ -7251,3 +7251,38 @@ export function countSmaller(arr: number[]): number[] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/wiggle-sort-ii/description/
+
+Given an integer array nums, reorder it such that nums[0] < nums[1] > nums[2] < nums[3]....
+
+You may assume the input array always has a valid answer.
+
+Input: nums = [1,5,1,1,6,4]
+Output: [1,6,1,5,1,4]
+Explanation: [1,4,1,5,1,6] is also accepted.
+*/
+export function wiggleSort(nums: number[]): void {
+    /* 
+    此处需要从大到小排序，small中的最大值需要被bigger的最大值卡到第一位
+    如果从小到大排序的话可能会出现最后相等的情况，比如说
+    1,2,2,3
+    按照小大小大交叉之后是
+    1,2,2,3
+    2,2是不符合条件的
+    如果从大到小的话
+    2,3,2,1
+    */
+    nums.sort((a, b) => b - a);
+
+    const half = nums.length >> 1;
+    const bigger = nums.slice(0, half);
+    const small = nums.slice(half);
+    let k = 0;
+
+    for (let i = 0; i < nums.length - 1; i += 2) {
+        nums[i] = small[k];
+        nums[i + 1] = bigger[k++];
+    }
+}
