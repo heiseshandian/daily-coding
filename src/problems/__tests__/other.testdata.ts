@@ -2579,3 +2579,22 @@ export const wiggleSortTestData = [
         expected: [1, 6, 1, 5, 1],
     },
 ];
+
+export const increasingTripletTestData = [
+    {
+        input: [1, 2, 3, 4, 5],
+        expected: true,
+    },
+    {
+        input: [5, 4, 3, 2, 1],
+        expected: false,
+    },
+    {
+        input: [2, 1, 5, 0, 4, 6],
+        expected: true,
+    },
+    {
+        input: [2, 1, 5, 5, 4, 6],
+        expected: true,
+    },
+];

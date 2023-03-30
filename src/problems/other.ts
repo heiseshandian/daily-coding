@@ -7286,3 +7286,65 @@ export function wiggleSort(nums: number[]): void {
         nums[i + 1] = bigger[k++];
     }
 }
+
+/* 
+https://leetcode.com/problems/increasing-triplet-subsequence/description/
+
+Given an integer array nums, return true if there exists a triple of indices (i, j, k) such 
+that i < j < k and nums[i] < nums[j] < nums[k]. If no such indices exists, return false.
+*/
+export function increasingTriplet(nums: number[]): boolean {
+    if (nums.length < 3) {
+        return false;
+    }
+
+    // end[i] 长度为i+1的最长递增子序列中最小结尾数值
+    const end: number[] = [nums[0]];
+    for (let i = 1; i < nums.length; i++) {
+        let left = 0;
+        let right = end.length - 1;
+        let found: number | undefined = undefined;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (end[mid] === nums[i]) {
+                found = mid;
+                break;
+            }
+
+            if (end[mid] > nums[i]) {
+                found = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        if (found === undefined) {
+            end.push(nums[i]);
+        } else {
+            end[found] = nums[i];
+        }
+
+        if (end.length >= 3) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+export function increasingTriplet2(nums: number[]): boolean {
+    let first = Infinity;
+    let second = Infinity;
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] <= first) {
+            first = nums[i];
+        } else if (nums[i] <= second) {
+            second = nums[i];
+        } else {
+            return true;
+        }
+    }
+
+    return false;
+}
