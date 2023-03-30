@@ -2598,3 +2598,24 @@ export const increasingTripletTestData = [
         expected: true,
     },
 ];
+
+export const fourSumCountTestData = [
+    {
+        input: {
+            nums1: [1, 2],
+            nums2: [-2, -1],
+            nums3: [-1, 2],
+            nums4: [0, 2],
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            nums1: [0],
+            nums2: [0],
+            nums3: [0],
+            nums4: [0],
+        },
+        expected: 1,
+    },
+];

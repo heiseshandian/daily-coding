@@ -1,6 +1,11 @@
 import { parenthesesComparator } from '../../common/index';
-import { countSmallerTestData, wiggleSortTestData, increasingTripletTestData } from './other.testdata';
-import { countSmaller, wiggleSort, increasingTriplet, increasingTriplet2 } from '../other';
+import {
+    countSmallerTestData,
+    wiggleSortTestData,
+    increasingTripletTestData,
+    fourSumCountTestData,
+} from './other.testdata';
+import { countSmaller, wiggleSort, increasingTriplet, increasingTriplet2, fourSumCount } from '../other';
 import {
     avoidFlood,
     calculateStr,
@@ -869,5 +874,9 @@ describe('other', () => {
     it.each(increasingTripletTestData)('increasingTriplet', ({ input, expected }) => {
         expect(increasingTriplet(input)).toBe(expected);
         expect(increasingTriplet2(input)).toBe(expected);
+    });
+
+    it.each(fourSumCountTestData)('fourSumCount', ({ input: { nums1, nums2, nums3, nums4 }, expected }) => {
+        expect(fourSumCount(nums1, nums2, nums3, nums4)).toBe(expected);
     });
 });
