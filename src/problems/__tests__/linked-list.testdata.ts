@@ -101,3 +101,14 @@ export const sortListTestData = [
         expected: [1],
     },
 ];
+
+export const oddEvenListTestData = [
+    {
+        input: [1, 2, 3, 4, 5],
+        expected: [1, 3, 5, 2, 4],
+    },
+    {
+        input: [2, 1, 3, 5, 6, 4, 7],
+        expected: [2, 3, 6, 7, 1, 5, 4],
+    },
+];

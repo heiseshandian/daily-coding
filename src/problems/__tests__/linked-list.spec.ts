@@ -1,4 +1,12 @@
-import { NodeWithRandom, copyRandomList, reverseBetween, rotateRight, sortList, sortList2 } from '../linked-list';
+import {
+    NodeWithRandom,
+    copyRandomList,
+    reverseBetween,
+    rotateRight,
+    sortList,
+    sortList2,
+    oddEvenList,
+} from '../linked-list';
 import {
     copyRandomListTestData,
     reverseBetweenTestData,
@@ -6,6 +14,7 @@ import {
     sortListTestData,
 } from './linked-list.testdata';
 import { SingleLinkedList } from '../../algorithm/linked-list';
+import { oddEvenListTestData } from './linked-list.testdata';
 describe('problems/linked-list', () => {
     describe('copyRandomList', () => {
         function convertNodeToList(head: NodeWithRandom | null) {
@@ -78,5 +87,12 @@ describe('problems/linked-list', () => {
 
         const head2 = SingleLinkedList.from(input);
         expect(SingleLinkedList.toArray(sortList2(head2))).toEqual(expected);
+    });
+
+    it.each(oddEvenListTestData)('oddEvenList', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+        const result = SingleLinkedList.toArray(oddEvenList(head));
+
+        expect(result).toEqual(expected);
     });
 });
