@@ -2619,3 +2619,20 @@ export const fourSumCountTestData = [
         expected: 1,
     },
 ];
+
+export const topKFrequentTestData = [
+    {
+        input: {
+            nums: [1, 1, 1, 2, 2, 3],
+            k: 2,
+        },
+        expected: [1, 2],
+    },
+    {
+        input: {
+            nums: [1],
+            k: 1,
+        },
+        expected: [1],
+    },
+];

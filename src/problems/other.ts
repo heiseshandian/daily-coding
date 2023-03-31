@@ -7377,3 +7377,44 @@ export function fourSumCount(nums1: number[], nums2: number[], nums3: number[], 
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/top-k-frequent-elements/description/
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+
+1 <= nums.length <= 105
+-104 <= nums[i] <= 104
+k is in the range [1, the number of unique elements in the array].
+It is guaranteed that the answer is unique.
+*/
+export function topKFrequent(nums: number[], k: number): number[] {
+    const map: Map<number, number> = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        map.set(nums[i], (map.get(nums[i]) || 0) + 1);
+    }
+
+    const bucket: number[][] = [];
+    map.forEach((count, k) => {
+        if (bucket[count] === undefined) {
+            bucket[count] = [k];
+        } else {
+            bucket[count].push(k);
+        }
+    });
+
+    const result: number[] = [];
+    for (let i = bucket.length - 1; i >= 0; i--) {
+        if (bucket[i]) {
+            result.push(...bucket[i]);
+        }
+
+        // It is guaranteed that the answer is unique.
+        if (result.length === k) {
+            break;
+        }
+    }
+    return result;
+}

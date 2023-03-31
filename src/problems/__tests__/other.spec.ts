@@ -5,7 +5,8 @@ import {
     increasingTripletTestData,
     fourSumCountTestData,
 } from './other.testdata';
-import { countSmaller, wiggleSort, increasingTriplet, increasingTriplet2, fourSumCount } from '../other';
+import { countSmaller, wiggleSort, increasingTriplet, increasingTriplet2, fourSumCount, topKFrequent } from '../other';
+import { topKFrequentTestData } from './other.testdata';
 import {
     avoidFlood,
     calculateStr,
@@ -878,5 +879,9 @@ describe('other', () => {
 
     it.each(fourSumCountTestData)('fourSumCount', ({ input: { nums1, nums2, nums3, nums4 }, expected }) => {
         expect(fourSumCount(nums1, nums2, nums3, nums4)).toBe(expected);
+    });
+
+    it.each(topKFrequentTestData)('topKFrequent', ({ input: { nums, k }, expected }) => {
+        expect(topKFrequent(nums, k)).toEqual(expected);
     });
 });
