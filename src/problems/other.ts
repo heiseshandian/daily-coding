@@ -7,7 +7,7 @@ import { SkipSet } from '../algorithm/skip-set';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { Stack } from '../algorithm/stack';
 import { UnionSet } from '../algorithm/union-set';
-import { getCharIndex, maxCommonFactor, swap } from '../common/index';
+import { getChar, getCharIndex, maxCommonFactor, swap } from '../common/index';
 
 /* 
 分糖果问题1
@@ -7417,4 +7417,60 @@ export function topKFrequent(nums: number[], k: number): number[] {
         }
     }
     return result;
+}
+
+/* 
+https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
+
+Given a string s and an integer k, return the length of the longest substring of s such that the 
+frequency of each character in this substring is greater than or equal to k.
+
+Input: s = "ababbc", k = 2
+Output: 5
+Explanation: The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
+
+1 <= s.length <= 10^4
+s consists of only lowercase English letters.
+1 <= k <= 10^5
+
+分治
+*/
+export function longestSubstring(s: string, k: number): number {
+    let max = 0;
+    const isValid = (s: string) => {
+        const counts: number[] = new Array(26).fill(0);
+        for (let i = 0; i < s.length; i++) {
+            const index = getCharIndex(s[i]);
+            counts[index]++;
+        }
+
+        const set: Set<string> = new Set();
+        for (let i = 0; i < counts.length; i++) {
+            if (counts[i] > 0 && counts[i] < k) {
+                set.add(getChar(i));
+            }
+        }
+
+        if (set.size === 0) {
+            max = Math.max(max, s.length);
+        } else {
+            let strs = '';
+            for (let i = 0; i < s.length; i++) {
+                if (set.has(s[i])) {
+                    strs += '0';
+                } else {
+                    strs += s[i];
+                }
+            }
+
+            const arr = strs.split(/0+/).filter((s) => s.length > 0);
+            for (let i = 0; i < arr.length; i++) {
+                isValid(arr[i]);
+            }
+        }
+    };
+
+    isValid(s);
+
+    return max;
 }

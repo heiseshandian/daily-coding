@@ -4,8 +4,17 @@ import {
     wiggleSortTestData,
     increasingTripletTestData,
     fourSumCountTestData,
+    longestSubstringTestData,
 } from './other.testdata';
-import { countSmaller, wiggleSort, increasingTriplet, increasingTriplet2, fourSumCount, topKFrequent } from '../other';
+import {
+    countSmaller,
+    wiggleSort,
+    increasingTriplet,
+    increasingTriplet2,
+    fourSumCount,
+    topKFrequent,
+    longestSubstring,
+} from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
     avoidFlood,
@@ -883,5 +892,9 @@ describe('other', () => {
 
     it.each(topKFrequentTestData)('topKFrequent', ({ input: { nums, k }, expected }) => {
         expect(topKFrequent(nums, k)).toEqual(expected);
+    });
+
+    it.each(longestSubstringTestData)('longestSubstring', ({ input: { s, k }, expected }) => {
+        expect(longestSubstring(s, k)).toBe(expected);
     });
 });

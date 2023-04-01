@@ -2636,3 +2636,20 @@ export const topKFrequentTestData = [
         expected: [1],
     },
 ];
+
+export const longestSubstringTestData = [
+    {
+        input: {
+            s: 'aaabb',
+            k: 3,
+        },
+        expected: 3,
+    },
+    {
+        input: {
+            s: 'ababbc',
+            k: 2,
+        },
+        expected: 5,
+    },
+];

@@ -38,6 +38,10 @@ export function getCharIndex(char: string) {
     return char.charCodeAt(0) - 'a'.charCodeAt(0);
 }
 
+export function getChar(index: number) {
+    return String.fromCharCode(index + 'a'.charCodeAt(0));
+}
+
 export const parenthesesComparator = (a: string, b: string) => {
     for (let i = 0; i < a.length; i++) {
         if (a[i] !== b[i]) {
