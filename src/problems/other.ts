@@ -7474,3 +7474,53 @@ export function longestSubstring(s: string, k: number): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/combination-sum-ii/description/
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique 
+combinations in candidates where the candidate numbers sum to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note: The solution set must not contain duplicate combinations.
+
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output: 
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+*/
+export function combinationSum2(candidates: number[], target: number): number[][] {
+    candidates.sort((a, b) => a - b);
+
+    const map: Map<number, number> = new Map();
+    for (let i = 0; i < candidates.length; i++) {
+        map.set(candidates[i], (map.get(candidates[i]) || 0) + 1);
+    }
+
+    const result: number[][] = [];
+    const process = (i: number, rest: number, path: number[]) => {
+        if (rest === 0) {
+            result.push(path.slice());
+            return;
+        }
+        if (i === candidates.length) {
+            return;
+        }
+
+        const times = map.get(candidates[i])!;
+        for (let k = 0; k <= times && rest >= k * candidates[i]; k++) {
+            if (k > 0) {
+                path.push(...new Array(k).fill(candidates[i]));
+            }
+            process(i + times, rest - candidates[i] * k, path);
+            path.length -= k;
+        }
+    };
+    process(0, target, []);
+
+    return result;
+}

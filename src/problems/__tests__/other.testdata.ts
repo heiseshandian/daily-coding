@@ -2653,3 +2653,25 @@ export const longestSubstringTestData = [
         expected: 5,
     },
 ];
+
+export const combinationSum2TestData = [
+    {
+        input: {
+            arr: [10, 1, 2, 7, 6, 1, 5],
+            target: 8,
+        },
+        expected: [
+            [1, 1, 6],
+            [2, 6],
+            [1, 7],
+            [1, 2, 5],
+        ],
+    },
+    {
+        input: {
+            arr: [2, 5, 2, 1, 2],
+            target: 5,
+        },
+        expected: [[5], [1, 2, 2]],
+    },
+];

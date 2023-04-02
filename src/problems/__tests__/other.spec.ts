@@ -5,6 +5,7 @@ import {
     increasingTripletTestData,
     fourSumCountTestData,
     longestSubstringTestData,
+    combinationSum2TestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -14,6 +15,7 @@ import {
     fourSumCount,
     topKFrequent,
     longestSubstring,
+    combinationSum2,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -896,5 +898,21 @@ describe('other', () => {
 
     it.each(longestSubstringTestData)('longestSubstring', ({ input: { s, k }, expected }) => {
         expect(longestSubstring(s, k)).toBe(expected);
+    });
+
+    it.each(combinationSum2TestData)('combinationSum2', ({ input: { arr, target }, expected }) => {
+        const sorter = (a: number[], b: number[]) => {
+            const strA = a.join('');
+            const strB = b.join('');
+            if (strA > strB) {
+                return 1;
+            }
+            if (strA === strB) {
+                return 0;
+            }
+            return -1;
+        };
+
+        expect(combinationSum2(arr, target).sort(sorter)).toEqual(expected.sort(sorter));
     });
 });
