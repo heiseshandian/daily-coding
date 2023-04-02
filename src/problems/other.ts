@@ -669,8 +669,8 @@ function getMinCoinsProcess(arr: number[], i: number, rest: number): number {
         return 0;
     }
 
-    // 没有硬币且rest不是0，返回-1无法搞定
-    if (i === arr.length || rest < 0) {
+    // 没有硬币且返回-1无法搞定
+    if (i === arr.length) {
         return -1;
     }
 
@@ -7518,6 +7518,37 @@ export function combinationSum2(candidates: number[], target: number): number[][
             }
             process(i + times, rest - candidates[i] * k, path);
             path.length -= k;
+        }
+    };
+    process(0, target, []);
+
+    return result;
+}
+
+export function combinationSum3(candidates: number[], target: number): number[][] {
+    candidates.sort((a, b) => a - b);
+
+    const result: number[][] = [];
+    const process = (index: number, rest: number, path: number[]) => {
+        if (rest === 0) {
+            result.push(path.slice());
+            return;
+        }
+        if (index === candidates.length) {
+            return;
+        }
+
+        let prev: number | undefined = undefined;
+        for (let i = index; i < candidates.length; i++) {
+            if (rest < candidates[i] || candidates[i] === prev) {
+                continue;
+            }
+
+            path.push(candidates[i]);
+            process(i + 1, rest - candidates[i], path);
+            path.pop();
+
+            prev = candidates[i];
         }
     };
     process(0, target, []);

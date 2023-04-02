@@ -16,6 +16,7 @@ import {
     topKFrequent,
     longestSubstring,
     combinationSum2,
+    combinationSum3,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -914,5 +915,6 @@ describe('other', () => {
         };
 
         expect(combinationSum2(arr, target).sort(sorter)).toEqual(expected.sort(sorter));
+        expect(combinationSum3(arr, target).sort(sorter)).toEqual(expected.sort(sorter));
     });
 });
