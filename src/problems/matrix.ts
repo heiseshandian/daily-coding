@@ -100,3 +100,45 @@ function getEdge(matrix: number[][], startX: number, startY: number, endX: numbe
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/spiral-matrix-ii/
+Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+
+Input: n = 3
+Output: [[1,2,3],[8,9,4],[7,6,5]]
+*/
+export function generateMatrix(n: number): number[][] {
+    const matrix = new Array(n).fill(0).map((_) => new Array(n).fill(0));
+
+    let start = 1;
+    const fill = (startX: number, endX: number) => {
+        // 填充第一行
+        for (let j = startX; j < endX; j++) {
+            matrix[startX][j] = start++;
+        }
+        // 填充右边的列
+        for (let i = startX; i < endX; i++) {
+            matrix[i][endX] = start++;
+        }
+        // 填充下边的行
+        for (let j = endX; j > startX; j--) {
+            matrix[endX][j] = start++;
+        }
+        // 填充左边的列
+        for (let i = endX; i > startX; i--) {
+            matrix[i][startX] = start++;
+        }
+    };
+
+    const level = n >> 1;
+    matrix[level][level] = n * n;
+
+    let i = 0;
+    while (i < level) {
+        fill(i, n - i - 1);
+        i++;
+    }
+
+    return matrix;
+}

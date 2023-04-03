@@ -1,14 +1,16 @@
-import { circleMatrix, zigzagMatrix } from '../matrix';
-import { zigzagMatrixTestData, circleMatrixTestData } from './matrix.testdata';
+import { circleMatrix, generateMatrix, zigzagMatrix } from '../matrix';
+import { zigzagMatrixTestData, circleMatrixTestData, generateMatrixTestData } from './matrix.testdata';
 
-describe('zigzagMatrix', () => {
+describe('matrix', () => {
     it.each(zigzagMatrixTestData)('zigzagMatrix %j', ({ input, expected }) => {
         expect(zigzagMatrix(input)).toEqual(expected);
     });
-});
 
-describe('circleMatrix', () => {
     it.each(circleMatrixTestData)('circleMatrix %j', ({ input, expected }) => {
         expect(circleMatrix(input)).toEqual(expected);
+    });
+
+    it.each(generateMatrixTestData)('generateMatrix', ({ input, expected }) => {
+        expect(generateMatrix(input)).toEqual(expected);
     });
 });
