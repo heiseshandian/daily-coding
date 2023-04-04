@@ -6,6 +6,7 @@ import {
     fourSumCountTestData,
     longestSubstringTestData,
     combinationSum2TestData,
+    uniquePathsWithObstaclesTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -17,6 +18,7 @@ import {
     longestSubstring,
     combinationSum2,
     combinationSum3,
+    uniquePathsWithObstacles,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -916,5 +918,9 @@ describe('other', () => {
 
         expect(combinationSum2(arr, target).sort(sorter)).toEqual(expected.sort(sorter));
         expect(combinationSum3(arr, target).sort(sorter)).toEqual(expected.sort(sorter));
+    });
+
+    it.each(uniquePathsWithObstaclesTestData)('uniquePathsWithObstacles', ({ input, expected }) => {
+        expect(uniquePathsWithObstacles(input)).toBe(expected);
     });
 });

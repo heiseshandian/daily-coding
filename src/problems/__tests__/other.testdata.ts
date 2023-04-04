@@ -2675,3 +2675,29 @@ export const combinationSum2TestData = [
         expected: [[5], [1, 2, 2]],
     },
 ];
+
+export const uniquePathsWithObstaclesTestData = [
+    {
+        input: [
+            [0, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0],
+        ],
+        expected: 2,
+    },
+    {
+        input: [
+            [0, 1],
+            [0, 0],
+        ],
+        expected: 1,
+    },
+    {
+        input: [[1, 0]],
+        expected: 0,
+    },
+    {
+        input: [[0, 1]],
+        expected: 0,
+    },
+];

@@ -7555,3 +7555,51 @@ export function combinationSum3(candidates: number[], target: number): number[][
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/unique-paths-ii/description/
+You are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]). 
+The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square that is an obstacle.
+
+Return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The testcases are generated so that the answer will be less than or equal to 2 * 10^9.
+*/
+export function uniquePathsWithObstacles(obstacleGrid: number[][]): number {
+    const m = obstacleGrid.length;
+    const n = obstacleGrid[0].length;
+    if (obstacleGrid[0][0] === 1 || obstacleGrid[m - 1][n - 1] === 1) {
+        return 0;
+    }
+
+    const dp: Map<string, number> = new Map();
+    const process = (i: number, j: number) => {
+        const id = `${i}_${j}`;
+        if (dp.has(id)) {
+            return dp.get(id)!;
+        }
+
+        if (i === m - 1 && j === n - 1) {
+            dp.set(id, 1);
+            return 1;
+        }
+
+        let count = 0;
+        // 向右
+        if (j + 1 < n && obstacleGrid[i][j + 1] === 0) {
+            count += process(i, j + 1);
+        }
+
+        // 向下
+        if (i + 1 < m && obstacleGrid[i + 1][j] === 0) {
+            count += process(i + 1, j);
+        }
+
+        dp.set(id, count);
+        return count;
+    };
+
+    return process(0, 0);
+}
