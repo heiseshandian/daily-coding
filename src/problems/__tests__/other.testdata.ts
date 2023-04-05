@@ -2701,3 +2701,14 @@ export const uniquePathsWithObstaclesTestData = [
         expected: 0,
     },
 ];
+
+export const nextGreaterElementsTestData = [
+    {
+        input: [1, 2, 1],
+        expected: [2, -1, 2],
+    },
+    {
+        input: [1, 2, 3, 4, 3],
+        expected: [2, 3, 4, -1, 4],
+    },
+];

@@ -7,6 +7,7 @@ import {
     longestSubstringTestData,
     combinationSum2TestData,
     uniquePathsWithObstaclesTestData,
+    nextGreaterElementsTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -19,6 +20,7 @@ import {
     combinationSum2,
     combinationSum3,
     uniquePathsWithObstacles,
+    nextGreaterElements,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -922,5 +924,9 @@ describe('other', () => {
 
     it.each(uniquePathsWithObstaclesTestData)('uniquePathsWithObstacles', ({ input, expected }) => {
         expect(uniquePathsWithObstacles(input)).toBe(expected);
+    });
+
+    it.each(nextGreaterElementsTestData)('nextGreaterElements', ({ input, expected }) => {
+        expect(nextGreaterElements(input)).toEqual(expected);
     });
 });

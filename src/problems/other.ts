@@ -7603,3 +7603,72 @@ export function uniquePathsWithObstacles(obstacleGrid: number[][]): number {
 
     return process(0, 0);
 }
+
+/* 
+https://leetcode.com/problems/next-greater-element-ii/description/
+Given a circular integer array nums (i.e., the next element of nums[nums.length - 1] is nums[0]), 
+return the next greater number for every element in nums.
+
+The next greater number of a number x is the first greater number to its traversing-order next in the array, 
+which means you could search circularly to find its next greater number. If it doesn't exist, return -1 for this number.
+
+单调栈
+*/
+export function nextGreaterElements(nums: number[]): number[] {
+    let maxPos = 0;
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] > nums[maxPos]) {
+            maxPos = i;
+        }
+    }
+
+    // 把最大值放在最后
+    const newArray = nums.slice(maxPos + 1).concat(nums.slice(0, maxPos + 1));
+    // 新索引和旧索引的对应关系
+    const positions: number[] = [];
+    for (let i = maxPos + 1; i < nums.length; i++) {
+        positions.push(i);
+    }
+    for (let i = 0; i < maxPos + 1; i++) {
+        positions.push(i);
+    }
+
+    // 严格从大到小
+    const stack: number[][] = [];
+    const result: number[] = [];
+
+    const generate = (i: number | undefined) => {
+        if (stack.length === 0) {
+            return;
+        }
+
+        stack[stack.length - 1].forEach((pos) => {
+            result[positions[pos]] = i === undefined ? -1 : nums[positions[i]];
+        });
+        stack.length--;
+    };
+
+    for (let i = 0; i < newArray.length; ) {
+        if (stack.length === 0) {
+            stack.push([i++]);
+            continue;
+        }
+
+        const top = stack[stack.length - 1];
+        const last = top[top.length - 1];
+        // 比栈顶小直接入栈
+        if (newArray[i] < newArray[last]) {
+            stack.push([i++]);
+        } else if (newArray[i] === newArray[last]) {
+            top.push(i++);
+        } else {
+            generate(i);
+        }
+    }
+
+    while (stack.length > 0) {
+        generate(undefined);
+    }
+
+    return result;
+}
