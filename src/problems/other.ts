@@ -7672,3 +7672,58 @@ export function nextGreaterElements(nums: number[]): number[] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/restore-ip-addresses/description/
+A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
+
+For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses, but "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses.
+Given a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. 
+You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.
+*/
+export function restoreIpAddresses(s: string): string[] {
+    const result: string[] = [];
+    const dfs = (i: number, path: string[]) => {
+        if (i === s.length && path.length === 4) {
+            result.push(path.join('.'));
+            return;
+        }
+        if (i === s.length || path.length === 4) {
+            return;
+        }
+
+        let cur = '';
+        // 第一位
+        cur += s[i];
+        path.push(cur);
+        dfs(i + 1, path);
+        path.pop();
+
+        if (cur === '0') {
+            return;
+        }
+
+        // 第二位
+        if (i + 1 < s.length) {
+            cur += s[i + 1];
+            path.push(cur);
+            dfs(i + 2, path);
+            path.pop();
+        }
+
+        // 第三位
+        if (i + 2 < s.length) {
+            cur += s[i + 2];
+            if (parseInt(cur) > 255) {
+                return;
+            }
+
+            path.push(cur);
+            dfs(i + 3, path);
+            path.pop();
+        }
+    };
+    dfs(0, []);
+
+    return result;
+}

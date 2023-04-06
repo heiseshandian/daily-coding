@@ -8,6 +8,7 @@ import {
     combinationSum2TestData,
     uniquePathsWithObstaclesTestData,
     nextGreaterElementsTestData,
+    restoreIpAddressesTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -21,6 +22,7 @@ import {
     combinationSum3,
     uniquePathsWithObstacles,
     nextGreaterElements,
+    restoreIpAddresses,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -928,5 +930,9 @@ describe('other', () => {
 
     it.each(nextGreaterElementsTestData)('nextGreaterElements', ({ input, expected }) => {
         expect(nextGreaterElements(input)).toEqual(expected);
+    });
+
+    it.each(restoreIpAddressesTestData)('restoreIpAddresses', ({ input, expected }) => {
+        expect(restoreIpAddresses(input).sort()).toEqual(expected.sort());
     });
 });
