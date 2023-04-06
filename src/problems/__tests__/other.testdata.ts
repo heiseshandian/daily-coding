@@ -2723,3 +2723,20 @@ export const restoreIpAddressesTestData = [
         expected: ['1.0.10.23', '1.0.102.3', '10.1.0.23', '10.10.2.3', '101.0.2.3'],
     },
 ];
+
+export const multiplyTestData = [
+    {
+        input: {
+            num1: '123',
+            num2: '456',
+        },
+        expected: '56088',
+    },
+    {
+        input: {
+            num1: '2',
+            num2: '3',
+        },
+        expected: '6',
+    },
+];

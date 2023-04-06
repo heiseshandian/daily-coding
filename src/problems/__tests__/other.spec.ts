@@ -9,6 +9,7 @@ import {
     uniquePathsWithObstaclesTestData,
     nextGreaterElementsTestData,
     restoreIpAddressesTestData,
+    multiplyTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -23,6 +24,7 @@ import {
     uniquePathsWithObstacles,
     nextGreaterElements,
     restoreIpAddresses,
+    multiply,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -934,5 +936,9 @@ describe('other', () => {
 
     it.each(restoreIpAddressesTestData)('restoreIpAddresses', ({ input, expected }) => {
         expect(restoreIpAddresses(input).sort()).toEqual(expected.sort());
+    });
+
+    it.each(multiplyTestData)('multiply', ({ input: { num1, num2 }, expected }) => {
+        expect(multiply(num1, num2)).toBe(expected);
     });
 });
