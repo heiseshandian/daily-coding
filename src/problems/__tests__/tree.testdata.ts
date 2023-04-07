@@ -142,3 +142,14 @@ export const lowestCommonAncestorTestData = [
         expected: 1,
     },
 ];
+
+export const robTestData = [
+    {
+        input: [3, 2, 3, null, 3, null, 1],
+        expected: 7,
+    },
+    {
+        input: [3, 4, 5, 1, 3, null, 1],
+        expected: 9,
+    },
+];

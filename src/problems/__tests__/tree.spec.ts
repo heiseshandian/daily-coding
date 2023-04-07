@@ -4,6 +4,7 @@ import {
     buildTreeTestData,
     printEdgeNodesTestData,
     maxPathSumTestData,
+    robTestData,
 } from './tree.testdata';
 import {
     kthSmallest,
@@ -16,7 +17,7 @@ import {
     maxPathSum2,
 } from '../tree';
 import { deserializeByLevel, TreeNode, preBuildNode } from '../../algorithm/tree';
-import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor } from '../tree';
+import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor, rob } from '../tree';
 import { lowestCommonAncestorTestData } from './tree.testdata';
 describe('tree', () => {
     it.each(kthSmallestTestData)('kthSmallest', ({ input: { tree, k }, expected }) => {
@@ -141,5 +142,9 @@ describe('tree', () => {
 
             expect(lca?.val).toBe(expected);
         });
+    });
+
+    it.each(robTestData)('rob', ({ input, expected }) => {
+        expect(rob(deserializeByLevel(input))).toBe(expected);
     });
 });
