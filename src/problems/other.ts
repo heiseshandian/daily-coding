@@ -5058,6 +5058,7 @@ export function minEatingSpeed(piles: number[], h: number): number {
         max = Math.max(max, piles[i]);
     }
 
+    // 这里需要从1开始，从min开始是不对的，因为有可能min并不是符合条件的最小值
     let left = 1;
     let right = max;
     let found = max;
