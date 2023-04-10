@@ -40,6 +40,7 @@ import {
     isInterleave,
     getMinEditDistance,
     getMinEditDistance2,
+    minPathSum,
 } from '../dp';
 import {
     countMoneyTestData,
@@ -53,6 +54,7 @@ import {
     getMaxMoneyTestData,
     isInterleaveTestData,
     editDistanceTestData,
+    minPathSumTestData,
 } from './dp.testdata';
 import { bagTestData, maxPointsTestData, nQueenTestData } from './recursion.testdata';
 import { numSquaresTestData, coinChangeTestData } from './dp.testdata';
@@ -160,5 +162,9 @@ describe('dp', () => {
     it.each(coinChangeTestData)('coinChange', ({ input: { coins, amount }, expected }) => {
         expect(coinChange(coins, amount)).toBe(expected);
         expect(coinChangeDp(coins, amount)).toBe(expected);
+    });
+
+    it.each(minPathSumTestData)('minPathSum', ({ input, expected }) => {
+        expect(minPathSum(input)).toBe(expected);
     });
 });

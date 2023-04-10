@@ -281,3 +281,21 @@ export const coinChangeTestData = [
         expected: 0,
     },
 ];
+
+export const minPathSumTestData = [
+    {
+        input: [
+            [1, 3, 1],
+            [1, 5, 1],
+            [4, 2, 1],
+        ],
+        expected: 7,
+    },
+    {
+        input: [
+            [1, 2, 3],
+            [4, 5, 6],
+        ],
+        expected: 12,
+    },
+];

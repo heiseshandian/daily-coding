@@ -1633,3 +1633,36 @@ export function coinChangeDp(coins: number[], amount: number): number {
 
     return dp[0][amount];
 }
+
+/* 
+https://leetcode.com/problems/minimum-path-sum/description/
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, 
+which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+*/
+export function minPathSum(grid: number[][]): number {
+    const m = grid.length;
+    const n = grid[0].length;
+    // dp[i][j] 从[i][j]出发到右下角的最小sum路径是多少
+    const dp: number[][] = new Array(m).fill(0).map((_) => new Array(n).fill(0));
+    dp[m - 1][n - 1] = grid[m - 1][n - 1];
+
+    // 最后一行
+    for (let j = n - 2; j >= 0; j--) {
+        dp[m - 1][j] = dp[m - 1][j + 1] + grid[m - 1][j];
+    }
+
+    // 最后一列
+    for (let i = m - 2; i >= 0; i--) {
+        dp[i][n - 1] = dp[i + 1][n - 1] + grid[i][n - 1];
+    }
+
+    for (let i = m - 2; i >= 0; i--) {
+        for (let j = n - 2; j >= 0; j--) {
+            dp[i][j] = grid[i][j] + Math.min(dp[i][j + 1], dp[i + 1][j]);
+        }
+    }
+
+    return dp[0][0];
+}
