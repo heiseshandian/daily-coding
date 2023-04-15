@@ -2740,3 +2740,14 @@ export const multiplyTestData = [
         expected: '6',
     },
 ];
+
+export const getPrimeNumbersTestData = [
+    {
+        input: 180,
+        expected: [2, 2, 3, 3, 5],
+    },
+    {
+        input: 10,
+        expected: [2, 5],
+    },
+];

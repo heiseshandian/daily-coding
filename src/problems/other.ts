@@ -7759,3 +7759,26 @@ export function multiply(num1: string, num2: string): string {
     const str = result.reverse().join('').replace(/^0+/, '');
     return str === '' ? '0' : str;
 }
+
+/* 
+功能:输入一个正整数，按照从小到大的顺序输出它的所有质因子（重复的也要列举）（如180的质因子为2 2 3 3 5 ）
+*/
+export function getPrimeNumbers(n: number): number[] {
+    const result: number[] = [];
+    // 这里只需要到i*i<=n即可，大的因子我们会在最后收集比如说 10000007*2这个数字，有10000007和2这两个因子，那么2会在第一个for 循环里被收集
+    // 10000007会在出循环之后作为n被收集
+    for (let i = 2; i * i <= n; i++) {
+        if (n % i === 0) {
+            result.push(i);
+            n = n / i;
+            // 重复的也要计入
+            i--;
+        }
+    }
+    // 比如说10,除以2之后还剩下5，那这个5也要被收入10的素数因子当中
+    if (n > 1) {
+        result.push(n);
+    }
+
+    return result;
+}

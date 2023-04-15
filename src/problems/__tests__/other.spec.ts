@@ -10,6 +10,7 @@ import {
     nextGreaterElementsTestData,
     restoreIpAddressesTestData,
     multiplyTestData,
+    getPrimeNumbersTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -25,6 +26,7 @@ import {
     nextGreaterElements,
     restoreIpAddresses,
     multiply,
+    getPrimeNumbers,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -940,5 +942,9 @@ describe('other', () => {
 
     it.each(multiplyTestData)('multiply', ({ input: { num1, num2 }, expected }) => {
         expect(multiply(num1, num2)).toBe(expected);
+    });
+
+    it.each(getPrimeNumbersTestData)('getPrimeNumbers', ({ input, expected }) => {
+        expect(getPrimeNumbers(input)).toEqual(expected);
     });
 });
