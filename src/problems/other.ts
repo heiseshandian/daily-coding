@@ -7782,3 +7782,70 @@ export function getPrimeNumbers(n: number): number[] {
 
     return result;
 }
+
+/* 
+描述
+N位同学站成一排，音乐老师要请最少的同学出列，使得剩下的K位同学排成合唱队形。
+设K位同学从左到右依次编号为1，2..，K，他们的身高分别为【i，TD......Tx，若存在i（1≤i≤K）使得Ti<Ta< ……<T；-1<T；且T；>T；+1>……>Tx，则称这K名同学排成了合唱队形。
+通俗来说，能找到一个同学，他的两边的同学身高都依次严格降低的队形就是合唱队形。例子：
+123 124 125 123 121是一个合唱队形
+123123124122不是合唱队形，因为前两名同学身高相等，不符合要求123 122 121122不是合唱队形，因为找不到一个同学，他的两侧同学身高递减。
+你的任务是，已知所有N位同学的身高，计算最少需要几位同学出列，可以使得剩下的同学排成合唱队形。
+
+注意：不允许改变队列元素的先后顺序且不要求最高同学左右人数必须相等
+
+数据范围：1≤n≤3000
+
+输入描述：
+用例两行数据，第一行是同学的总数N，第二行是N位同学的身高，以空格隔开
+
+输出描述：
+最少需要几位同学出列
+
+解题思路：
+先从左到右求一遍最长递增子序列长度，然后从右向左求一遍，相同位置相加最大的值就是合唱队的最大长度，
+总人数减去合唱队长度就是最终的返回值
+*/
+export function getMinOutNumberOfPeople(heights: number[]): number {
+    const left = getMaxIncreasingLengthArr(heights);
+    const right = getMaxIncreasingLengthArr(heights.slice().reverse()).reverse();
+
+    let max = 1;
+    for (let i = 0; i < left.length; i++) {
+        max = Math.max(max, left[i] + right[i] - 1);
+    }
+
+    return heights.length - max;
+}
+
+function getMaxIncreasingLengthArr(arr: number[]): number[] {
+    // ends[i] 长度为i+1的子序列中的最小结尾数值是多少
+    const ends: number[] = [arr[0]];
+    const result: number[] = [1];
+
+    for (let i = 1; i < arr.length; i++) {
+        // 在ends中找到大于等于arr[i]且最近的值
+        let left = 0;
+        let right = ends.length - 1;
+        let found: number | undefined = undefined;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (ends[mid] >= arr[i]) {
+                found = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        if (found === undefined) {
+            ends.push(arr[i]);
+        } else {
+            ends[found] = arr[i];
+        }
+
+        result[i] = ends.length;
+    }
+
+    return result;
+}

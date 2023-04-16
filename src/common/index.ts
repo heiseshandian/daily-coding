@@ -56,7 +56,7 @@ export const parenthesesComparator = (a: string, b: string) => {
 };
 
 // 用于生成随机测试数据
-export function generateArray(row: number, col: number, left = 1, right = 100): number[][] {
+export function generateMatrix(row: number, col: number, left = 1, right = 100): number[][] {
     row = Math.ceil(Math.random() * row);
     col = Math.ceil(Math.random() * col);
 
@@ -66,6 +66,17 @@ export function generateArray(row: number, col: number, left = 1, right = 100): 
         for (let j = 0; j < col; j++) {
             result[i][j] = Math.ceil(Math.random() * (right - left)) + left;
         }
+    }
+
+    return result;
+}
+
+export function generateArray(maxVal: number, maxLen: number): number[] {
+    const len = Math.ceil(Math.random() * maxLen);
+
+    const result = new Array(len);
+    for (let i = 0; i < len; i++) {
+        result[i] = Math.ceil(Math.random() * maxVal);
     }
 
     return result;

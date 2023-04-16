@@ -11,6 +11,7 @@ import {
     restoreIpAddressesTestData,
     multiplyTestData,
     getPrimeNumbersTestData,
+    getMinOutNumberOfPeopleTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -27,6 +28,7 @@ import {
     restoreIpAddresses,
     multiply,
     getPrimeNumbers,
+    getMinOutNumberOfPeople,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
 import {
@@ -946,5 +948,9 @@ describe('other', () => {
 
     it.each(getPrimeNumbersTestData)('getPrimeNumbers', ({ input, expected }) => {
         expect(getPrimeNumbers(input)).toEqual(expected);
+    });
+
+    it.each(getMinOutNumberOfPeopleTestData)('getMinOutNumberOfPeople', ({ input, expected }) => {
+        expect(getMinOutNumberOfPeople(input)).toBe(expected);
     });
 });
