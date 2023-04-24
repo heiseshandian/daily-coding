@@ -25,7 +25,7 @@ function getClosestMaxOrMinArr(arr: number[], isMax = true): MonotonousStackResu
 
         const top = stack[stack.length - 1];
 
-        let before = undefined;
+        let before: number | undefined = undefined;
         if (stack.length >= 2) {
             const last = stack[stack.length - 2];
             before = last[last.length - 1];
