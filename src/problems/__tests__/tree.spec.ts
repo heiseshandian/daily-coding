@@ -5,6 +5,7 @@ import {
     printEdgeNodesTestData,
     maxPathSumTestData,
     robTestData,
+    flattenTestData,
 } from './tree.testdata';
 import {
     kthSmallest,
@@ -15,6 +16,7 @@ import {
     minCameraCover2,
     maxPathSum,
     maxPathSum2,
+    flatten,
 } from '../tree';
 import { deserializeByLevel, TreeNode, preBuildNode } from '../../algorithm/tree';
 import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor, rob } from '../tree';
@@ -146,5 +148,11 @@ describe('tree', () => {
 
     it.each(robTestData)('rob', ({ input, expected }) => {
         expect(rob(deserializeByLevel(input))).toBe(expected);
+    });
+
+    it.each(flattenTestData)('flatten', ({ input, expected }) => {
+        const root = deserializeByLevel(input);
+        flatten(root);
+        expect(root).toEqual(deserializeByLevel(expected));
     });
 });

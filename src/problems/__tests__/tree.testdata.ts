@@ -153,3 +153,18 @@ export const robTestData = [
         expected: 9,
     },
 ];
+
+export const flattenTestData = [
+    {
+        input: [1, 2, 5, 3, 4, null, 6],
+        expected: [1, null, 2, null, 3, null, 4, null, 5, null, 6],
+    },
+    {
+        input: [],
+        expected: [],
+    },
+    {
+        input: [0],
+        expected: [0],
+    },
+];

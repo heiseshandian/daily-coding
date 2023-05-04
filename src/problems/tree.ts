@@ -601,3 +601,38 @@ export function rob(root: TreeNode | null): number {
 
     return Math.max(...dfs(root));
 }
+
+/* 
+https://leetcode.com/problems/flatten-binary-tree-to-linked-list/description/
+
+Given the root of a binary tree, flatten the tree into a "linked list":
+
+The "linked list" should use the same TreeNode class where the right child pointer points to the 
+next node in the list and the left child pointer is always null.
+
+The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+*/
+export function flatten(root: TreeNode | null): void {
+    if (!root) {
+        return;
+    }
+
+    const nodes: TreeNode[] = [];
+    const pre = (node: TreeNode | null) => {
+        if (!node) {
+            return;
+        }
+
+        nodes.push(node);
+        pre(node.left);
+        pre(node.right);
+    };
+    pre(root);
+
+    nodes.reduce((prev, cur) => {
+        prev.right = cur;
+        prev.left = null;
+
+        return cur;
+    });
+}
