@@ -17,6 +17,7 @@ import {
     maxPathSum,
     maxPathSum2,
     flatten,
+    flatten2,
 } from '../tree';
 import { deserializeByLevel, TreeNode, preBuildNode } from '../../algorithm/tree';
 import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor, rob } from '../tree';
@@ -152,7 +153,11 @@ describe('tree', () => {
 
     it.each(flattenTestData)('flatten', ({ input, expected }) => {
         const root = deserializeByLevel(input);
+        const root2 = deserializeByLevel(input);
         flatten(root);
+        flatten2(root2);
+
         expect(root).toEqual(deserializeByLevel(expected));
+        expect(root2).toEqual(deserializeByLevel(expected));
     });
 });

@@ -636,3 +636,23 @@ export function flatten(root: TreeNode | null): void {
         return cur;
     });
 }
+
+export function flatten2(root: TreeNode | null): void {
+    if (!root) {
+        return;
+    }
+
+    let prev: TreeNode | null = null;
+
+    // 右左头 反过来就是先序遍历，秒啊
+    function dfs(node: TreeNode | null): void {
+        if (!node) return;
+        dfs(node.right);
+        dfs(node.left);
+        node.left = null;
+        node.right = prev;
+        prev = node;
+    }
+
+    dfs(root);
+}
