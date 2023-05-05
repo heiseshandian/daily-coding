@@ -112,3 +112,27 @@ export const oddEvenListTestData = [
         expected: [2, 3, 6, 7, 1, 5, 4],
     },
 ];
+
+export const detectCycleTestData = [
+    {
+        input: {
+            arr: [3, 2, 0, -4],
+            pos: 1,
+        },
+        expected: 2,
+    },
+    {
+        input: {
+            arr: [1, 2],
+            pos: 0,
+        },
+        expected: 1,
+    },
+    {
+        input: {
+            arr: [1],
+            pos: -1,
+        },
+        expected: undefined,
+    },
+];

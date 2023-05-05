@@ -6,9 +6,11 @@ import {
     sortList,
     sortList2,
     oddEvenList,
+    detectCycle,
 } from '../linked-list';
 import {
     copyRandomListTestData,
+    detectCycleTestData,
     reverseBetweenTestData,
     rotateRightTestData,
     sortListTestData,
@@ -94,5 +96,15 @@ describe('problems/linked-list', () => {
         const result = SingleLinkedList.toArray(oddEvenList(head));
 
         expect(result).toEqual(expected);
+    });
+
+    it.each(detectCycleTestData)('detectCycle', ({ input: { arr, pos }, expected }) => {
+        const nodes = arr.map((val) => new SingleLinkedList(val));
+        nodes.reduce((prev, cur) => (prev.next = cur));
+        if (pos !== -1) {
+            nodes[nodes.length - 1].next = nodes[pos];
+        }
+
+        expect(detectCycle(nodes[0])?.val).toBe(expected);
     });
 });

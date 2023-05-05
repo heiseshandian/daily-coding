@@ -262,3 +262,40 @@ export function oddEvenList(head: SingleLinkedList | null): SingleLinkedList | n
 
     return head;
 }
+
+/* 
+https://leetcode.com/problems/linked-list-cycle-ii/description/
+
+Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously 
+following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer 
+is connected to (0-indexed). It is -1 if there is no cycle. Note that pos is not passed as a parameter.
+
+Do not modify the linked list.
+*/
+export function detectCycle(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head || !head.next) {
+        return null;
+    }
+
+    let slow: SingleLinkedList | null | undefined = head.next;
+    let fast: SingleLinkedList | null | undefined = head.next?.next;
+    while (fast && slow !== fast) {
+        slow = slow?.next;
+        fast = fast.next?.next;
+    }
+
+    // 此处不能直接用fast===null，因为经过上面的?.运算符fast的结果有可能是undefined
+    if (!fast) {
+        return null;
+    }
+
+    fast = head;
+    while (fast !== slow) {
+        slow = slow!.next;
+        fast = fast!.next;
+    }
+
+    return fast;
+}
