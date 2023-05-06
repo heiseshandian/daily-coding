@@ -12,6 +12,7 @@ import {
     multiplyTestData,
     getPrimeNumbersTestData,
     getMinOutNumberOfPeopleTestData,
+    findMinTestData,
 } from './other.testdata';
 import {
     countSmaller,
@@ -31,6 +32,7 @@ import {
     getMinOutNumberOfPeople,
 } from '../other';
 import { topKFrequentTestData } from './other.testdata';
+import { findMin } from '../other';
 import {
     avoidFlood,
     calculateStr,
@@ -952,5 +954,9 @@ describe('other', () => {
 
     it.each(getMinOutNumberOfPeopleTestData)('getMinOutNumberOfPeople', ({ input, expected }) => {
         expect(getMinOutNumberOfPeople(input)).toBe(expected);
+    });
+
+    it.each(findMinTestData)('findMin', ({ input, expected }) => {
+        expect(findMin(input)).toBe(expected);
     });
 });
