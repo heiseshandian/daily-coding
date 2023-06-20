@@ -14,6 +14,17 @@
             "args": ["${relativeFile}"],
             "cwd": "${workspaceRoot}",
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            // 用于调试当前打开文件
+            "name": "node",
+            "type": "node",
+            "runtimeExecutable": "node",
+            "request": "launch",
+            // ${relativeFile} 表示当前打开文件
+            "args": ["${relativeFile}"],
+            "cwd": "${workspaceRoot}",
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }
