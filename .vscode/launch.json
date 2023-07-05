@@ -24,7 +24,11 @@
             // ${relativeFile} 表示当前打开文件
             "args": ["${relativeFile}"],
             "cwd": "${workspaceRoot}",
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": [
+                // 通过注释掉node_internals来允许step into node_internals
+                // "<node_internals>/**"
+            ]
         }
     ]
 }
