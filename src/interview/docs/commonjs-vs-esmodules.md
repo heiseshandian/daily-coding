@@ -1,7 +1,23 @@
 ### 不同点
 
--   commonjs 导出的变量可修改，es module 导出的变量不可修改（相当于 es module 导出的内容都是 const）
--   es module 导出的变量按引用传递，即使是基础类型也是按照引用传递，而 commonjs 导出是按照值传递（本来导入的时候就是普通的赋值操作）
+#### 从使用上来说
+
+-   commonjs 支持动态导入，支持通过 exports 和 module.exports 两种方式来导入，es modules 只支持通过 import 和 export 关键字实现导入导出
+    commonjs 模块下不推荐 exports 和 module.exports 混用，有些情况下容易出现问题，因为 exports 本质上只是 module.exports 的一个引用，如果 exports.x 的形式导出一些成员，然后又以 module.exports 的形式导出一整个对象，那么 exports 的形式就会失效，因为整个 exports 对象都被覆盖了。
+
+```js
+// a.js
+exports.a = 1;
+module.exports = {};
+
+// main.js
+const a = require('./a.js');
+
+// {}
+console.log(a);
+```
+
+-   commonjs 导出的对象本质上是 module.exports 的浅复制，在导入模块中可重新赋值，而 es modules 导出的变量本质上是对原有变量的引用，或者说 live bindings，在引入模块中不可被修改，就算对基础类型来说也是如此
 
 ```js
 // a.js
@@ -13,47 +29,38 @@ export function addNum() {
 
 // main.js
 import { num, addNum } from './a.js';
-console.log(num); //1
+
+// 1
+console.log(num);
 addNum();
-console.log(num); //2
+// 2
+console.log(num);
 ```
-
--   commonjs 同步加载并执行模块，es module 会在预处理阶段分析模块依赖，在执行阶段执行模块（本质上是编译时所有 import 会被提到文件顶部）
-
-同时由于 es module 在编译时就能分析出模块依赖关系，可以很好的做 tree shaking。（当然动态 import 是不行的，因为动态 import 是引入整个模块，所以可以把需要动态引入的模块尽可能拆分的更小，确保动态引入的部分都是不需要做 tree shaking 的）
 
 ```js
-// main.js
-console.log('main.js开始执行');
-import say from './a.js';
-import say1 from './b.js';
-console.log('main.js执行完毕');
-
 // a.js
-import b from './b.js';
-console.log('a模块加载');
-export default function say() {
-    console.log('hello , world');
-}
+export let num = 1;
 
-// b.js
-console.log('b模块加载')
-export default function sayhello(){
-    console.log('hello,world')
-}
+// main.js
+import { num } from './a.js';
 
-/*
-b模块加载
-a模块加载
-main.js开始执行
-main.js执行完毕
-*/
+// TypeError: Assignment to constant variable.
+num = 1;
 ```
 
-### 相同点
+#### 从执行时机上来说
 
-两者在解析依赖的时候都是采用 dfs 遍历
+-   commonjs 是同步加载并执行，依赖解析采用 dfs 算法，而 es modules 是先解析依赖，也是 dfs 方式，然后执行代码（本质上是在编译的时候将静态 import 提升到代码顶部）
+    这也是为什么 es modules 可以被用于 tree shaking，因为在代码执行之前依赖关系就是确定的。当然，后面增加了 dynamic import 之后由于是动态全部导入所以不太好做 tree shaking，一种权衡的方案可能是让被动态导入的模块尽可能小，保证被动态导入的所有内容都会被使用到。
+
+#### 其他的一些点
+
+-   两者都通过缓存来避免重复加载
+-   commonjs 在 require 的时候会先创建一个空的 module 对象，然后缓存起来，这样在下次加载这个模块的时候就会直接从缓存中返回，也就不会出现循环依赖的时候彼此等待的情况，但是这种情况下同步上下文中是拿不到一些具体的方法的，因为实际的模块代码并没有加载完成。es modules 则是通过先分析依赖关系，再执行模块代码的形式，同时借助缓存，天然的就能避免循环等待执行。
+
+```
 
 #### 参考资料
 
 [「万字进阶」深入浅出 Commonjs 和 Es Module](https://juejin.cn/post/6994224541312483336)
+```
