@@ -39,7 +39,7 @@ function newFunction() {
     const result = Con.apply(obj, arguments);
 
     // 4. 若构造函数没有人为返回一个对象类型的值则将这个新建的对象返回
-    return typeof result === 'object' ? result : obj;
+    return typeof result === 'object' && result !== null ? result : obj;
 }
 
 function Person() {}
