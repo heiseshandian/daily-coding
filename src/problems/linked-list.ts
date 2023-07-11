@@ -299,3 +299,57 @@ export function detectCycle(head: SingleLinkedList | null): SingleLinkedList | n
 
     return fast;
 }
+
+/* 
+https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/
+
+Given the head of a sorted linked list, delete all nodes that have duplicate numbers, 
+leaving only distinct numbers from the original list. Return the linked list sorted as well.
+*/
+export function deleteDuplicates(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head || !head.next) {
+        return head;
+    }
+
+    const newHead = findFirstDistinctNode(head);
+    if (!newHead) {
+        return newHead;
+    }
+
+    let cur = newHead;
+    let next = newHead.next;
+    while (next) {
+        const distinct = findFirstDistinctNode(next);
+        cur.next = distinct;
+        if (!distinct) {
+            break;
+        }
+
+        cur = cur.next!;
+        next = cur?.next;
+    }
+
+    return newHead;
+}
+
+function findFirstDistinctNode(node: SingleLinkedList | null): SingleLinkedList | null {
+    if (!node || !node.next) {
+        return node;
+    }
+
+    let distinct = node;
+    let next = distinct.next;
+    // 如果当前节点与下一个节点不同则直接返回
+    if (distinct.val !== next?.val) {
+        return distinct;
+    }
+
+    while (next) {
+        if (!distinct || distinct.val !== next?.val) {
+            // 此处需要递归调用，因为下一个节点有可能是一堆相同节点的开头，也可能是一个独立的distinct节点
+            return findFirstDistinctNode(next);
+        }
+        next = next.next;
+    }
+    return null;
+}

@@ -136,3 +136,22 @@ export const detectCycleTestData = [
         expected: undefined,
     },
 ];
+
+export const deleteDuplicatesTestData = [
+    {
+        input: [1, 2, 3, 3, 4, 4, 5],
+        expected: [1, 2, 5],
+    },
+    {
+        input: [1, 1, 2, 3, 3, 4, 4, 5],
+        expected: [2, 5],
+    },
+    {
+        input: [1, 1, 1, 2, 2, 3, 3, 4, 4, 5],
+        expected: [5],
+    },
+    {
+        input: [1, 1, 1, 2, 2, 3, 3, 4, 4],
+        expected: [],
+    },
+];

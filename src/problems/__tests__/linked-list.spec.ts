@@ -7,9 +7,11 @@ import {
     sortList2,
     oddEvenList,
     detectCycle,
+    deleteDuplicates,
 } from '../linked-list';
 import {
     copyRandomListTestData,
+    deleteDuplicatesTestData,
     detectCycleTestData,
     reverseBetweenTestData,
     rotateRightTestData,
@@ -106,5 +108,12 @@ describe('problems/linked-list', () => {
         }
 
         expect(detectCycle(nodes[0])?.val).toBe(expected);
+    });
+
+    it.each(deleteDuplicatesTestData)('deleteDuplicates', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+        const result = SingleLinkedList.toArray(deleteDuplicates(head));
+
+        expect(result).toEqual(expected);
     });
 });
