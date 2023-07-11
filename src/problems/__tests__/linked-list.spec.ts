@@ -8,6 +8,7 @@ import {
     oddEvenList,
     detectCycle,
     deleteDuplicates,
+    deleteDuplicates2,
 } from '../linked-list';
 import {
     copyRandomListTestData,
@@ -114,6 +115,10 @@ describe('problems/linked-list', () => {
         const head = SingleLinkedList.from(input);
         const result = SingleLinkedList.toArray(deleteDuplicates(head));
 
+        const head2 = SingleLinkedList.from(input);
+        const result2 = SingleLinkedList.toArray(deleteDuplicates2(head2));
+
         expect(result).toEqual(expected);
+        expect(result2).toEqual(expected);
     });
 });

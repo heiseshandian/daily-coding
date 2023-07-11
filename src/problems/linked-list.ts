@@ -353,3 +353,21 @@ function findFirstDistinctNode(node: SingleLinkedList | null): SingleLinkedList 
     }
     return null;
 }
+
+// 更为简洁的代码实现
+export function deleteDuplicates2(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head || !head.next) {
+        return head;
+    }
+
+    if (head.val === head.next?.val) {
+        while (head?.val === head?.next?.val) {
+            head = head?.next!;
+        }
+
+        return deleteDuplicates2(head.next);
+    }
+
+    head.next = deleteDuplicates2(head.next);
+    return head;
+}
