@@ -656,3 +656,127 @@ export function flatten2(root: TreeNode | null): void {
 
     dfs(root);
 }
+
+/*
+https://leetcode.com/problems/recover-binary-search-tree/description/ 
+
+You are given the root of a binary search tree (BST), where the values of exactly two nodes 
+of the tree were swapped by mistake. Recover the tree without changing its structure.
+
+额外空间复杂度O(n)
+*/
+export function recoverTree(root: TreeNode | null): void {
+    // 先中序遍历拿到所有的节点
+    const nodes: TreeNode[] = [];
+
+    const middleTraverse = (node: TreeNode | null) => {
+        if (!node) {
+            return;
+        }
+
+        middleTraverse(node.left);
+        nodes.push(node);
+        middleTraverse(node.right);
+    };
+    middleTraverse(root);
+
+    // 如果是相邻两个节点交换则只有一个逆序对，如果是非相邻的两个节点交换则有两个逆序对
+    const pairs: TreeNode[] = [];
+    for (let i = 0; i < nodes.length - 1; i++) {
+        if (nodes[i].val > nodes[i + 1].val) {
+            pairs.push(nodes[i]);
+            pairs.push(nodes[i + 1]);
+        }
+    }
+
+    const swap = (nodeA: TreeNode, nodeB: TreeNode) => {
+        const tmp = nodeA.val;
+        nodeA.val = nodeB.val;
+        nodeB.val = tmp;
+    };
+
+    if (pairs.length === 2) {
+        swap(pairs[0], pairs[1]);
+    } else {
+        swap(pairs[0], pairs[3]);
+    }
+}
+
+// 额外空间复杂度O(log(n))
+export function recoverTree2(root: TreeNode | null): void {
+    let first: TreeNode | null = null;
+    let second: TreeNode | null = null;
+    let prev = new TreeNode(-Infinity);
+
+    const traverse = (node: TreeNode | null) => {
+        if (!node) {
+            return;
+        }
+        traverse(node.left);
+
+        if (prev.val > node.val) {
+            if (!first) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+
+        traverse(node.right);
+    };
+    traverse(root);
+
+    const tmp = first!.val;
+    first!.val = second!.val;
+    second!.val = tmp;
+}
+
+// 采用Morris遍历优化空间复杂度
+export function recoverTree3(root: TreeNode | null): void {
+    let first: TreeNode | null = null;
+    let second: TreeNode | null = null;
+    let prev = new TreeNode(-Infinity);
+
+    const update = (node: TreeNode) => {
+        if (prev.val > node.val) {
+            if (!first) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+    };
+
+    let cur: TreeNode | null = root;
+    // 当前节点左子树上的最右节点
+    let mostRight: TreeNode;
+    while (cur) {
+        // 没有左节点直接往右
+        if (!cur.left) {
+            update(cur);
+            cur = cur.right;
+            continue;
+        }
+
+        // 有左节点就找到左节点上的最右节点
+        mostRight = cur.left;
+        while (mostRight.right && mostRight.right !== cur) {
+            mostRight = mostRight.right;
+        }
+
+        if (!mostRight.right) {
+            // 第一次到达头结点
+            mostRight.right = cur;
+            cur = cur.left;
+        } else {
+            // 第二次到达头结点
+            mostRight.right = null;
+            update(cur);
+            cur = cur.right;
+        }
+    }
+
+    const tmp = first!.val;
+    first!.val = second!.val;
+    second!.val = tmp;
+}

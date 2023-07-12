@@ -168,3 +168,14 @@ export const flattenTestData = [
         expected: [0],
     },
 ];
+
+export const recoverTreeTestData = [
+    {
+        input: [1, 3, null, null, 2],
+        expected: [3, 1, null, null, 2],
+    },
+    {
+        input: [3, 1, 4, null, null, 2],
+        expected: [2, 1, 4, null, null, 3],
+    },
+];

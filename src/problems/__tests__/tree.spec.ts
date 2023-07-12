@@ -6,6 +6,7 @@ import {
     maxPathSumTestData,
     robTestData,
     flattenTestData,
+    recoverTreeTestData,
 } from './tree.testdata';
 import {
     kthSmallest,
@@ -18,6 +19,9 @@ import {
     maxPathSum2,
     flatten,
     flatten2,
+    recoverTree,
+    recoverTree2,
+    recoverTree3,
 } from '../tree';
 import { deserializeByLevel, TreeNode, preBuildNode } from '../../algorithm/tree';
 import { sufficientSubset, buildTree, printEdgeNodes, lowestCommonAncestor, rob } from '../tree';
@@ -159,5 +163,18 @@ describe('tree', () => {
 
         expect(root).toEqual(deserializeByLevel(expected));
         expect(root2).toEqual(deserializeByLevel(expected));
+    });
+
+    it.each(recoverTreeTestData)('recoverTree', ({ input, expected }) => {
+        const root = deserializeByLevel(input);
+        const root2 = deserializeByLevel(input);
+        const root3 = deserializeByLevel(input);
+        recoverTree(root);
+        recoverTree2(root2);
+        recoverTree3(root3);
+
+        expect(root).toEqual(deserializeByLevel(expected));
+        expect(root2).toEqual(deserializeByLevel(expected));
+        expect(root3).toEqual(deserializeByLevel(expected));
     });
 });
