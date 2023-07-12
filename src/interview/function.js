@@ -15,3 +15,33 @@ export function currying(fn, ...args) {
         return fn.apply(this, _args);
     };
 }
+
+export function debounce(fn, delay) {
+    let timeout;
+
+    return (...args) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => {
+            fn(...args);
+        }, delay);
+    };
+}
+
+export function throttle(fn, delay) {
+    let shouldWait = false;
+
+    return (...args) => {
+        if (shouldWait) {
+            return;
+        }
+
+        fn(...args);
+        shouldWait = true;
+
+        setTimeout(() => {
+            shouldWait = false;
+        }, delay);
+    };
+}
