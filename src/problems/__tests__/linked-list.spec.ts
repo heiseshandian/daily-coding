@@ -9,11 +9,13 @@ import {
     detectCycle,
     deleteDuplicates,
     deleteDuplicates2,
+    reorderList,
 } from '../linked-list';
 import {
     copyRandomListTestData,
     deleteDuplicatesTestData,
     detectCycleTestData,
+    reorderListTestData,
     reverseBetweenTestData,
     rotateRightTestData,
     sortListTestData,
@@ -120,5 +122,12 @@ describe('problems/linked-list', () => {
 
         expect(result).toEqual(expected);
         expect(result2).toEqual(expected);
+    });
+
+    it.each(reorderListTestData)('reorderList', ({ input, expected }) => {
+        const head = SingleLinkedList.from(input);
+        reorderList(head);
+
+        expect(head).toEqual(SingleLinkedList.from(expected));
     });
 });

@@ -155,3 +155,14 @@ export const deleteDuplicatesTestData = [
         expected: [],
     },
 ];
+
+export const reorderListTestData = [
+    {
+        input: [1, 2, 3, 4],
+        expected: [1, 4, 2, 3],
+    },
+    {
+        input: [1, 2, 3, 4, 5],
+        expected: [1, 5, 2, 4, 3],
+    },
+];

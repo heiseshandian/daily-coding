@@ -1,4 +1,4 @@
-import { SingleLinkedList } from '../algorithm/linked-list';
+import { SingleLinkedList, reverseSingleLinkedList } from '../algorithm/linked-list';
 //https://leetcode.com/problems/copy-list-with-random-pointer/
 // 深度copy如下带有random指针的节点
 export class NodeWithRandom {
@@ -370,4 +370,42 @@ export function deleteDuplicates2(head: SingleLinkedList | null): SingleLinkedLi
 
     head.next = deleteDuplicates2(head.next);
     return head;
+}
+
+/* 
+https://leetcode.com/problems/reorder-list/
+
+You are given the head of a singly linked-list. The list can be represented as:
+L0 → L1 → … → Ln - 1 → Ln
+Reorder the list to be on the following form:
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+You may not modify the values in the list's nodes. Only nodes themselves may be changed.
+*/
+
+export function reorderList(head: SingleLinkedList | null): void {
+    if (!head || !head.next || !head.next.next) {
+        return;
+    }
+
+    // 对于奇数个节点，slow指向中点，对于偶数个节点，slow指向上节点
+    let slow = head;
+    let fast = head;
+    while (fast && fast.next && fast.next.next) {
+        slow = slow.next!;
+        fast = fast.next.next;
+    }
+    let secondHalf = slow.next;
+    // 切断前后半部分
+    slow.next = null;
+
+    secondHalf = reverseSingleLinkedList(secondHalf);
+    let cur = head;
+    while (secondHalf) {
+        const curNext = cur.next;
+        const secondNext = secondHalf.next;
+        cur.next = secondHalf;
+        secondHalf.next = curNext;
+        cur = curNext!;
+        secondHalf = secondNext;
+    }
 }
