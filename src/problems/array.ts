@@ -38,3 +38,41 @@ export function maxNumOfMarkedIndices(nums: number[]): number {
 
     return count;
 }
+
+/* 
+https://leetcode.com/problems/maximize-distance-to-closest-person/description/
+
+You are given an array representing a row of seats where seats[i] = 1 represents a person sitting in the ith seat, and seats[i] = 0 represents that the ith seat is empty (0-indexed).
+
+There is at least one empty seat, and at least one person sitting.
+
+Alex wants to sit in the seat such that the distance between him and the closest person to him is maximized. 
+
+Return that maximum distance to the closest person.
+*/
+export function maxDistToClosest(seats: number[]): number {
+    let maxDistance = 1;
+
+    let left = 0;
+    let right = 1;
+    while (right < seats.length) {
+        if (seats[right] === 0) {
+            right++;
+            continue;
+        }
+
+        if (seats[left] === 0) {
+            maxDistance = Math.max(maxDistance, right - left);
+        } else {
+            maxDistance = Math.max(maxDistance, (right - left) >> 1);
+        }
+        left = right;
+        right++;
+    }
+
+    // 最后需考虑最后一个座位为空的情况
+    if (seats[right - 1] === 0) {
+        maxDistance = Math.max(maxDistance, right - left - 1);
+    }
+    return maxDistance;
+}
