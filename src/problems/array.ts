@@ -1,3 +1,4 @@
+import { swap } from '../common/index';
 /* 
 https://leetcode.com/problems/find-the-maximum-number-of-marked-indices/description/
 
@@ -75,4 +76,67 @@ export function maxDistToClosest(seats: number[]): number {
         maxDistance = Math.max(maxDistance, right - left - 1);
     }
     return maxDistance;
+}
+
+/* 
+https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150
+
+Given an integer array nums sorted in non-decreasing order, remove some duplicates in-place such that each unique element appears at most twice. The relative order of the elements should be kept the same.
+
+Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the first part of the array nums. More formally, if there are k elements after removing the duplicates, then the first k elements of nums should hold the final result. It does not matter what you leave beyond the first k elements.
+
+Return k after placing the final result in the first k slots of nums.
+
+Do not allocate extra space for another array. You must do this by modifying the input array in-place with O(1) extra memory.
+
+Input: nums = [1,1,1,2,2,3]
+Output: 5, nums = [1,1,2,2,3,_]
+Explanation: Your function should return k = 5, with the first five elements of nums being 1, 1, 2, 2 and 3 respectively.
+It does not matter what you leave beyond the returned k (hence they are underscores).
+*/
+export function removeDuplicates(nums: number[]): number {
+    if (nums.length < 3) {
+        return nums.length;
+    }
+
+    // 标记需要删除的元素
+    let prev = nums[0];
+    let count = 1;
+    let k = nums.length;
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] === prev) {
+            count++;
+        } else {
+            prev = nums[i];
+            count = 1;
+        }
+
+        if (count >= 3) {
+            // @ts-expect-error
+            nums[i] = null;
+            k--;
+        }
+    }
+
+    // 移动需要删除的元素
+    let left = 0;
+    let right = 0;
+    // 此处需要同时考虑left和right不越界，因为有可能后面没有null位置了
+    while (right < nums.length && left < nums.length) {
+        // 将left移动到第一个null位置
+        if (nums[left] !== null) {
+            left++;
+            continue;
+        }
+
+        // 将right移动到第一个非null位置
+        right = left + 1;
+        while (nums[right] === null) {
+            right++;
+        }
+
+        swap(nums, left++, right++);
+    }
+
+    return k;
 }
