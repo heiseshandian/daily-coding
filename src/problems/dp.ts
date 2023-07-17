@@ -1666,3 +1666,63 @@ export function minPathSum(grid: number[][]): number {
 
     return dp[0][0];
 }
+
+/* 
+https://leetcode.com/problems/triangle/description/
+
+Given a triangle array, return the minimum path sum from top to bottom.
+
+For each step, you may move to an adjacent number of the row below. More formally, 
+if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+
+Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+Output: 11
+Explanation: The triangle looks like:
+   2
+  3 4
+ 6 5 7
+4 1 8 3
+The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 (underlined above).
+*/
+// 从最后一行开始分析，最后一行的最短路径和就是自己，然后倒数第二行，倒数第三行
+export function minimumTotal(triangle: number[][]): number {
+    // dp[row][i] row行i列的最短路径和
+    const dp = new Array(triangle.length + 1)
+        .fill(0)
+        .map((_) => new Array(triangle[triangle.length - 1].length + 1).fill(0));
+
+    // 从下到上，从左到右填表
+    for (let row = triangle.length - 1; row >= 0; row--) {
+        for (let i = 0; i < triangle[row].length; i++) {
+            dp[row][i] = Math.min(dp[row + 1][i], dp[row + 1][i + 1]) + triangle[row][i];
+        }
+    }
+
+    return dp[0][0];
+}
+
+// 空间压缩
+export function minimumTotal2(triangle: number[][]): number {
+    // dp[row][i] row行i列的最短路径和
+    const dp = new Array(triangle[triangle.length - 1].length + 1).fill(0);
+
+    // 从下到上，从左到右填表
+    for (let row = triangle.length - 1; row >= 0; row--) {
+        for (let i = 0; i < triangle[row].length; i++) {
+            dp[i] = Math.min(dp[i], dp[i + 1]) + triangle[row][i];
+        }
+    }
+
+    return dp[0];
+}
+
+// 直接更改原数组
+export function minimumTotal3(triangle: number[][]): number {
+    for (let i = triangle.length - 2; i >= 0; i--) {
+        for (let j = 0; j < triangle[i].length; j++) {
+            triangle[i][j] += Math.min(triangle[i + 1][j], triangle[i + 1][j + 1]);
+        }
+    }
+
+    return triangle[0][0];
+}
