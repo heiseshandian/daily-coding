@@ -10,11 +10,14 @@ import {
     deleteDuplicates,
     deleteDuplicates2,
     reorderList,
+    removeElements,
+    removeElements2,
 } from '../linked-list';
 import {
     copyRandomListTestData,
     deleteDuplicatesTestData,
     detectCycleTestData,
+    removeElementsTestData,
     reorderListTestData,
     reverseBetweenTestData,
     rotateRightTestData,
@@ -129,5 +132,16 @@ describe('problems/linked-list', () => {
         reorderList(head);
 
         expect(head).toEqual(SingleLinkedList.from(expected));
+    });
+
+    it.each(removeElementsTestData)('removeElements', ({ input: { arr, val }, expected }) => {
+        const head = SingleLinkedList.from(arr);
+        const result = SingleLinkedList.toArray(removeElements(head, val));
+
+        const head2 = SingleLinkedList.from(arr);
+        const result2 = SingleLinkedList.toArray(removeElements2(head2, val));
+
+        expect(result).toEqual(expected);
+        expect(result2).toEqual(expected);
     });
 });

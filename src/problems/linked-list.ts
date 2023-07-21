@@ -408,3 +408,53 @@ export function reorderList(head: SingleLinkedList | null): void {
         secondHalf = secondNext;
     }
 }
+
+/* 
+https://leetcode.com/problems/remove-linked-list-elements/description/
+
+Given the head of a linked list and an integer val, remove all the nodes 
+of the linked list that has Node.val == val, and return the new head.
+*/
+export function removeElements(head: SingleLinkedList | null, val: number): SingleLinkedList | null {
+    if (!head) {
+        return head;
+    }
+
+    // 找到新头部
+    let cur: SingleLinkedList | null = head;
+    while (cur && cur.val === val) {
+        cur = cur.next;
+    }
+    const newHead = cur;
+    if (!newHead || !newHead.next) {
+        return newHead;
+    }
+
+    let prev = newHead;
+    cur = newHead.next;
+    while (cur) {
+        if (cur.val === val) {
+            prev.next = cur.next;
+        } else {
+            prev = cur;
+        }
+
+        cur = cur.next;
+    }
+
+    return newHead;
+};
+
+export function removeElements2(head: SingleLinkedList | null, val: number): SingleLinkedList | null {
+    const holder = new SingleLinkedList(-1, head);
+    let cur = holder;
+    while (cur && cur.next) {
+        if (cur.next.val === val) {
+            cur.next = cur.next.next;
+        } else {
+            cur = cur.next;
+        }
+    }
+
+    return holder.next;
+};

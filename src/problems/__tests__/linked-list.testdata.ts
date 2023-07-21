@@ -7,45 +7,45 @@ export const copyRandomListTestData: TestData<
     Array<[val: number, random: number | null]>,
     Array<[val: number, random: number | null]>
 > = [
-    {
-        input: [
-            [7, null],
-            [13, 0],
-            [11, 4],
-            [10, 2],
-            [1, 0],
-        ],
-        expected: [
-            [7, null],
-            [13, 0],
-            [11, 4],
-            [10, 2],
-            [1, 0],
-        ],
-    },
-    {
-        input: [
-            [1, 1],
-            [2, 1],
-        ],
-        expected: [
-            [1, 1],
-            [2, 1],
-        ],
-    },
-    {
-        input: [
-            [3, null],
-            [3, 0],
-            [3, null],
-        ],
-        expected: [
-            [3, null],
-            [3, 0],
-            [3, null],
-        ],
-    },
-];
+        {
+            input: [
+                [7, null],
+                [13, 0],
+                [11, 4],
+                [10, 2],
+                [1, 0],
+            ],
+            expected: [
+                [7, null],
+                [13, 0],
+                [11, 4],
+                [10, 2],
+                [1, 0],
+            ],
+        },
+        {
+            input: [
+                [1, 1],
+                [2, 1],
+            ],
+            expected: [
+                [1, 1],
+                [2, 1],
+            ],
+        },
+        {
+            input: [
+                [3, null],
+                [3, 0],
+                [3, null],
+            ],
+            expected: [
+                [3, null],
+                [3, 0],
+                [3, null],
+            ],
+        },
+    ];
 
 export const reverseBetweenTestData = [
     {
@@ -166,3 +166,34 @@ export const reorderListTestData = [
         expected: [1, 5, 2, 4, 3],
     },
 ];
+
+export const removeElementsTestData = [
+    {
+        input: {
+            arr: [1, 2, 6, 3, 4, 5, 6],
+            val: 6
+        },
+        expected: [1, 2, 3, 4, 5]
+    },
+    {
+        input: {
+            arr: [],
+            val: 1
+        },
+        expected: []
+    },
+    {
+        input: {
+            arr: [7, 7, 7, 7],
+            val: 7
+        },
+        expected: []
+    },
+    {
+        input: {
+            arr: [1, 2, 2, 1],
+            val: 2
+        },
+        expected: [1, 1]
+    }
+]
