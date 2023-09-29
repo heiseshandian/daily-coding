@@ -2260,7 +2260,7 @@ export function getMaxProfit2(arr: number[]): number {
 
     for (let i = 0; i < arr.length; i++) {
         min = Math.min(min, arr[i]);
-        max = Math.max(arr[i] - min);
+        max = Math.max(max, arr[i] - min);
     }
 
     return max;
