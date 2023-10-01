@@ -169,3 +169,45 @@ export function merge(nums1: number[], m: number, nums2: number[], n: number): v
         nums1[index--] = nums2[i2--];
     }
 }
+
+/* 
+https://leetcode.com/problems/3sum-closest/description/
+
+Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+*/
+export function threeSumClosest(nums: number[], target: number): number {
+    nums.sort((a, b) => a - b);
+
+    let closestSum = nums[0] + nums[1] + nums[2];
+    if (nums.length <= 3) {
+        return closestSum;
+    }
+
+    // 先固定一个数，然后在剩下的范围上玩双指针
+    for (let i = 0; i < nums.length - 2; i++) {
+        let left = i + 1;
+        let right = nums.length - 1;
+        while (left < right) {
+            const sum = nums[left] + nums[right] + nums[i];
+            if (sum === target) {
+                return target;
+            }
+
+            if (Math.abs(sum - target) < Math.abs(closestSum - target)) {
+                closestSum = sum;
+            }
+
+            if (sum < target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+    }
+
+    return closestSum;
+}
