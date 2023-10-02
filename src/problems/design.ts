@@ -173,3 +173,44 @@ export class WordDictionary {
         return node.end !== 0;
     }
 }
+
+// 简化信息，不需要记录pass信息
+export class WordDictionary2 {
+    root: Record<string, any>;
+
+    constructor() {
+        this.root = {};
+    }
+
+    addWord(word: string): void {
+        let node = this.root;
+
+        for (let i = 0; i < word.length; i++) {
+            const char = word[i];
+            if (!node[char]) {
+                node[char] = {};
+            }
+            node = node[char];
+        }
+
+        node['$'] = true;
+    }
+
+    search(word: string, node = this.root): boolean {
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== '.') {
+                const char = word[i];
+                if (!node[char]) {
+                    return false;
+                }
+                node = node[char];
+            } else {
+                return Object.keys(node)
+                    .filter((key) => key !== '$')
+                    .some((k) => this.search(word.slice(i + 1), node[k]));
+            }
+        }
+
+        return Boolean(node['$']);
+    }
+}
