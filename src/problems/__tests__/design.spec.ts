@@ -1,5 +1,5 @@
 import { MedianFinderTestData } from './design.testdata';
-import { IMedianFinder, MedianFinder, MedianFinder2 } from '../design';
+import { IMedianFinder, MedianFinder, MedianFinder2, WordDictionary } from '../design';
 describe('design', () => {
     it.each(MedianFinderTestData)('MedianFinder', ({ input, expected }) => {
         const finder = new MedianFinder();
@@ -21,5 +21,46 @@ describe('design', () => {
 
         expect(result1).toEqual(expected);
         expect(result2).toEqual(expected);
+    });
+
+    describe('WordDictionary', () => {
+        let wordDictionary: WordDictionary;
+
+        beforeEach(() => {
+            wordDictionary = new WordDictionary();
+        });
+
+        test('search returns true for added words', () => {
+            wordDictionary.addWord('hello');
+            wordDictionary.addWord('world');
+
+            expect(wordDictionary.search('hello')).toBe(true);
+            expect(wordDictionary.search('world')).toBe(true);
+        });
+
+        test('search returns false for non-existent words', () => {
+            wordDictionary.addWord('hello');
+            wordDictionary.addWord('world');
+
+            expect(wordDictionary.search('h')).toBe(false);
+            expect(wordDictionary.search('wo')).toBe(false);
+        });
+
+        test('search returns true for wildcard matches', () => {
+            wordDictionary.addWord('hello');
+            wordDictionary.addWord('world');
+
+            expect(wordDictionary.search('h.llo')).toBe(true);
+            expect(wordDictionary.search('w.rld')).toBe(true);
+            expect(wordDictionary.search('h..lo')).toBe(true);
+            expect(wordDictionary.search('w..ld')).toBe(true);
+        });
+
+        test('search returns false for empty string', () => {
+            wordDictionary.addWord('hello');
+            wordDictionary.addWord('world');
+
+            expect(wordDictionary.search('')).toBe(false);
+        });
     });
 });

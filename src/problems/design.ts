@@ -1,4 +1,6 @@
 import { GenericHeap } from '../algorithm/generic-heap';
+import { getCharIndex } from '../common';
+import { PrefixTreeNode } from '../algorithm/prefix-tree';
 /* 
 https://leetcode.com/problems/find-median-from-data-stream/description/
 
@@ -117,5 +119,57 @@ export class MedianFinder2 implements IMedianFinder {
         }
 
         return (this.leftMaxHeap.peek() + this.rightMinHeap.peek()) / 2;
+    }
+}
+
+/* 
+https://leetcode.com/problems/design-add-and-search-words-data-structure/
+
+Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the WordDictionary class:
+
+WordDictionary() Initializes the object.
+void addWord(word) Adds word to the data structure, it can be matched later.
+bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. 
+word may contain dots '.' where dots can be matched with any letter.
+*/
+export class WordDictionary {
+    root: PrefixTreeNode;
+
+    constructor() {
+        this.root = new PrefixTreeNode();
+    }
+
+    addWord(word: string): void {
+        let node = this.root;
+        node.pass++;
+
+        for (let i = 0; i < word.length; i++) {
+            const index = getCharIndex(word[i]);
+            if (!node.nextNodes[index]) {
+                node.nextNodes[index] = new PrefixTreeNode();
+            }
+            node = node.nextNodes[index];
+            node.pass++;
+        }
+
+        node.end++;
+    }
+
+    search(word: string, node = this.root): boolean {
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== '.') {
+                const index = getCharIndex(word[i]);
+                if (!node.nextNodes[index]) {
+                    return false;
+                }
+                node = node.nextNodes[index];
+            } else {
+                return node.nextNodes.some((n) => this.search(word.slice(i + 1), n));
+            }
+        }
+
+        return node.end !== 0;
     }
 }
