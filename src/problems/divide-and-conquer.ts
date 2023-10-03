@@ -1,3 +1,4 @@
+import { cache } from '../design-pattern/proxy';
 /* 
 分治算法
 
@@ -18,7 +19,7 @@ all the different possible ways to group numbers and operators. You may return t
 The test cases are generated such that the output values fit in a 32-bit 
 integer and the number of different results does not exceed 104.
 */
-export function diffWaysToCompute(expression: string): number[] {
+export const diffWaysToCompute = cache((expression: string) => {
     if (/^\d+$/.test(expression)) {
         return [+expression];
     }
@@ -49,4 +50,4 @@ export function diffWaysToCompute(expression: string): number[] {
     }
 
     return result;
-}
+});
