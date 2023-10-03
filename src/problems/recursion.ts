@@ -564,3 +564,62 @@ function infect(arr: number[][], i: number, j: number) {
     infect(arr, i, j - 1);
     infect(arr, i, j + 1);
 }
+
+/* 
+https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid/
+
+You are given a 0-indexed 2D integer matrix grid of size 3 * 3, representing the number of stones in each cell. 
+The grid contains exactly 9 stones, and there can be multiple stones in a single cell.
+
+In one move, you can move a single stone from its current cell to any other cell if the two cells share a side.
+
+Return the minimum number of moves required to place one stone in each cell.
+*/
+type Position = [x: number, y: number, val?: number];
+
+export function minimumMoves(grid: number[][]): number {
+    const destPositions: Position[] = [];
+    const sourcePositions: Position[] = [];
+
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] === 0) {
+                destPositions.push([i, j]);
+            }
+            if (grid[i][j] > 1) {
+                sourcePositions.push([i, j, grid[i][j]]);
+            }
+        }
+    }
+
+    return minimumMovesProcess(destPositions, sourcePositions);
+}
+
+function minimumMovesProcess(destPositions: Position[], sourcePositions: Position[]): number {
+    if (destPositions.length === 0) {
+        return 0;
+    }
+
+    let moves = Infinity;
+    const [x1, y1] = destPositions[0];
+    const nextDestPositions = destPositions.slice(1);
+    const nextSourcePositions = sourcePositions.slice(0);
+    for (let i = 0; i < sourcePositions.length; i++) {
+        const [x2, y2, val] = sourcePositions[i];
+        const currentMove = Math.abs(x1 - x2) + Math.abs(y1 - y2);
+
+        if (val === 2) {
+            nextSourcePositions.splice(i, 1);
+        } else {
+            nextSourcePositions[i][2]!--;
+        }
+        moves = Math.min(moves, currentMove + minimumMovesProcess(nextDestPositions, nextSourcePositions));
+        if (val === 2) {
+            nextSourcePositions.splice(i, 0, [x2, y2, val]);
+        } else {
+            nextSourcePositions[i][2]!++;
+        }
+    }
+
+    return moves;
+}
