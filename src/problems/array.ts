@@ -1,4 +1,3 @@
-import { swap } from '../common/index';
 /* 
 https://leetcode.com/problems/find-the-maximum-number-of-marked-indices/description/
 
@@ -95,50 +94,26 @@ Explanation: Your function should return k = 5, with the first five elements of 
 It does not matter what you leave beyond the returned k (hence they are underscores).
 */
 export function removeDuplicates(nums: number[]): number {
-    if (nums.length < 3) {
-        return nums.length;
+    if (nums.length == 0) {
+        return 0;
     }
 
-    // 标记需要删除的元素
-    let prev = nums[0];
-    let count = 1;
-    let k = nums.length;
-    for (let i = 1; i < nums.length; i++) {
-        if (nums[i] === prev) {
-            count++;
-        } else {
-            prev = nums[i];
-            count = 1;
-        }
-
-        if (count >= 3) {
-            // @ts-expect-error
-            nums[i] = null;
-            k--;
-        }
-    }
-
-    // 移动需要删除的元素
-    let left = 0;
-    let right = 0;
-    // 此处需要同时考虑left和right不越界，因为有可能后面没有null位置了
-    while (right < nums.length && left < nums.length) {
-        // 将left移动到第一个null位置
-        if (nums[left] !== null) {
-            left++;
+    let i = 0;
+    let dup = false;
+    for (let j = 1; j < nums.length; ++j) {
+        if (nums[i] == nums[j]) {
+            if (dup == false) {
+                dup = true;
+                i += 1;
+                nums[i] = nums[j];
+            }
             continue;
         }
-
-        // 将right移动到第一个非null位置
-        right = left + 1;
-        while (nums[right] === null) {
-            right++;
-        }
-
-        swap(nums, left++, right++);
+        dup = false;
+        i += 1;
+        nums[i] = nums[j];
     }
-
-    return k;
+    return i + 1;
 }
 
 /* 
