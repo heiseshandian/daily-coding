@@ -1,4 +1,5 @@
 import { cache } from '../design-pattern/proxy';
+import { TreeNode } from '../algorithm/tree';
 /* 
 分治算法
 
@@ -47,6 +48,45 @@ export const diffWaysToCompute = cache((expression: string) => {
                 }
             }
         }
+    }
+
+    return result;
+});
+
+/* 
+https://leetcode.com/problems/unique-binary-search-trees-ii/
+
+Given an integer n, return all the structurally unique BST's (binary search trees), 
+which has exactly n nodes of unique values from 1 to n. Return the answer in any order.
+*/
+export function generateTrees(n: number) {
+    if (n === 0) {
+        return [];
+    }
+
+    return recursiveGenerateTrees(1, n);
+}
+
+const recursiveGenerateTrees = cache<Array<TreeNode | null>>((start: number, end: number) => {
+    let result: Array<TreeNode | null> = [];
+
+    if (start > end) {
+        result.push(null);
+        return result;
+    }
+
+    // 根据谁为头结点来划分可能性
+    for (let i = start; i <= end; i++) {
+        // 左右分解
+        let leftTrees = recursiveGenerateTrees(start, i - 1);
+        let rightTrees = recursiveGenerateTrees(i + 1, end);
+
+        // 合并
+        leftTrees.forEach((left) => {
+            rightTrees.forEach((right) => {
+                result.push(new TreeNode(i, left, right));
+            });
+        });
     }
 
     return result;
