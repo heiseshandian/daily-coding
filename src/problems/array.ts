@@ -212,3 +212,26 @@ export function minTimeToVisitAllPoints(points: number[][]): number {
     }
     return minTime;
 }
+
+/* 
+https://leetcode.com/problems/find-maximum-number-of-string-pairs/
+
+You are given a 0-indexed array words consisting of distinct strings.
+
+The string words[i] can be paired with the string words[j] if:
+
+The string words[i] is equal to the reversed string of words[j].
+0 <= i < j < words.length.
+Return the maximum number of pairs that can be formed from the array words.
+
+Note that each string can belong in at most one pair.
+*/
+export function maximumNumberOfStringPairs(words: string[]): number {
+    const set = new Set();
+
+    for (let word of words) {
+        set.add(word.split('').sort().join());
+    }
+
+    return words.length - set.size;
+}
