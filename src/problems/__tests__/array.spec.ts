@@ -1,4 +1,11 @@
-import { maxNumOfMarkedIndices, maxDistToClosest, removeDuplicates, merge, threeSumClosest } from '../array';
+import {
+    maxNumOfMarkedIndices,
+    maxDistToClosest,
+    removeDuplicates,
+    merge,
+    threeSumClosest,
+    findValueOfPartition,
+} from '../array';
 import {
     maxDistToClosestTestData,
     maxNumOfMarkedIndicesTestData,
@@ -35,5 +42,16 @@ describe('array', () => {
         [[-10, -5, -2, 0, 1, 3, 7], 10, 10],
     ])('returns the closest sum for %p and target %p', (nums, target, expected) => {
         expect(threeSumClosest(nums, target)).toBe(expected);
+    });
+
+    it.each([
+        [[1, 2, 3, 4, 5], 1],
+        [[5, 4, 3, 2, 1], 1],
+        [[1, 1, 1, 1, 1], 0],
+        [[1, 3, 6, 10, 15], 2],
+        [[], Infinity],
+    ])('returns correct value for array %p', (nums, expected) => {
+        const result = findValueOfPartition(nums);
+        expect(result).toBe(expected);
     });
 });

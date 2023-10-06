@@ -235,3 +235,36 @@ export function maximumNumberOfStringPairs(words: string[]): number {
 
     return words.length - set.size;
 }
+
+/* 
+https://leetcode.com/problems/find-the-value-of-the-partition/
+
+You are given a positive integer array nums.
+
+Partition nums into two arrays, nums1 and nums2, such that:
+
+Each element of the array nums belongs to either the array nums1 or the array nums2.
+Both arrays are non-empty.
+The value of the partition is minimized.
+The value of the partition is |max(nums1) - min(nums2)|.
+
+Here, max(nums1) denotes the maximum element of the array nums1, and min(nums2) denotes the minimum element of the array nums2.
+
+Return the integer denoting the value of such partition.
+*/
+export function findValueOfPartition(nums: number[]): number {
+    nums.sort((a, b) => a - b);
+    let min = Infinity;
+
+    for (let i = 0; i < nums.length - 1; i++) {
+        const current = nums[i + 1] - nums[i];
+        // 0必然是最小值，可提前返回
+        if (current === 0) {
+            return 0;
+        }
+
+        min = Math.min(min, current);
+    }
+
+    return min;
+}
