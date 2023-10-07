@@ -30,3 +30,39 @@ export function constrainedSubsetSum(nums: number[], k: number): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/repeated-dna-sequences/
+
+The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
+
+For example, "ACGAATTCCG" is a DNA sequence.
+When studying DNA, it is useful to identify repeated sequences within the DNA.
+
+Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. 
+You may return the answer in any order.
+
+直接从前向后遍历即可，不用先遍历一遍拿到所有的tokens然后再遍历s对比token最后一次出现的下标是否比当前token更早
+*/
+export function findRepeatedDnaSequences(s: string): string[] {
+    if (s.length < 11) {
+        return [];
+    }
+
+    const dnaSeq = new Set<string>();
+    const visited = new Set<string>();
+    let start = 0;
+    let end = 10;
+    // 此处可以取到等于，因为slice不包含end处的字符，end-1是最后一个可以取到的字符
+    while (end <= s.length) {
+        const dna = s.slice(start, end);
+        if (visited.has(dna)) {
+            dnaSeq.add(dna);
+        }
+        visited.add(dna);
+        start++;
+        end++;
+    }
+
+    return Array.from(dnaSeq);
+}
