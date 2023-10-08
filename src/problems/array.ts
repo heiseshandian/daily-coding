@@ -268,3 +268,78 @@ export function findValueOfPartition(nums: number[]): number {
 
     return min;
 }
+
+/* 
+https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/
+
+Given two arrays nums1 and nums2.
+
+Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
+
+A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) 
+of the characters without disturbing the relative positions of the remaining characters. 
+(ie, [2,3,5] is a subsequence of [1,2,3,4,5] while [1,5,3] is not).
+*/
+export function maxDotProduct(nums1: number[], nums2: number[]): number {
+    // dp[i][j] nums[0-j],nums2[0-j] 所形成的等长子序列中最大值
+    const dp: number[][] = new Array(nums1.length).fill(0).map((_) => new Array(nums2.length));
+    dp[0][0] = nums1[0] * nums2[0];
+
+    // 第一行 dp[0][x]
+    for (let j = 1; j < nums2.length; j++) {
+        dp[0][j] = Math.max(dp[0][j - 1], nums1[0] * nums2[j]);
+    }
+
+    // 第一列 dp[i][0]
+    for (let i = 1; i < nums1.length; i++) {
+        dp[i][0] = Math.max(dp[i - 1][0], nums1[i] * nums2[0]);
+    }
+
+    // 从上到下，从左到右填表
+    for (let i = 1; i < nums1.length; i++) {
+        for (let j = 1; j < nums2.length; j++) {
+            /* 
+            可能性分类
+            - dp[i][j] 的值来源于 dp[i-1][j]相当于抛弃i
+            - dp[i][j] 的值来源于 dp[i][j-1]相当于抛弃j
+            - dp[i][j] 的值来源于 dp[i - 1][j - 1] + nums1[i] * nums2[j]
+            - dp[i][j] 的值来源于 nums1[i] * nums2[j] 相当于抛弃前面的数组，直接从i,j处开始
+            */
+            dp[i][j] = Math.max(Math.max(0, dp[i - 1][j - 1]) + nums1[i] * nums2[j], dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+
+    return dp[nums1.length - 1][nums2.length - 1];
+}
+
+// 空间压缩技巧
+// https://www.bilibili.com/video/BV1AS4y1C7qR/?spm_id_from=333.788.recommend_more_video.0&vd_source=7b242528b70c1c6d4ee0ca3780b547a5
+export function maxDotProduct2(nums1: number[], nums2: number[]): number {
+    // 空间压缩技术，用一个数组滚动的方式来填表
+    const dp: number[] = new Array(nums2.length);
+    dp[0] = nums1[0] * nums2[0];
+
+    // 第一行 dp[x]
+    for (let j = 1; j < nums2.length; j++) {
+        dp[j] = Math.max(dp[j - 1], nums1[0] * nums2[j]);
+    }
+
+    let topLeftCorner: number;
+    let nextTopLeftCorner: number;
+    for (let i = 1; i < nums1.length; i++) {
+        topLeftCorner = dp[0];
+        for (let j = 0; j < nums2.length; j++) {
+            nextTopLeftCorner = dp[j];
+
+            if (j === 0) {
+                dp[j] = Math.max(dp[j], nums1[i] * nums2[j]);
+            } else {
+                dp[j] = Math.max(Math.max(0, topLeftCorner) + nums1[i] * nums2[j], dp[j - 1], dp[j]);
+            }
+
+            topLeftCorner = nextTopLeftCorner;
+        }
+    }
+
+    return dp[nums2.length - 1];
+}

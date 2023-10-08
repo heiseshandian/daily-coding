@@ -5,6 +5,8 @@ import {
     merge,
     threeSumClosest,
     findValueOfPartition,
+    maxDotProduct,
+    maxDotProduct2,
 } from '../array';
 import {
     maxDistToClosestTestData,
@@ -53,5 +55,15 @@ describe('array', () => {
     ])('returns correct value for array %p', (nums, expected) => {
         const result = findValueOfPartition(nums);
         expect(result).toBe(expected);
+    });
+
+    it.each([
+        [[2, 1, -2, 5], [3, 0, -6], 18],
+        [[3, -2], [2, -6, 7], 21],
+        [[-1, -1], [1, 1], -1],
+        [[9, 2, 3, 7, -9, 1, -8, 5, -1, -1], [-3, -8, 3, -10, 1, 3, 9], 200],
+    ])('returns correct value for nums1 %p and nums2 %p', (nums1, nums2, expected) => {
+        expect(maxDotProduct(nums1, nums2)).toBe(expected);
+        expect(maxDotProduct2(nums1, nums2)).toBe(expected);
     });
 });
