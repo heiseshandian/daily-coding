@@ -47,15 +47,15 @@ export function letterCombinations(digits: string): string[] {
         return [];
     }
 
-    const map: Record<string, string[]> = {
-        2: 'abc'.split(''),
-        3: 'def'.split(''),
-        4: 'ghi'.split(''),
-        5: 'jkl'.split(''),
-        6: 'mno'.split(''),
-        7: 'pqrs'.split(''),
-        8: 'tuv'.split(''),
-        9: 'wxyz'.split(''),
+    const map: Record<string, string> = {
+        2: 'abc',
+        3: 'def',
+        4: 'ghi',
+        5: 'jkl',
+        6: 'mno',
+        7: 'pqrs',
+        8: 'tuv',
+        9: 'wxyz',
     };
 
     const result: string[] = [];
