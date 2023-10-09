@@ -32,3 +32,47 @@ export function combinationSum3(k: number, n: number): number[][] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. 
+Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. 
+Note that 1 does not map to any letters.
+*/
+export function letterCombinations(digits: string): string[] {
+    if (digits.length === 0) {
+        return [];
+    }
+
+    const map: Record<string, string[]> = {
+        2: 'abc'.split(''),
+        3: 'def'.split(''),
+        4: 'ghi'.split(''),
+        5: 'jkl'.split(''),
+        6: 'mno'.split(''),
+        7: 'pqrs'.split(''),
+        8: 'tuv'.split(''),
+        9: 'wxyz'.split(''),
+    };
+
+    const result: string[] = [];
+    const backtracking = (index: number, path: string[]) => {
+        if (index === digits.length) {
+            result.push(path.join(''));
+            return;
+        }
+
+        const alphas = map[digits[index]];
+        for (let i = 0; i < alphas.length; i++) {
+            path.push(alphas[i]);
+            backtracking(index + 1, path);
+            path.pop();
+        }
+    };
+    backtracking(0, []);
+
+    return result;
+}
