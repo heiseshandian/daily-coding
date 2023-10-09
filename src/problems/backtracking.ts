@@ -59,20 +59,45 @@ export function letterCombinations(digits: string): string[] {
     };
 
     const result: string[] = [];
-    const backtracking = (index: number, path: string[]) => {
+    const backtracking = (index: number, path: string) => {
         if (index === digits.length) {
-            result.push(path.join(''));
+            result.push(path);
             return;
         }
 
         const alphas = map[digits[index]];
         for (let i = 0; i < alphas.length; i++) {
-            path.push(alphas[i]);
-            backtracking(index + 1, path);
-            path.pop();
+            backtracking(index + 1, path + alphas[i]);
         }
     };
-    backtracking(0, []);
+    backtracking(0, '');
+
+    return result;
+}
+
+/* 
+https://leetcode.com/problems/generate-parentheses/description/
+
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+*/
+export function generateParenthesis(n: number): string[] {
+    const result: string[] = [];
+
+    const backtracking = (leftCount: number, rightCount: number, path: string) => {
+        if (leftCount === n && rightCount === n) {
+            result.push(path);
+            return;
+        }
+
+        if (leftCount < n) {
+            backtracking(leftCount + 1, rightCount, path + '(');
+        }
+        // 此处必须限制右括号的数量小于左括号的数量，否则新增加的右括号将无法被匹配
+        if (rightCount < n && rightCount < leftCount) {
+            backtracking(leftCount, rightCount + 1, path + ')');
+        }
+    };
+    backtracking(0, 0, '');
 
     return result;
 }
