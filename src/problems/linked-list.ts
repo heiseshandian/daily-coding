@@ -443,7 +443,7 @@ export function removeElements(head: SingleLinkedList | null, val: number): Sing
     }
 
     return newHead;
-};
+}
 
 export function removeElements2(head: SingleLinkedList | null, val: number): SingleLinkedList | null {
     const holder = new SingleLinkedList(-1, head);
@@ -457,4 +457,49 @@ export function removeElements2(head: SingleLinkedList | null, val: number): Sin
     }
 
     return holder.next;
-};
+}
+
+/* 
+https://leetcode.com/problems/insertion-sort-list/description/
+
+Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.
+
+The steps of the insertion sort algorithm:
+
+Insertion sort iterates, consuming one input element each repetition and growing a sorted output list.
+At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list and inserts it there.
+It repeats until no input elements remain.
+*/
+export function insertionSortList(head: SingleLinkedList | null): SingleLinkedList | null {
+    if (!head || !head.next) {
+        return head;
+    }
+
+    const placeholder = new SingleLinkedList(-Infinity);
+    placeholder.next = head;
+
+    let sortedStart: SingleLinkedList | null = placeholder;
+    let sortedEnd: SingleLinkedList = head;
+    let cur: SingleLinkedList | null = head.next;
+    while (cur) {
+        if (sortedEnd.val <= cur.val) {
+            const next: SingleLinkedList | null = cur.next;
+            sortedEnd.next = cur;
+            sortedEnd = cur;
+            cur = next;
+        } else {
+            sortedEnd.next = cur.next;
+            sortedStart = placeholder;
+
+            while (sortedStart?.next && sortedStart.next.val < cur.val) {
+                sortedStart = sortedStart?.next;
+            }
+            const next = sortedStart.next;
+            sortedStart.next = cur;
+            cur.next = next;
+            cur = sortedEnd.next;
+        }
+    }
+
+    return placeholder.next;
+}
