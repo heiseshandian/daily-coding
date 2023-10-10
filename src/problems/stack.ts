@@ -103,3 +103,44 @@ export function removeKdigits(num: string, k: number): string {
 
     return stack.length > 0 ? stack.join('').replace(/^0+(\d+)$/, '$1') : '0';
 }
+
+/* 
+https://leetcode.com/problems/remove-duplicate-letters/
+
+Given a string s, remove duplicate letters so that every letter appears once and only once. 
+You must make sure your result is the smallest in lexicographical order among all possible results.
+*/
+export function removeDuplicateLetters(s: string): string {
+    const countMap: Record<string, number> = {};
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        if (countMap[char] === undefined) {
+            countMap[char] = 0;
+        }
+        countMap[char]++;
+    }
+
+    // 严格递增（a,b,c...）
+    const stack: string[] = [];
+    const added: Record<string, boolean> = {};
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        countMap[char]--;
+
+        if (added[char]) {
+            continue;
+        }
+
+        // 此处要注意 countMap[stack[stack.length - 1]] > 0
+        // 因为如果某个字符后面已经没有了那我们是不能将其删除掉的，只能直接留在栈顶
+        while (stack.length > 0 && stack[stack.length - 1] > char && countMap[stack[stack.length - 1]] > 0) {
+            added[stack.pop()!] = false;
+        }
+        stack.push(char);
+        added[char] = true;
+    }
+
+    return stack.join('');
+}
