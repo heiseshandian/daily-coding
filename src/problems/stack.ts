@@ -72,3 +72,34 @@ function calculateStack(stack: Array<string | number>): number {
 
     return left;
 }
+
+/*
+https://leetcode.com/problems/remove-k-digits/description/
+
+Given string num representing a non-negative integer num, and an integer k, 
+return the smallest possible integer after removing k digits from num.
+*/
+export function removeKdigits(num: string, k: number): string {
+    if (k >= num.length) {
+        return '0';
+    }
+
+    // 递增（从高位到低位保持递增可以确保最后的数字是最小的）
+    const stack: string[] = [];
+    for (let i = 0; i < num.length; i++) {
+        const current = num[i];
+
+        while (k > 0 && stack.length > 0 && Number(stack[stack.length - 1]) > Number(current)) {
+            stack.pop();
+            k--;
+        }
+        stack.push(current);
+    }
+
+    while (k > 0) {
+        stack.pop();
+        k--;
+    }
+
+    return stack.length > 0 ? stack.join('').replace(/^0+(\d+)$/, '$1') : '0';
+}
