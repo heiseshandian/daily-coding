@@ -180,3 +180,32 @@ function initFlags(board: string[][], row: boolean[][], col: boolean[][], bucket
         }
     }
 }
+
+/* 
+https://leetcode.com/problems/subsets/
+
+Given an integer array nums of unique elements, return all possible 
+subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+*/
+export function subsets(nums: number[]): number[][] {
+    const result: number[][] = [];
+
+    const backtracking = (index: number, path: number[]) => {
+        result.push(path.slice());
+
+        if (index === nums.length) {
+            return;
+        }
+
+        for (let i = index; i < nums.length; i++) {
+            path.push(nums[i]);
+            backtracking(i + 1, path);
+            path.pop();
+        }
+    };
+    backtracking(0, []);
+
+    return result;
+}
