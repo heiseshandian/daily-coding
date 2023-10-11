@@ -226,6 +226,10 @@ export function combine(n: number, k: number): number[][] {
             result.push(path.slice());
             return;
         }
+        // 剩余数字不够k - path.length个，直接返回
+        if (n - index + 1 < k - path.length) {
+            return;
+        }
 
         for (let i = index; i <= n; i++) {
             path.push(i);
