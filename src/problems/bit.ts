@@ -1,3 +1,5 @@
+import { getCharIndex } from '../common/index';
+
 // 求一个数的n次方
 export function pow(a: number, n: number): number {
     let result = 1;
@@ -101,4 +103,35 @@ export function reverseBits2(n: number): number {
     }
 
     return result;
+}
+
+/* 
+https://leetcode.com/problems/maximum-product-of-word-lengths/
+
+Given a string array words, return the maximum value of length(word[i]) * length(word[j]) 
+where the two words do not share common letters. If no such two words exist, return 0.
+*/
+export function maxProduct(words: string[]): number {
+    // 一共有26个英文字母，我们可以用26位二进制位来表示某个字母有没有出现过，然后通过按位或的结果来判断两个字符串有没有公共字母
+    const bits = words.map((word) => {
+        let bit = 0;
+
+        for (let i = 0; i < word.length; i++) {
+            bit = bit | (1 << getCharIndex(word[i]));
+        }
+
+        return bit;
+    });
+
+    let max = 0;
+    for (let i = 0; i < words.length; i++) {
+        for (let j = i + 1; j < words.length; j++) {
+            // 按位或等于0说明两个字符串没有公共字母
+            if ((bits[i] & bits[j]) === 0) {
+                max = Math.max(max, words[i].length * words[j].length);
+            }
+        }
+    }
+
+    return max;
 }
