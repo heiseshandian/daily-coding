@@ -1,3 +1,5 @@
+import { isEven, isOdd } from '../common';
+
 /* 
 https://leetcode.com/problems/non-overlapping-intervals/
 
@@ -19,4 +21,49 @@ export function eraseOverlapIntervals(intervals: number[][]): number {
     }
 
     return overlapCount;
+}
+
+/* 
+https://leetcode.com/problems/longest-palindrome/description/
+
+Given a string s which consists of lowercase or uppercase letters, 
+return the length of the longest palindrome that can be built with those letters.
+
+Letters are case sensitive, for example, "Aa" is not considered a palindrome here.
+*/
+export function longestPalindrome(s: string): number {
+    const countMap: Record<string, number> = {};
+    for (const char of s) {
+        if (!countMap[char]) {
+            countMap[char] = 0;
+        }
+        countMap[char]++;
+    }
+
+    let max = 0;
+    let hasOdd = false;
+    Object.values(countMap).forEach((count) => {
+        if (isEven(count)) {
+            max += count;
+        } else {
+            hasOdd = true;
+            max += count - 1;
+        }
+    });
+
+    return hasOdd ? max + 1 : max;
+}
+
+export function longestPalindrome2(s: string): number {
+    const countMap: Record<string, number> = {};
+    for (const char of s) {
+        if (!countMap[char]) {
+            countMap[char] = 0;
+        }
+        countMap[char]++;
+    }
+
+    const oddCount = Object.values(countMap).filter((count) => isOdd(count)).length;
+
+    return oddCount > 0 ? s.length - oddCount + 1 : s.length;
 }

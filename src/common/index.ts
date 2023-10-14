@@ -81,3 +81,11 @@ export function generateArray(maxVal: number, maxLen: number): number[] {
 
     return result;
 }
+
+export function isEven(n: number) {
+    return (n & 1) === 0;
+}
+
+export function isOdd(n: number) {
+    return (n & 1) === 1;
+}
