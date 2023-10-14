@@ -241,3 +241,37 @@ export function combine(n: number, k: number): number[][] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/combination-sum/description/
+
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations 
+of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the 
+frequency
+ of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+*/
+export function combinationSum(candidates: number[], target: number): number[][] {
+    const result: number[][] = [];
+    const backtracking = (index: number, path: number[], sum: number) => {
+        if (sum === target) {
+            result.push(path.slice());
+            return;
+        }
+        if (index >= candidates.length) {
+            return;
+        }
+
+        for (let k = 0; k <= Math.floor((target - sum) / candidates[index]); k++) {
+            path.push(...new Array(k).fill(candidates[index]));
+            backtracking(index + 1, path, sum + k * candidates[index]);
+            path.length -= k;
+        }
+    };
+    backtracking(0, [], 0);
+
+    return result;
+}
