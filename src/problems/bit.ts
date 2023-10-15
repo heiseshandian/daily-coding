@@ -164,3 +164,32 @@ export function singleNumber(nums: number[]): number {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/bitwise-and-of-numbers-range/description/
+
+Given two integers left and right that represent the range [left, right], 
+return the bitwise AND of all numbers in this range, inclusive.
+
+分析
+假设 
+left的二进制表示是  1xxx1....
+right的二进制表示为 1xxx1....
+则left和right之间必然能找到 
+1xxx1 01111111 和
+1xxx1 10000000
+这两个&之后的结果是 1xxx100000000
+任何数和0与都是0，所以最终结果就是1xxxx1，也就是left和right的二进制表示的公共前缀部分
+*/
+export function rangeBitwiseAnd(left: number, right: number): number {
+    let result = 0;
+
+    for (let i = 0; i <= 31; i++) {
+        if (left >> i === right >> i) {
+            // 先右移，后左移，右边i位会变成0
+            result = (left >> i) << i;
+        }
+    }
+
+    return result;
+}
