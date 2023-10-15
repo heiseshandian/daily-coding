@@ -211,6 +211,46 @@ export function subsets(nums: number[]): number[][] {
 }
 
 /* 
+https://leetcode.com/problems/subsets-ii/
+
+Given an integer array nums that may contain duplicates, return all possible 
+subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+*/
+export function subsetsWithDup(nums: number[]): number[][] {
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    // 这里我们不在于实际顺序，只需要保证相同的数字在一起即可，而默认的sort算法会将item转化为字符串，然后根据UTF-16 code升序排列
+    // 比如说 [4,17] => [17,4] 因为1的utf-16编码比4更小
+    nums.sort();
+
+    const result: number[][] = [];
+
+    const backtracking = (index: number, path: number[]) => {
+        result.push(path.slice());
+        if (index >= nums.length) {
+            return;
+        }
+
+        const set = new Set<number>();
+        for (let i = index; i < nums.length; i++) {
+            if (set.has(nums[i])) {
+                continue;
+            }
+            set.add(nums[i]);
+
+            path.push(nums[i]);
+            // 这里是i+1，不是index+1，因为某个数字一旦选过后续只能选择i后面的数字，不能选择i前面的数字
+            backtracking(i + 1, path);
+            path.pop();
+        }
+    };
+    backtracking(0, []);
+
+    return result;
+}
+
+/* 
 https://leetcode.com/problems/combinations/
 
 Given two integers n and k, return all possible combinations 
