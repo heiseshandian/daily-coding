@@ -805,3 +805,35 @@ export function isBalanced(root: TreeNode | null): boolean {
 
     return dfs(root)[1];
 }
+
+/* 
+https://leetcode.com/problems/minimum-depth-of-binary-tree/description/
+
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+Note: A leaf is a node with no children.
+*/
+export function minDepth(root: TreeNode | null): number {
+    if (!root) {
+        return 0;
+    }
+
+    let min = Infinity;
+    const backtracking = (node: TreeNode, depth: number) => {
+        if (!node.left && !node.right) {
+            min = Math.min(min, depth);
+            return;
+        }
+        if (node.left) {
+            backtracking(node.left, depth + 1);
+        }
+        if (node.right) {
+            backtracking(node.right, depth + 1);
+        }
+    };
+    backtracking(root, 1);
+
+    return min;
+}
