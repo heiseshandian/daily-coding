@@ -343,3 +343,42 @@ export function maxDotProduct2(nums1: number[], nums2: number[]): number {
 
     return dp[nums2.length - 1];
 }
+
+/* 
+https://leetcode.com/problems/two-sum/description/
+
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+*/
+export function twoSum(nums: number[], target: number): number[] {
+    const indexMap: Record<number, number> = {};
+    for (let i = 0; i < nums.length; i++) {
+        indexMap[nums[i]] = i;
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+        const index = indexMap[target - nums[i]];
+        if (index !== undefined && index > i) {
+            return [i, index];
+        }
+    }
+    return [];
+}
+
+// 不必一开始就经过一遍循环建立所有索引数据，可以一边遍历一遍更新索引信息
+// 减少一次循环操作
+export function twoSum2(nums: number[], target: number): number[] {
+    const indexMap: Record<number, number> = {};
+
+    for (let i = 0; i < nums.length; i++) {
+        const pair = target - nums[i];
+        if (indexMap[pair] !== undefined) {
+            return [indexMap[pair], i];
+        }
+        indexMap[nums[i]] = i;
+    }
+    return [];
+}
