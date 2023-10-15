@@ -780,3 +780,28 @@ export function recoverTree3(root: TreeNode | null): void {
     first!.val = second!.val;
     second!.val = tmp;
 }
+
+/* 
+https://leetcode.com/problems/balanced-binary-tree/
+
+Given a binary tree, determine if it is height-balanced
+
+二叉树的递归套路，向左子树要信息，向右子树要信息，进而组合出当前节点的信息并向上返回
+*/
+export function isBalanced(root: TreeNode | null): boolean {
+    const dfs = (node: TreeNode | null): [height: number, balanced: boolean] => {
+        if (!node) {
+            return [0, true];
+        }
+
+        const [leftHeight, leftBalanced] = dfs(node.left);
+        const [rightHeight, rightBalanced] = dfs(node.right);
+
+        return [
+            Math.max(leftHeight, rightHeight) + 1,
+            leftBalanced && rightBalanced && Math.abs(leftHeight - rightHeight) <= 1,
+        ];
+    };
+
+    return dfs(root)[1];
+}
