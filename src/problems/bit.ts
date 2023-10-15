@@ -135,3 +135,32 @@ export function maxProduct(words: string[]): number {
 
     return max;
 }
+
+/* 
+https://leetcode.com/problems/single-number-ii/description/
+
+Given an integer array nums where every element appears three times except for one, which appears exactly once. 
+Find the single element and return it.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+// 统计每一位1的个数，并根据是否能被3整除来判断只出现一次的数字在那一位上是1还是0
+// 能被3整除则仅出现一次的数字那一位必然是0，否则必然是1
+*/
+export function singleNumber(nums: number[]): number {
+    let result = 0;
+    for (let i = 31; i >= 0; i--) {
+        let count = 0;
+        for (let j = 0; j < nums.length; j++) {
+            if ((nums[j] >> i) & 1) {
+                count++;
+            }
+        }
+
+        if (count % 3 > 0) {
+            result |= 1 << i;
+        }
+    }
+
+    return result;
+}
