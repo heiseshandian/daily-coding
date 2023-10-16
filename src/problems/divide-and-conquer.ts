@@ -67,7 +67,7 @@ export function generateTrees(n: number) {
     return recursiveGenerateTrees(1, n);
 }
 
-const recursiveGenerateTrees = cache<Array<TreeNode | null>>((start: number, end: number) => {
+const recursiveGenerateTrees = cache((start: number, end: number) => {
     let result: Array<TreeNode | null> = [];
 
     if (start > end) {

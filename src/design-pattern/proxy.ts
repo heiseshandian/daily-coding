@@ -68,10 +68,10 @@ export const syncFileProxy = (() => {
     };
 })();
 
-export function cache<T>(fn: (...args: any[]) => T) {
-    const runCache: Record<string, T> = {};
+export function cache<T extends (...args: any[]) => any>(fn: T) {
+    const runCache: Record<string, any> = {};
 
-    return function (...args: any[]): T {
+    return ((...args: any[]) => {
         const id = args.join(',');
         if (runCache.hasOwnProperty(id)) {
             return runCache[id];
@@ -79,7 +79,7 @@ export function cache<T>(fn: (...args: any[]) => T) {
 
         runCache[id] = fn.apply(this, args);
         return runCache[id];
-    };
+    }) as T;
 }
 
 export const loadScript = cache((src: string) => {
