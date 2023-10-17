@@ -89,3 +89,18 @@ export function isEven(n: number) {
 export function isOdd(n: number) {
     return (n & 1) === 1;
 }
+
+export function getClosestMaxOrEqual(arr: number[], target: number, left: number, right: number): number {
+    let closestMaxOrEqual = right + 1;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            closestMaxOrEqual = mid;
+            right = mid - 1;
+        }
+    }
+
+    return closestMaxOrEqual;
+}

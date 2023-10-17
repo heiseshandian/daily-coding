@@ -1,3 +1,5 @@
+import { getClosestMaxOrEqual } from '../common';
+
 /* 
 https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
 
@@ -58,4 +60,39 @@ export function maxArea(height: number[]): number {
     }
 
     return max;
+}
+
+/* 
+https://leetcode.com/problems/boats-to-save-people/
+
+You are given an array people where people[i] is the weight of the ith person, and an infinite number 
+of boats where each boat can carry a maximum weight of limit. Each boat carries at most two people 
+at the same time, provided the sum of the weight of those people is at most limit.
+
+Return the minimum number of boats to carry every given person.
+*/
+export function numRescueBoats(people: number[], limit: number): number {
+    people.sort((a, b) => a - b);
+
+    let count = 0;
+    let closestMaxOrEqual = people.length;
+    if (people[people.length - 1] >= limit) {
+        closestMaxOrEqual = getClosestMaxOrEqual(people, limit, 0, people.length - 1);
+        count += people.length - closestMaxOrEqual;
+    }
+
+    let left = 0;
+    let right = closestMaxOrEqual - 1;
+    while (left <= right) {
+        if (people[left] + people[right] <= limit) {
+            count++;
+            left++;
+            right--;
+        } else {
+            count++;
+            right--;
+        }
+    }
+
+    return count;
 }
