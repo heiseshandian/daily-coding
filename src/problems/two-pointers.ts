@@ -96,3 +96,49 @@ export function numRescueBoats(people: number[], limit: number): number {
 
     return count;
 }
+
+/* 
+https://leetcode.com/problems/string-compression/
+
+Given an array of characters chars, compress it using the following algorithm:
+
+Begin with an empty string s. For each group of consecutive repeating characters in chars:
+
+If the group's length is 1, append the character to s.
+Otherwise, append the character followed by the group's length.
+The compressed string s should not be returned separately, but instead, be stored in the input character array chars. 
+Note that group lengths that are 10 or longer will be split into multiple characters in chars.
+
+After you are done modifying the input array, return the new length of the array.
+
+You must write an algorithm that uses only constant extra space.
+*/
+export function compress(chars: string[]): number {
+    // 此处故意从后往前遍历，避免删除元素之后导致索引不对
+    let prev = chars.length - 1;
+    let next = prev - 1;
+    let count = 1;
+    const spliceChars = () => {
+        chars.splice(next + 2, count - 1, ...`${count}`.split(''));
+    };
+
+    while (next >= 0) {
+        if (chars[prev] === chars[next]) {
+            next--;
+            count++;
+            continue;
+        }
+
+        if (count > 1) {
+            spliceChars();
+        }
+        count = 1;
+        prev = next;
+        next--;
+    }
+    if (count > 1) {
+        spliceChars();
+    }
+
+    return chars.length;
+}
