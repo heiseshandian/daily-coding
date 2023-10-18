@@ -177,3 +177,75 @@ function pickSums(arr: number[], n: number): number[] {
 
     return Array.from(result);
 }
+
+/* 
+https://leetcode.com/problems/closest-subsequence-sum/
+
+You are given an integer array nums and an integer goal.
+
+You want to choose a subsequence of nums such that the sum of its elements is the closest possible to goal. 
+That is, if the sum of the subsequence's elements is sum, then you want to minimize the absolute difference abs(sum - goal).
+
+Return the minimum possible value of abs(sum - goal).
+
+Note that a subsequence of an array is an array formed by removing some elements (possibly all or none) of the original array.
+
+Constraints:
+1 <= nums.length <= 40
+-10^7 <= nums[i] <= 10^7
+-10^9 <= goal <= 10^9
+
+2^20大概是10^6级别，那么必然不可能直接从nums中暴力穷举（操作量级要小于10^9）
+想着是不是可以一分为二，然后借助二分查找来优化时间复杂度
+*/
+export function minAbsDifference(nums: number[], goal: number): number {
+    const half = nums.length >> 1;
+    const sums1 = combinationSums(nums.slice(0, half));
+    const sums2 = combinationSums(nums.slice(half)).sort((a, b) => a - b);
+
+    let minDiff = Infinity;
+    for (let i = 0; i < sums1.length; i++) {
+        const target = goal - sums1[i];
+
+        let left = 0;
+        let right = sums2.length - 1;
+        let closestMin = left;
+        let closestMax = right;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (sums2[mid] === target) {
+                return 0;
+            }
+
+            if (sums2[mid] > target) {
+                closestMax = mid;
+                right = mid - 1;
+            } else {
+                closestMin = mid;
+                left = mid + 1;
+            }
+        }
+
+        minDiff = Math.min(minDiff, Math.abs(target - sums2[closestMin]), Math.abs(target - sums2[closestMax]));
+    }
+
+    return minDiff;
+}
+
+// 从nums中挑选任意多个数组并返回它们的和
+function combinationSums(nums: number[]) {
+    const result = new Set<number>();
+
+    const backtracking = (index: number, sum: number) => {
+        result.add(sum);
+        if (index === nums.length) {
+            return;
+        }
+
+        backtracking(index + 1, sum);
+        backtracking(index + 1, sum + nums[index]);
+    };
+    backtracking(0, 0);
+
+    return Array.from(result);
+}
