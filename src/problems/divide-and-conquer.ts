@@ -91,3 +91,89 @@ const recursiveGenerateTrees = cache((start: number, end: number) => {
 
     return result;
 });
+
+/* 
+https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/
+
+You are given an integer array nums of 2 * n integers. You need to partition nums into two arrays of length n 
+to minimize the absolute difference of the sums of the arrays. To partition nums, put each element of nums into one of the two arrays.
+
+Return the minimum possible absolute difference.
+
+Constraints:
+- 1 <= n <= 15
+- nums.length == 2 * n
+
+https://www.bilibili.com/video/BV1Rh411J7Dd/?spm_id_from=333.337.search-card.all.click&vd_source=7b242528b70c1c6d4ee0ca3780b547a5
+*/
+export function minimumDifference(nums: number[]): number {
+    const n = nums.length >> 1;
+    const firstHalf = nums.slice(0, n);
+    const secondHalf = nums.slice(n);
+
+    const sum = nums.reduce((acc, cur) => acc + cur);
+    const halfSum = sum / 2;
+
+    const map: Record<number, number[]> = {};
+    for (let i = 0; i <= n; i++) {
+        map[i] = pickSums(secondHalf, i).sort((a, b) => a - b);
+    }
+
+    let minDiff = Infinity;
+    for (let i = 0; i <= n; i++) {
+        const sums = pickSums(firstHalf, i);
+
+        for (const x of sums) {
+            // 二分查找最接近的数字，大于，小于，或者等于
+            const target = halfSum - x;
+            const arr = map[n - i];
+            let left = 0;
+            let right = arr.length - 1;
+
+            let closestMin = left;
+            let closestMax = right;
+
+            while (left <= right) {
+                const mid = left + ((right - left) >> 1);
+                if (arr[mid] === target) {
+                    return 0;
+                }
+
+                if (arr[mid] > target) {
+                    closestMax = mid;
+                    right = mid - 1;
+                } else {
+                    closestMin = mid;
+                    left = mid + 1;
+                }
+            }
+
+            minDiff = Math.min(
+                minDiff,
+                Math.abs(sum - (x + arr[closestMin]) * 2),
+                Math.abs(sum - (x + arr[closestMax]) * 2)
+            );
+        }
+    }
+
+    return minDiff;
+}
+
+// 从数组中选择n个数，返回它们的和
+function pickSums(arr: number[], n: number): number[] {
+    const result = new Set<number>();
+
+    const backtracking = (index: number, rest: number, sum: number) => {
+        if (rest === 0) {
+            result.add(sum);
+            return;
+        }
+
+        for (let i = index; i < arr.length && arr.length - i >= rest; i++) {
+            backtracking(i + 1, rest - 1, sum + arr[i]);
+        }
+    };
+    backtracking(0, n, 0);
+
+    return Array.from(result);
+}
