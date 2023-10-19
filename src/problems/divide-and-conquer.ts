@@ -249,3 +249,55 @@ function combinationSums(nums: number[]) {
 
     return Array.from(result);
 }
+
+/* 
+https://leetcode.com/problems/split-array-with-same-average/
+
+ou are given an integer array nums.
+
+You should move each element of nums into one of the two arrays A and B such that A and B are non-empty, and average(A) == average(B).
+
+Return true if it is possible to achieve that and false otherwise.
+
+Note that for an array arr, average(arr) is the sum of all the elements of arr over the length of arr.
+*/
+export function splitArraySameAverage(nums: number[]): boolean {
+    const sum = nums.reduce((acc, cur) => acc + cur);
+    const average = sum / nums.length;
+
+    const half = nums.length >> 1;
+    const firstHalf = nums.slice(0, half);
+    const secondHalf = nums.slice(half);
+
+    // 分成两部分，从左半部分中选择i个数字，从右半部分中选择j个数字
+    for (let i = 0; i <= half; i++) {
+        const sums1 = pickSums(firstHalf, i);
+        for (let j = 0; j <= nums.length - half; j++) {
+            const count = i + j;
+            if (count === 0 || count === nums.length) {
+                continue;
+            }
+            const sums2 = pickSums(secondHalf, j).sort((a, b) => a - b);
+
+            for (let k = 0; k < sums1.length; k++) {
+                let left = 0;
+                let right = sums2.length - 1;
+                while (left <= right) {
+                    const mid = left + ((right - left) >> 1);
+                    const cur = (sums2[mid] + sums1[k]) / count;
+                    if (cur === average) {
+                        return true;
+                    }
+
+                    if (cur > average) {
+                        right = mid - 1;
+                    } else {
+                        left = mid + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
