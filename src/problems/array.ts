@@ -416,3 +416,84 @@ export function stoneGame(piles: number[]): boolean {
 
     return first(0, piles.length - 1) > last(0, piles.length - 1);
 }
+
+/* 
+https://leetcode.com/problems/maximal-square/description/
+
+Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+*/
+export function maximalSquare(matrix: string[][]): number {
+    const arr = matrix[0].map((v) => +v);
+    let max = arr.indexOf(1) !== -1 ? 1 : 0;
+
+    for (let i = 1; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            arr[j] = matrix[i][j] === '0' ? 0 : 1 + arr[j];
+        }
+
+        for (let j = 0; j < arr.length; j++) {
+            if (arr[j] < 1) {
+                continue;
+            }
+
+            let left = 1;
+            let right = arr[j];
+            while (left <= right) {
+                const mid = left + ((right - left) >> 1);
+                if (canExpand(arr, mid, j)) {
+                    max = Math.max(max, mid);
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+    }
+
+    return max * max;
+}
+
+function canExpand(arr: number[], target: number, i: number): boolean {
+    let len = 1;
+    let right = i + 1;
+    while (right < arr.length && len < target) {
+        if (arr[right] >= target) {
+            len++;
+            right++;
+        } else {
+            break;
+        }
+    }
+
+    let left = i - 1;
+    while (left >= 0 && len < target) {
+        if (arr[left] >= target) {
+            len++;
+            left--;
+        } else {
+            break;
+        }
+    }
+
+    return len >= target;
+}
+
+export function maximalSquare2(matrix: string[][]): number {
+    let max = 0;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === '0') {
+                continue;
+            }
+
+            if (i > 0 && j > 0) {
+                matrix[i][j] = (
+                    Math.min(Number(matrix[i - 1][j]), Number(matrix[i][j - 1]), Number(matrix[i - 1][j - 1])) + 1
+                ).toString();
+            }
+
+            max = Math.max(max, Number(matrix[i][j]));
+        }
+    }
+    return max * max;
+}
