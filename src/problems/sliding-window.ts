@@ -66,3 +66,39 @@ export function findRepeatedDnaSequences(s: string): string[] {
 
     return Array.from(dnaSeq);
 }
+
+/* 
+https://leetcode.com/problems/contains-duplicate-ii/
+
+Given an integer array nums and an integer k, return true if there are two distinct 
+indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
+
+Constraints:
+
+1 <= nums.length <= 10^5
+-109 <= nums[i] <= 10^9
+0 <= k <= 10^5
+*/
+export function containsNearbyDuplicate(nums: number[], k: number): boolean {
+    if (k === 0) {
+        return false;
+    }
+
+    let left = -1;
+    let right = -1;
+    const set = new Set<number>();
+    while (right < nums.length) {
+        if (right - left === k + 1) {
+            left++;
+            set.delete(nums[left]);
+        }
+
+        right++;
+        if (set.has(nums[right])) {
+            return true;
+        }
+        set.add(nums[right]);
+    }
+
+    return false;
+}
