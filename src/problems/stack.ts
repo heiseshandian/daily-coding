@@ -144,3 +144,68 @@ export function removeDuplicateLetters(s: string): string {
 
     return stack.join('');
 }
+
+/* 
+https://leetcode.com/problems/create-maximum-number/
+
+You are given two integer arrays nums1 and nums2 of lengths m and n respectively. 
+nums1 and nums2 represent the digits of two numbers. You are also given an integer k.
+
+Create the maximum number of length k <= m + n from digits of the two numbers. 
+The relative order of the digits from the same array must be preserved.
+
+Return an array of the k digits representing the answer.
+*/
+export function maxNumber(nums1: number[], nums2: number[], k: number): number[] {
+    let result: number[] = [];
+
+    let start = Math.max(0, k - nums2.length);
+    while (start <= nums1.length && start <= k) {
+        const left = getMax(nums1, start);
+        const right = getMax(nums2, k - start);
+        const tmp = merge(left.join(''), right.join(''));
+
+        if (result.join('') < tmp.join('')) {
+            result = tmp;
+        }
+        start++;
+    }
+
+    return result;
+}
+
+function merge(nums1: string, nums2: string) {
+    let i = 0;
+    let j = 0;
+    const result: number[] = [];
+
+    while (i < nums1.length && j < nums2.length) {
+        result.push(nums1.substring(i) > nums2.substring(j) ? Number(nums1[i++]) : Number(nums2[j++]));
+    }
+    while (i < nums1.length) {
+        result.push(+nums1[i++]);
+    }
+    while (j < nums2.length) {
+        result.push(+nums2[j++]);
+    }
+
+    return result;
+}
+
+function getMax(nums: number[], k: number) {
+    if (nums.length <= k) {
+        return nums;
+    }
+
+    // 严格从大到小
+    const stack: number[] = [];
+    for (let i = 0; i < nums.length; i++) {
+        const val = nums[i];
+        while (stack.length > 0 && stack[stack.length - 1] < val && stack.length + nums.length - i - 1 >= k) {
+            stack.pop();
+        }
+        stack.push(val);
+    }
+
+    return stack.slice(0, k);
+}
