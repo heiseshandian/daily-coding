@@ -1,4 +1,5 @@
 import { SlidingWindow } from '../algorithm/sliding-window';
+import { getClosestMaxOrEqual } from '../common/index';
 
 /* 
 https://leetcode.com/problems/constrained-subsequence-sum/
@@ -98,6 +99,56 @@ export function containsNearbyDuplicate(nums: number[], k: number): boolean {
             return true;
         }
         set.add(nums[right]);
+    }
+
+    return false;
+}
+
+/* 
+https://leetcode.com/problems/contains-duplicate-iii/
+
+ou are given an integer array nums and two integers indexDiff and valueDiff.
+
+Find a pair of indices (i, j) such that:
+
+i != j,
+abs(i - j) <= indexDiff.
+abs(nums[i] - nums[j]) <= valueDiff, and
+Return true if such pair exists or false otherwise.
+
+Constraints:
+
+2 <= nums.length <= 10^5
+-10^9 <= nums[i] <= 10^9
+1 <= indexDiff <= nums.length
+0 <= valueDiff <= 10^9
+*/
+export function containsNearbyAlmostDuplicate(nums: number[], indexDiff: number, valueDiff: number): boolean {
+    const window = nums.slice(0, indexDiff + 1).sort((a, b) => a - b);
+    for (let i = 1; i < window.length; i++) {
+        if (window[i] - window[i - 1] <= valueDiff) {
+            return true;
+        }
+    }
+
+    let left = indexDiff;
+    let right = indexDiff;
+    while (right < nums.length) {
+        // 删除已经出窗口的元素
+        const toDelete = getClosestMaxOrEqual(window, nums[left - indexDiff], 0, window.length - 1);
+        window.splice(toDelete, 1);
+
+        left++;
+        right++;
+
+        const closestMaxOrEqual = getClosestMaxOrEqual(window, nums[right], 0, window.length - 1);
+        if (
+            (closestMaxOrEqual < window.length && window[closestMaxOrEqual] - nums[right] <= valueDiff) ||
+            (closestMaxOrEqual - 1 >= 0 && nums[right] - window[closestMaxOrEqual - 1] <= valueDiff)
+        ) {
+            return true;
+        }
+        window.splice(closestMaxOrEqual, 0, nums[right]);
     }
 
     return false;
