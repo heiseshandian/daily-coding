@@ -113,15 +113,7 @@ where the two words do not share common letters. If no such two words exist, ret
 */
 export function maxProduct(words: string[]): number {
     // 一共有26个英文字母，我们可以用26位二进制位来表示某个字母有没有出现过，然后通过按位或的结果来判断两个字符串有没有公共字母
-    const bits = words.map((word) => {
-        let bit = 0;
-
-        for (let i = 0; i < word.length; i++) {
-            bit = bit | (1 << getCharIndex(word[i]));
-        }
-
-        return bit;
-    });
+    const bits = words.map((word) => convertWordToBit(word));
 
     let max = 0;
     for (let i = 0; i < words.length; i++) {
@@ -134,6 +126,16 @@ export function maxProduct(words: string[]): number {
     }
 
     return max;
+}
+
+function convertWordToBit(word: string): number {
+    let bit = 0;
+
+    for (let i = 0; i < word.length; i++) {
+        bit = bit | (1 << getCharIndex(word[i]));
+    }
+
+    return bit;
 }
 
 /* 
@@ -192,4 +194,25 @@ export function rangeBitwiseAnd(left: number, right: number): number {
     }
 
     return result;
+}
+
+/* 
+https://leetcode.com/problems/count-the-number-of-consistent-strings/
+
+You are given a string allowed consisting of distinct characters and an array of strings words. 
+A string is consistent if all characters in the string appear in the string allowed.
+
+Return the number of consistent strings in the array words.
+*/
+export function countConsistentStrings(allowed: string, words: string[]): number {
+    const allowedBit = convertWordToBit(allowed);
+    let count = 0;
+    for (let i = 0; i < words.length; i++) {
+        // 若出现新的字符则必然按位或的结果大于 allowedBit（因为在其他位置出现了新的1）
+        if ((allowedBit | convertWordToBit(words[i])) <= allowedBit) {
+            count++;
+        }
+    }
+
+    return count;
 }
