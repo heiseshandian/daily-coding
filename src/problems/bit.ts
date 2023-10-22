@@ -1,4 +1,5 @@
 import { getCharIndex } from '../common/index';
+import { getRightOne } from '../algorithm/exclusive-or';
 
 // 求一个数的n次方
 export function pow(a: number, n: number): number {
@@ -139,6 +140,23 @@ function convertWordToBit(word: string): number {
 }
 
 /* 
+https://leetcode.com/problems/single-number/description/
+
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+*/
+export function singleNumber(nums: number[]): number {
+    // 两个相同的数字异或的结果是0，任何数异或0都是本身
+    let xor = 0;
+    for (let i = 0; i < nums.length; i++) {
+        xor ^= nums[i];
+    }
+
+    return xor;
+}
+
+/* 
 https://leetcode.com/problems/single-number-ii/description/
 
 Given an integer array nums where every element appears three times except for one, which appears exactly once. 
@@ -149,7 +167,7 @@ You must implement a solution with a linear runtime complexity and use only cons
 // 统计每一位1的个数，并根据是否能被3整除来判断只出现一次的数字在那一位上是1还是0
 // 能被3整除则仅出现一次的数字那一位必然是0，否则必然是1
 */
-export function singleNumber(nums: number[]): number {
+export function singleNumber2(nums: number[]): number {
     let result = 0;
     for (let i = 31; i >= 0; i--) {
         let count = 0;
@@ -165,6 +183,34 @@ export function singleNumber(nums: number[]): number {
     }
 
     return result;
+}
+
+/* 
+https://leetcode.com/problems/single-number-iii/
+
+Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. 
+Find the two elements that appear only once. You can return the answer in any order.
+
+You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
+*/
+export function singleNumber3(nums: number[]): number[] {
+    // 假设这两个独立的数是a和b，则xor=a^b
+    // 我们需要通过某种方式将a和b区分开，由于异或可以看成是无进位相加，所以xor最右侧的1必然来自于a或者b
+    // 也就是说在xor最右侧的1这一位a和b必然是一个是0一个是1，我们可以通过这个特性将两者区分开
+    let xor = 0;
+    for (let i = 0; i < nums.length; i++) {
+        xor ^= nums[i];
+    }
+
+    const rightOne = getRightOne(xor);
+    let a = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (rightOne & nums[i]) {
+            a ^= nums[i];
+        }
+    }
+
+    return [a, xor ^ a];
 }
 
 /* 
