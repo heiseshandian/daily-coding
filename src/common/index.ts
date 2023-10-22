@@ -17,19 +17,6 @@ export function maxCommonFactor(a: number, b: number): number {
     return maxCommonFactor(b, a % b);
 }
 
-// 打印二进制位
-export function printBinary(n: number): string {
-    let result: string[] = [];
-    for (let i = 31; i >= 0; i--) {
-        // n & 000...0001
-        // n & 000...0010
-        // n & 000...0100 与完之后的结果只有某一位不是1结果才是0，否则那一位必然是1
-        result.push((n & (1 << i)) === 0 ? '0' : '1');
-    }
-
-    return result.join('');
-}
-
 export function flipACoin(): boolean {
     return Math.random() < 0.5;
 }
@@ -80,14 +67,6 @@ export function generateArray(maxVal: number, maxLen: number): number[] {
     }
 
     return result;
-}
-
-export function isEven(n: number) {
-    return (n & 1) === 0;
-}
-
-export function isOdd(n: number) {
-    return (n & 1) === 1;
 }
 
 export function getClosestMaxOrEqual(arr: number[], target: number, left: number, right: number): number {
