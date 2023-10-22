@@ -335,6 +335,45 @@ export function buildTree(preOrder: number[], inOrder: number[]): TreeNode | nul
 }
 
 /* 
+https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+
+Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree 
+and postorder is the postorder traversal of the same tree, construct and return the binary tree.
+
+Constraints:
+
+1 <= inorder.length <= 3000
+postorder.length == inorder.length
+-3000 <= inorder[i], postorder[i] <= 3000
+inorder and postorder consist of unique values.
+Each value of postorder also appears in inorder.
+inorder is guaranteed to be the inorder traversal of the tree.
+postorder is guaranteed to be the postorder traversal of the tree.
+*/
+export function buildTree2(inorder: number[], postorder: number[]): TreeNode | null {
+    const inMap: Record<number, number> = {};
+    for (let i = 0; i < inorder.length; i++) {
+        inMap[inorder[i]] = i;
+    }
+
+    const build = (inStart: number, inEnd: number, postStart: number, postEnd: number) => {
+        if (inStart > inEnd || postStart > postEnd) {
+            return null;
+        }
+
+        const root = new TreeNode(postorder[postEnd]);
+        const inRoot = inMap[postorder[postEnd]];
+        const leftCount = inRoot - inStart;
+        root.left = build(inStart, inRoot - 1, postStart, postStart + leftCount - 1);
+        root.right = build(inRoot + 1, inEnd, postStart + leftCount, postEnd - 1);
+
+        return root;
+    };
+
+    return build(0, inorder.length - 1, 0, postorder.length - 1);
+}
+
+/* 
 https://leetcode.com/problems/populating-next-right-pointers-in-each-node/description/
 
 You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
