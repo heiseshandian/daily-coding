@@ -4533,6 +4533,28 @@ export function lengthOfLongestSubstring2(str: string): number {
     return max;
 }
 
+export function lengthOfLongestSubstring3(s: string): number {
+    if (s.length === 0) return 0;
+
+    let longestSubStr = '';
+    let left = 0;
+    let right = 1;
+
+    while (right <= s.length) {
+        const window = s.substring(left, right);
+        if (!window.includes(s[right])) {
+            right++;
+        } else {
+            left++;
+        }
+        if (window.length > longestSubStr.length) {
+            longestSubStr = window;
+        }
+    }
+
+    return longestSubStr.length;
+}
+
 /* 
 给定字符串s，问s中至多包含k个字符的子串中最长的是多少？
 
