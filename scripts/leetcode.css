@@ -1,0 +1,13 @@
+.special-copy-btn {
+    padding: 5px 8px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.special-copy-btn:hover {
+    background-color: #45a049;
+}
