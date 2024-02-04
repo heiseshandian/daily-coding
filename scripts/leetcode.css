@@ -11,3 +11,34 @@
 .special-copy-btn:hover {
     background-color: #45a049;
 }
+
+.message-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.message {
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.success {
+    background-color: #4caf50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
