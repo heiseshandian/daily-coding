@@ -39,9 +39,7 @@ export function canConstruct(s: string, k: number): boolean {
         map[s[i]] = prev + 1;
     }
 
-    const oddCount = Object.keys(map)
-        .map((k) => map[k])
-        .filter((times) => times & 1).length;
+    const oddCount = Object.values(map).filter((times) => times & 1).length;
 
     return oddCount <= k;
 }
