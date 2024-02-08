@@ -83,10 +83,10 @@ function handleClickCopyBtn() {
  */
 function fixConstraints(desc) {
     // -4 * 10^4 <= Node.val <= 4 * 10^4
-    const prefixReg = /10(\d)\s+<=/g;
-    const suffixReg = /<=\s+(?:\d\s+\*\s+)?10(\d)/g;
+    const prefixReg = /10([1-9])\s+<=/g;
+    const suffixReg = /<=\s+(?:\d\s+\*\s+)?10([1-9])/g;
     // [1, 4 * 10^4]
-    const squareReg = /10(\d)\]/g;
+    const squareReg = /10([1-9])\]/g;
 
     return desc
         .replace(prefixReg, '10^$1 <=')

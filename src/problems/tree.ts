@@ -62,7 +62,10 @@ function isEqualTree(node1: TreeNode | null, node2: TreeNode | null): boolean {
 
     if (node1.val !== node2.val) return false;
 
-    return isEqualTree(node1.left, node2.right) && isEqualTree(node1.right, node2.left);
+    return (
+        isEqualTree(node1.left, node2.right) &&
+        isEqualTree(node1.right, node2.left)
+    );
 }
 
 export function countEqualTree2(head: TreeNode | null): number {
@@ -137,7 +140,11 @@ export function zigzagLevelOrder(head: TreeNode): number[][] {
 
         // 当前节点是当前层最后一个节点
         if (cur === curEnd) {
-            result.push(shouldReverse ? curLevelValues.slice().reverse() : curLevelValues.slice());
+            result.push(
+                shouldReverse
+                    ? curLevelValues.slice().reverse()
+                    : curLevelValues.slice()
+            );
             shouldReverse = !shouldReverse;
             curLevelValues.length = 0;
             curEnd = nextEnd;
@@ -159,7 +166,8 @@ Return the minimum number of cameras needed to monitor all nodes of the tree.
 3) x 有camera且被覆盖 cameraCovered （此情况x的父节点可不放节点，也可放节点）
 */
 export function minCameraCover(root: TreeNode | null): number {
-    const { uncovered, noCameraCovered, cameraCovered } = minCameraCoverProcess(root);
+    const { uncovered, noCameraCovered, cameraCovered } =
+        minCameraCoverProcess(root);
 
     return Math.min(uncovered + 1, noCameraCovered, cameraCovered);
 }
@@ -172,7 +180,11 @@ class MinCameraInfo {
     // x节点放置了相机
     cameraCovered: number;
 
-    constructor(uncovered: number, noCameraCovered: number, cameraCovered: number) {
+    constructor(
+        uncovered: number,
+        noCameraCovered: number,
+        cameraCovered: number
+    ) {
         this.uncovered = uncovered;
         this.noCameraCovered = noCameraCovered;
         this.cameraCovered = cameraCovered;
@@ -246,12 +258,18 @@ function minCameraCoverProcess2(node: TreeNode | null): MinCameraInfo2 {
 
     // 如果子节点有一个没被覆盖则x节点必须放相机
     // 此判断条件必须放在前面，因为如果子节点中存在未被覆盖的相机则x节点必须要放相机，没有其他可能性
-    if (left.status === MinCameraStatus.Uncovered || right.status === MinCameraStatus.Uncovered) {
+    if (
+        left.status === MinCameraStatus.Uncovered ||
+        right.status === MinCameraStatus.Uncovered
+    ) {
         return new MinCameraInfo2(MinCameraStatus.CameraCovered, cameras + 1);
     }
 
     // 如果子节点中有一个有相机，则x节点必返回无相机但被覆盖
-    if (left.status === MinCameraStatus.CameraCovered || right.status === MinCameraStatus.CameraCovered) {
+    if (
+        left.status === MinCameraStatus.CameraCovered ||
+        right.status === MinCameraStatus.CameraCovered
+    ) {
         return new MinCameraInfo2(MinCameraStatus.NoCameraCovered, cameras);
     }
 
@@ -272,7 +290,10 @@ A leaf is a node with no children.
 Input: root = [1,2,3,4,-99,-99,7,8,9,-99,-99,12,13,-99,14], limit = 1
 Output: [1,2,3,4,null,null,7,8,9,null,14]
 */
-export function sufficientSubset(root: TreeNode | null, limit: number): TreeNode | null {
+export function sufficientSubset(
+    root: TreeNode | null,
+    limit: number
+): TreeNode | null {
     const canDeleteRoot = sufficientSubsetDfs(root, 0, limit);
     if (canDeleteRoot) {
         return null;
@@ -281,7 +302,11 @@ export function sufficientSubset(root: TreeNode | null, limit: number): TreeNode
     return root;
 }
 
-function sufficientSubsetDfs(node: TreeNode | null, sum: number, limit: number): boolean {
+function sufficientSubsetDfs(
+    node: TreeNode | null,
+    sum: number,
+    limit: number
+): boolean {
     if (!node) {
         return true;
     }
@@ -321,13 +346,21 @@ Each value of inorder also appears in preorder.
 preorder is guaranteed to be the preorder traversal of the tree.
 inorder is guaranteed to be the inorder traversal of the tree.
 */
-export function buildTree(preOrder: number[], inOrder: number[]): TreeNode | null {
+export function buildTree(
+    preOrder: number[],
+    inOrder: number[]
+): TreeNode | null {
     const inMap: Map<number, number> = new Map();
     for (let i = 0; i < inOrder.length; i++) {
         inMap.set(inOrder[i], i);
     }
 
-    const build = (preStart: number, preEnd: number, inStart: number, inEnd: number) => {
+    const build = (
+        preStart: number,
+        preEnd: number,
+        inStart: number,
+        inEnd: number
+    ) => {
         if (preStart > preEnd || inStart > inEnd) {
             return null;
         }
@@ -335,7 +368,12 @@ export function buildTree(preOrder: number[], inOrder: number[]): TreeNode | nul
         const root = new TreeNode(preOrder[preStart]);
         const inRoot = inMap.get(root.val)!;
         const numsLeft = inRoot - inStart;
-        root.left = build(preStart + 1, preStart + numsLeft, inStart, inRoot - 1);
+        root.left = build(
+            preStart + 1,
+            preStart + numsLeft,
+            inStart,
+            inRoot - 1
+        );
         root.right = build(preStart + numsLeft + 1, preEnd, inRoot + 1, inEnd);
 
         return root;
@@ -360,13 +398,21 @@ Each value of postorder also appears in inorder.
 inorder is guaranteed to be the inorder traversal of the tree.
 postorder is guaranteed to be the postorder traversal of the tree.
 */
-export function buildTree2(inorder: number[], postorder: number[]): TreeNode | null {
+export function buildTree2(
+    inorder: number[],
+    postorder: number[]
+): TreeNode | null {
     const inMap: Record<number, number> = {};
     for (let i = 0; i < inorder.length; i++) {
         inMap[inorder[i]] = i;
     }
 
-    const build = (inStart: number, inEnd: number, postStart: number, postEnd: number) => {
+    const build = (
+        inStart: number,
+        inEnd: number,
+        postStart: number,
+        postEnd: number
+    ) => {
         if (inStart > inEnd || postStart > postEnd) {
             return null;
         }
@@ -374,8 +420,18 @@ export function buildTree2(inorder: number[], postorder: number[]): TreeNode | n
         const root = new TreeNode(postorder[postEnd]);
         const inRoot = inMap[postorder[postEnd]];
         const leftCount = inRoot - inStart;
-        root.left = build(inStart, inRoot - 1, postStart, postStart + leftCount - 1);
-        root.right = build(inRoot + 1, inEnd, postStart + leftCount, postEnd - 1);
+        root.left = build(
+            inStart,
+            inRoot - 1,
+            postStart,
+            postStart + leftCount - 1
+        );
+        root.right = build(
+            inRoot + 1,
+            inEnd,
+            postStart + leftCount,
+            postEnd - 1
+        );
 
         return root;
     };
@@ -409,7 +465,9 @@ class TreeNodeWithNext {
     }
 }
 
-export function connect(root: TreeNodeWithNext | null): TreeNodeWithNext | null {
+export function connect(
+    root: TreeNodeWithNext | null
+): TreeNodeWithNext | null {
     if (!root) {
         return root;
     }
@@ -477,7 +535,10 @@ export function printEdgeNodes(root: TreeNode | null): number[] {
     while (!queue.isEmpty()) {
         const first = queue.poll()!;
 
-        if (first === curStart || (!first.left && !first.right && first !== curEnd)) {
+        if (
+            first === curStart ||
+            (!first.left && !first.right && first !== curEnd)
+        ) {
             starts.push(first.val);
         } else if (first === curEnd) {
             ends.unshift(first.val);
@@ -529,7 +590,9 @@ export function maxPathSum(root: TreeNode | null): number {
     return maxPathSumProcess(root)[0];
 }
 
-function maxPathSumProcess(node: TreeNode | null): [max: number, maxStartFromHead: number] {
+function maxPathSumProcess(
+    node: TreeNode | null
+): [max: number, maxStartFromHead: number] {
     // 对于空节点需要返回-Infinity，否则当树上都是负数的时候空节点的返回值会被当成最大值，这是不对的
     // 因为路径要求最少要求一个节点
     if (!node) {
@@ -539,8 +602,17 @@ function maxPathSumProcess(node: TreeNode | null): [max: number, maxStartFromHea
     const [leftMax, leftMaxStartFromHead] = maxPathSumProcess(node.left);
     const [rightMax, rightMaxStartFromHead] = maxPathSumProcess(node.right);
 
-    const maxStartFromHead = Math.max(node.val, node.val + leftMaxStartFromHead, node.val + rightMaxStartFromHead);
-    const max = Math.max(leftMax, rightMax, maxStartFromHead, node.val + leftMaxStartFromHead + rightMaxStartFromHead);
+    const maxStartFromHead = Math.max(
+        node.val,
+        node.val + leftMaxStartFromHead,
+        node.val + rightMaxStartFromHead
+    );
+    const max = Math.max(
+        leftMax,
+        rightMax,
+        maxStartFromHead,
+        node.val + leftMaxStartFromHead + rightMaxStartFromHead
+    );
 
     return [max, maxStartFromHead];
 }
@@ -576,7 +648,11 @@ nodes p and q as the lowest node in T that has both p and q as descendants (wher
 Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
 Output: 3
 */
-export function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {
+export function lowestCommonAncestor(
+    root: TreeNode | null,
+    p: TreeNode | null,
+    q: TreeNode | null
+): TreeNode | null {
     if (p === null || q === null) {
         return p || q;
     }
@@ -587,7 +663,9 @@ export function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, 
     const pParents: TreeNode[] = [];
     const qParents: TreeNode[] = [];
 
-    const post = (node: TreeNode | null): [foundP: boolean, foundQ: boolean] => {
+    const post = (
+        node: TreeNode | null
+    ): [foundP: boolean, foundQ: boolean] => {
         if (!node) {
             return [false, false];
         }
@@ -608,12 +686,17 @@ export function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, 
     };
     post(root);
 
-    const shortParents = pParents.length < qParents.length ? pParents : qParents;
+    const shortParents =
+        pParents.length < qParents.length ? pParents : qParents;
     const shortParentsSet = new Set(shortParents);
     const longParents = shortParents === pParents ? qParents : pParents;
     let i = 0;
     while (i < longParents.length) {
-        if (shortParentsSet.has(longParents[i]) || longParents[i] === p || longParents[i] === q) {
+        if (
+            shortParentsSet.has(longParents[i]) ||
+            longParents[i] === p ||
+            longParents[i] === q
+        ) {
             return longParents[i];
         }
         i++;
@@ -633,7 +716,9 @@ Given the root of the binary tree, return the maximum amount of money the thief 
 二叉树的递归套路
 */
 export function rob(root: TreeNode | null): number {
-    const dfs = (node: TreeNode | null): [maxWithSelf: number, maxWithoutSelf: number] => {
+    const dfs = (
+        node: TreeNode | null
+    ): [maxWithSelf: number, maxWithoutSelf: number] => {
         if (!node) {
             return [0, 0];
         }
@@ -642,7 +727,8 @@ export function rob(root: TreeNode | null): number {
         const [rightMaxWithSelf, rightMaxWithoutSelf] = dfs(node.right);
 
         const withoutSelf =
-            Math.max(leftMaxWithSelf, leftMaxWithoutSelf) + Math.max(rightMaxWithSelf, rightMaxWithoutSelf);
+            Math.max(leftMaxWithSelf, leftMaxWithoutSelf) +
+            Math.max(rightMaxWithSelf, rightMaxWithoutSelf);
         const withSelf = leftMaxWithoutSelf + rightMaxWithoutSelf + node.val;
 
         return [withSelf, withoutSelf];
@@ -838,7 +924,9 @@ Given a binary tree, determine if it is height-balanced
 二叉树的递归套路，向左子树要信息，向右子树要信息，进而组合出当前节点的信息并向上返回
 */
 export function isBalanced(root: TreeNode | null): boolean {
-    const dfs = (node: TreeNode | null): [height: number, balanced: boolean] => {
+    const dfs = (
+        node: TreeNode | null
+    ): [height: number, balanced: boolean] => {
         if (!node) {
             return [0, true];
         }
@@ -848,7 +936,9 @@ export function isBalanced(root: TreeNode | null): boolean {
 
         return [
             Math.max(leftHeight, rightHeight) + 1,
-            leftBalanced && rightBalanced && Math.abs(leftHeight - rightHeight) <= 1,
+            leftBalanced &&
+                rightBalanced &&
+                Math.abs(leftHeight - rightHeight) <= 1,
         ];
     };
 
