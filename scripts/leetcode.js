@@ -1,6 +1,12 @@
 // 自动复制leetcode上的链接地址、标题、描述等
 addCopyBtn();
 
+const observer = new MutationObserver(function () {
+    addCopyBtn();
+});
+
+observer.observe(document, { childList: true, subtree: true });
+
 const COPY_BTN_CONTENT = 'copy content';
 
 async function addCopyBtn() {
