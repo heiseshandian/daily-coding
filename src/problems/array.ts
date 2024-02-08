@@ -714,3 +714,23 @@ function countDigits(n: number): number {
 
     return count;
 }
+
+export function sequentialDigits2(low: number, high: number): number[] {
+    const result: number[] = [];
+
+    for (let i = 1; i <= 8; i++) {
+        let num = i;
+        let nextDigit = i + 1;
+
+        while (num <= high && nextDigit <= 9) {
+            num = num * 10 + nextDigit;
+            if (num >= low && num <= high) {
+                result.push(num);
+            }
+
+            nextDigit++;
+        }
+    }
+
+    return result.sort((a, b) => a - b);
+}
