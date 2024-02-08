@@ -129,7 +129,12 @@ The final sorted array should not be returned by the function, but instead be st
 To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, 
 and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
 */
-export function merge(nums1: number[], m: number, nums2: number[], n: number): void {
+export function merge(
+    nums1: number[],
+    m: number,
+    nums2: number[],
+    n: number
+): void {
     let index = m + n - 1;
     let i1 = m - 1;
     let i2 = n - 1;
@@ -283,7 +288,9 @@ of the characters without disturbing the relative positions of the remaining cha
 */
 export function maxDotProduct(nums1: number[], nums2: number[]): number {
     // dp[i][j] nums[0-j],nums2[0-j] 所形成的等长子序列中最大值
-    const dp: number[][] = new Array(nums1.length).fill(0).map((_) => new Array(nums2.length));
+    const dp: number[][] = new Array(nums1.length)
+        .fill(0)
+        .map((_) => new Array(nums2.length));
     dp[0][0] = nums1[0] * nums2[0];
 
     // 第一行 dp[0][x]
@@ -306,7 +313,11 @@ export function maxDotProduct(nums1: number[], nums2: number[]): number {
             - dp[i][j] 的值来源于 dp[i - 1][j - 1] + nums1[i] * nums2[j]
             - dp[i][j] 的值来源于 nums1[i] * nums2[j] 相当于抛弃前面的数组，直接从i,j处开始
             */
-            dp[i][j] = Math.max(Math.max(0, dp[i - 1][j - 1]) + nums1[i] * nums2[j], dp[i - 1][j], dp[i][j - 1]);
+            dp[i][j] = Math.max(
+                Math.max(0, dp[i - 1][j - 1]) + nums1[i] * nums2[j],
+                dp[i - 1][j],
+                dp[i][j - 1]
+            );
         }
     }
 
@@ -335,7 +346,11 @@ export function maxDotProduct2(nums1: number[], nums2: number[]): number {
             if (j === 0) {
                 dp[j] = Math.max(dp[j], nums1[i] * nums2[j]);
             } else {
-                dp[j] = Math.max(Math.max(0, topLeftCorner) + nums1[i] * nums2[j], dp[j - 1], dp[j]);
+                dp[j] = Math.max(
+                    Math.max(0, topLeftCorner) + nums1[i] * nums2[j],
+                    dp[j - 1],
+                    dp[j]
+                );
             }
 
             topLeftCorner = nextTopLeftCorner;
@@ -403,7 +418,10 @@ export function stoneGame(piles: number[]): boolean {
             return piles[left];
         }
 
-        return Math.max(piles[left] + last(left + 1, right), piles[right] + last(left, right - 1));
+        return Math.max(
+            piles[left] + last(left + 1, right),
+            piles[right] + last(left, right - 1)
+        );
     });
 
     const last = cache((left: number, right: number): number => {
@@ -488,7 +506,11 @@ export function maximalSquare2(matrix: string[][]): number {
 
             if (i > 0 && j > 0) {
                 matrix[i][j] = (
-                    Math.min(Number(matrix[i - 1][j]), Number(matrix[i][j - 1]), Number(matrix[i - 1][j - 1])) + 1
+                    Math.min(
+                        Number(matrix[i - 1][j]),
+                        Number(matrix[i][j - 1]),
+                        Number(matrix[i - 1][j - 1])
+                    ) + 1
                 ).toString();
             }
 
@@ -539,7 +561,10 @@ export function frequencySort(s: string): string {
         map[s[i]] = prev + 1;
     }
 
-    const chars: Array<[string, number]> = Object.keys(map).map((k) => [k, map[k]]);
+    const chars: Array<[string, number]> = Object.keys(map).map((k) => [
+        k,
+        map[k],
+    ]);
 
     return chars
         .sort(([, timesA], [, timesB]) => timesB - timesA)
@@ -733,4 +758,45 @@ export function sequentialDigits2(low: number, high: number): number[] {
     }
 
     return result.sort((a, b) => a - b);
+}
+
+/* 
+https://leetcode.com/problems/count-items-matching-a-rule/description/
+1773. Count Items Matching a Rule
+You are given an array items, where each items[i] = [typei, colori, namei] describes the type, color, and name of the ith item. You are also given a rule represented by two strings, ruleKey and ruleValue.
+
+The ith item is said to match the rule if one of the following is true:
+
+	ruleKey == "type" and ruleValue == typei.
+	ruleKey == "color" and ruleValue == colori.
+	ruleKey == "name" and ruleValue == namei.
+
+Return the number of items that match the given rule.
+
+Example 1:
+
+Input: items = [["phone","blue","pixel"],["computer","silver","lenovo"],["phone","gold","iphone"]], ruleKey = "color", ruleValue = "silver"
+Output: 1
+Explanation: There is only one item matching the given rule, which is ["computer","silver","lenovo"].
+
+Example 2:
+
+Input: items = [["phone","blue","pixel"],["computer","silver","phone"],["phone","gold","iphone"]], ruleKey = "type", ruleValue = "phone"
+Output: 2
+Explanation: There are only two items matching the given rule, which are ["phone","blue","pixel"] and ["phone","gold","iphone"]. Note that the item ["computer","silver","phone"] does not match.
+
+Constraints:
+
+	1 <= items.length <= 10^4
+	1 <= typei.length, colori.length, namei.length, ruleValue.length <= 10
+	ruleKey is equal to either "type", "color", or "name".
+	All strings consist only of lowercase letters.
+*/
+export function countMatches(
+    items: string[][],
+    ruleKey: string,
+    ruleValue: string
+): number {
+    const index = ['type', 'color', 'name'].indexOf(ruleKey);
+    return items.filter((item) => item[index] === ruleValue).length;
 }
