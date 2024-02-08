@@ -52,7 +52,9 @@ function handleClickCopyBtn() {
     const title = container.querySelector('.text-title-large')?.textContent;
     const desc = container.querySelector('[data-track-load="description_content"]')?.textContent;
 
-    const toCopy = reduceMultipleEmptyLines(`${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${desc}`);
+    const toCopy = reduceMultipleEmptyLines(
+        `${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${fixConstraints(desc)}`
+    );
 
     navigator.clipboard
         .writeText(toCopy)
@@ -63,6 +65,17 @@ function handleClickCopyBtn() {
             console.error(err);
             showErrorMessage('Unable to copy text to clipboard');
         });
+}
+
+/**
+ * 将 Constraints 中的 105 变成 10^5 （默认情况下上划线没有复制出来）
+ * @param {string} desc
+ */
+function fixConstraints(desc) {
+    const prefixReg = /10(\d)\s+<=/g;
+    const suffixReg = /<=\s+10(\d)/g;
+
+    return desc.replace(prefixReg, '10^$1 <=').replace(suffixReg, '<= 10^$1');
 }
 
 /**
