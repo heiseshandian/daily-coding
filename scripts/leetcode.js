@@ -1,6 +1,8 @@
 // 自动复制leetcode上的链接地址、标题、描述等
 addCopyBtn();
 
+const COPY_BTN_CONTENT = 'copy content';
+
 async function addCopyBtn() {
     const btnContainer = await getBtnContainer();
     if (btnContainer.hasAddedCopyBtn) {
@@ -8,7 +10,7 @@ async function addCopyBtn() {
     }
 
     const copyBtn = document.createElement('button');
-    copyBtn.textContent = 'copy content';
+    copyBtn.textContent = COPY_BTN_CONTENT;
     copyBtn.classList.add('special-copy-btn');
     copyBtn.addEventListener('click', handleClickCopyBtn);
 
@@ -50,7 +52,7 @@ function handleClickCopyBtn() {
     const title = container.querySelector('.text-title-large')?.textContent;
     const desc = container.querySelector('[data-track-load="description_content"]')?.textContent;
 
-    const toCopy = reduceMultipleEmptyLines(`${href}\n${title}\n${desc}`);
+    const toCopy = reduceMultipleEmptyLines(`${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${desc}`);
 
     navigator.clipboard
         .writeText(toCopy)
@@ -61,6 +63,20 @@ function handleClickCopyBtn() {
             console.error(err);
             showErrorMessage('Unable to copy text to clipboard');
         });
+}
+
+/**
+ * 删除 inputString 指定的 suffixToRemove 后缀
+ * @param {string} inputString
+ * @param {string} suffixToRemove
+ * @returns
+ */
+function removeSuffix(inputString, suffixToRemove) {
+    if (inputString.endsWith(suffixToRemove)) {
+        return inputString.slice(0, -suffixToRemove.length);
+    } else {
+        return inputString;
+    }
 }
 
 function reduceMultipleEmptyLines(text) {
