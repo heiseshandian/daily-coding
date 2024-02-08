@@ -635,3 +635,82 @@ export function divideArray(nums: number[], k: number): number[][] {
 
     return result;
 }
+
+/* 
+https://leetcode.com/problems/sequential-digits/description/?envType=daily-question&envId=2024-02-02
+1291. Sequential Digits
+An integer has sequential digits if and only if each digit in the number is one more than the previous digit.
+
+Return a sorted list of all the integers in the range [low, high] inclusive that have sequential digits.
+
+Example 1:
+Input: low = 100, high = 300
+Output: [123,234]
+Example 2:
+Input: low = 1000, high = 13000
+Output: [1234,2345,3456,4567,5678,6789,12345]
+
+Constraints:
+
+	10 <= low <= high <= 10^9
+
+注意：对于分类讨论的场景需要考虑以下因素
+- 分类是否完备？分类是否覆盖所有场景？
+- 分类之间是否有交叉？如果有交叉的话如何去重？
+*/
+export function sequentialDigits(low: number, high: number): number[] {
+    const lowDigits = countDigits(low);
+    const highDigits = countDigits(high);
+
+    const generateSequentialDigits = (bit: number) => {
+        const result: number[] = [];
+        for (let i = 1; i <= 9 - bit + 1; i++) {
+            let count = bit;
+            let digits = i;
+            let cur = i;
+            while (--count) {
+                digits *= 10;
+                digits += ++cur;
+            }
+
+            result.push(digits);
+        }
+
+        return result;
+    };
+
+    const set: Set<number> = new Set();
+    // for lowDigits
+    let digits = generateSequentialDigits(lowDigits);
+    for (let i = 0; i < digits.length; i++) {
+        if (digits[i] >= low && digits[i] <= high) {
+            set.add(digits[i]);
+        }
+    }
+
+    // for center
+    for (let i = lowDigits + 1; i < highDigits; i++) {
+        const digits = generateSequentialDigits(i);
+        digits.forEach((digit) => set.add(digit));
+    }
+
+    // for highDigits
+    digits = generateSequentialDigits(highDigits);
+    for (let i = 0; i < digits.length; i++) {
+        if (digits[i] >= low && digits[i] <= high) {
+            set.add(digits[i]);
+        }
+    }
+
+    return Array.from(set);
+}
+
+function countDigits(n: number): number {
+    let count = 0;
+    while (n) {
+        count++;
+        n = Math.floor(n / 10);
+    }
+
+    return count;
+}
