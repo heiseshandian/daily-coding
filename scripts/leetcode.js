@@ -51,15 +51,19 @@ function handleClickCopyBtn() {
     const container = document.querySelector('.flexlayout__tab');
 
     const href = location.href;
-    const title = container.querySelector('.text-title-large')?.textContent;
-    const desc = container.querySelector(
+
+    let title = container.querySelector('.text-title-large')?.textContent;
+    title = removeSuffix(title, COPY_BTN_CONTENT);
+
+    let desc = container.querySelector(
         '[data-track-load="description_content"]'
     )?.textContent;
+    desc = fixConstraints(desc).trimEnd('\n');
+
+    const lines = document.querySelector('.view-lines')?.textContent;
 
     const toCopy = reduceMultipleEmptyLines(
-        `${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${fixConstraints(
-            desc
-        )}`
+        `/*\n${href}\n${title}\n${desc}\n*/\nexport ${lines}\n`
     );
 
     navigator.clipboard
