@@ -28,7 +28,9 @@ function getBtnContainer() {
     let resolveFn;
 
     const updateBtnContainer = () => {
-        btnContainer = document.querySelector('.flexlayout__tab .text-title-large');
+        btnContainer = document.querySelector(
+            '.flexlayout__tab .text-title-large'
+        );
         if (!btnContainer) {
             requestAnimationFrame(updateBtnContainer);
         } else {
@@ -50,10 +52,14 @@ function handleClickCopyBtn() {
 
     const href = location.href;
     const title = container.querySelector('.text-title-large')?.textContent;
-    const desc = container.querySelector('[data-track-load="description_content"]')?.textContent;
+    const desc = container.querySelector(
+        '[data-track-load="description_content"]'
+    )?.textContent;
 
     const toCopy = reduceMultipleEmptyLines(
-        `${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${fixConstraints(desc)}`
+        `${href}\n${removeSuffix(title, COPY_BTN_CONTENT)}\n${fixConstraints(
+            desc
+        )}`
     );
 
     navigator.clipboard
@@ -72,10 +78,16 @@ function handleClickCopyBtn() {
  * @param {string} desc
  */
 function fixConstraints(desc) {
+    // -4 * 10^4 <= Node.val <= 4 * 10^4
     const prefixReg = /10(\d)\s+<=/g;
-    const suffixReg = /<=\s+10(\d)/g;
+    const suffixReg = /<=\s+(?:\d\s+\*\s+)10(\d)/g;
+    // [1, 4 * 10^4]
+    const squareReg = /10(\d)\]/g;
 
-    return desc.replace(prefixReg, '10^$1 <=').replace(suffixReg, '<= 10^$1');
+    return desc
+        .replace(prefixReg, '10^$1 <=')
+        .replace(suffixReg, '<= 10^$1')
+        .replace(squareReg, '10^$1]');
 }
 
 /**
