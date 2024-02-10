@@ -63,7 +63,9 @@ export function longestPalindrome2(s: string): number {
         countMap[char]++;
     }
 
-    const oddCount = Object.values(countMap).filter((count) => isOdd(count)).length;
+    const oddCount = Object.values(countMap).filter((count) =>
+        isOdd(count)
+    ).length;
 
     return oddCount > 0 ? s.length - oddCount + 1 : s.length;
 }

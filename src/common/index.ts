@@ -43,7 +43,12 @@ export const parenthesesComparator = (a: string, b: string) => {
 };
 
 // 用于生成随机测试数据
-export function generateMatrix(row: number, col: number, left = 1, right = 100): number[][] {
+export function generateMatrix(
+    row: number,
+    col: number,
+    left = 1,
+    right = 100
+): number[][] {
     row = Math.ceil(Math.random() * row);
     col = Math.ceil(Math.random() * col);
 
@@ -69,7 +74,12 @@ export function generateArray(maxVal: number, maxLen: number): number[] {
     return result;
 }
 
-export function getClosestMaxOrEqual(arr: number[], target: number, left: number, right: number): number {
+export function getClosestMaxOrEqual(
+    arr: number[],
+    target: number,
+    left: number,
+    right: number
+): number {
     let closestMaxOrEqual = right + 1;
     while (left <= right) {
         const mid = left + ((right - left) >> 1);
@@ -82,4 +92,12 @@ export function getClosestMaxOrEqual(arr: number[], target: number, left: number
     }
 
     return closestMaxOrEqual;
+}
+
+export function isEven(n: number) {
+    return (n & 1) === 0;
+}
+
+export function isOdd(n: number) {
+    return (n & 1) === 1;
 }
