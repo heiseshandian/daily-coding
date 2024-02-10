@@ -183,3 +183,29 @@ export function winnerOfGame(colors: string): boolean {
 
     return aliceCount > bobCount;
 }
+
+export function winnerOfGame2(colors: string): boolean {
+    let aliceCount = 0;
+    let bobCount = 0;
+
+    let continueA = 0;
+    let continueB = 0;
+    for (let i = 0; i < colors.length; i++) {
+        if (colors[i] === 'A') {
+            continueA++;
+
+            bobCount += Math.max(0, continueB - 2);
+            continueB = 0;
+        } else {
+            continueB++;
+
+            aliceCount += Math.max(0, continueA - 2);
+            continueA = 0;
+        }
+    }
+
+    aliceCount += Math.max(0, continueA - 2);
+    bobCount += Math.max(0, continueB - 2);
+
+    return aliceCount > bobCount;
+}
