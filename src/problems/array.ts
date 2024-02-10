@@ -890,3 +890,81 @@ export function smallerNumbersThanCurrent(nums: number[]): number[] {
     const sorted = [...nums].sort((a, b) => a - b);
     return nums.map((num) => sorted.indexOf(num));
 }
+
+/*
+https://leetcode.com/problems/shortest-subarray-to-be-removed-to-make-array-sorted/
+1574. Shortest Subarray to be Removed to Make Array Sorted
+Given an integer array arr, remove a subarray (can be empty) from arr such that the remaining elements in arr are non-decreasing.
+
+Return the length of the shortest subarray to remove.
+
+A subarray is a contiguous subsequence of the array.
+
+Example 1:
+
+Input: arr = [1,2,3,10,4,2,3,5]
+Output: 3
+Explanation: The shortest subarray we can remove is [10,4,2] of length 3. The remaining elements after that will be [1,2,3,3,5] which are sorted.
+Another correct solution is to remove the subarray [3,10,4].
+
+Example 2:
+
+Input: arr = [5,4,3,2,1]
+Output: 4
+Explanation: Since the array is strictly decreasing, we can only keep a single element. Therefore we need to remove a subarray of length 4, either [5,4,3,2] or [4,3,2,1].
+
+Example 3:
+
+Input: arr = [1,2,3]
+Output: 0
+Explanation: The array is already non-decreasing. We do not need to remove any elements.
+
+Constraints:
+
+	1 <= arr.length <= 10^5
+	0 <= arr[i] <= 10^9
+
+思路分析
+- 先找到以0开始的最长增长子串 prefix 和以最后一个元素结尾的最长增长子串 suffix
+- 由于是删除某个子串，所以 prefix 和 suffix 中间的部分（如果有的话，若无中间部分，则整个串必然都是最长增长子串）必然会被删除
+- 然后从中间部分向左或向右扩张，使得 prefix 的最后一个元素小于 suffix 的第一个元素
+    - 终止条件 prefix 的最后一个元素小于 suffix 的第一个元素 | prefix 为空 | suffix 为空
+    - 删除 prefix 的最右边元素
+    - 删除 suffix 的最左边元素
+*/
+export function findLengthOfShortestSubarray(arr: number[]): number {
+    let prefixEnd = 1;
+    let suffixStart = arr.length - 1;
+
+    // 找到左侧最长增长子序列的末尾
+    while (prefixEnd < arr.length && arr[prefixEnd] >= arr[prefixEnd - 1]) {
+        prefixEnd++;
+    }
+    if (prefixEnd === arr.length) {
+        return 0;
+    }
+    prefixEnd--;
+
+    // 找到右侧最长增长子序列的开头
+    while (suffixStart >= 1 && arr[suffixStart - 1] <= arr[suffixStart]) {
+        suffixStart--;
+    }
+
+    let sortestSubarrayLen = suffixStart - prefixEnd - 1;
+    const findSortestSubarrayLen = cache(
+        (end: number, start: number): number => {
+            if (end === -1 || start === arr.length || arr[end] <= arr[start]) {
+                return 0;
+            }
+
+            // 删除 prefix 的最右边元素
+            const left = findSortestSubarrayLen(end - 1, start);
+            // 删除 suffix 的最左边元素
+            const right = findSortestSubarrayLen(end, start + 1);
+
+            return Math.min(left + 1, right + 1);
+        }
+    );
+
+    return sortestSubarrayLen + findSortestSubarrayLen(prefixEnd, suffixStart);
+}
