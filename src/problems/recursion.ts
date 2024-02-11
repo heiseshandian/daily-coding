@@ -1,5 +1,6 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { maxCommonFactor, swap } from '../common';
+import { cache } from '../design-pattern/proxy';
 
 /* 
 n层汉诺塔问题
@@ -10,7 +11,13 @@ export function hanoi(n: number): string[] {
     return result;
 }
 
-function hanoiProcess(n: number, from: string, to: string, center: string, path: string[]) {
+function hanoiProcess(
+    n: number,
+    from: string,
+    to: string,
+    center: string,
+    path: string[]
+) {
     if (n === 1) {
         path.push(`1 ${from} > ${to}`);
         return;
@@ -43,7 +50,12 @@ export function subsequence(str: string) {
     return result;
 }
 
-function subsequenceProcess(str: string, index: number, result: string[], currentSubsequence: string) {
+function subsequenceProcess(
+    str: string,
+    index: number,
+    result: string[],
+    currentSubsequence: string
+) {
     if (index === str.length) {
         result.push(currentSubsequence);
         return;
@@ -104,7 +116,12 @@ export function bag(weights: number[], values: number[], targetWeight: number) {
     return bagProcess(weights, values, targetWeight, 0);
 }
 
-function bagProcess(weights: number[], values: number[], leftWeight: number, index: number): number {
+function bagProcess(
+    weights: number[],
+    values: number[],
+    leftWeight: number,
+    index: number
+): number {
     if (leftWeight < 0) {
         return -1;
     }
@@ -113,22 +130,34 @@ function bagProcess(weights: number[], values: number[], leftWeight: number, ind
     }
 
     const val1 = bagProcess(weights, values, leftWeight, index + 1);
-    let val2 = bagProcess(weights, values, leftWeight - weights[index], index + 1);
+    let val2 = bagProcess(
+        weights,
+        values,
+        leftWeight - weights[index],
+        index + 1
+    );
     if (val2 !== -1) {
         val2 += values[index];
     }
     return Math.max(val1, val2);
 }
 
-export function bagDp(weights: number[], values: number[], targetWeight: number) {
-    const dp: number[][] = new Array(targetWeight + 1).fill(0).map((_) => new Array(weights.length + 1).fill(0));
+export function bagDp(
+    weights: number[],
+    values: number[],
+    targetWeight: number
+) {
+    const dp: number[][] = new Array(targetWeight + 1)
+        .fill(0)
+        .map((_) => new Array(weights.length + 1).fill(0));
 
     for (let index = weights.length - 1; index >= 0; index--) {
         for (let leftWeight = 0; leftWeight <= targetWeight; leftWeight++) {
             const val1 = dp[leftWeight][index + 1];
             let val2 = -1;
             if (leftWeight - weights[index] >= 0) {
-                val2 = dp[leftWeight - weights[index]][index + 1] + values[index];
+                val2 =
+                    dp[leftWeight - weights[index]][index + 1] + values[index];
             }
 
             dp[leftWeight][index] = Math.max(val1, val2);
@@ -141,7 +170,10 @@ export function bagDp(weights: number[], values: number[], targetWeight: number)
 /* 范围尝试 */
 /* 有一组数字牌 array，array中所有的数字都是正数，有A和B两个玩家，规定只能从剩余牌的头尾拿牌，问A和B能获得的最大分数是多少 */
 export function maxPoint(arr: number[]) {
-    return Math.max(maxPointF(arr, 0, arr.length - 1), maxPointS(arr, 0, arr.length - 1));
+    return Math.max(
+        maxPointF(arr, 0, arr.length - 1),
+        maxPointS(arr, 0, arr.length - 1)
+    );
 }
 
 // 先手过程
@@ -150,7 +182,10 @@ function maxPointF(arr: number[], left: number, right: number): number {
         return arr[left];
     }
 
-    return Math.max(arr[left] + maxPointS(arr, left + 1, right), arr[right] + maxPointS(arr, left, right - 1));
+    return Math.max(
+        arr[left] + maxPointS(arr, left + 1, right),
+        arr[right] + maxPointS(arr, left, right - 1)
+    );
 }
 
 // 后手过程
@@ -161,7 +196,10 @@ function maxPointS(arr: number[], left: number, right: number): number {
     }
 
     // 此外后手只能选择先手拿牌之后的最小值
-    return Math.min(maxPointF(arr, left + 1, right), maxPointF(arr, left, right - 1));
+    return Math.min(
+        maxPointF(arr, left + 1, right),
+        maxPointF(arr, left, right - 1)
+    );
 }
 
 /* n皇后问题，有n个皇后，摆放在N x N的格子上，要求任意两个皇后不同行，不同列且不共斜线，问一共有多少种摆法 */
@@ -258,7 +296,11 @@ export function jumpDp2(arr: number[]): number {
 arr1:[1,2,3,4,5] arr2:[3,5,7,9,11],k=4
 maxK:[16,15,14,14]
 */
-export function getMaxSumK(arr1: number[], arr2: number[], k: number): number[] | null {
+export function getMaxSumK(
+    arr1: number[],
+    arr2: number[],
+    k: number
+): number[] | null {
     if (!arr1 || !arr2 || !k || k > arr1.length * arr2.length) {
         return null;
     }
@@ -339,9 +381,14 @@ export function getMaxPoints(arr1: number[], arr2: number[]): number {
                     sameXDiffY++;
                 }
             } else {
-                const factor = maxCommonFactor(points[i].y - points[j].y, points[i].x - points[j].x);
+                const factor = maxCommonFactor(
+                    points[i].y - points[j].y,
+                    points[i].x - points[j].x
+                );
                 // 此处若用数字来表示会有精度丢失，两个点靠的很近的情况下两个斜率可能区分不出来，故而采用分数的最简形式来表示斜率
-                const k = `${(points[i].y - points[j].y) / factor}_${(points[i].x - points[j].x) / factor}`;
+                const k = `${(points[i].y - points[j].y) / factor}_${
+                    (points[i].x - points[j].x) / factor
+                }`;
                 const previousCount = kMap.get(k) || 0;
                 kMap.set(k, previousCount + 1);
             }
@@ -416,7 +463,9 @@ export function getMinUnavailableSum(arr: number[]): number | null {
 
     const max = arr.reduce((sum, cur) => sum + cur, 0);
     // i,j表示用[0...i]位置上的数字自由组合能否组成j
-    const dp: boolean[][] = new Array(arr.length).fill(0).map((_) => new Array(max + 1));
+    const dp: boolean[][] = new Array(arr.length)
+        .fill(0)
+        .map((_) => new Array(max + 1));
 
     dp[0].fill(false);
     dp[0][arr[0]] = true;
@@ -510,7 +559,12 @@ export function minMoney(arr1: number[], arr2: number[]): number {
     return minMoneyProcess(arr1, arr2, 0, 0);
 }
 
-function minMoneyProcess(arr1: number[], arr2: number[], power: number, i: number): number {
+function minMoneyProcess(
+    arr1: number[],
+    arr2: number[],
+    power: number,
+    i: number
+): number {
     if (i === arr1.length) {
         return 0;
     }
@@ -554,7 +608,13 @@ export function getIslandCount(arr: number[][]): number {
 }
 
 function infect(arr: number[][], i: number, j: number) {
-    if (i < 0 || i > arr.length - 1 || j < 0 || j > arr[0].length - 1 || arr[i][j] !== 1) {
+    if (
+        i < 0 ||
+        i > arr.length - 1 ||
+        j < 0 ||
+        j > arr[0].length - 1 ||
+        arr[i][j] !== 1
+    ) {
         return;
     }
 
@@ -595,7 +655,10 @@ export function minimumMoves(grid: number[][]): number {
     return minimumMovesProcess(destPositions, sourcePositions);
 }
 
-function minimumMovesProcess(destPositions: Position[], sourcePositions: Position[]): number {
+function minimumMovesProcess(
+    destPositions: Position[],
+    sourcePositions: Position[]
+): number {
     if (destPositions.length === 0) {
         return 0;
     }
@@ -613,7 +676,11 @@ function minimumMovesProcess(destPositions: Position[], sourcePositions: Positio
         } else {
             nextSourcePositions[i][2]!--;
         }
-        moves = Math.min(moves, currentMove + minimumMovesProcess(nextDestPositions, nextSourcePositions));
+        moves = Math.min(
+            moves,
+            currentMove +
+                minimumMovesProcess(nextDestPositions, nextSourcePositions)
+        );
         if (val === 2) {
             nextSourcePositions.splice(i, 0, [x2, y2, val]);
         } else {
@@ -622,4 +689,105 @@ function minimumMovesProcess(destPositions: Position[], sourcePositions: Positio
     }
 
     return moves;
+}
+
+/*
+https://leetcode.com/problems/cherry-pickup-ii/description/?envType=daily-question&envId=2024-02-11
+1463. Cherry Pickup II
+You are given a rows x cols matrix grid representing a field of cherries where grid[i][j] represents the number of cherries that you can collect from the (i, j) cell.
+
+You have two robots that can collect cherries for you:
+
+	Robot #1 is located at the top-left corner (0, 0), and
+	Robot #2 is located at the top-right corner (0, cols - 1).
+
+Return the maximum number of cherries collection using both robots by following the rules below:
+
+	From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1).
+	When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.
+	When both robots stay in the same cell, only one takes the cherries.
+	Both robots cannot move outside of the grid at any moment.
+	Both robots should reach the bottom row in grid.
+
+Example 1:
+
+Input: grid = [[3,1,1],[2,5,1],[1,5,5],[2,1,1]]
+Output: 24
+Explanation: Path of robot #1 and #2 are described in color green and blue respectively.
+Cherries taken by Robot #1, (3 + 2 + 5 + 2) = 12.
+Cherries taken by Robot #2, (1 + 5 + 5 + 1) = 12.
+Total of cherries: 12 + 12 = 24.
+
+Example 2:
+
+Input: grid = [[1,0,0,0,0,0,1],[2,0,0,0,0,3,0],[2,0,9,0,0,0,0],[0,3,0,5,4,0,0],[1,0,2,3,0,0,6]]
+Output: 28
+Explanation: Path of robot #1 and #2 are described in color green and blue respectively.
+Cherries taken by Robot #1, (1 + 9 + 5 + 2) = 17.
+Cherries taken by Robot #2, (1 + 3 + 4 + 3) = 11.
+Total of cherries: 17 + 11 = 28.
+
+Constraints:
+
+	rows == grid.length
+	cols == grid[i].length
+	2 <= rows, cols <= 70
+	0 <= grid[i][j] <= 100
+
+思路分析
+- 每一层A和B都有三种选择，组合之后有9种选择，可以通过这9种选择取最大值
+*/
+export function cherryPickup(grid: number[][]): number {
+    const dfs = cache((i: number, jA: number, jB: number): number => {
+        if (i === grid.length) {
+            return 0;
+        }
+
+        // A往左走-B有三种可能性，求最大值
+        const maxLeft = jA - 1 >= 0 ? getPoints(i, jA - 1, jB) : 0;
+        const maxCenter = getPoints(i, jA, jB);
+        const maxRight = jA + 1 < grid[0].length ? getPoints(i, jA + 1, jB) : 0;
+
+        return Math.max(maxLeft, maxCenter, maxRight);
+    });
+
+    const getPoints = cache((i: number, nextA: number, jB: number): number => {
+        const pointsA = grid[i][nextA];
+        grid[i][nextA] = 0;
+
+        let pA1 = pointsA;
+        let pA2 = pointsA;
+        let pA3 = pointsA;
+
+        // 往左
+        if (jB - 1 >= 0) {
+            const pointsB = grid[i][jB - 1];
+            grid[i][jB - 1] = 0;
+            pA1 += pointsB + dfs(i + 1, nextA, jB - 1);
+            grid[i][jB - 1] = pointsB;
+        }
+
+        // 向下
+        const pointsB = grid[i][jB];
+        grid[i][jB] = 0;
+        pA2 += pointsB + dfs(i + 1, nextA, jB);
+        grid[i][jB] = pointsB;
+
+        // 往右
+        if (jB + 1 < grid[0].length) {
+            const pointsB = grid[i][jB + 1];
+            grid[i][jB + 1] = 0;
+            pA3 += pointsB + dfs(i + 1, nextA, jB + 1);
+            grid[i][jB + 1] = pointsB;
+        }
+
+        // A需要在此处恢复现场
+        grid[i][nextA] = pointsA;
+
+        return Math.max(pA1, pA2, pA3);
+    });
+
+    return (
+        dfs(1, 0, grid[0].length - 1) + grid[0][0] + grid[0][grid[0].length - 1]
+    );
 }
