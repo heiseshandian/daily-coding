@@ -968,3 +968,103 @@ export function findLengthOfShortestSubarray(arr: number[]): number {
 
     return sortestSubarrayLen + findSortestSubarrayLen(prefixEnd, suffixStart);
 }
+
+/*
+https://leetcode.com/problems/find-players-with-zero-or-one-losses/description/?envType=daily-question&envId=2024-02-11
+2225. Find Players With Zero or One Losses
+You are given an integer array matches where matches[i] = [winneri, loseri] indicates that the player winneri defeated player loseri in a match.
+
+Return a list answer of size 2 where:
+
+	answer[0] is a list of all players that have not lost any matches.
+	answer[1] is a list of all players that have lost exactly one match.
+
+The values in the two lists should be returned in increasing order.
+
+Note:
+
+	You should only consider the players that have played at least one match.
+	The testcases will be generated such that no two matches will have the same outcome.
+
+Example 1:
+
+Input: matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
+Output: [[1,2,10],[4,5,7,8]]
+Explanation:
+Players 1, 2, and 10 have not lost any matches.
+Players 4, 5, 7, and 8 each have lost one match.
+Players 3, 6, and 9 each have lost two matches.
+Thus, answer[0] = [1,2,10] and answer[1] = [4,5,7,8].
+
+Example 2:
+
+Input: matches = [[2,3],[1,3],[5,4],[6,4]]
+Output: [[1,2,5,6],[]]
+Explanation:
+Players 1, 2, 5, and 6 have not lost any matches.
+Players 3 and 4 each have lost two matches.
+Thus, answer[0] = [1,2,5,6] and answer[1] = [].
+
+Constraints:
+
+	1 <= matches.length <= 10^5
+	matches[i].length == 2
+	1 <= winneri, loseri <= 10^5
+	winneri != loseri
+	All matches[i] are unique.
+*/
+export function findWinners(matches: number[][]): number[][] {
+    const losersMap: Record<number, number> = {};
+
+    matches.forEach(([_winner, loser]) => {
+        const prev = losersMap[loser] || 0;
+        losersMap[loser] = prev + 1;
+    });
+
+    const answer1 = new Set<number>();
+    const answer2 = new Set<number>();
+    matches.forEach(([winner, loser]) => {
+        if (!losersMap[winner]) {
+            answer1.add(winner);
+        }
+
+        if (losersMap[loser] === 1) {
+            answer2.add(loser);
+        }
+    });
+
+    return [
+        Array.from(answer1).sort((a, b) => a - b),
+        Array.from(answer2).sort((a, b) => a - b),
+    ];
+}
+
+// 用空间换时间
+export function findWinners2(matches: number[][]): number[][] {
+    const playerStatus: number[] = new Array(Math.pow(10, 5));
+
+    matches.forEach(([winner, loser]) => {
+        if (playerStatus[winner] === undefined) {
+            playerStatus[winner] = 0;
+        }
+
+        if (playerStatus[loser] === undefined) {
+            playerStatus[loser] = 1;
+        } else {
+            playerStatus[loser]++;
+        }
+    });
+
+    const answer1: number[] = [];
+    const answer2: number[] = [];
+    playerStatus.forEach((v, i) => {
+        if (v === 0) {
+            answer1.push(i);
+        }
+        if (v === 1) {
+            answer2.push(i);
+        }
+    });
+
+    return [answer1, answer2];
+}
