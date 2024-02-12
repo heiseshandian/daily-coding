@@ -1147,38 +1147,43 @@ export function kthLargestNumber(nums: string[], k: number): string {
 export function kthLargestNumber2(nums: string[], k: number): string {
     let left = 0;
     let right = nums.length - 1;
+    k--;
 
     while (left <= right) {
-        const mid = partition(nums, left, right);
-        if (mid === k - 1) {
-            return nums[mid];
+        const [l, r] = partition(nums, left, right);
+        if (k >= l && k <= r) {
+            return nums[l];
         }
 
-        if (mid > k - 1) {
-            right = mid - 1;
+        if (k < l) {
+            right = l - 1;
         } else {
-            left = mid + 1;
+            left = r + 1;
         }
     }
 
     return nums[left];
 }
 
-function partition(nums: string[], left: number, right: number): number {
+function partition(
+    nums: string[],
+    left: number,
+    right: number
+): [left: number, right: number] {
     const targetPosition = Math.ceil(Math.random() * (right - left)) + left;
-    swap(nums, targetPosition, right);
+    const target = BigInt(nums[targetPosition]);
 
-    const prevRight = right;
-    const target = BigInt(nums[right]);
+    for (let i = left; i <= right; ) {
+        const cur = BigInt(nums[i]);
 
-    while (left < right) {
-        if (BigInt(nums[left]) >= target) {
-            left++;
+        if (cur === target) {
+            i++;
+        } else if (cur > target) {
+            swap(nums, left++, i++);
         } else {
-            swap(nums, left, --right);
+            swap(nums, right--, i);
         }
     }
-    swap(nums, left, prevRight);
 
-    return left;
+    return [left, right];
 }
