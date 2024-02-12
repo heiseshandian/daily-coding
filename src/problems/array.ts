@@ -1,5 +1,6 @@
 import { cache } from '../design-pattern/proxy';
 import { GenericHeap } from '../algorithm/generic-heap';
+import { swap } from '../common';
 /* 
 https://leetcode.com/problems/find-the-maximum-number-of-marked-indices/description/
 
@@ -1141,4 +1142,43 @@ export function kthLargestNumber(nums: string[], k: number): string {
     }
 
     return String(minHeap.pop());
+}
+
+export function kthLargestNumber2(nums: string[], k: number): string {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left <= right) {
+        const mid = partition(nums, left, right);
+        if (mid === k - 1) {
+            return nums[mid];
+        }
+
+        if (mid > k - 1) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return nums[left];
+}
+
+function partition(nums: string[], left: number, right: number): number {
+    const targetPosition = Math.ceil(Math.random() * (right - left)) + left;
+    swap(nums, targetPosition, right);
+
+    const prevRight = right;
+    const target = BigInt(nums[right]);
+
+    while (left < right) {
+        if (BigInt(nums[left]) >= target) {
+            left++;
+        } else {
+            swap(nums, left, --right);
+        }
+    }
+    swap(nums, left, prevRight);
+
+    return left;
 }
