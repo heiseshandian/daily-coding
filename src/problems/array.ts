@@ -80,6 +80,23 @@ export function maxDistToClosest(seats: number[]): number {
     return maxDistance;
 }
 
+export function maxDistToClosest2(seats: number[]): number {
+    const emptySeats = seats.join('').split(/1+/);
+    let max = Math.max(
+        emptySeats[0].length,
+        emptySeats[emptySeats.length - 1].length
+    );
+
+    for (let i = 1; i < emptySeats.length - 1; i++) {
+        const cur = Math.ceil(emptySeats[i].length / 2);
+        if (max < cur) {
+            max = cur;
+        }
+    }
+
+    return max;
+}
+
 /* 
 https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150
 
