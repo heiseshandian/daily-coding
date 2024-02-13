@@ -106,8 +106,6 @@ export function generateParenthesis(n: number): string[] {
     return result;
 }
 
-generateParenthesis(3);
-
 /* 
 https://leetcode.com/problems/sudoku-solver/
 
