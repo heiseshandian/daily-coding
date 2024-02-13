@@ -1,11 +1,21 @@
 // 自动复制leetcode上的链接地址、标题、描述等
 addCopyBtn();
+// 自动跳转到英文站
+autoJumpBackToEnglishVersion();
 
 const observer = new MutationObserver(function () {
     addCopyBtn();
 });
 
 observer.observe(document, { childList: true, subtree: true });
+
+function autoJumpBackToEnglishVersion() {
+    if (location.href.startsWith('https://leetcode.cn')) {
+        location.replace(
+            location.href.replace('https://leetcode.cn', 'https://leetcode.com')
+        );
+    }
+}
 
 const COPY_BTN_CONTENT = 'copy content';
 
@@ -31,7 +41,7 @@ async function addCopyBtn() {
  */
 function getBtnContainer() {
     let btnContainer;
-    let resolveFn;
+    let resolveFn = () => {};
 
     const updateBtnContainer = () => {
         btnContainer = document.querySelector(
