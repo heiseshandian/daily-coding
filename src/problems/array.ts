@@ -1204,3 +1204,106 @@ function partition(
 
     return [left, right];
 }
+
+/*
+https://leetcode.com/problems/valid-tic-tac-toe-state/description/
+794. Valid Tic-Tac-Toe State
+Given a Tic-Tac-Toe board as a string array board, return true if and only if it is possible to reach this board position during the course of a valid tic-tac-toe game.
+
+The board is a 3 x 3 array that consists of characters ' ', 'X', and 'O'. The ' ' character represents an empty square.
+
+Here are the rules of Tic-Tac-Toe:
+
+	Players take turns placing characters into empty squares ' '.
+	The first player always places 'X' characters, while the second player always places 'O' characters.
+	'X' and 'O' characters are always placed into empty squares, never filled ones.
+	The game ends when there are three of the same (non-empty) character filling any row, column, or diagonal.
+	The game also ends if all squares are non-empty.
+	No more moves can be played if the game is over.
+
+Example 1:
+
+Input: board = ["O  ","   ","   "]
+Output: false
+Explanation: The first player always plays "X".
+
+Example 2:
+
+Input: board = ["XOX"," X ","   "]
+Output: false
+Explanation: Players take turns making moves.
+
+Example 3:
+
+Input: board = ["XOX","O O","XOX"]
+Output: true
+
+Constraints:
+
+	board.length == 3
+	board[i].length == 3
+	board[i][j] is either 'X', 'O', or ' '.
+
+分析：
+- 如果X赢了则x必然比o多一个子 且 O不可能赢
+- 如果O赢了则O必然和x一样多
+- 正常情况下 X >= O
+*/
+export function validTicTacToe(board: string[]): boolean {
+    let xCount = 0;
+    let oCount = 0;
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            if (board[i][j] === 'X') {
+                xCount++;
+            } else if (board[i][j] === 'O') {
+                oCount++;
+            }
+        }
+    }
+    if (oCount > xCount || xCount > oCount + 1) {
+        return false;
+    }
+
+    const isOver = (player: string): boolean => {
+        const success = player.repeat(board[0].length);
+        // 横向
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === success) {
+                return true;
+            }
+        }
+
+        // 纵向
+        for (let j = 0; j < board[0].length; j++) {
+            if (board.map((b) => b[j]).join('') === success) {
+                return true;
+            }
+        }
+
+        // 正反交叉
+        let positiveDiagonal = '';
+        let negtiveDiagonal = '';
+        let i = 0;
+        let positiveJ = 0;
+        let negtiveJ = board.length - 1;
+        while (i < board.length) {
+            positiveDiagonal += board[i][positiveJ++];
+            negtiveDiagonal += board[i++][negtiveJ--];
+        }
+        if (positiveDiagonal === success || negtiveDiagonal === success) {
+            return true;
+        }
+
+        return false;
+    };
+
+    if (isOver('X')) {
+        return xCount === oCount + 1 && !isOver('O');
+    }
+    if (isOver('O')) {
+        return xCount === oCount;
+    }
+
+    return true;
+}
