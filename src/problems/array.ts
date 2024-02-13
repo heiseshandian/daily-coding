@@ -1307,3 +1307,68 @@ export function validTicTacToe(board: string[]): boolean {
 
     return true;
 }
+
+/*
+https://leetcode.com/problems/most-profit-assigning-work/description/
+826. Most Profit Assigning Work
+You have n jobs and m workers. You are given three arrays: difficulty, profit, and worker where:
+
+	difficulty[i] and profit[i] are the difficulty and the profit of the ith job, and
+	worker[j] is the ability of jth worker (i.e., the jth worker can only complete a job with difficulty at most worker[j]).
+
+Every worker can be assigned at most one job, but one job can be completed multiple times.
+
+	For example, if three workers attempt the same job that pays $1, then the total profit will be $3. If a worker cannot complete any job, their profit is $0.
+
+Return the maximum profit we can achieve after assigning the workers to the jobs.
+
+Example 1:
+
+Input: difficulty = [2,4,6,8,10], profit = [10,20,30,40,50], worker = [4,5,6,7]
+Output: 100
+Explanation: Workers are assigned jobs of difficulty [4,4,6,6] and they get a profit of [20,20,30,30] separately.
+
+Example 2:
+
+Input: difficulty = [85,47,57], profit = [24,66,99], worker = [40,25,25]
+Output: 0
+
+Constraints:
+
+	n == difficulty.length
+	n == profit.length
+	m == worker.length
+	1 <= n, m <= 10^4
+	1 <= difficulty[i], profit[i], worker[i] <= 10^5
+
+思路分析
+- 直接组合 difficulty 和 profit 之后按照 profit 从大到小排序，每个 worker 从 profit 最大的job开始挑选，时间复杂度 O(n^2)
+- 通过某种方式避免内层遍历，比如说 jobs 和 worker 都按照 difficulty 升序排列，然后对 worker 进行遍历，遍历的过程中记录index和
+找到的最大的 profit
+*/
+export function maxProfitAssignment(
+    difficulty: number[],
+    profit: number[],
+    worker: number[]
+): number {
+    const jobs: Array<[difficulty: number, profit: number]> = difficulty.map(
+        (d, i) => [d, profit[i]]
+    );
+    jobs.sort(([d1], [d2]) => d1 - d2);
+
+    let maxProfit = 0;
+    let lastIndex = 0;
+
+    let max = 0;
+    worker.sort((a, b) => a - b);
+    for (let i = 0; i < worker.length; i++) {
+        while (lastIndex < jobs.length && jobs[lastIndex][0] <= worker[i]) {
+            maxProfit = Math.max(maxProfit, jobs[lastIndex][1]);
+            lastIndex++;
+        }
+
+        max += maxProfit;
+    }
+
+    return max;
+}
