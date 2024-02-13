@@ -83,7 +83,11 @@ Given n pairs of parentheses, write a function to generate all combinations of w
 export function generateParenthesis(n: number): string[] {
     const result: string[] = [];
 
-    const backtracking = (leftCount: number, rightCount: number, path: string) => {
+    const backtracking = (
+        leftCount: number,
+        rightCount: number,
+        path: string
+    ) => {
         if (leftCount === n && rightCount === n) {
             result.push(path);
             return;
@@ -93,7 +97,7 @@ export function generateParenthesis(n: number): string[] {
             backtracking(leftCount + 1, rightCount, path + '(');
         }
         // 此处必须限制右括号的数量小于左括号的数量，否则新增加的右括号将无法被匹配
-        if (rightCount < n && rightCount < leftCount) {
+        if (rightCount < leftCount) {
             backtracking(leftCount, rightCount + 1, path + ')');
         }
     };
@@ -101,6 +105,8 @@ export function generateParenthesis(n: number): string[] {
 
     return result;
 }
+
+generateParenthesis(3);
 
 /* 
 https://leetcode.com/problems/sudoku-solver/
@@ -165,7 +171,12 @@ export function solveSudoku(board: string[][]): void {
     backtracking(0, 0);
 }
 
-function initFlags(board: string[][], row: boolean[][], col: boolean[][], bucket: boolean[][]): void {
+function initFlags(
+    board: string[][],
+    row: boolean[][],
+    col: boolean[][],
+    bucket: boolean[][]
+): void {
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[0].length; j++) {
             const bucketId = 3 * parseInt(`${i / 3}`) + parseInt(`${j / 3}`);
@@ -294,7 +305,10 @@ frequency
 
 The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
 */
-export function combinationSum(candidates: number[], target: number): number[][] {
+export function combinationSum(
+    candidates: number[],
+    target: number
+): number[][] {
     const result: number[][] = [];
     const backtracking = (index: number, path: number[], sum: number) => {
         if (sum === target) {
@@ -305,7 +319,11 @@ export function combinationSum(candidates: number[], target: number): number[][]
             return;
         }
 
-        for (let k = 0; k <= Math.floor((target - sum) / candidates[index]); k++) {
+        for (
+            let k = 0;
+            k <= Math.floor((target - sum) / candidates[index]);
+            k++
+        ) {
             path.push(...new Array(k).fill(candidates[index]));
             backtracking(index + 1, path, sum + k * candidates[index]);
             path.length -= k;
