@@ -791,3 +791,69 @@ export function cherryPickup(grid: number[][]): number {
         dfs(1, 0, grid[0].length - 1) + grid[0][0] + grid[0][grid[0].length - 1]
     );
 }
+
+/*
+https://leetcode.com/problems/score-of-parentheses/description/
+856. Score of Parentheses
+Given a balanced parentheses string s, return the score of the string.
+
+The score of a balanced parentheses string is based on the following rule:
+
+	"()" has score 1.
+	AB has score A + B, where A and B are balanced parentheses strings.
+	(A) has score 2 * A, where A is a balanced parentheses string.
+
+Example 1:
+
+Input: s = "()"
+Output: 1
+
+Example 2:
+
+Input: s = "(())"
+Output: 2
+
+Example 3:
+
+Input: s = "()()"
+Output: 2
+
+Constraints:
+
+	2 <= s.length <= 50
+	s consists of only '(' and ')'.
+	s is a balanced parentheses string.
+*/
+export function scoreOfParentheses(s: string): number {
+    let score = 0;
+    const stack: Array<string | number> = [];
+
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            stack.push('(');
+            continue;
+        }
+
+        const top = stack[stack.length - 1];
+        let tmpScore = 0;
+        if (Number.isInteger(top)) {
+            stack.pop();
+            stack.pop();
+            tmpScore = Number(top) << 1;
+        } else {
+            stack.pop();
+            tmpScore = 1;
+        }
+
+        while (Number.isInteger(stack[stack.length - 1])) {
+            tmpScore += Number(stack.pop());
+        }
+        stack.push(tmpScore);
+
+        if (stack.length === 1) {
+            score += Number(stack.pop());
+        }
+    }
+
+    return score;
+}
