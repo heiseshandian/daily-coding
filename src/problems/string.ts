@@ -405,21 +405,28 @@ Constraints:
 	s consists of only lowercase English letters.
 */
 export function countPalindromicSubsequence(s: string): number {
-    const map: Record<string, number> = {};
-    for (let i = 0; i < s.length; i++) {
-        map[s[i]] = i;
-    }
+    const alphas = 'abcdefghijklmnopqrstuvwxyz';
 
-    const countUniqueAlhas = (l: number, r: number): number => {
-        return new Set(s.substring(l + 1, r)).size;
+    const countUniqueAlphas = (l: number, r: number): number => {
+        let uniqueAlplas = 0;
+
+        for (const alpha of alphas) {
+            const index = s.indexOf(alpha, l + 1);
+            if (index !== -1 && index < r) {
+                uniqueAlplas++;
+            }
+        }
+
+        return uniqueAlplas;
     };
 
     let count = 0;
-    const set = new Set();
-    for (let i = 0; i < s.length; i++) {
-        if (map[s[i]] > i && !set.has(s[i])) {
-            set.add(s[i]);
-            count += countUniqueAlhas(i, map[s[i]]);
+    for (const alpha of alphas) {
+        const left = s.indexOf(alpha);
+        const right = s.lastIndexOf(alpha);
+
+        if (left < right) {
+            count += countUniqueAlphas(left, right);
         }
     }
 
