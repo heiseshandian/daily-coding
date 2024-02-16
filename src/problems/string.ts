@@ -408,16 +408,16 @@ export function countPalindromicSubsequence(s: string): number {
     const alphas = 'abcdefghijklmnopqrstuvwxyz';
 
     const countUniqueAlphas = (l: number, r: number): number => {
-        let uniqueAlplas = 0;
+        let uniqueAlphas = 0;
 
         for (const alpha of alphas) {
             const index = s.indexOf(alpha, l + 1);
             if (index !== -1 && index < r) {
-                uniqueAlplas++;
+                uniqueAlphas++;
             }
         }
 
-        return uniqueAlplas;
+        return uniqueAlphas;
     };
 
     let count = 0;
