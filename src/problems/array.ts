@@ -1510,3 +1510,123 @@ export function largestPerimeter(nums: number[]): number {
 
     return -1;
 }
+
+/*
+https://leetcode.com/problems/minimum-number-of-operations-to-make-array-continuous/?envType=daily-question&envId=2024-02-15
+2009. Minimum Number of Operations to Make Array Continuous
+You are given an integer array nums. In one operation, you can replace any element in nums with any integer.
+
+nums is considered continuous if both of the following conditions are fulfilled:
+
+	All elements in nums are unique.
+	The difference between the maximum element and the minimum element in nums equals nums.length - 1.
+
+For example, nums = [4, 2, 5, 3] is continuous, but nums = [1, 2, 3, 5, 6] is not continuous.
+
+Return the minimum number of operations to make nums continuous.
+
+Example 1:
+
+Input: nums = [4,2,5,3]
+Output: 0
+Explanation: nums is already continuous.
+
+Example 2:
+
+Input: nums = [1,2,3,5,6]
+Output: 1
+Explanation: One possible solution is to change the last element to 4.
+The resulting array is [1,2,3,5,4], which is continuous.
+
+Example 3:
+
+Input: nums = [1,10,100,1000]
+Output: 3
+Explanation: One possible solution is to:
+- Change the second element to 2.
+- Change the third element to 3.
+- Change the fourth element to 4.
+The resulting array is [1,2,3,4], which is continuous.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^9
+
+Hint:
+- Sort the array.
+- For every index do a binary search to get the possible right end of the window and calculate the possible answer.
+*/
+export function minOperations(nums: number[]): number {
+    nums.sort((a, b) => a - b);
+
+    const dupes: number[] = [];
+    let prev = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] === prev) {
+            dupes.push(prev);
+        } else {
+            prev = nums[i];
+        }
+    }
+    const getDupesLen = (leftTarget: number, rightTarget: number): number => {
+        let left = 0;
+        let right = dupes.length - 1;
+        let l: number | null = null;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (dupes[mid] >= leftTarget) {
+                l = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        if (l === null) {
+            return 0;
+        }
+
+        left = 0;
+        right = dupes.length - 1;
+        let r: number | null = null;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (dupes[mid] <= rightTarget) {
+                r = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (r === null) {
+            return 0;
+        }
+
+        return r - l + 1;
+    };
+
+    let minOps = Infinity;
+    for (let i = 0; i < nums.length; i++) {
+        let left = 0;
+        let right = nums.length - 1;
+        let mostEnd = i;
+        const target = nums[i] + nums.length - 1;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (nums[mid] <= target) {
+                mostEnd = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        minOps = Math.min(
+            minOps,
+            nums.length -
+                (mostEnd - i + 1 - getDupesLen(nums[i], nums[mostEnd]))
+        );
+    }
+
+    return minOps;
+}
