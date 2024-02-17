@@ -361,6 +361,12 @@ Constraints:
 
 	1 <= nums.length <= 20
 	1 <= nums[i], k <= 1000
+
+Hints
+ - Sort the array nums and create another array cnt of size nums[i].
+ - Use backtracking to generate all the beautiful subsets. If cnt[nums[i] - k] is positive, 
+ then it is impossible to add nums[i] in the subset, and we just move to the next index. 
+ Otherwise, it is also possible to add nums[i] in the subset, in this case, increase cnt[nums[i]], and move to the next index.
 */
 export function beautifulSubsets(nums: number[], k: number): number {
     nums.sort((a, b) => a - b);
@@ -376,6 +382,7 @@ export function beautifulSubsets(nums: number[], k: number): number {
             return;
         }
 
+        // 取当前数字
         if (!countNums[nums[i] - k]) {
             path.push(nums[i]);
             countNums[nums[i]] = (countNums[nums[i]] || 0) + 1;
