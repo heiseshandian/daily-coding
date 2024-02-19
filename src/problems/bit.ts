@@ -72,7 +72,13 @@ function neighbors(board: number[][], i: number, j: number): number {
 }
 
 function lifeState(board: number[][], i: number, j: number): 0 | 1 {
-    return i >= 0 && i < board.length && j >= 0 && j < board[0].length && (board[i][j] & 1) === 1 ? 1 : 0;
+    return i >= 0 &&
+        i < board.length &&
+        j >= 0 &&
+        j < board[0].length &&
+        (board[i][j] & 1) === 1
+        ? 1
+        : 0;
 }
 
 // 逆序二进制位
@@ -250,7 +256,10 @@ A string is consistent if all characters in the string appear in the string allo
 
 Return the number of consistent strings in the array words.
 */
-export function countConsistentStrings(allowed: string, words: string[]): number {
+export function countConsistentStrings(
+    allowed: string,
+    words: string[]
+): number {
     const allowedBit = convertWordToBit(allowed);
     let count = 0;
     for (let i = 0; i < words.length; i++) {
@@ -288,4 +297,47 @@ export function grayCode(n: number): number[] {
     }
 
     return result;
+}
+
+/*
+https://leetcode.com/problems/power-of-two/description/?envType=daily-question&envId=2024-02-19
+231. Power of Two
+Given an integer n, return true if it is a power of two. Otherwise, return false.
+
+An integer n is a power of two, if there exists an integer x such that n == 2x.
+
+Example 1:
+
+Input: n = 1
+Output: true
+Explanation: 20 = 1
+
+Example 2:
+
+Input: n = 16
+Output: true
+Explanation: 24 = 16
+
+Example 3:
+
+Input: n = 3
+Output: false
+
+Constraints:
+
+	-231 <= n <= 231 - 1
+
+Follow up: Could you solve it without loops/recursion?
+*/
+export function isPowerOfTwo(n: number): boolean {
+    if (n < 0) {
+        return false;
+    }
+    let oneCount = 0;
+    while (n) {
+        oneCount += n & 1;
+        n >>= 1;
+    }
+
+    return oneCount === 1;
 }
