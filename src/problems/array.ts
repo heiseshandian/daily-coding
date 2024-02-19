@@ -1815,3 +1815,92 @@ export function minimumJumps(
 
     return -1;
 }
+
+/*
+https://leetcode.com/problems/count-good-meals/
+1711. Count Good Meals
+A good meal is a meal that contains exactly two different food items with a sum of deliciousness equal to a power of two.
+
+You can pick any two different foods to make a good meal.
+
+Given an array of integers deliciousness where deliciousness[i] is the deliciousness of the i​​​​​​th​​​​​​​​ item of food,
+return the number of different good meals you can make from this list modulo 10^9 + 7.
+
+Note that items with different indices are considered different even if they have the same deliciousness value.
+
+Example 1:
+
+Input: deliciousness = [1,3,5,7,9]
+Output: 4
+Explanation: The good meals are (1,3), (1,7), (3,5) and, (7,9).
+Their respective sums are 4, 8, 8, and 16, all of which are powers of 2.
+
+Example 2:
+
+Input: deliciousness = [1,1,1,3,3,3,7]
+Output: 15
+Explanation: The good meals are (1,1) with 3 ways, (1,3) with 9 ways, and (1,7) with 3 ways.
+
+Constraints:
+
+	1 <= deliciousness.length <= 10^5
+	0 <= deliciousness[i] <= 2^20
+*/
+export function countPairs(deliciousness: number[]): number {
+    deliciousness.sort((a, b) => a - b);
+
+    const repeatTimes: Record<number, number> = {};
+    let max = -Infinity;
+    for (let i = 0; i < deliciousness.length; i++) {
+        repeatTimes[deliciousness[i]] =
+            (repeatTimes[deliciousness[i]] || 0) + 1;
+
+        if (max < deliciousness[i]) {
+            max = deliciousness[i];
+        }
+    }
+    max *= 2;
+
+    const deduped = Array.from(new Set(deliciousness));
+    let pow = Math.pow(2, 21);
+    while (pow > max) {
+        pow /= 2;
+    }
+
+    let count = 0;
+    while (pow >= 1) {
+        for (let i = 0; i < deduped.length; i++) {
+            const target = pow - deduped[i];
+            if (target === deduped[i]) {
+                count += factorial(repeatTimes[target] - 1);
+            }
+            if (target < deduped[i]) {
+                continue;
+            }
+
+            let left = i + 1;
+            let right = deduped.length - 1;
+            while (left <= right) {
+                const mid = left + ((right - left) >> 1);
+                if (deduped[mid] === target) {
+                    count += repeatTimes[deduped[i]] * repeatTimes[target];
+                    break;
+                }
+
+                if (deduped[mid] > target) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+        }
+
+        pow /= 2;
+    }
+
+    return count % (Math.pow(10, 9) + 7);
+}
+
+function factorial(n: number): number {
+    return ((n + 1) * n) >> 1;
+}
