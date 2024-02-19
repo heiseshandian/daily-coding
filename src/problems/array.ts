@@ -1904,3 +1904,126 @@ export function countPairs(deliciousness: number[]): number {
 function factorial(n: number): number {
     return ((n + 1) * n) / 2;
 }
+
+/*
+https://leetcode.com/problems/cut-off-trees-for-golf-event/description/
+675. Cut Off Trees for Golf Event
+You are asked to cut off all the trees in a forest for a golf event. The forest is represented as an m x n matrix. In this matrix:
+
+	0 means the cell cannot be walked through.
+	1 represents an empty cell that can be walked through.
+	A number greater than 1 represents a tree in a cell that can be walked through, and this number is the tree's height.
+
+In one step, you can walk in any of the four directions: north, east, south, and west. If you are standing in a cell with a tree, you can choose whether to cut it off.
+
+You must cut off the trees in order from shortest to tallest. When you cut off a tree, the value at its cell becomes 1 (an empty cell).
+
+Starting from the point (0, 0), return the minimum steps you need to walk to cut off all the trees. If you cannot cut off all the trees, return -1.
+
+Note: The input is generated such that no two trees have the same height, and there is at least one tree needs to be cut off.
+
+Example 1:
+
+Input: forest = [[1,2,3],[0,0,4],[7,6,5]]
+Output: 6
+Explanation: Following the path above allows you to cut off the trees from shortest to tallest in 6 steps.
+
+Example 2:
+
+Input: forest = [[1,2,3],[0,0,0],[7,6,5]]
+Output: -1
+Explanation: The trees in the bottom row cannot be accessed as the middle row is blocked.
+
+Example 3:
+
+Input: forest = [[2,3,4],[0,0,5],[8,7,6]]
+Output: 6
+Explanation: You can follow the same path as Example 1 to cut off all the trees.
+Note that you can cut off the first tree at (0, 0) before making any steps.
+
+Constraints:
+
+	m == forest.length
+	n == forest[i].length
+	1 <= m, n <= 50
+	0 <= forest[i][j] <= 10^9
+	Heights of all trees are distinct.
+*/
+export function cutOffTree(forest: number[][]): number {
+    const trees: Array<[height: number, i: number, j: number]> = [];
+    for (let i = 0; i < forest.length; i++) {
+        for (let j = 0; j < forest[0].length; j++) {
+            if (forest[i][j] > 1) {
+                trees.push([forest[i][j], i, j]);
+            }
+        }
+    }
+    trees.sort(([heightA], [heightB]) => heightA - heightB);
+
+    let i1 = 0;
+    let j1 = 0;
+    let steps = 0;
+    for (let i = 0; i < trees.length; i++) {
+        const [, i2, j2] = trees[i];
+        const distance = getMinDistance(forest, i1, j1, i2, j2);
+        if (distance === Infinity) {
+            return -1;
+        }
+        steps += distance;
+
+        i1 = i2;
+        j1 = j2;
+    }
+
+    return steps;
+}
+
+function getMinDistance(
+    forest: number[][],
+    i1: number,
+    j1: number,
+    i2: number,
+    j2: number
+): number {
+    if (i1 === i2 && j1 === j2) {
+        return 0;
+    }
+
+    const nodes: Array<[i1: number, j1: number, steps: number]> = [[i1, j1, 0]];
+    const visited = new Set<number>();
+    while (nodes.length) {
+        const [i1, j1, steps] = nodes.shift()!;
+
+        const id = (i1 << 16) | j1;
+        if (visited.has(id)) {
+            continue;
+        }
+        visited.add(id);
+
+        if (i1 === i2 && j1 === j2) {
+            return steps;
+        }
+
+        // 上
+        if (i1 - 1 >= 0 && forest[i1 - 1][j1] !== 0) {
+            nodes.push([i1 - 1, j1, steps + 1]);
+        }
+
+        // 下
+        if (i1 + 1 < forest.length && forest[i1 + 1][j1] !== 0) {
+            nodes.push([i1 + 1, j1, steps + 1]);
+        }
+
+        // 左
+        if (j1 - 1 >= 0 && forest[i1][j1 - 1] !== 0) {
+            nodes.push([i1, j1 - 1, steps + 1]);
+        }
+
+        // 右
+        if (j1 + 1 < forest[0].length && forest[i1][j1 + 1] !== 0) {
+            nodes.push([i1, j1 + 1, steps + 1]);
+        }
+    }
+
+    return Infinity;
+}
