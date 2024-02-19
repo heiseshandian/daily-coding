@@ -2006,6 +2006,8 @@ function getMinDistance(
 
     while (nodes.length) {
         const len = nodes.length;
+        // 一次访问一层节点比访问一个节点的效率会高一点（常数项时间，量级没差别），
+        // 因为倘若某一层中末尾已经到达目标节点则无需将下层节点加入 nodes
         for (let i = 0; i < len; i++) {
             const [i1, j1] = nodes.shift()!;
 
