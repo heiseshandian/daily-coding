@@ -1989,40 +1989,48 @@ function getMinDistance(
         return 0;
     }
 
-    const nodes: Array<[i1: number, j1: number, steps: number]> = [[i1, j1, 0]];
-    const visited = new Set<number>();
+    const nodes: Array<[i1: number, j1: number]> = [[i1, j1]];
+    const visited: boolean[][] = [];
+    for (let x = 0; x < forest.length; x++) {
+        visited[x] = [];
+    }
+    visited[i1][j1] = true;
+
+    let distance = 0;
+    const directions = [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+    ];
+
     while (nodes.length) {
-        const [i1, j1, steps] = nodes.shift()!;
+        const len = nodes.length;
+        for (let i = 0; i < len; i++) {
+            const [i1, j1] = nodes.shift()!;
 
-        const id = (i1 << 16) | j1;
-        if (visited.has(id)) {
-            continue;
-        }
-        visited.add(id);
+            if (i1 === i2 && j1 === j2) {
+                return distance;
+            }
 
-        if (i1 === i2 && j1 === j2) {
-            return steps;
-        }
-
-        // 上
-        if (i1 - 1 >= 0 && forest[i1 - 1][j1] !== 0) {
-            nodes.push([i1 - 1, j1, steps + 1]);
-        }
-
-        // 下
-        if (i1 + 1 < forest.length && forest[i1 + 1][j1] !== 0) {
-            nodes.push([i1 + 1, j1, steps + 1]);
-        }
-
-        // 左
-        if (j1 - 1 >= 0 && forest[i1][j1 - 1] !== 0) {
-            nodes.push([i1, j1 - 1, steps + 1]);
+            directions.forEach(([iDelta, jDelta]) => {
+                const nextI1 = i1 + iDelta;
+                const nextJ1 = j1 + jDelta;
+                if (
+                    nextI1 >= 0 &&
+                    nextI1 < forest.length &&
+                    nextJ1 >= 0 &&
+                    nextJ1 < forest[0].length &&
+                    forest[nextI1][nextJ1] &&
+                    !visited[nextI1][nextJ1]
+                ) {
+                    visited[nextI1][nextJ1] = true;
+                    nodes.push([nextI1, nextJ1]);
+                }
+            });
         }
 
-        // 右
-        if (j1 + 1 < forest[0].length && forest[i1][j1 + 1] !== 0) {
-            nodes.push([i1, j1 + 1, steps + 1]);
-        }
+        distance++;
     }
 
     return Infinity;
