@@ -1902,5 +1902,5 @@ export function countPairs(deliciousness: number[]): number {
 }
 
 function factorial(n: number): number {
-    return ((n + 1) * n) >> 1;
+    return ((n + 1) * n) / 2;
 }
