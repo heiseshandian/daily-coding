@@ -242,6 +242,7 @@ export function rangeBitwiseAnd(left: number, right: number): number {
         if (left >> i === right >> i) {
             // 先右移，后左移，右边i位会变成0
             result = (left >> i) << i;
+            break;
         }
     }
 
