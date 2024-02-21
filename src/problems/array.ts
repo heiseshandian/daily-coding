@@ -2152,21 +2152,15 @@ export function minPatches(nums: number[], n: number): number {
     let count = 0;
 
     let i = 0;
-    while (i < nums.length && currentMax < n) {
-        if (nums[i] > next) {
+    while (currentMax < n) {
+        if (i < nums.length && nums[i] <= next) {
+            currentMax += nums[i++];
+        } else {
             currentMax += next;
             count++;
-        } else {
-            currentMax += nums[i++];
         }
 
         next = currentMax + 1;
-    }
-
-    while (currentMax < n) {
-        currentMax += next;
-        next = currentMax + 1;
-        count++;
     }
 
     return count;
