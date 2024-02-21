@@ -343,6 +343,10 @@ export function isPowerOfTwo(n: number): boolean {
     return oneCount === 1;
 }
 
+export function isPowerOfTwo2(n: number): boolean {
+    return n === (n & (~n + 1));
+}
+
 /*
 https://leetcode.com/problems/missing-number/description/
 268. Missing Number
