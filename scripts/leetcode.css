@@ -42,10 +42,3 @@
 .hidden {
     display: none;
 }
-
-/* 隐藏页面的难度标记，避免总是选择性跳过hard难度的题 */
-.text-difficulty-medium,
-.text-difficulty-hard,
-.text-difficulty-easy {
-    display: none !important;
-}
