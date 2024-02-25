@@ -42,16 +42,19 @@ async function addCopyBtn() {
 const GPT_PROMPT = 'gpt prompt';
 
 async function addCopyGptPrompt() {
-    const btnContainer = await getBtnContainer();
+    const btnContainer = (await getBtnContainer('.items-center.gap-4 button'))
+        .parentNode;
     if (btnContainer.hasAddGptPrompt) {
         return;
     }
 
     const gptPrompt = document.createElement('button');
     gptPrompt.textContent = GPT_PROMPT;
-    'special-copy-btn purple-btn'.split(' ').forEach((cls) => {
-        gptPrompt.classList.add(cls);
-    });
+    'whitespace-nowrap focus:outline-none text-white dark:text-dark-white text-md flex h-8 items-center gap-1 rounded-lg px-4 font-medium purple-btn'
+        .split(' ')
+        .forEach((cls) => {
+            gptPrompt.classList.add(cls);
+        });
     gptPrompt.addEventListener('click', handleClickGptPrompt);
 
     btnContainer.appendChild(gptPrompt);
@@ -61,16 +64,15 @@ async function addCopyGptPrompt() {
 /**
  * 由于 btnContainer 是异步加载的，这里使用 raf 来获取
  *
+ * @param {string} selectors
  * @returns {Promise<HTMLDivElement>} btnContainer
  */
-function getBtnContainer() {
+function getBtnContainer(selectors = '.flexlayout__tab .text-title-large') {
     let btnContainer;
     let resolveFn = () => {};
 
     const updateBtnContainer = () => {
-        btnContainer = document.querySelector(
-            '.flexlayout__tab .text-title-large'
-        );
+        btnContainer = document.querySelector(selectors);
         if (!btnContainer) {
             requestAnimationFrame(updateBtnContainer);
         } else {
@@ -94,6 +96,7 @@ function handleClickCopyBtn() {
 
     let title = container.querySelector('.text-title-large')?.textContent;
     title = removeSuffix(title, COPY_BTN_CONTENT);
+    saveTitle(title);
 
     let desc = container.querySelector(
         '[data-track-load="description_content"]'
@@ -110,15 +113,29 @@ function handleClickCopyBtn() {
 }
 
 /**
+ * 将 title 保存到 localStorage
+ *
+ * @param {string} title
+ */
+function saveTitle(title) {
+    localStorage.setItem('leetcode_title_baymax', title);
+}
+
+/**
+ * 从 localStorage 取出之前保存的标题
+ *
+ */
+function getTitleFromCache() {
+    return localStorage.getItem('leetcode_title_baymax');
+}
+
+/**
  * 点击复制gpt prompt
  */
 function handleClickGptPrompt() {
-    const container = document.querySelector('.flexlayout__tab');
+    const title = getTitleFromCache();
 
-    let title = container.querySelector('.text-title-large')?.textContent;
-    title = removeSuffix(title, COPY_BTN_CONTENT);
-
-    let lines = document.querySelector('.view-lines')?.textContent;
+    let lines = document.getElementById('code').nextElementSibling.textContent;
     lines = `// code start\n${lines}\n // code end\n`;
 
     const output =
