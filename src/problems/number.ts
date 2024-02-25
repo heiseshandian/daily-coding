@@ -160,6 +160,13 @@ Constraints:
 
 	1 <= nums.length <= 10^5
 	1 <= nums[i] <= 10^5
+
+Hints:
+- Create a (prime) factor-numbers list for all the indices.
+- Add an edge between the neighbors of the (prime) factor-numbers list. The order of the numbers doesn’t matter. 
+We only need edges between 2 neighbors instead of edges for all pairs.
+- The problem is now similar to checking if all the numbers (nodes of the graph) are in the same connected component.
+- Any algorithm (i.e., BFS, DFS, or Union-Find Set) should work to find or check connected components
 */
 export function canTraverseAllPairs(nums: number[]): boolean {
     if (nums.indexOf(1) !== nums.lastIndexOf(1)) {
