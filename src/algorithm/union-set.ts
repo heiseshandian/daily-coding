@@ -1,4 +1,4 @@
-class UnionSetNode<T = any> {
+export class UnionSetNode<T = any> {
     val: T;
     constructor(val: T) {
         this.val = val;
@@ -6,8 +6,8 @@ class UnionSetNode<T = any> {
 }
 
 export class UnionSet<T = any> {
-    #nodes: Map<T, UnionSetNode<T>> = new Map();
-    #parents: Map<UnionSetNode<T>, UnionSetNode<T>> = new Map();
+    nodes: Map<T, UnionSetNode<T>> = new Map();
+    parents: Map<UnionSetNode<T>, UnionSetNode<T>> = new Map();
     sizeMap: Map<UnionSetNode<T>, number> = new Map();
 
     constructor(values: T[] = []) {
@@ -18,14 +18,14 @@ export class UnionSet<T = any> {
 
     public addNode(value: T) {
         const node = new UnionSetNode<T>(value);
-        this.#nodes.set(value, node);
-        this.#parents.set(node, node);
+        this.nodes.set(value, node);
+        this.parents.set(node, node);
         this.sizeMap.set(node, 1);
     }
 
     public isSameSet(a: T, b: T) {
-        const nodeA = this.#nodes.get(a);
-        const nodeB = this.#nodes.get(b);
+        const nodeA = this.nodes.get(a);
+        const nodeB = this.nodes.get(b);
 
         if (!nodeA || !nodeB) {
             return false;
@@ -34,8 +34,8 @@ export class UnionSet<T = any> {
     }
 
     public union(a: T, b: T) {
-        const nodeA = this.#nodes.get(a);
-        const nodeB = this.#nodes.get(b);
+        const nodeA = this.nodes.get(a);
+        const nodeB = this.nodes.get(b);
         if (!nodeA || !nodeB) {
             return;
         }
@@ -51,7 +51,7 @@ export class UnionSet<T = any> {
         const largeSet = sizeA >= sizeB ? parentA : parentB;
         const smallSet = largeSet === parentA ? parentB : parentA;
 
-        this.#parents.set(smallSet, largeSet);
+        this.parents.set(smallSet, largeSet);
         this.sizeMap.set(largeSet, sizeA + sizeB);
         this.sizeMap.delete(smallSet);
     }
@@ -59,14 +59,13 @@ export class UnionSet<T = any> {
     #findParent(node: UnionSetNode<T>) {
         let cur = node;
         const visitedNodes: UnionSetNode<T>[] = [];
-        while (cur !== this.#parents.get(cur)) {
-            // @ts-ignore
-            cur = this.#parents.get(cur);
+        while (cur !== this.parents.get(cur)) {
+            cur = this.parents.get(cur)!;
             visitedNodes.push(cur);
         }
 
         visitedNodes.forEach((visitedNode) => {
-            this.#parents.set(visitedNode, cur);
+            this.parents.set(visitedNode, cur);
         });
         return cur;
     }
