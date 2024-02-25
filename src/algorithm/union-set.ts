@@ -30,7 +30,7 @@ export class UnionSet<T = any> {
         if (!nodeA || !nodeB) {
             return false;
         }
-        return this.#findParent(nodeA) === this.#findParent(nodeB);
+        return this.findParent(nodeA) === this.findParent(nodeB);
     }
 
     public union(a: T, b: T) {
@@ -40,8 +40,8 @@ export class UnionSet<T = any> {
             return;
         }
 
-        const parentA = this.#findParent(nodeA);
-        const parentB = this.#findParent(nodeB);
+        const parentA = this.findParent(nodeA);
+        const parentB = this.findParent(nodeB);
         if (parentA === parentB) {
             return;
         }
@@ -56,7 +56,7 @@ export class UnionSet<T = any> {
         this.sizeMap.delete(smallSet);
     }
 
-    #findParent(node: UnionSetNode<T>) {
+    findParent(node: UnionSetNode<T>) {
         let cur = node;
         const visitedNodes: UnionSetNode<T>[] = [];
         while (cur !== this.parents.get(cur)) {
