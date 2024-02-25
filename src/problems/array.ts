@@ -2326,3 +2326,80 @@ export function findAllPeople(
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/restore-the-array-from-adjacent-pairs/description/?envType=daily-question&envId=2024-02-25
+1743. Restore the Array From Adjacent Pairs
+There is an integer array nums that consists of n unique elements, but you have forgotten it. 
+However, you do remember every pair of adjacent elements in nums.
+
+You are given a 2D integer array adjacentPairs of size n - 1 where each adjacentPairs[i] = [ui, vi] 
+indicates that the elements ui and vi are adjacent in nums.
+
+It is guaranteed that every adjacent pair of elements nums[i] and nums[i+1] will exist in adjacentPairs, 
+either as [nums[i], nums[i+1]] or [nums[i+1], nums[i]]. The pairs can appear in any order.
+
+Return the original array nums. If there are multiple solutions, return any of them.
+
+Example 1:
+
+Input: adjacentPairs = [[2,1],[3,4],[3,2]]
+Output: [1,2,3,4]
+Explanation: This array has all its adjacent pairs in adjacentPairs.
+Notice that adjacentPairs[i] may not be in left-to-right order.
+
+Example 2:
+
+Input: adjacentPairs = [[4,-2],[1,4],[-3,1]]
+Output: [-2,4,1,-3]
+Explanation: There can be negative numbers.
+Another solution is [-3,1,4,-2], which would also be accepted.
+
+Example 3:
+
+Input: adjacentPairs = [[100000,-100000]]
+Output: [100000,-100000]
+
+Constraints:
+
+	nums.length == n
+	adjacentPairs.length == n - 1
+	adjacentPairs[i].length == 2
+	2 <= n <= 10^5
+	-10^5 <= nums[i], ui, vi <= 10^5
+	There exists some nums that has adjacentPairs as its pairs.
+
+Hints:
+- Find the first element of nums - it will only appear once in adjacentPairs.
+- The adjacent pairs are like edges of a graph. Perform a depth-first search from the first element.
+*/
+export function restoreArray(adjacentPairs: number[][]): number[] {
+    const edgesMap: Record<number, number[]> = {};
+    adjacentPairs.forEach(([from, to]) => {
+        edgesMap[from] = (edgesMap[from] || []).concat(to);
+        edgesMap[to] = (edgesMap[to] || []).concat(from);
+    });
+
+    const first = Number(
+        Object.keys(edgesMap).find((k) => edgesMap[k].length === 1)
+    );
+    const nodes = [first];
+    const result = new Array(adjacentPairs.length + 1);
+    let i = 0;
+    const visited = new Set();
+    while (nodes.length) {
+        const node = nodes.shift()!;
+        result[i++] = node;
+        visited.add(node);
+
+        if (edgesMap[node].length) {
+            edgesMap[node].forEach((n) => {
+                if (!visited.has(n)) {
+                    nodes.push(n);
+                }
+            });
+        }
+    }
+
+    return result;
+}
