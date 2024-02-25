@@ -1,10 +1,10 @@
 // 自动复制leetcode上的链接地址、标题、描述等
-addCopyBtn();
+addBtns();
 // 自动跳转到英文站
 autoJumpBackToEnglishVersion();
 
 const observer = new MutationObserver(function () {
-    addCopyBtn();
+    addBtns();
 });
 
 observer.observe(document, { childList: true, subtree: true });
@@ -15,6 +15,11 @@ function autoJumpBackToEnglishVersion() {
             location.href.replace('https://leetcode.cn', 'https://leetcode.com')
         );
     }
+}
+
+function addBtns() {
+    addCopyBtn();
+    addCopyGptPrompt();
 }
 
 const COPY_BTN_CONTENT = 'copy content';
@@ -32,6 +37,25 @@ async function addCopyBtn() {
 
     btnContainer.appendChild(copyBtn);
     btnContainer.hasAddedCopyBtn = true;
+}
+
+const GPT_PROMPT = 'gpt prompt';
+
+async function addCopyGptPrompt() {
+    const btnContainer = await getBtnContainer();
+    if (btnContainer.hasAddGptPrompt) {
+        return;
+    }
+
+    const gptPrompt = document.createElement('button');
+    gptPrompt.textContent = GPT_PROMPT;
+    'special-copy-btn purple-btn'.split(' ').forEach((cls) => {
+        gptPrompt.classList.add(cls);
+    });
+    gptPrompt.addEventListener('click', handleClickGptPrompt);
+
+    btnContainer.appendChild(gptPrompt);
+    btnContainer.hasAddGptPrompt = true;
 }
 
 /**
@@ -82,6 +106,34 @@ function handleClickCopyBtn() {
         `/*\n${href}\n${title}\n${desc}\n*/\nexport ${lines}\n`
     );
 
+    copyToClipboard(toCopy);
+}
+
+/**
+ * 点击复制gpt prompt
+ */
+function handleClickGptPrompt() {
+    const container = document.querySelector('.flexlayout__tab');
+
+    let title = container.querySelector('.text-title-large')?.textContent;
+    title = removeSuffix(title, COPY_BTN_CONTENT);
+
+    let lines = document.querySelector('.view-lines')?.textContent;
+    lines = `// code start\n${lines}\n // code end\n`;
+
+    const output =
+        'Output markdown instead of formatting the markdown content directly.';
+
+    const toCopy = `${title}\n${lines}\n${output}`;
+
+    copyToClipboard(toCopy);
+}
+
+/**
+ * 复制内容到剪贴板
+ * @param {string} toCopy
+ */
+function copyToClipboard(toCopy) {
     navigator.clipboard
         .writeText(toCopy)
         .then(() => {

@@ -12,6 +12,15 @@
     background-color: #45a049;
 }
 
+.purple-btn {
+    background-color: #9c27b0;
+    margin-left: 5px;
+}
+
+.purple-btn:hover {
+    background-color: #7b1fa2;
+}
+
 .message-container {
     position: fixed;
     top: 20px;
