@@ -1169,3 +1169,64 @@ export function findBottomLeftValue(root: TreeNode): number {
 
     return leftMostNodeVal;
 }
+
+/*
+https://leetcode.com/problems/binary-tree-level-order-traversal-ii/description/
+107. Binary Tree Level Order Traversal II
+Given the root of a binary tree, return the bottom-up level order traversal of its nodes' values. (i.e., from left to right, level by level from leaf to root).
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[15,7],[9,20],[3]]
+
+Example 2:
+
+Input: root = [1]
+Output: [[1]]
+
+Example 3:
+
+Input: root = []
+Output: []
+
+Constraints:
+
+	The number of nodes in the tree is in the range [0, 2000].
+	-1000 <= Node.val <= 1000
+*/
+export function levelOrderBottom(root: TreeNode | null): number[][] {
+    if (!root) {
+        return [];
+    }
+
+    const result: number[][] = [];
+    const nodes = [root];
+    let curEnd = root;
+    let nextEnd = root;
+    const level: number[] = [];
+    while (nodes.length) {
+        const node = nodes.shift()!;
+        level.push(node.val);
+
+        if (node.left) {
+            nodes.push(node.left);
+            nextEnd = node.left;
+        }
+        if (node.right) {
+            nodes.push(node.right);
+            nextEnd = node.right;
+        }
+
+        if (node === curEnd) {
+            curEnd = nextEnd;
+            result.push(level.slice());
+            level.length = 0;
+        }
+    }
+    if (level.length > 0) {
+        result.push(level);
+    }
+
+    return result.reverse();
+}
