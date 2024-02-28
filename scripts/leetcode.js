@@ -103,13 +103,23 @@ function handleClickCopyBtn() {
     )?.textContent;
     desc = fixConstraints(desc).trimEnd('\n');
 
-    const lines = document.querySelector('.view-lines')?.textContent;
+    let lines = document.querySelector('.view-lines')?.textContent;
+    lines = removeComment(lines);
 
     const toCopy = reduceMultipleEmptyLines(
         `/*\n${href}\n${title}\n${desc}\n*/\nexport ${lines}\n`
     );
 
     copyToClipboard(toCopy);
+}
+
+/**
+ * 删除注释
+ *
+ * @param {string} lines
+ */
+function removeComment(lines) {
+    return lines.replace(/\/\*[\s\S]*?\*\//, '');
 }
 
 /**
