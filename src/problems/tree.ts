@@ -1153,25 +1153,17 @@ Constraints:
 */
 export function findBottomLeftValue(root: TreeNode): number {
     const nodes: TreeNode[] = [root];
-    let curEnd: TreeNode | null = root;
-    let nextEnd: TreeNode | null = null;
 
     let leftMostNodeVal = 0;
     while (nodes.length) {
         const node = nodes.shift()!;
         leftMostNodeVal = node.val;
 
-        if (node === curEnd) {
-            curEnd = nextEnd;
-        }
-
         if (node.right) {
             nodes.push(node.right);
-            nextEnd = node.right;
         }
         if (node.left) {
             nodes.push(node.left);
-            nextEnd = node.left;
         }
     }
 
