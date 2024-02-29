@@ -2567,3 +2567,47 @@ export function miceAndCheese(
         rewards.slice(k).reduce((acc, [, , r]) => acc + r, 0)
     );
 }
+
+/*
+https://leetcode.com/problems/least-number-of-unique-integers-after-k-removals/description/?envType=daily-question&envId=2024-02-16
+1481. Least Number of Unique Integers after K Removals
+Given an array of integers arr and an integer k. Find the least number of unique integers after removing exactly k elements.
+
+Example 1:
+
+Input: arr = [5,5,4], k = 1
+Output: 1
+Explanation: Remove the single 4, only 5 is left.
+
+Example 2:
+
+Input: arr = [4,3,1,1,3,3,2], k = 3
+Output: 2
+Explanation: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will be left.
+
+Constraints:
+
+	1 <= arr.length <= 10^5
+	1 <= arr[i] <= 10^9
+	0 <= k <= arr.length
+*/
+export function findLeastNumOfUniqueInts(arr: number[], k: number): number {
+    const repeatTimes: Record<number, number> = {};
+    arr.forEach((v) => {
+        repeatTimes[v] = (repeatTimes[v] || 0) + 1;
+    });
+
+    const sortedTimes = Object.values(repeatTimes).sort((a, b) => a - b);
+    let count = 0;
+    for (let i = 0; i < sortedTimes.length; i++) {
+        count += sortedTimes[i];
+
+        if (count >= k) {
+            return count === k
+                ? sortedTimes.length - i - 1
+                : sortedTimes.length - i;
+        }
+    }
+
+    return 0;
+}
