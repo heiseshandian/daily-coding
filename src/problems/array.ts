@@ -2727,3 +2727,60 @@ export class NumMatrix {
         return this.prefixSumMatrix[row2][col2] - left - top + topLeft;
     }
 }
+
+/*
+https://leetcode.com/problems/sum-of-matrix-after-queries/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china
+2718. Sum of Matrix After Queries
+You are given an integer n and a 0-indexed 2D array queries where queries[i] = [typei, indexi, vali].
+
+Initially, there is a 0-indexed n x n matrix filled with 0's. For each query, you must apply one of the following changes:
+
+    if typei == 0, set the values in the row with indexi to vali, overwriting any previous values.
+    if typei == 1, set the values in the column with indexi to vali, overwriting any previous values.
+
+Return the sum of integers in the matrix after all queries are applied.
+
+Example 1:
+
+Input: n = 3, queries = [[0,0,1],[1,2,2],[0,2,3],[1,0,4]]
+Output: 23
+Explanation: The image above describes the matrix after each query. The sum of the matrix after all queries are applied is 23. 
+
+Example 2:
+
+Input: n = 3, queries = [[0,0,4],[0,1,2],[1,0,1],[0,2,3],[1,2,1]]
+Output: 17
+Explanation: The image above describes the matrix after each query. The sum of the matrix after all queries are applied is 17.
+
+Constraints:
+
+    1 <= n <= 10^4
+    1 <= queries.length <= 10^4
+    queries[i].length == 3
+    0 <= typei <= 1
+    0 <= indexi < n
+    0 <= vali <= 10^5
+    
+Hints：
+- Process queries in reversed order, as the latest queries represent the most recent changes in the matrix.
+- Once you encounter an operation on some row/column, no further operations will affect the values in this row/column. 
+Keep track of seen rows and columns with a set.
+- When operating on an unseen row/column, the number of affected cells is the number of columns/rows you haven’t previously seen.
+*/
+export function matrixSumQueries(n: number, queries: number[][]): number {
+    const seenRows = new Set<number>();
+    const seenColumns = new Set<number>();
+    let result = 0;
+    for (let i = queries.length - 1; i >= 0; i--) {
+        const [type, index, val] = queries[i];
+        if (type === 0 && !seenRows.has(index)) {
+            result += (n - seenColumns.size) * val;
+            seenRows.add(index);
+        } else if (type === 1 && !seenColumns.has(index)) {
+            result += (n - seenRows.size) * val;
+            seenColumns.add(index);
+        }
+    }
+
+    return result;
+}
