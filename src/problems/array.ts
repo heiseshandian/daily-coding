@@ -2718,7 +2718,7 @@ export class NumMatrix {
 
     sumRegion(row1: number, col1: number, row2: number, col2: number): number {
         const top = row1 - 1 >= 0 ? this.prefixSumMatrix[row1 - 1][col2] : 0;
-        const left = col2 - 1 >= 0 ? this.prefixSumMatrix[row2][col1 - 1] : 0;
+        const left = col1 - 1 >= 0 ? this.prefixSumMatrix[row2][col1 - 1] : 0;
         const topLeft =
             row1 - 1 >= 0 && col1 - 1 >= 0
                 ? this.prefixSumMatrix[row1 - 1][col1 - 1]
