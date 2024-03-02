@@ -2594,7 +2594,31 @@ Follow up: Squaring each element and sorting the new array is very trivial, coul
 */
 export function sortedSquares(nums: number[]): number[] {
     nums = nums.map((n) => n * n);
-    nums.sort((a, b) => a - b);
 
-    return nums;
+    // find the min index
+    let min = Infinity;
+    let minIndex = 0;
+    nums.forEach((v, i) => {
+        if (v < min) {
+            min = v;
+            minIndex = i;
+        }
+    });
+
+    // merge
+    const result: number[] = new Array(nums.length);
+    let left = minIndex;
+    let right = minIndex + 1;
+    let i = 0;
+    while (left >= 0 && right < nums.length) {
+        result[i++] = nums[left] <= nums[right] ? nums[left--] : nums[right++];
+    }
+    while (left >= 0) {
+        result[i++] = nums[left--];
+    }
+    while (right < nums.length) {
+        result[i++] = nums[right++];
+    }
+
+    return result;
 }
