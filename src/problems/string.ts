@@ -932,3 +932,57 @@ export function addStrings(num1: string, num2: string): string {
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/minimum-additions-to-make-valid-string/description/
+2645. Minimum Additions to Make Valid String
+Given a string word to which you can insert letters "a", "b" or "c" anywhere and any number of times, 
+return the minimum number of letters that must be inserted so that word becomes valid.
+
+A string is called valid if it can be formed by concatenating the string "abc" several times.
+
+Example 1:
+
+Input: word = "b"
+Output: 2
+Explanation: Insert the letter "a" right before "b", and the letter "c" right next to "a" to obtain the valid string "abc".
+
+Example 2:
+
+Input: word = "aaa"
+Output: 6
+Explanation: Insert letters "b" and "c" next to each "a" to obtain the valid string "abcabcabc".
+
+Example 3:
+
+Input: word = "abc"
+Output: 0
+Explanation: word is already valid. No modifications are needed. 
+
+Constraints:
+
+	1 <= word.length <= 50
+	word consists of letters "a", "b" and "c" only.
+*/
+export function addMinimum(word: string): number {
+    const next = {
+        a: new Set(['b', 'c']),
+        b: new Set(['c']),
+    };
+
+    let min = 0;
+    let i = 0;
+    while (i < word.length) {
+        if (word[i] === 'a' && word[i + 1] === 'b' && word[i + 2] === 'c') {
+            i += 3;
+        } else if (next[word[i]]?.has(word[i + 1])) {
+            min += 1;
+            i += 2;
+        } else {
+            min += 2;
+            i++;
+        }
+    }
+
+    return min;
+}
