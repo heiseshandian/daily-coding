@@ -503,14 +503,10 @@ export function goodSubsetofBinaryMatrix(grid: number[][]): number[] {
         r <<= 1;
 
         // l取1
-        l = l | 1;
-        r = r | 0;
-        dfs(i + 1, l, r);
+        dfs(i + 1, l | 1, r | 0);
 
         // l取0
-        l = l | 0;
-        r = r | 1;
-        dfs(i + 1, l, r);
+        dfs(i + 1, l | 0, r | 1);
     };
     dfs(0, 0, 0);
 
