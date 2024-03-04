@@ -491,28 +491,37 @@ export function goodSubsetofBinaryMatrix(grid: number[][]): number[] {
             return [i];
         }
     }
+    const n = grid[0].length;
 
     const bitMasks: number[][] = [];
-    const dfs = (i: number, l: number, r: number) => {
-        if (i === 5) {
-            bitMasks.push([l, r]);
+    const backtracking = (i: number, left: number, right: number) => {
+        if (i === n) {
+            bitMasks.push([left, right]);
             return;
         }
 
-        l <<= 1;
-        r <<= 1;
+        left <<= 1;
+        right <<= 1;
 
-        // l取1
-        dfs(i + 1, l | 1, r | 0);
+        // left取1
+        backtracking(i + 1, left | 1, right | 0);
 
-        // l取0
-        dfs(i + 1, l | 0, r | 1);
+        // left取0
+        backtracking(i + 1, left | 0, right | 1);
+        backtracking(i + 1, left | 0, right | 0);
     };
-    dfs(0, 0, 0);
+    backtracking(0, 0, 0);
 
-    console.log('bitMasks', bitMasks);
+    const gridNumbers = grid.map((row) => parseInt(row.join(''), 2));
+
+    for (let i = 0; i < bitMasks.length; i++) {
+        const [left, right] = bitMasks[i];
+        const index1 = gridNumbers.indexOf(left);
+        const index2 = gridNumbers.indexOf(right);
+        if (index1 !== -1 && index2 !== -1 && index1 !== index2) {
+            return [index1, index2].sort((a, b) => a - b);
+        }
+    }
 
     return [];
 }
-
-goodSubsetofBinaryMatrix([]);
