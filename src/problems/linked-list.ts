@@ -1,4 +1,8 @@
-import { SingleLinkedList, reverseSingleLinkedList } from '../algorithm/linked-list';
+import {
+    ListNode,
+    SingleLinkedList,
+    reverseSingleLinkedList,
+} from '../algorithm/linked-list';
 //https://leetcode.com/problems/copy-list-with-random-pointer/
 // 深度copy如下带有random指针的节点
 export class NodeWithRandom {
@@ -12,7 +16,9 @@ export class NodeWithRandom {
     }
 }
 
-export function copyRandomList(head: NodeWithRandom | null): NodeWithRandom | null {
+export function copyRandomList(
+    head: NodeWithRandom | null
+): NodeWithRandom | null {
     if (!head) {
         return head;
     }
@@ -64,7 +70,11 @@ export function copyRandomList(head: NodeWithRandom | null): NodeWithRandom | nu
 Given the head of a singly linked list and two integers left and right where left <= right, 
 reverse the nodes of the list from position left to position right, and return the reversed list.
 */
-export function reverseBetween(head: SingleLinkedList | null, left: number, right: number): SingleLinkedList | null {
+export function reverseBetween(
+    head: SingleLinkedList | null,
+    left: number,
+    right: number
+): SingleLinkedList | null {
     if (left === right) {
         return head;
     }
@@ -111,7 +121,10 @@ Output: [4,5,1,2,3]
 
 单链表旋转
 */
-export function rotateRight(head: SingleLinkedList | null, k: number): SingleLinkedList | null {
+export function rotateRight(
+    head: SingleLinkedList | null,
+    k: number
+): SingleLinkedList | null {
     if (!head) {
         return head;
     }
@@ -159,7 +172,9 @@ Given the head of a linked list, return the list after sorting it in ascending o
 链表排序
 */
 // 时间复杂度O(nlogn) 空间复杂度O(n)
-export function sortList(head: SingleLinkedList | null): SingleLinkedList | null {
+export function sortList(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head) {
         return head;
     }
@@ -185,7 +200,9 @@ export function sortList(head: SingleLinkedList | null): SingleLinkedList | null
 }
 
 // 时间复杂度O(nlogn) 空间复杂度O(1)
-export function sortList2(head: SingleLinkedList | null): SingleLinkedList | null {
+export function sortList2(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head || !head.next) {
         return head;
     }
@@ -213,7 +230,10 @@ function splitListInHalf(head: SingleLinkedList) {
     return slow;
 }
 
-function merge(list1: SingleLinkedList | null, list2: SingleLinkedList | null): SingleLinkedList | null {
+function merge(
+    list1: SingleLinkedList | null,
+    list2: SingleLinkedList | null
+): SingleLinkedList | null {
     const newHead = new SingleLinkedList(undefined);
 
     let cur = newHead;
@@ -243,7 +263,9 @@ Note that the relative order inside both the even and odd groups should remain a
 
 You must solve the problem in O(1) extra space complexity and O(n) time complexity.
 */
-export function oddEvenList(head: SingleLinkedList | null): SingleLinkedList | null {
+export function oddEvenList(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head) {
         return head;
     }
@@ -274,7 +296,9 @@ is connected to (0-indexed). It is -1 if there is no cycle. Note that pos is not
 
 Do not modify the linked list.
 */
-export function detectCycle(head: SingleLinkedList | null): SingleLinkedList | null {
+export function detectCycle(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head || !head.next) {
         return null;
     }
@@ -306,7 +330,9 @@ https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/
 Given the head of a sorted linked list, delete all nodes that have duplicate numbers, 
 leaving only distinct numbers from the original list. Return the linked list sorted as well.
 */
-export function deleteDuplicates(head: SingleLinkedList | null): SingleLinkedList | null {
+export function deleteDuplicates(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head || !head.next) {
         return head;
     }
@@ -332,7 +358,9 @@ export function deleteDuplicates(head: SingleLinkedList | null): SingleLinkedLis
     return newHead;
 }
 
-function findFirstDistinctNode(node: SingleLinkedList | null): SingleLinkedList | null {
+function findFirstDistinctNode(
+    node: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!node || !node.next) {
         return node;
     }
@@ -355,7 +383,9 @@ function findFirstDistinctNode(node: SingleLinkedList | null): SingleLinkedList 
 }
 
 // 更为简洁的代码实现
-export function deleteDuplicates2(head: SingleLinkedList | null): SingleLinkedList | null {
+export function deleteDuplicates2(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head || !head.next) {
         return head;
     }
@@ -415,7 +445,10 @@ https://leetcode.com/problems/remove-linked-list-elements/description/
 Given the head of a linked list and an integer val, remove all the nodes 
 of the linked list that has Node.val == val, and return the new head.
 */
-export function removeElements(head: SingleLinkedList | null, val: number): SingleLinkedList | null {
+export function removeElements(
+    head: SingleLinkedList | null,
+    val: number
+): SingleLinkedList | null {
     if (!head) {
         return head;
     }
@@ -445,7 +478,10 @@ export function removeElements(head: SingleLinkedList | null, val: number): Sing
     return newHead;
 }
 
-export function removeElements2(head: SingleLinkedList | null, val: number): SingleLinkedList | null {
+export function removeElements2(
+    head: SingleLinkedList | null,
+    val: number
+): SingleLinkedList | null {
     const holder = new SingleLinkedList(-1, head);
     let cur = holder;
     while (cur && cur.next) {
@@ -470,7 +506,9 @@ Insertion sort iterates, consuming one input element each repetition and growing
 At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list and inserts it there.
 It repeats until no input elements remain.
 */
-export function insertionSortList(head: SingleLinkedList | null): SingleLinkedList | null {
+export function insertionSortList(
+    head: SingleLinkedList | null
+): SingleLinkedList | null {
     if (!head || !head.next) {
         return head;
     }
@@ -502,4 +540,70 @@ export function insertionSortList(head: SingleLinkedList | null): SingleLinkedLi
     }
 
     return placeholder.next;
+}
+
+/*
+https://leetcode.com/problems/merge-in-between-linked-lists/description/
+1669. Merge In Between Linked Lists
+You are given two linked lists: list1 and list2 of sizes n and m respectively.
+
+Remove list1's nodes from the ath node to the bth node, and put list2 in their place.
+
+The blue edges and nodes in the following figure indicate the result:
+
+Build the result list and return its head.
+
+Example 1:
+
+Input: list1 = [10,1,13,6,9,5], a = 3, b = 4, list2 = [1000000,1000001,1000002]
+Output: [10,1,13,1000000,1000001,1000002,5]
+Explanation: We remove the nodes 3 and 4 and put the entire list2 in their place. The blue edges and nodes in the above figure indicate the result.
+
+Example 2:
+
+Input: list1 = [0,1,2,3,4,5,6], a = 2, b = 5, list2 = [1000000,1000001,1000002,1000003,1000004]
+Output: [0,1,1000000,1000001,1000002,1000003,1000004,6]
+Explanation: The blue edges and nodes in the above figure indicate the result.
+
+Constraints:
+
+	3 <= list1.length <= 10^4
+	1 <= a <= b < list1.length - 1
+	1 <= list2.length <= 10^4
+*/
+
+export function mergeInBetween(
+    list1: ListNode | null,
+    a: number,
+    b: number,
+    list2: ListNode | null
+): ListNode | null {
+    let preA: ListNode | null = null;
+    let i = 0;
+    let cur = list1;
+    while (i < a && cur) {
+        preA = cur;
+        cur = cur.next;
+        i++;
+    }
+    i--;
+
+    let nextB: ListNode | null = null;
+    while (i < b && cur) {
+        cur = cur.next;
+        i++;
+        nextB = cur;
+    }
+
+    let endB: ListNode | null = null;
+    cur = list2;
+    while (cur) {
+        endB = cur;
+        cur = cur.next;
+    }
+
+    preA!.next = list2;
+    endB!.next = nextB;
+
+    return list1;
 }

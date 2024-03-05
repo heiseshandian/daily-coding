@@ -28,12 +28,18 @@ export class SingleLinkedList {
     }
 }
 
+export class ListNode extends SingleLinkedList {}
+
 export class DoubleLinkedList {
     val: any;
     next: DoubleLinkedList | null;
     prev: DoubleLinkedList | null;
 
-    constructor(val: any, prev?: DoubleLinkedList | null, next?: DoubleLinkedList | null) {
+    constructor(
+        val: any,
+        prev?: DoubleLinkedList | null,
+        next?: DoubleLinkedList | null
+    ) {
         this.val = val !== undefined ? val : null;
         this.prev = prev !== undefined ? prev : null;
         this.next = next !== undefined ? next : null;
@@ -80,7 +86,10 @@ export function reverseDoubleLinkedList(head: DoubleLinkedList | null) {
     return prev;
 }
 
-export function deleteNum(head: SingleLinkedList | null, num: number): SingleLinkedList | null {
+export function deleteNum(
+    head: SingleLinkedList | null,
+    num: number
+): SingleLinkedList | null {
     while (head?.val === num) {
         head = head.next;
     }
@@ -204,9 +213,18 @@ output:[1,2,1,3,3,5,4]
 注：给定的p值有可能在链表中不存在
 */
 export function partition(head: SingleLinkedList | null, p: number) {
-    let [lessHead, lessTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
-    let [equalHead, equalTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
-    let [moreHead, moreTail]: [SingleLinkedList | null, SingleLinkedList | null] = [null, null];
+    let [lessHead, lessTail]: [
+        SingleLinkedList | null,
+        SingleLinkedList | null
+    ] = [null, null];
+    let [equalHead, equalTail]: [
+        SingleLinkedList | null,
+        SingleLinkedList | null
+    ] = [null, null];
+    let [moreHead, moreTail]: [
+        SingleLinkedList | null,
+        SingleLinkedList | null
+    ] = [null, null];
 
     if (head === null) {
         return head;
@@ -318,7 +336,10 @@ export function deepCloneSpecialNodeList(head: SpecialNode | null) {
 给定两个可能有环也可能无环的单链表，头结点head1，head2
 实现一个函数，如果两个链表相交，返回第一个相交的节点，如果不相交返回null
 */
-export function getFirstIntersectNode(head1: SingleLinkedList | null, head2: SingleLinkedList | null) {
+export function getFirstIntersectNode(
+    head1: SingleLinkedList | null,
+    head2: SingleLinkedList | null
+) {
     if ((!head1 && !head2) || (!head1?.next && !head2?.next)) {
         return null;
     }
@@ -328,7 +349,11 @@ export function getFirstIntersectNode(head1: SingleLinkedList | null, head2: Sin
 
     // 两个链表都没有环
     if (!loop1 && !loop2) {
-        return findIntersectNode(head1, head2, (node: SingleLinkedList | null) => !node);
+        return findIntersectNode(
+            head1,
+            head2,
+            (node: SingleLinkedList | null) => !node
+        );
     }
 
     // 两个链表都有环
@@ -349,7 +374,11 @@ export function getFirstIntersectNode(head1: SingleLinkedList | null, head2: Sin
         }
 
         // 入环节点相等
-        const found = findIntersectNode(head1, head2, (node: SingleLinkedList | null) => node === loop1);
+        const found = findIntersectNode(
+            head1,
+            head2,
+            (node: SingleLinkedList | null) => node === loop1
+        );
         return found || loop1;
     }
 
