@@ -296,91 +296,6 @@ export function findValueOfPartition(nums: number[]): number {
 }
 
 /* 
-https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/
-
-Given two arrays nums1 and nums2.
-
-Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
-
-A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) 
-of the characters without disturbing the relative positions of the remaining characters. 
-(ie, [2,3,5] is a subsequence of [1,2,3,4,5] while [1,5,3] is not).
-*/
-export function maxDotProduct(nums1: number[], nums2: number[]): number {
-    // dp[i][j] nums[0-j],nums2[0-j] 所形成的等长子序列中最大值
-    const dp: number[][] = new Array(nums1.length)
-        .fill(0)
-        .map((_) => new Array(nums2.length));
-    dp[0][0] = nums1[0] * nums2[0];
-
-    // 第一行 dp[0][x]
-    for (let j = 1; j < nums2.length; j++) {
-        dp[0][j] = Math.max(dp[0][j - 1], nums1[0] * nums2[j]);
-    }
-
-    // 第一列 dp[i][0]
-    for (let i = 1; i < nums1.length; i++) {
-        dp[i][0] = Math.max(dp[i - 1][0], nums1[i] * nums2[0]);
-    }
-
-    // 从上到下，从左到右填表
-    for (let i = 1; i < nums1.length; i++) {
-        for (let j = 1; j < nums2.length; j++) {
-            /* 
-            可能性分类
-            - dp[i][j] 的值来源于 dp[i-1][j]相当于抛弃i
-            - dp[i][j] 的值来源于 dp[i][j-1]相当于抛弃j
-            - dp[i][j] 的值来源于 dp[i - 1][j - 1] + nums1[i] * nums2[j]
-            - dp[i][j] 的值来源于 nums1[i] * nums2[j] 相当于抛弃前面的数组，直接从i,j处开始
-            */
-            dp[i][j] = Math.max(
-                Math.max(0, dp[i - 1][j - 1]) + nums1[i] * nums2[j],
-                dp[i - 1][j],
-                dp[i][j - 1]
-            );
-        }
-    }
-
-    return dp[nums1.length - 1][nums2.length - 1];
-}
-
-// 空间压缩技巧
-// https://www.bilibili.com/video/BV1AS4y1C7qR/?spm_id_from=333.788.recommend_more_video.0&vd_source=7b242528b70c1c6d4ee0ca3780b547a5
-export function maxDotProduct2(nums1: number[], nums2: number[]): number {
-    // 空间压缩技术，用一个数组滚动的方式来填表
-    const dp: number[] = new Array(nums2.length);
-    dp[0] = nums1[0] * nums2[0];
-
-    // 第一行 dp[x]
-    for (let j = 1; j < nums2.length; j++) {
-        dp[j] = Math.max(dp[j - 1], nums1[0] * nums2[j]);
-    }
-
-    let topLeftCorner: number;
-    let nextTopLeftCorner: number;
-    for (let i = 1; i < nums1.length; i++) {
-        topLeftCorner = dp[0];
-        for (let j = 0; j < nums2.length; j++) {
-            nextTopLeftCorner = dp[j];
-
-            if (j === 0) {
-                dp[j] = Math.max(dp[j], nums1[i] * nums2[j]);
-            } else {
-                dp[j] = Math.max(
-                    Math.max(0, topLeftCorner) + nums1[i] * nums2[j],
-                    dp[j - 1],
-                    dp[j]
-                );
-            }
-
-            topLeftCorner = nextTopLeftCorner;
-        }
-    }
-
-    return dp[nums2.length - 1];
-}
-
-/* 
 https://leetcode.com/problems/two-sum/description/
 
 Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
@@ -3239,4 +3154,99 @@ export function lastVisitedIntegers(nums: number[]): number[] {
     });
 
     return ans;
+}
+
+/*
+https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/
+1458. Max Dot Product of Two Subsequences
+Given two arrays nums1 and nums2.
+
+Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
+
+A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) 
+of the characters without disturbing the relative positions of the remaining characters. 
+(ie, [2,3,5] is a subsequence of [1,2,3,4,5] while [1,5,3] is not).
+
+Example 1:
+
+Input: nums1 = [2,1,-2,5], nums2 = [3,0,-6]
+Output: 18
+Explanation: Take subsequence [2,-2] from nums1 and subsequence [3,-6] from nums2.
+Their dot product is (2*3 + (-2)*(-6)) = 18.
+
+Example 2:
+
+Input: nums1 = [3,-2], nums2 = [2,-6,7]
+Output: 21
+Explanation: Take subsequence [3] from nums1 and subsequence [7] from nums2.
+Their dot product is (3*7) = 21.
+
+Example 3:
+
+Input: nums1 = [-1,-1], nums2 = [1,1]
+Output: -1
+Explanation: Take subsequence [-1] from nums1 and subsequence [1] from nums2.
+Their dot product is -1.
+
+Constraints:
+
+	1 <= nums1.length, nums2.length <= 500
+	-1000 <= nums1[i], nums2[i] <= 1000
+*/
+export function maxDotProduct(nums1: number[], nums2: number[]): number {
+    const dp: number[][] = Array.from({ length: nums1.length + 1 }, () =>
+        Array(nums2.length + 1).fill(-Infinity)
+    );
+
+    let product = 0;
+    for (let i = 1; i <= nums1.length; i++) {
+        for (let j = 1; j <= nums2.length; j++) {
+            product = nums1[i - 1] * nums2[j - 1];
+
+            dp[i][j] = Math.max(
+                product,
+                dp[i - 1][j - 1] + product,
+                dp[i - 1][j],
+                dp[i][j - 1]
+            );
+        }
+    }
+
+    return dp[nums1.length][nums2.length];
+}
+
+// 空间压缩技巧
+// https://www.bilibili.com/video/BV1AS4y1C7qR/?spm_id_from=333.788.recommend_more_video.0&vd_source=7b242528b70c1c6d4ee0ca3780b547a5
+export function maxDotProduct2(nums1: number[], nums2: number[]): number {
+    // 空间压缩技术，用一个数组滚动的方式来填表
+    const dp: number[] = new Array(nums2.length);
+    dp[0] = nums1[0] * nums2[0];
+
+    // 第一行 dp[x]
+    for (let j = 1; j < nums2.length; j++) {
+        dp[j] = Math.max(dp[j - 1], nums1[0] * nums2[j]);
+    }
+
+    let topLeftCorner: number;
+    let nextTopLeftCorner: number;
+    for (let i = 1; i < nums1.length; i++) {
+        topLeftCorner = dp[0];
+        for (let j = 0; j < nums2.length; j++) {
+            nextTopLeftCorner = dp[j];
+
+            if (j === 0) {
+                dp[j] = Math.max(dp[j], nums1[i] * nums2[j]);
+            } else {
+                dp[j] = Math.max(
+                    Math.max(0, topLeftCorner) + nums1[i] * nums2[j],
+                    dp[j - 1],
+                    dp[j]
+                );
+            }
+
+            topLeftCorner = nextTopLeftCorner;
+        }
+    }
+
+    return dp[nums2.length - 1];
 }
