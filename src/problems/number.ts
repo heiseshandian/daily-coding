@@ -316,5 +316,20 @@ Constraints:
 	1 <= n <= 10^4
 */
 export function lexicalOrder(n: number): number[] {
-    const backtracking = () => {};
+    const result: number[] = [];
+
+    const backtracking = (prev: number) => {
+        if (prev > n) {
+            return;
+        }
+        result.push(prev);
+
+        prev *= 10;
+        for (let i = prev === 0 ? 1 : 0; i < 10; i++) {
+            backtracking(prev + i);
+        }
+    };
+    backtracking(0);
+
+    return result.slice(1);
 }
