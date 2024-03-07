@@ -1396,3 +1396,65 @@ export function sumEvenGrandparent(root: TreeNode | null): number {
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/longest-univalue-path/description/
+687. Longest Univalue Path
+Given the root of a binary tree, return the length of the longest path, where each node in the path has the same value. This path may or may not pass through the root.
+
+The length of the path between two nodes is represented by the number of edges between them.
+
+Example 1:
+
+Input: root = [5,4,5,1,1,null,5]
+Output: 2
+Explanation: The shown image shows that the longest path of the same value (i.e. 5).
+
+Example 2:
+
+Input: root = [1,4,5,4,4,null,5]
+Output: 2
+Explanation: The shown image shows that the longest path of the same value (i.e. 4).
+
+Constraints:
+
+	The number of nodes in the tree is in the range [0, 10^4].
+	-1000 <= Node.val <= 1000
+	The depth of the tree will not exceed 1000.
+*/
+
+type UnivaluePath = [val: number, max: number, height: number];
+
+export function longestUnivaluePath(root: TreeNode | null): number {
+    if (!root) {
+        return 0;
+    }
+
+    const dfs = (node: TreeNode | null): UnivaluePath => {
+        if (!node) {
+            return [0, 0, 0];
+        }
+
+        const [leftVal, leftMax, leftHeight] = dfs(node.left);
+        const [rightVal, rightMax, rightHeight] = dfs(node.right);
+
+        let val = node.val;
+        let max = Math.max(leftMax, rightMax, 1);
+        let height = 1;
+
+        if (val === leftVal && val === rightVal) {
+            max = Math.max(max, leftHeight + rightHeight + 1);
+            height = Math.max(leftHeight + 1, rightHeight + 1);
+        } else if (val === leftVal) {
+            max = Math.max(max, leftHeight + 1);
+            height = leftHeight + 1;
+        } else if (val === rightVal) {
+            max = Math.max(max, rightHeight + 1);
+            height = rightHeight + 1;
+        }
+
+        return [val, max, height];
+    };
+
+    return dfs(root)[1] - 1;
+}
