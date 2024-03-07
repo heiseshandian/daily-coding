@@ -5,6 +5,7 @@ autoJumpBackToEnglishVersion();
 
 const observer = new MutationObserver(function () {
     addBtns();
+    saveTitle();
 });
 
 observer.observe(document, { childList: true, subtree: true });
@@ -96,7 +97,6 @@ function handleClickCopyBtn() {
 
     let title = container.querySelector('.text-title-large')?.textContent;
     title = removeSuffix(title, COPY_BTN_CONTENT);
-    saveTitle(title);
 
     let desc = container.querySelector(
         '[data-track-load="description_content"]'
@@ -124,10 +124,13 @@ function removeComment(lines) {
 
 /**
  * 将 title 保存到 localStorage
- *
- * @param {string} title
  */
-function saveTitle(title) {
+async function saveTitle() {
+    const titleElement = await getBtnContainer(
+        '.flexlayout__tab .text-title-large'
+    );
+
+    let title = removeSuffix(titleElement.textContent, COPY_BTN_CONTENT);
     localStorage.setItem('leetcode_title_baymax', title);
 }
 
