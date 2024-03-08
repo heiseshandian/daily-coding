@@ -22,9 +22,12 @@ export function isOdd(n: number) {
 // 统计一个数字的二进制表示中有多少个1
 export function countBits(n: number): number {
     let bit = 0;
-    while (n) {
-        bit += n & 1;
-        n >>= 1;
+    while (n > 0) {
+        if ((n & -n) !== 0) {
+            bit++;
+        }
+        n -= n & -n;
     }
+
     return bit;
 }
