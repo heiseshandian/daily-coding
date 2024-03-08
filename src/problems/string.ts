@@ -1210,3 +1210,31 @@ export function checkOnesSegment(s: string): boolean {
 
     return true;
 }
+
+/*
+https://leetcode.com/problems/thousand-separator/description/
+1556. Thousand Separator
+Given an integer n, add a dot (".") as the thousands separator and return it in string format.
+
+Example 1:
+
+Input: n = 987
+Output: "987"
+
+Example 2:
+
+Input: n = 1234
+Output: "1.234"
+
+Constraints:
+
+	0 <= n <= 2^31 - 1
+*/
+export function thousandSeparator(n: number): string {
+    const digits = n.toString().split('');
+    for (let i = digits.length - 3; i > 0; i -= 3) {
+        digits.splice(i, 0, '.');
+    }
+
+    return digits.join('');
+}
