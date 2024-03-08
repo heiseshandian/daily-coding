@@ -1,5 +1,5 @@
 {
-    "name": "leet-code-problems",
+    "name": "daily-coding",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -11,15 +11,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/heiseshandian/leet-code-problems.git"
+        "url": "git+https://github.com/heiseshandian/daily-coding.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/heiseshandian/leet-code-problems/issues"
+        "url": "https://github.com/heiseshandian/daily-coding/issues"
     },
-    "homepage": "https://github.com/heiseshandian/leet-code-problems#readme",
+    "homepage": "https://github.com/heiseshandian/daily-coding#readme",
     "devDependencies": {
         "@types/jest": "^29.5.0",
         "jest": "^29.5.0",
