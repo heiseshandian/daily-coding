@@ -3296,7 +3296,7 @@ export function canSortArray(nums: number[]): boolean {
     let prev = countBits(nums[0]);
     let min = nums[0];
     let max = nums[0];
-    const segments: number[][] = [];
+    let prevMax = -Infinity;
     let i = 1;
     while (i < nums.length) {
         const bits = countBits(nums[i]);
@@ -3306,22 +3306,18 @@ export function canSortArray(nums: number[]): boolean {
             max = Math.max(max, nums[i]);
             i++;
         } else {
-            segments.push([min, max]);
+            if (prevMax > min) {
+                return false;
+            }
+            prevMax = max;
+
             prev = bits;
             min = nums[i];
             max = nums[i];
         }
     }
-    segments.push([min, max]);
-
-    let [, prevMax] = segments[0];
-    for (let i = 1; i < segments.length; i++) {
-        const [min, max] = segments[i];
-        if (prevMax > min) {
-            return false;
-        } else {
-            prevMax = max;
-        }
+    if (prevMax > min) {
+        return false;
     }
 
     return true;
