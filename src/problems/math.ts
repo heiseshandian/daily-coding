@@ -47,13 +47,17 @@ function atNGivenDigitSet(digits: string[], digitsOfN: number[]): number {
 
     // 首位不在digits中，比如说 [1,3,5] 299
     if (closestMin !== null) {
-        count += (closestMin + 1) * Math.pow(digits.length, digitsOfN.length - 1);
+        count +=
+            (closestMin + 1) * Math.pow(digits.length, digitsOfN.length - 1);
     }
 
     return count;
 }
 
-function getClosestMinAndFoundFlag(digits: string[], target: number): [closestMin: number | null, found: boolean] {
+function getClosestMinAndFoundFlag(
+    digits: string[],
+    target: number
+): [closestMin: number | null, found: boolean] {
     let left = 0;
     let right = digits.length - 1;
     let closestMin: number | null = null;
@@ -72,4 +76,62 @@ function getClosestMinAndFoundFlag(digits: string[], target: number): [closestMi
     }
 
     return [closestMin, found];
+}
+
+/*
+https://leetcode.com/problems/moving-stones-until-consecutive/description/
+1033. Moving Stones Until Consecutive
+There are three stones in different positions on the X-axis. You are given three integers a, b, and c, the positions of the stones.
+
+In one move, you pick up a stone at an endpoint (i.e., either the lowest or highest position stone), 
+and move it to an unoccupied position between those endpoints. Formally, let's say the stones are currently at positions x, y, and z with x < y < z. 
+You pick up the stone at either position x or position z, and move that stone to an integer position k, with x < k < z and k != y.
+
+The game ends when you cannot make any more moves (i.e., the stones are in three consecutive positions).
+
+Return an integer array answer of length 2 where:
+
+	answer[0] is the minimum number of moves you can play, and
+	answer[1] is the maximum number of moves you can play.
+
+Example 1:
+
+Input: a = 1, b = 2, c = 5
+Output: [1,2]
+Explanation: Move the stone from 5 to 3, or move the stone from 5 to 4 to 3.
+
+Example 2:
+
+Input: a = 4, b = 3, c = 2
+Output: [0,0]
+Explanation: We cannot make any moves.
+
+Example 3:
+
+Input: a = 3, b = 5, c = 1
+Output: [1,2]
+Explanation: Move the stone from 1 to 4; or move the stone from 1 to 2 to 4.
+
+Constraints:
+
+	1 <= a, b, c <= 100
+	a, b, and c have different values.
+*/
+export function numMovesStones(a: number, b: number, c: number): number[] {
+    let min = Math.min(a, b, c);
+    let max = Math.max(a, b, c);
+    let mid = a + b + c - min - max;
+
+    const minMoves =
+        max - min === 2
+            ? 0
+            : mid - min === 2 ||
+              max - mid === 2 ||
+              mid - min === 1 ||
+              max - mid === 1
+            ? 1
+            : 2;
+    const maxMoves = max - min - 2;
+
+    return [minMoves, maxMoves];
 }
