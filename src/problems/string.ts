@@ -1238,3 +1238,72 @@ export function thousandSeparator(n: number): string {
 
     return digits.join('');
 }
+
+/*
+https://leetcode.com/problems/reconstruct-original-digits-from-english/description/
+423. Reconstruct Original Digits from English
+Given a string s containing an out-of-order English representation of digits 0-9, return the digits in ascending order.
+
+Example 1:
+Input: s = "owoztneoer"
+Output: "012"
+Example 2:
+Input: s = "fviefuro"
+Output: "45"
+
+Constraints:
+
+	1 <= s.length <= 10^5
+	s[i] is one of the characters ["e","g","f","i","h","o","n","s","r","u","t","w","v","x","z"].
+	s is guaranteed to be valid.
+*/
+type NumberRecord = Record<
+    number,
+    [char: string, times: Record<string, number>]
+>;
+export function originalDigits(s: string): string {
+    const repeatTimes = getRepeatTimes(s);
+
+    const even: NumberRecord = {
+        0: ['z', getRepeatTimes('zero')],
+        2: ['w', getRepeatTimes('two')],
+        4: ['u', getRepeatTimes('four')],
+        6: ['x', getRepeatTimes('six')],
+        8: ['g', getRepeatTimes('eight')],
+    };
+    const odd: NumberRecord = {
+        1: ['o', getRepeatTimes('one')],
+        3: ['t', getRepeatTimes('three')],
+        5: ['f', getRepeatTimes('five')],
+        7: ['s', getRepeatTimes('seven')],
+    };
+
+    const result: number[] = Array(10).fill(0);
+    [even, odd].forEach((v) => {
+        Object.keys(v).forEach((n) => {
+            const [char, times] = v[n];
+
+            if (repeatTimes[char]) {
+                result[n] = repeatTimes[char];
+
+                Object.keys(times).forEach((k) => {
+                    repeatTimes[k] -= times[k] * result[n];
+                });
+            }
+        });
+    });
+    result[9] =
+        Object.values(repeatTimes).reduce((acc, cur) => acc + cur) /
+        'nine'.length;
+
+    return result.map((v, i) => (v === 0 ? '' : `${i}`.repeat(v))).join('');
+}
+
+function getRepeatTimes(s: string) {
+    const times: Record<string, number> = {};
+    for (let i = 0; i < s.length; i++) {
+        times[s[i]] = (times[s[i]] || 0) + 1;
+    }
+
+    return times;
+}
