@@ -1,4 +1,3 @@
-import { GenericHeap } from '../algorithm/generic-heap';
 /*
 https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/description/
 1964. Find the Longest Valid Obstacle Course at Each Position
@@ -118,23 +117,21 @@ export function minTaps(n: number, ranges: number[]): number {
     const areas = ranges
         .map((v, i) => [i - v, i + v])
         .sort(([startA], [startB]) => startA - startB);
-    const maxHeap = new GenericHeap<number[]>(
-        ([, endA], [, endB]) => endB - endA
-    );
 
     let min = 0;
     let currentEnd = 0;
     let i = 0;
     while (currentEnd < n) {
+        let maxEnd = currentEnd;
         while (i < areas.length && areas[i][0] <= currentEnd) {
-            maxHeap.push(areas[i++]);
+            maxEnd = Math.max(maxEnd, areas[i++][1]);
         }
 
-        if (maxHeap.size() === 0) {
+        if (maxEnd === currentEnd) {
             return -1;
         }
 
-        currentEnd = maxHeap.pop()[1];
+        currentEnd = maxEnd;
         min++;
     }
 
