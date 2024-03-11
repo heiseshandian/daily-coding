@@ -89,7 +89,11 @@ export function removeKdigits(num: string, k: number): string {
     for (let i = 0; i < num.length; i++) {
         const current = num[i];
 
-        while (k > 0 && stack.length > 0 && Number(stack[stack.length - 1]) > Number(current)) {
+        while (
+            k > 0 &&
+            stack.length > 0 &&
+            Number(stack[stack.length - 1]) > Number(current)
+        ) {
             stack.pop();
             k--;
         }
@@ -135,7 +139,11 @@ export function removeDuplicateLetters(s: string): string {
 
         // 此处要注意 countMap[stack[stack.length - 1]] > 0
         // 因为如果某个字符后面已经没有了那我们是不能将其删除掉的，只能直接留在栈顶
-        while (stack.length > 0 && stack[stack.length - 1] > char && countMap[stack[stack.length - 1]] > 0) {
+        while (
+            stack.length > 0 &&
+            stack[stack.length - 1] > char &&
+            countMap[stack[stack.length - 1]] > 0
+        ) {
             added[stack.pop()!] = false;
         }
         stack.push(char);
@@ -156,7 +164,11 @@ The relative order of the digits from the same array must be preserved.
 
 Return an array of the k digits representing the answer.
 */
-export function maxNumber(nums1: number[], nums2: number[], k: number): number[] {
+export function maxNumber(
+    nums1: number[],
+    nums2: number[],
+    k: number
+): number[] {
     let result: number[] = [];
 
     let start = Math.max(0, k - nums2.length);
@@ -180,7 +192,11 @@ function merge(nums1: string, nums2: string) {
     const result: number[] = [];
 
     while (i < nums1.length && j < nums2.length) {
-        result.push(nums1.substring(i) > nums2.substring(j) ? Number(nums1[i++]) : Number(nums2[j++]));
+        result.push(
+            nums1.substring(i) > nums2.substring(j)
+                ? Number(nums1[i++])
+                : Number(nums2[j++])
+        );
     }
     while (i < nums1.length) {
         result.push(+nums1[i++]);
@@ -201,11 +217,70 @@ function getMax(nums: number[], k: number) {
     const stack: number[] = [];
     for (let i = 0; i < nums.length; i++) {
         const val = nums[i];
-        while (stack.length > 0 && stack[stack.length - 1] < val && stack.length + nums.length - i - 1 >= k) {
+        while (
+            stack.length > 0 &&
+            stack[stack.length - 1] < val &&
+            stack.length + nums.length - i - 1 >= k
+        ) {
             stack.pop();
         }
         stack.push(val);
     }
 
     return stack.slice(0, k);
+}
+
+/*
+https://leetcode.com/problems/valid-parentheses/description/
+20. Valid Parentheses
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+	Open brackets must be closed by the same type of brackets.
+	Open brackets must be closed in the correct order.
+	Every close bracket has a corresponding open bracket of the same type.
+
+Example 1:
+
+Input: s = "()"
+Output: true
+
+Example 2:
+
+Input: s = "()[]{}"
+Output: true
+
+Example 3:
+
+Input: s = "(]"
+Output: false
+
+Constraints:
+
+	1 <= s.length <= 10^4
+	s consists of parentheses only '()[]{}'.
+*/
+export function isValid(s: string): boolean {
+    const stack: string[] = [];
+    const map = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+    };
+    let i = 0;
+    while (i < s.length) {
+        if (map[s[i]]) {
+            stack.push(s[i]);
+        } else {
+            const top = stack.pop()!;
+            if (map[top] !== s[i]) {
+                return false;
+            }
+        }
+
+        i++;
+    }
+
+    return stack.length === 0;
 }
