@@ -678,7 +678,7 @@ Constraints:
 	m == img.length
 	n == img[i].length
 	1 <= m, n <= 200
-	0 <= img[i][j] <= 2^55
+	0 <= img[i][j] <= 255
 */
 export function imageSmoother(img: number[][]): number[][] {
     const m = img.length;

@@ -187,8 +187,8 @@ function fixConstraints(desc) {
     const squareReg = /10([1-9])\]/g;
 
     // -2^31 <= nums.length <= 2^31-1
-    const twoPrefixReg = /-?2([1-9]{2})\s+(<=?)/g;
-    const twoSuffixReg = /(<=?)\s+(?:\d\s+\*\s+)?2([1-9]{2})/g;
+    const twoPrefixReg = /-?2([1-3]{2})\s+(<=?)/g;
+    const twoSuffixReg = /(<=?)\s+(?:\d\s+\*\s+)?2([1-3]{2})/g;
 
     return desc
         .replace(prefixReg, '10^$1 $2')
