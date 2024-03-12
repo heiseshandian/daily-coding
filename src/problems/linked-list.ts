@@ -697,3 +697,78 @@ export function middleNode(head: ListNode | null): ListNode | null {
 
     return slow;
 }
+
+/*
+https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/
+1171. Remove Zero Sum Consecutive Nodes from Linked List
+Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
+
+After doing so, return the head of the final linked list.  You may return any such answer.
+
+(Note that in the examples below, all sequences are serializations of ListNode objects.)
+
+Example 1:
+
+Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
+
+Example 2:
+
+Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
+
+Example 3:
+
+Input: head = [1,2,3,-3,-2]
+Output: [1]
+
+Constraints:
+
+	The given linked list will contain between 1 and 1000 nodes.
+	Each node in the linked list has -1000 <= node.val <= 1000.
+*/
+export function removeZeroSumSublists(head: ListNode | null): ListNode | null {
+    if (!head) {
+        return head;
+    }
+
+    const nums: number[] = [];
+    let cur: ListNode | null = head;
+    while (cur) {
+        nums.push(cur.val);
+        cur = cur.next;
+    }
+
+    const suffixSum: number[] = new Array(nums.length);
+    suffixSum[nums.length - 1] = nums[nums.length - 1];
+    for (let i = nums.length - 2; i >= 0; i--) {
+        suffixSum[i] = suffixSum[i + 1] + nums[i];
+    }
+
+    for (let i = nums.length - 1; i >= 0; ) {
+        let j = i;
+        let mostLeft: number | null = null;
+        const prev = i === nums.length - 1 ? 0 : suffixSum[i + 1];
+        while (j >= 0) {
+            if (suffixSum[j] - prev === 0) {
+                mostLeft = j;
+            }
+            j--;
+        }
+
+        if (mostLeft === null) {
+            i--;
+        } else {
+            nums.splice(mostLeft, i - mostLeft + 1);
+            i = mostLeft - 1;
+        }
+    }
+
+    const nodes = nums.map((v) => new ListNode(v));
+    nodes.forEach((n, i) => {
+        n.next = nodes[i + 1] || null;
+    });
+
+    return nodes[0] || null;
+}
