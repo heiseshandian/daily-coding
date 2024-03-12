@@ -1477,35 +1477,31 @@ Constraints:
 	0 <= answers[i] <= 1000
 */
 export function scoreOfStudents(s: string, answers: number[]): number {
-    const splitedS = s.split('');
-
-    const set = new Set<number>();
-    const calc = cache((rest: string[]) => {
-        if (rest.length === 1) {
-            set.add(+rest[0]);
-            return;
+    const MAX = 1000;
+    const calc = cache((start: number, end: number): Set<number> => {
+        if (start === end) {
+            return new Set([+s[start]]);
         }
 
-        for (let i = 1; i < rest.length; i += 2) {
-            if (rest[i] === '+') {
-                calc(
-                    rest
-                        .slice(0, i - 1)
-                        .concat(`${Number(rest[i - 1]) + Number(rest[i + 1])}`)
-                        .concat(rest.slice(i + 2))
-                );
-            } else if (rest[i] === '*') {
-                calc(
-                    rest
-                        .slice(0, i - 1)
-                        .concat(`${Number(rest[i - 1]) * Number(rest[i + 1])}`)
-                        .concat(rest.slice(i + 2))
-                );
-            }
+        const results = new Set<number>();
+        for (let i = start + 1; i < end; i += 2) {
+            const left = calc(start, i - 1);
+            const right = calc(i + 1, end);
+
+            left.forEach((l) => {
+                right.forEach((r) => {
+                    const val = s[i] === '+' ? l + r : l * r;
+                    if (val <= MAX) {
+                        results.add(val);
+                    }
+                });
+            });
         }
+
+        return results;
     });
-    calc(splitedS);
 
+    const set = calc(0, s.length - 1);
     const correctResult = calculate(s);
 
     return answers.reduce((acc, cur) => {
