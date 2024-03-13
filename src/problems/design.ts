@@ -299,3 +299,109 @@ export function promiseAll<T>(functions: Fn<T>[]): Promise<T[]> {
         rejectFn = reject;
     });
 }
+
+/*
+https://leetcode.com/problems/frequency-tracker/
+2671. Frequency Tracker
+Design a data structure that keeps track of the values in it and answers some queries regarding their frequencies.
+
+Implement the FrequencyTracker class.
+
+	FrequencyTracker(): Initializes the FrequencyTracker object with an empty array initially.
+	void add(int number): Adds number to the data structure.
+	void deleteOne(int number): Deletes one occurrence of number from the data structure. The data structure may not contain number, and in this case nothing is deleted.
+	bool hasFrequency(int frequency): Returns true if there is a number in the data structure that occurs frequency number of times, otherwise, it returns false.
+
+Example 1:
+
+Input
+["FrequencyTracker", "add", "add", "hasFrequency"]
+[[], [3], [3], [2]]
+Output
+[null, null, null, true]
+
+Explanation
+FrequencyTracker frequencyTracker = new FrequencyTracker();
+frequencyTracker.add(3); // The data structure now contains [3]
+frequencyTracker.add(3); // The data structure now contains [3, 3]
+frequencyTracker.hasFrequency(2); // Returns true, because 3 occurs twice
+
+Example 2:
+
+Input
+["FrequencyTracker", "add", "deleteOne", "hasFrequency"]
+[[], [1], [1], [1]]
+Output
+[null, null, null, false]
+
+Explanation
+FrequencyTracker frequencyTracker = new FrequencyTracker();
+frequencyTracker.add(1); // The data structure now contains [1]
+frequencyTracker.deleteOne(1); // The data structure becomes empty []
+frequencyTracker.hasFrequency(1); // Returns false, because the data structure is empty
+
+Example 3:
+
+Input
+["FrequencyTracker", "hasFrequency", "add", "hasFrequency"]
+[[], [2], [3], [1]]
+Output
+[null, false, null, true]
+
+Explanation
+FrequencyTracker frequencyTracker = new FrequencyTracker();
+frequencyTracker.hasFrequency(2); // Returns false, because the data structure is empty
+frequencyTracker.add(3); // The data structure now contains [3]
+frequencyTracker.hasFrequency(1); // Returns true, because 3 occurs once
+
+Constraints:
+
+	1 <= number <= 10^5
+	1 <= frequency <= 10^5
+	At most, 2 * 10^5 calls will be made to add, deleteOne, and hasFrequency in total.
+*/
+export class FrequencyTracker {
+    private map: Record<number, number>;
+    private freqMap: Record<number, Set<number>>;
+
+    private updateFreqMap(prevFreq: number, nextFreq: number, number: number) {
+        this.freqMap[prevFreq]?.delete(number);
+        if (this.freqMap[prevFreq]?.size === 0) {
+            delete this.freqMap[prevFreq];
+        }
+
+        (this.freqMap[nextFreq] || (this.freqMap[nextFreq] = new Set())).add(
+            number
+        );
+    }
+
+    constructor() {
+        this.map = {};
+        this.freqMap = {};
+    }
+
+    add(number: number): void {
+        const prevFreq = this.map[number] || 0;
+        this.map[number] = prevFreq + 1;
+
+        this.updateFreqMap(prevFreq, prevFreq + 1, number);
+    }
+
+    deleteOne(number: number): void {
+        const prevFreq = this.map[number];
+        if (!prevFreq) {
+            return;
+        }
+
+        this.map[number]--;
+        if (this.map[number] === 0) {
+            delete this.map[number];
+        }
+
+        this.updateFreqMap(prevFreq, prevFreq - 1, number);
+    }
+
+    hasFrequency(frequency: number): boolean {
+        return this.freqMap[frequency] !== undefined;
+    }
+}
