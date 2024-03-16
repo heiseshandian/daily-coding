@@ -3628,3 +3628,43 @@ export function productExceptSelf(nums: number[]): number[] {
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/contiguous-array/description/?envType=daily-question&envId=2024-03-16
+525. Contiguous Array
+Given a binary array nums, return the maximum length of a contiguous subarray with an equal number of 0 and 1.
+
+Example 1:
+
+Input: nums = [0,1]
+Output: 2
+Explanation: [0, 1] is the longest contiguous subarray with an equal number of 0 and 1.
+
+Example 2:
+
+Input: nums = [0,1,0]
+Output: 2
+Explanation: [0, 1] (or [1, 0]) is a longest contiguous subarray with equal number of 0 and 1.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	nums[i] is either 0 or 1.
+*/
+export function findMaxLength(nums: number[]): number {
+    let prefix = 0;
+    const map: Record<number, number> = { 0: -1 };
+    let max = 0;
+    for (let i = 0; i < nums.length; i++) {
+        prefix += nums[i] || -1;
+
+        // 此处不可直接使用 map[prefix] 来判断，因为 map[prefix] 如果等于 0 的话也是 false
+        if (map[prefix] !== undefined) {
+            max = Math.max(max, i - map[prefix]);
+        } else {
+            map[prefix] = i;
+        }
+    }
+
+    return max;
+}
