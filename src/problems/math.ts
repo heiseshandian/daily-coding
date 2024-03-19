@@ -200,7 +200,8 @@ export function minGroupsForValidAssignment(balls: number[]): number {
         const rest = t * (min + 1) - cur;
 
         if (rest > t) {
-            min--;
+            const half = cur >> 1;
+            min = cur - half < min ? cur - half : min - 1;
             i = 0;
             count = 0;
             continue;
