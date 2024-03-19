@@ -135,3 +135,80 @@ export function numMovesStones(a: number, b: number, c: number): number[] {
 
     return [minMoves, maxMoves];
 }
+
+/*
+https://leetcode.com/problems/minimum-number-of-groups-to-create-a-valid-assignment/description/
+2910. Minimum Number of Groups to Create a Valid Assignment
+You are given a collection of numbered balls and instructed to sort them into boxes for a nearly balanced distribution. There are two rules you must follow:
+
+	Balls with the same box must have the same value. But, if you have more than one ball with the same number, you can put them in different boxes.
+	The biggest box can only have one more ball than the smallest box.
+
+​Return the fewest number of boxes to sort these balls following these rules.
+
+Example 1: 
+
+Input:   balls = [3,2,3,2,3] 
+
+Output:   2 
+
+Explanation:
+
+We can sort balls into boxes as follows:
+
+	[3,3,3]
+	[2,2]
+
+The size difference between the two boxes doesn't exceed one.
+
+Example 2: 
+
+Input:   balls = [10,10,10,3,1,1] 
+
+Output:   4 
+
+Explanation:
+
+We can sort balls into boxes as follows:
+
+	[10]
+	[10,10]
+	[3]
+	[1,1]
+
+You can't use fewer than four boxes while still following the rules. For example, putting all three balls numbered 10 in one box would break the rule about the maximum size difference between boxes.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^9
+*/
+export function minGroupsForValidAssignment(balls: number[]): number {
+    const repeatTimes: Record<number, number> = {};
+    balls.forEach((v) => {
+        repeatTimes[v] = (repeatTimes[v] || 0) + 1;
+    });
+
+    const times = Object.values(repeatTimes).sort((a, b) => a - b);
+    const len = times.length;
+    let min = times[0];
+    let i = 0;
+    let count = 0;
+    while (i < len) {
+        const cur = times[i];
+        const t = Math.ceil(cur / (min + 1));
+        const rest = t * (min + 1) - cur;
+
+        if (rest > t) {
+            min--;
+            i = 0;
+            count = 0;
+            continue;
+        }
+
+        count += t;
+        i++;
+    }
+
+    return count;
+}
