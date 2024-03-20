@@ -145,11 +145,20 @@ export function countConversionResultDp2(str: string): number {
 给定两个长度都为N的数组weights和values，weights【i】和values【i】分别代表i号物品的重量和价值。
 给定一个正数bag，表示一个载重bag的袋子，你装的物品不能超过这个重量。返回你能装下最多的价值是多少？
 */
-export function maxValueOfBag(weights: number[], values: number[], bag: number): number {
+export function maxValueOfBag(
+    weights: number[],
+    values: number[],
+    bag: number
+): number {
     return bagProcess(weights, values, 0, bag);
 }
 
-function bagProcess(weights: number[], values: number[], i: number, restWeight: number): number {
+function bagProcess(
+    weights: number[],
+    values: number[],
+    i: number,
+    restWeight: number
+): number {
     // 没有空间或者没有货物能拿到的最大价值是0
     if (i === weights.length) {
         return 0;
@@ -159,17 +168,25 @@ function bagProcess(weights: number[], values: number[], i: number, restWeight: 
     let p1 = 0;
     // 拿当前物品之前需要判断下是否超重
     if (restWeight - weights[i] >= 0) {
-        p1 = values[i] + bagProcess(weights, values, i + 1, restWeight - weights[i]);
+        p1 =
+            values[i] +
+            bagProcess(weights, values, i + 1, restWeight - weights[i]);
     }
     const p2 = bagProcess(weights, values, i + 1, restWeight);
 
     return Math.max(p1, p2);
 }
 
-export function maxValueOfBagDp(weights: number[], values: number[], bag: number): number {
+export function maxValueOfBagDp(
+    weights: number[],
+    values: number[],
+    bag: number
+): number {
     // dp[i][j] 剩余重量为j，自由拿i以及i以后的所有物品所能获得的最大价值
     // i:0-weights.length j:0-bag
-    const dp: number[][] = new Array(weights.length + 1).fill(0).map((_) => new Array(bag + 1).fill(0));
+    const dp: number[][] = new Array(weights.length + 1)
+        .fill(0)
+        .map((_) => new Array(bag + 1).fill(0));
 
     for (let i = weights.length - 1; i >= 0; i--) {
         for (let j = 0; j <= bag; j++) {
@@ -190,7 +207,11 @@ export function maxValueOfBagDp(weights: number[], values: number[], bag: number
 
 // 观察maxValueOfBagDp可以看出每一行的值都只依赖于下一行的值，也就是说我们可以用一个数组滚动的方式来弄出最终的值，从而节省空间
 // 由于dp[i][j]有可能依赖于前面已经计算过的值所以我们需要用两个数组来滚动，若dp[i][j]严格依赖于二维表中下面的值则可以只用一个数组来滚动
-export function maxValueOfBagDp2(weights: number[], values: number[], bag: number): number {
+export function maxValueOfBagDp2(
+    weights: number[],
+    values: number[],
+    bag: number
+): number {
     const dp: number[] = new Array(bag + 1).fill(0);
     let dpPrev: number[] = new Array(bag + 1).fill(0);
 
@@ -219,7 +240,10 @@ export function maxValueOfBagDp2(weights: number[], values: number[], bag: numbe
 但是每个玩家每次只能拿走最左或最右的纸牌，玩家A和玩家B都绝顶聪明。请返回最后获胜者的分数。
 */
 export function getMaxPoints(points: number[]): number {
-    return Math.max(first(points, 0, points.length - 1), last(points, 0, points.length - 1));
+    return Math.max(
+        first(points, 0, points.length - 1),
+        last(points, 0, points.length - 1)
+    );
 }
 
 // 在left-right上先手拿牌所能获得的最大点数
@@ -251,9 +275,13 @@ export function getMaxPointsDp(points: number[]): number {
     const len = points.length;
 
     // dpFirst[i][j] 在i-j上先手能获得的最大点数
-    const dpFirst: number[][] = new Array(len).fill(0).map((_) => new Array(len).fill(0));
+    const dpFirst: number[][] = new Array(len)
+        .fill(0)
+        .map((_) => new Array(len).fill(0));
     // dpLast[i][j]在i-j上后手能获得的最大点数
-    const dpLast: number[][] = new Array(len).fill(0).map((_) => new Array(len).fill(0));
+    const dpLast: number[][] = new Array(len)
+        .fill(0)
+        .map((_) => new Array(len).fill(0));
 
     // left===right dpLast[i][j]=points[left];
     for (let i = 0; i < len; i++) {
@@ -305,7 +333,10 @@ function countNQueenProcess(queen: number[], i: number): number {
 function isValidPosition(queen: number[], i: number, j: number): boolean {
     // 此处lineNum < i 而不是<queen.length 因为后面还没摆放皇后
     for (let lineNum = 0; lineNum < i; lineNum++) {
-        if (queen[lineNum] === j || Math.abs(i - lineNum) === Math.abs(j - queen[lineNum])) {
+        if (
+            queen[lineNum] === j ||
+            Math.abs(i - lineNum) === Math.abs(j - queen[lineNum])
+        ) {
             return false;
         }
     }
@@ -324,7 +355,12 @@ export function countNQueen2(n: number): number {
     return countNQueen2Process(limit, 0, 0, 0);
 }
 
-function countNQueen2Process(limit: number, colLimit: number, leftLimit: number, rightLimit: number): number {
+function countNQueen2Process(
+    limit: number,
+    colLimit: number,
+    leftLimit: number,
+    rightLimit: number
+): number {
     if (colLimit === limit) {
         return 1;
     }
@@ -358,7 +394,12 @@ function countNQueen2Process(limit: number, colLimit: number, leftLimit: number,
 如果机器人来到中间位置，那么下一步可以往左走或者往右走；
 规定机器人必须走K步，最终能来到P位置（P也是1~N中的一个）的方法有多少种给定四个参数N、M、K、P，返回方法数。
 */
-export function countWalkMethods(n: number, m: number, k: number, p: number): number {
+export function countWalkMethods(
+    n: number,
+    m: number,
+    k: number,
+    p: number
+): number {
     return walkProcess(n, p, k, m);
 }
 
@@ -379,15 +420,25 @@ function walkProcess(n: number, p: number, restK: number, i: number): number {
     }
 
     // 向左走或者向右走
-    return walkProcess(n, p, restK - 1, i + 1) + walkProcess(n, p, restK - 1, i - 1);
+    return (
+        walkProcess(n, p, restK - 1, i + 1) +
+        walkProcess(n, p, restK - 1, i - 1)
+    );
 }
 
-export function countWalkMethodsDp(n: number, m: number, k: number, p: number): number {
+export function countWalkMethodsDp(
+    n: number,
+    m: number,
+    k: number,
+    p: number
+): number {
     // dp[restK][i] 表示剩余步数为restK，当前位置为i的情况下，后续有多少种走法
     // restK:0-k 一共k+1个位置
     // i:1-n
     // dp[k][m] 就是我们最终需要返回的值
-    const dp: number[][] = new Array(k + 1).fill(0).map((_) => new Array(n + 1).fill(0));
+    const dp: number[][] = new Array(k + 1)
+        .fill(0)
+        .map((_) => new Array(n + 1).fill(0));
     dp[0][p] = 1;
 
     for (let restK = 1; restK <= k; restK++) {
@@ -406,7 +457,12 @@ export function countWalkMethodsDp(n: number, m: number, k: number, p: number): 
 }
 
 // 用两个数组滚动来节省空间
-export function countWalkMethodsDp2(n: number, m: number, k: number, p: number): number {
+export function countWalkMethodsDp2(
+    n: number,
+    m: number,
+    k: number,
+    p: number
+): number {
     let prevDp = new Array(n + 1).fill(0);
     prevDp[p] = 1;
 
@@ -453,7 +509,9 @@ function countMoneyProcess(arr: number[], i: number, rest: number): number {
 
 export function countMoneyDp(arr: number[], target: number): number {
     // dp[i][rest] 从i位置开始自由选择，搞定rest有多少种选择方案
-    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(target + 1).fill(0));
+    const dp: number[][] = new Array(arr.length + 1)
+        .fill(0)
+        .map((_) => new Array(target + 1).fill(0));
     for (let i = 0; i <= arr.length; i++) {
         dp[i][0] = 1;
     }
@@ -473,7 +531,9 @@ export function countMoneyDp(arr: number[], target: number): number {
 
 export function countMoneyDp2(arr: number[], target: number): number {
     // dp[i][rest] 从i位置开始自由选择，搞定rest有多少种选择方案
-    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(target + 1).fill(0));
+    const dp: number[][] = new Array(arr.length + 1)
+        .fill(0)
+        .map((_) => new Array(target + 1).fill(0));
     for (let i = 0; i <= arr.length; i++) {
         dp[i][0] = 1;
     }
@@ -545,7 +605,11 @@ function convertStr2CountArr(str: string): number[] {
 }
 
 // 从i位置自由选择，搞定剩下的字符最少需要多少张贴纸
-function getMinMethodsProcess(strArr: number[], handledArr: number[][], i: number): number {
+function getMinMethodsProcess(
+    strArr: number[],
+    handledArr: number[][],
+    i: number
+): number {
     // 所有字符已经搞定返回最少需要0张
     if (strArr.every((val) => val === 0)) {
         return 0;
@@ -599,7 +663,11 @@ export function getMinMethodsDp(str: string, arr: string[]): number {
 
 // 自由使用所有贴纸搞定rest最少需要多少张贴纸，这种尝试模型就比上面的要好一点，因为这种尝试模型只有一个可变参数，可以有效提高缓存结构的命中率，
 // 而且所需要的缓存也会少一些
-function getMinMethodsDpProcess(rest: string, handledArr: number[][], dp: Map<string, number>): number {
+function getMinMethodsDpProcess(
+    rest: string,
+    handledArr: number[][],
+    dp: Map<string, number>
+): number {
     if (dp.has(rest)) {
         return dp.get(rest) as number;
     }
@@ -636,7 +704,9 @@ function getMinMethodsDpProcess(rest: string, handledArr: number[][], dp: Map<st
 export function maxCommonSubsequence(str1: string, str2: string): number {
     // 上来就弄一张二维表，然后再赋予这张二维表意义
     // dp[i][j] str1 0-i字符与str2 0-j字符的最长公共子序列长度，dp[str1.length-1][str2.length-1]就是我们最终的返回值
-    const dp: number[][] = new Array(str1.length).fill(0).map((_) => new Array(str2.length).fill(0));
+    const dp: number[][] = new Array(str1.length)
+        .fill(0)
+        .map((_) => new Array(str2.length).fill(0));
     dp[0][0] = str1[0] === str2[0] ? 1 : 0;
 
     // 第0行的值，一旦出现一个相同字符，后续位置都是1（因为str1此时就一个字符，可能的最长公共子序列长度也就是1）
@@ -685,18 +755,30 @@ export function getCoffeeTime(arr: number[], a: number, b: number): number {
 假设i号杯子决定放进咖啡机里面洗则nextFreeTime = Math.max(arr[i],freeTime) + a
 假设i号杯子决定自己挥发干净则最快干净的时间是 arr[i] + b
  */
-function coffeeTimeProcess(arr: number[], a: number, b: number, i: number, freeTime: number): number {
+function coffeeTimeProcess(
+    arr: number[],
+    a: number,
+    b: number,
+    i: number,
+    freeTime: number
+): number {
     // 没有杯子需要洗了，则咖啡机洗完的时间就是最少时间
     if (i === arr.length) {
         return freeTime;
     }
 
     // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
-    const p1 = Math.max(arr[i] + b, coffeeTimeProcess(arr, a, b, i + 1, freeTime));
+    const p1 = Math.max(
+        arr[i] + b,
+        coffeeTimeProcess(arr, a, b, i + 1, freeTime)
+    );
 
     // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
     const nextFreeTime = Math.max(arr[i], freeTime) + a;
-    const p2 = Math.max(nextFreeTime, coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime));
+    const p2 = Math.max(
+        nextFreeTime,
+        coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime)
+    );
 
     return Math.min(p1, p2);
 }
@@ -726,11 +808,17 @@ function coffeeTimeProcess2(
     }
 
     // i号杯子自然挥发，自然挥发可并行发生，洗完所有杯子所需时间就是当前时间与后续时间的较大值
-    const p1 = Math.max(arr[i] + b, coffeeTimeProcess(arr, a, b, i + 1, freeTime));
+    const p1 = Math.max(
+        arr[i] + b,
+        coffeeTimeProcess(arr, a, b, i + 1, freeTime)
+    );
 
     // i号杯子放进咖啡机里洗，洗完所有杯子所需时间就是nextFreeTime与后续时间的较大值
     const nextFreeTime = Math.max(arr[i], freeTime) + a;
-    const p2 = Math.max(nextFreeTime, coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime));
+    const p2 = Math.max(
+        nextFreeTime,
+        coffeeTimeProcess(arr, a, b, i + 1, nextFreeTime)
+    );
 
     if (!dp.has(i)) {
         dp.set(i, new Map());
@@ -750,7 +838,9 @@ export function getCoffeeTimeDp2(arr: number[], a: number, b: number): number {
     }
 
     // dp[i][freeTime] dp[0][0]就是我们需要的返回值
-    const dp: number[][] = new Array(arr.length + 1).fill(0).map((_) => new Array(maxFreeTime + 1).fill(0));
+    const dp: number[][] = new Array(arr.length + 1)
+        .fill(0)
+        .map((_) => new Array(maxFreeTime + 1).fill(0));
 
     // dp[arr.length][freeTime]=freeTime
     for (let freeTime = 0; freeTime <= maxFreeTime; freeTime++) {
@@ -819,7 +909,13 @@ export function getCoffeeTimeDp3(arr: number[], a: number, b: number): number {
  
 有一张9x10的棋盘，假设当前马在（0,0）位置，给定目标点(a,b) 以及目标步数k，问有多少种方式能够到达目标点
 */
-export function getHorseMethods(maxX: number, maxY: number, a: number, b: number, k: number): number {
+export function getHorseMethods(
+    maxX: number,
+    maxY: number,
+    a: number,
+    b: number,
+    k: number
+): number {
     if (k < 0) {
         return 0;
     }
@@ -861,7 +957,13 @@ function getHorseMethodsProcess(
     return count;
 }
 
-export function getHorseMethods2(maxX: number, maxY: number, a: number, b: number, k: number): number {
+export function getHorseMethods2(
+    maxX: number,
+    maxY: number,
+    a: number,
+    b: number,
+    k: number
+): number {
     if (k < 0) {
         return 0;
     }
@@ -869,7 +971,13 @@ export function getHorseMethods2(maxX: number, maxY: number, a: number, b: numbe
     return getHorseMethodsProcess2(maxX, maxY, a, b, k);
 }
 
-function getHorseMethodsProcess2(maxX: number, maxY: number, curA: number, curB: number, rest: number): number {
+function getHorseMethodsProcess2(
+    maxX: number,
+    maxY: number,
+    curA: number,
+    curB: number,
+    rest: number
+): number {
     // 剩余0步且当前来到了(0,0)位置则找到了一种走法，否则返回0
     if (rest === 0) {
         return curA === 0 && curB === 0 ? 1 : 0;
@@ -895,7 +1003,13 @@ function getHorseMethodsProcess2(maxX: number, maxY: number, curA: number, curB:
     return count;
 }
 
-export function getHorseMethodsDp(maxX: number, maxY: number, a: number, b: number, k: number): number {
+export function getHorseMethodsDp(
+    maxX: number,
+    maxY: number,
+    a: number,
+    b: number,
+    k: number
+): number {
     if (k < 0) {
         return 0;
     }
@@ -903,7 +1017,9 @@ export function getHorseMethodsDp(maxX: number, maxY: number, a: number, b: numb
     // dp[k][a][b]是最终返回值
     const dp: number[][][] = new Array(k + 1)
         .fill(0)
-        .map((_) => new Array(maxX + 1).fill(0).map((_) => new Array(maxY + 1).fill(0)));
+        .map((_) =>
+            new Array(maxX + 1).fill(0).map((_) => new Array(maxY + 1).fill(0))
+        );
 
     // 剩余0步且当前来到了(a,b)位置则找到了一种走法，否则返回0
     // if (rest === 0) {
@@ -921,14 +1037,30 @@ export function getHorseMethodsDp(maxX: number, maxY: number, a: number, b: numb
         for (let curA = 0; curA <= maxX; curA++) {
             for (let curB = 0; curB <= maxY; curB++) {
                 dp[rest][curA][curB] =
-                    (isOutOfScope(curA + 2, curB + 1) ? 0 : dp[rest - 1][curA + 2][curB + 1]) +
-                    (isOutOfScope(curA + 2, curB - 1) ? 0 : dp[rest - 1][curA + 2][curB - 1]) +
-                    (isOutOfScope(curA - 2, curB + 1) ? 0 : dp[rest - 1][curA - 2][curB + 1]) +
-                    (isOutOfScope(curA - 2, curB - 1) ? 0 : dp[rest - 1][curA - 2][curB - 1]) +
-                    (isOutOfScope(curA + 1, curB + 2) ? 0 : dp[rest - 1][curA + 1][curB + 2]) +
-                    (isOutOfScope(curA - 1, curB + 2) ? 0 : dp[rest - 1][curA - 1][curB + 2]) +
-                    (isOutOfScope(curA + 1, curB - 2) ? 0 : dp[rest - 1][curA + 1][curB - 2]) +
-                    (isOutOfScope(curA - 1, curB - 2) ? 0 : dp[rest - 1][curA - 1][curB - 2]);
+                    (isOutOfScope(curA + 2, curB + 1)
+                        ? 0
+                        : dp[rest - 1][curA + 2][curB + 1]) +
+                    (isOutOfScope(curA + 2, curB - 1)
+                        ? 0
+                        : dp[rest - 1][curA + 2][curB - 1]) +
+                    (isOutOfScope(curA - 2, curB + 1)
+                        ? 0
+                        : dp[rest - 1][curA - 2][curB + 1]) +
+                    (isOutOfScope(curA - 2, curB - 1)
+                        ? 0
+                        : dp[rest - 1][curA - 2][curB - 1]) +
+                    (isOutOfScope(curA + 1, curB + 2)
+                        ? 0
+                        : dp[rest - 1][curA + 1][curB + 2]) +
+                    (isOutOfScope(curA - 1, curB + 2)
+                        ? 0
+                        : dp[rest - 1][curA - 1][curB + 2]) +
+                    (isOutOfScope(curA + 1, curB - 2)
+                        ? 0
+                        : dp[rest - 1][curA + 1][curB - 2]) +
+                    (isOutOfScope(curA - 1, curB - 2)
+                        ? 0
+                        : dp[rest - 1][curA - 1][curB - 2]);
             }
         }
     }
@@ -936,13 +1068,21 @@ export function getHorseMethodsDp(maxX: number, maxY: number, a: number, b: numb
     return dp[k][a][b];
 }
 
-export function getHorseMethodsDp2(maxX: number, maxY: number, a: number, b: number, k: number): number {
+export function getHorseMethodsDp2(
+    maxX: number,
+    maxY: number,
+    a: number,
+    b: number,
+    k: number
+): number {
     if (k < 0) {
         return 0;
     }
 
     // dp[k][a][b]是最终返回值
-    const dp: number[][] = new Array(maxX + 1).fill(0).map((_) => new Array(maxY + 1).fill(0));
+    const dp: number[][] = new Array(maxX + 1)
+        .fill(0)
+        .map((_) => new Array(maxY + 1).fill(0));
     dp[0][0] = 1;
     let prevDp = dp.slice().map((arr) => arr.slice());
 
@@ -955,14 +1095,30 @@ export function getHorseMethodsDp2(maxX: number, maxY: number, a: number, b: num
         for (let curA = 0; curA <= maxX; curA++) {
             for (let curB = 0; curB <= maxY; curB++) {
                 dp[curA][curB] =
-                    (isOutOfScope(curA + 2, curB + 1) ? 0 : prevDp[curA + 2][curB + 1]) +
-                    (isOutOfScope(curA + 2, curB - 1) ? 0 : prevDp[curA + 2][curB - 1]) +
-                    (isOutOfScope(curA - 2, curB + 1) ? 0 : prevDp[curA - 2][curB + 1]) +
-                    (isOutOfScope(curA - 2, curB - 1) ? 0 : prevDp[curA - 2][curB - 1]) +
-                    (isOutOfScope(curA + 1, curB + 2) ? 0 : prevDp[curA + 1][curB + 2]) +
-                    (isOutOfScope(curA - 1, curB + 2) ? 0 : prevDp[curA - 1][curB + 2]) +
-                    (isOutOfScope(curA + 1, curB - 2) ? 0 : prevDp[curA + 1][curB - 2]) +
-                    (isOutOfScope(curA - 1, curB - 2) ? 0 : prevDp[curA - 1][curB - 2]);
+                    (isOutOfScope(curA + 2, curB + 1)
+                        ? 0
+                        : prevDp[curA + 2][curB + 1]) +
+                    (isOutOfScope(curA + 2, curB - 1)
+                        ? 0
+                        : prevDp[curA + 2][curB - 1]) +
+                    (isOutOfScope(curA - 2, curB + 1)
+                        ? 0
+                        : prevDp[curA - 2][curB + 1]) +
+                    (isOutOfScope(curA - 2, curB - 1)
+                        ? 0
+                        : prevDp[curA - 2][curB - 1]) +
+                    (isOutOfScope(curA + 1, curB + 2)
+                        ? 0
+                        : prevDp[curA + 1][curB + 2]) +
+                    (isOutOfScope(curA - 1, curB + 2)
+                        ? 0
+                        : prevDp[curA - 1][curB + 2]) +
+                    (isOutOfScope(curA + 1, curB - 2)
+                        ? 0
+                        : prevDp[curA + 1][curB - 2]) +
+                    (isOutOfScope(curA - 1, curB - 2)
+                        ? 0
+                        : prevDp[curA - 1][curB - 2]);
             }
         }
 
@@ -1002,14 +1158,20 @@ export function getMinValueOfColor(arr: number[][]): number {
 }
 
 // 把i位置及其以后的石头染色，返回最少代价
-function colorProcess(zeros: number[][], i: number, restRedCount: number): number {
+function colorProcess(
+    zeros: number[][],
+    i: number,
+    restRedCount: number
+): number {
     if (i === zeros.length) {
         return restRedCount === 0 ? 0 : -1;
     }
 
     // 如果restRedCount=0 则剩下所有石头都必须染成蓝色
     if (restRedCount === 0) {
-        return zeros.slice(i).reduce((acc, [, , blueCost]) => acc + blueCost, 0);
+        return zeros
+            .slice(i)
+            .reduce((acc, [, , blueCost]) => acc + blueCost, 0);
     }
 
     const [, redCost, blueCost] = zeros[i];
@@ -1052,7 +1214,9 @@ export function getMinValueOfColorDp(arr: number[][]): number {
     // i 0-zeros.length
     // restRedCount 0-half
     // 返回dp[0][half-redCount]
-    const dp: number[][] = new Array(zeros.length + 1).fill(0).map((_) => new Array(half + 1).fill(0));
+    const dp: number[][] = new Array(zeros.length + 1)
+        .fill(0)
+        .map((_) => new Array(half + 1).fill(0));
 
     // dp[zeros.length]
     for (let restRedCount = 1; restRedCount <= half; restRedCount++) {
@@ -1179,7 +1343,10 @@ export function getPlusOrMinusCountDp(arr: number[], target: number): number {
     for (let i = arr.length - 1; i >= 0; i--) {
         for (let rest = 0; rest <= sum; rest++) {
             // 两种选择
-            const p1 = Math.abs(rest - arr[i]) <= sum ? prevDp[Math.abs(rest - arr[i])] : 0;
+            const p1 =
+                Math.abs(rest - arr[i]) <= sum
+                    ? prevDp[Math.abs(rest - arr[i])]
+                    : 0;
             const p2 = rest + arr[i] <= sum ? prevDp[rest + arr[i]] : 0;
 
             dp[rest] = p1 + p2;
@@ -1259,7 +1426,11 @@ export function getMaxMoney2(income: number[][]): number {
     return getMaxMoney2Process(income, 0, income.length >> 1);
 }
 
-function getMaxMoney2Process(income: number[][], i: number, restA: number): number {
+function getMaxMoney2Process(
+    income: number[][],
+    i: number,
+    restA: number
+): number {
     if (i === income.length) {
         return restA === 0 ? 0 : -1;
     }
@@ -1293,7 +1464,9 @@ function getMaxMoney2Process(income: number[][], i: number, restA: number): numb
 export function getMaxMoneyDp(income: number[][]): number {
     const half = income.length >> 1;
     // dp[i][restA]
-    const dp: number[][] = new Array(income.length + 1).fill(0).map((_) => new Array(half + 1).fill(0));
+    const dp: number[][] = new Array(income.length + 1)
+        .fill(0)
+        .map((_) => new Array(half + 1).fill(0));
 
     for (let restA = 1; restA <= half; restA++) {
         dp[income.length][restA] = -1;
@@ -1391,14 +1564,20 @@ str4=321abc
 str3就是str1和str2的交错组成，但是str4就不是str1和str2的交错组成
 */
 // 样本对应模型
-export function isInterleave(str1: string, str2: string, str3: string): boolean {
+export function isInterleave(
+    str1: string,
+    str2: string,
+    str3: string
+): boolean {
     if (str1.length + str2.length !== str3.length) {
         return false;
     }
 
     // dp[i][j] str1取前i个字符，str2取前j个字符能否交错组成 str3中 前i+j个字符
     // dp[str1.length][str2.length]就是我们想要的结果
-    const dp: boolean[][] = new Array(str1.length + 1).fill(0).map((_) => new Array(str2.length).fill(false));
+    const dp: boolean[][] = new Array(str1.length + 1)
+        .fill(0)
+        .map((_) => new Array(str2.length).fill(false));
 
     // str1取0个字符，str2取0个字符必然可以组成str3取0个字符
     dp[0][0] = true;
@@ -1441,7 +1620,9 @@ rose -> ros (remove 'e')
 样本对应模型 */
 export function getMinEditDistance(word1: string, word2: string) {
     // dp[i][j] word1取前i个字符（下标 0 到 i-1）编辑成 word2取前j个字符（0到j-1）的最小代价
-    const dp: number[][] = new Array(word1.length + 1).fill(0).map((_) => new Array(word2.length + 1).fill(0));
+    const dp: number[][] = new Array(word1.length + 1)
+        .fill(0)
+        .map((_) => new Array(word2.length + 1).fill(0));
 
     // word1取0个字符
     for (let j = 0; j <= word2.length; j++) {
@@ -1456,7 +1637,11 @@ export function getMinEditDistance(word1: string, word2: string) {
     // 从上到下，从左到右填表
     for (let i = 1; i <= word1.length; i++) {
         for (let j = 1; j <= word2.length; j++) {
-            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i - 1][j - 1] + 1, dp[i][j - 1] + 1);
+            dp[i][j] = Math.min(
+                dp[i - 1][j] + 1,
+                dp[i - 1][j - 1] + 1,
+                dp[i][j - 1] + 1
+            );
             if (word1[i - 1] === word2[j - 1]) {
                 dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
             }
@@ -1484,7 +1669,11 @@ export function getMinEditDistance2(word1: string, word2: string) {
     // 从上到下，从左到右填表
     for (let i = 1; i <= word1.length; i++) {
         for (let j = 1; j <= word2.length; j++) {
-            dp[j] = Math.min(prevDp[j] + 1, (j === 1 ? i - 1 : prevDp[j - 1]) + 1, (j === 1 ? i : prevDp[j - 1]) + 1);
+            dp[j] = Math.min(
+                prevDp[j] + 1,
+                (j === 1 ? i - 1 : prevDp[j - 1]) + 1,
+                (j === 1 ? i : prevDp[j - 1]) + 1
+            );
             if (word1[i - 1] === word2[j - 1]) {
                 dp[j] = Math.min(dp[j], j === 1 ? i - 1 : prevDp[j - 1]);
             }
@@ -1588,7 +1777,12 @@ export function coinChange(coins: number[], amount: number): number {
 }
 
 // i以及i以后的硬币自由选择，搞定rest最少需要多少硬币
-function coinChangeProcess(coins: number[], i: number, rest: number, dp: Map<string, number>) {
+function coinChangeProcess(
+    coins: number[],
+    i: number,
+    rest: number,
+    dp: Map<string, number>
+) {
     if (rest === 0) {
         return 0;
     }
@@ -1615,7 +1809,9 @@ function coinChangeProcess(coins: number[], i: number, rest: number, dp: Map<str
 
 export function coinChangeDp(coins: number[], amount: number): number {
     // i以及i以后的硬币自由选择，搞定rest最少需要多少硬币
-    const dp: number[][] = new Array(coins.length + 1).fill(0).map((_) => new Array(amount + 1).fill(-1));
+    const dp: number[][] = new Array(coins.length + 1)
+        .fill(0)
+        .map((_) => new Array(amount + 1).fill(-1));
     for (let i = 0; i <= coins.length; i++) {
         dp[i][0] = 0;
     }
@@ -1626,7 +1822,9 @@ export function coinChangeDp(coins: number[], amount: number): number {
             dp[i][rest] = dp[i + 1][rest];
             if (rest >= coins[i] && dp[i][rest - coins[i]] !== -1) {
                 dp[i][rest] =
-                    dp[i][rest] === -1 ? dp[i][rest - coins[i]] + 1 : Math.min(dp[i][rest], dp[i][rest - coins[i]] + 1);
+                    dp[i][rest] === -1
+                        ? dp[i][rest - coins[i]] + 1
+                        : Math.min(dp[i][rest], dp[i][rest - coins[i]] + 1);
             }
         }
     }
@@ -1645,7 +1843,9 @@ export function minPathSum(grid: number[][]): number {
     const m = grid.length;
     const n = grid[0].length;
     // dp[i][j] 从[i][j]出发到右下角的最小sum路径是多少
-    const dp: number[][] = new Array(m).fill(0).map((_) => new Array(n).fill(0));
+    const dp: number[][] = new Array(m)
+        .fill(0)
+        .map((_) => new Array(n).fill(0));
     dp[m - 1][n - 1] = grid[m - 1][n - 1];
 
     // 最后一行
@@ -1689,12 +1889,15 @@ export function minimumTotal(triangle: number[][]): number {
     // dp[row][i] row行i列的最短路径和
     const dp = new Array(triangle.length + 1)
         .fill(0)
-        .map((_) => new Array(triangle[triangle.length - 1].length + 1).fill(0));
+        .map((_) =>
+            new Array(triangle[triangle.length - 1].length + 1).fill(0)
+        );
 
     // 从下到上，从左到右填表
     for (let row = triangle.length - 1; row >= 0; row--) {
         for (let i = 0; i < triangle[row].length; i++) {
-            dp[row][i] = Math.min(dp[row + 1][i], dp[row + 1][i + 1]) + triangle[row][i];
+            dp[row][i] =
+                Math.min(dp[row + 1][i], dp[row + 1][i + 1]) + triangle[row][i];
         }
     }
 
@@ -1720,7 +1923,10 @@ export function minimumTotal2(triangle: number[][]): number {
 export function minimumTotal3(triangle: number[][]): number {
     for (let i = triangle.length - 2; i >= 0; i--) {
         for (let j = 0; j < triangle[i].length; j++) {
-            triangle[i][j] += Math.min(triangle[i + 1][j], triangle[i + 1][j + 1]);
+            triangle[i][j] += Math.min(
+                triangle[i + 1][j],
+                triangle[i + 1][j + 1]
+            );
         }
     }
 
@@ -1779,4 +1985,76 @@ export function maxSumAfterPartitioning(arr: number[], k: number): number {
     }
 
     return dp[arr.length - 1];
+}
+
+/*
+https://leetcode.com/problems/longest-non-decreasing-subarray-from-two-arrays/description/
+2771. Longest Non-decreasing Subarray From Two Arrays
+You are given two 0-indexed integer arrays nums1 and nums2 of length n.
+
+Let's define another 0-indexed integer array, nums3, of length n. For each index i in the range [0, n - 1], you can 
+assign either nums1[i] or nums2[i] to nums3[i].
+
+Your task is to maximize the length of the longest non-decreasing subarray in nums3 by choosing its values optimally.
+
+Return an integer representing the length of the longest non-decreasing subarray in nums3.
+
+Note: A subarray is a contiguous non-empty sequence of elements within an array.
+
+Example 1:
+
+Input: nums1 = [2,3,1], nums2 = [1,2,1]
+Output: 2
+Explanation: One way to construct nums3 is: 
+nums3 = [nums1[0], nums2[1], nums2[2]] => [2,2,1]. 
+The subarray starting from index 0 and ending at index 1, [2,2], forms a non-decreasing subarray of length 2. 
+We can show that 2 is the maximum achievable length.
+
+Example 2:
+
+Input: nums1 = [1,3,2,1], nums2 = [2,2,3,4]
+Output: 4
+Explanation: One way to construct nums3 is: 
+nums3 = [nums1[0], nums2[1], nums2[2], nums2[3]] => [1,2,3,4]. 
+The entire array forms a non-decreasing subarray of length 4, making it the maximum achievable length.
+
+Example 3:
+
+Input: nums1 = [1,1], nums2 = [2,2]
+Output: 2
+Explanation: One way to construct nums3 is: 
+nums3 = [nums1[0], nums1[1]] => [1,1]. 
+The entire array forms a non-decreasing subarray of length 2, making it the maximum achievable length.
+
+Constraints:
+
+	1 <= nums1.length == nums2.length == n <= 10^5
+	1 <= nums1[i], nums2[i] <= 10^9
+*/
+export function maxNonDecreasingLength(
+    nums1: number[],
+    nums2: number[]
+): number {
+    const dp1: number[] = Array(nums1.length).fill(1);
+    const dp2: number[] = Array(nums2.length).fill(1);
+
+    let max = 1;
+    for (let i = 1; i < nums1.length; i++) {
+        if (nums1[i] >= nums1[i - 1]) {
+            dp1[i] = dp1[i - 1] + 1;
+        }
+        if (nums1[i] >= nums2[i - 1]) {
+            dp1[i] = Math.max(dp1[i], dp2[i - 1] + 1);
+        }
+        if (nums2[i] >= nums2[i - 1]) {
+            dp2[i] = dp2[i - 1] + 1;
+        }
+        if (nums2[i] >= nums1[i - 1]) {
+            dp2[i] = Math.max(dp2[i], dp1[i - 1] + 1);
+        }
+
+        max = Math.max(max, dp1[i], dp2[i]);
+    }
+
+    return max;
 }
