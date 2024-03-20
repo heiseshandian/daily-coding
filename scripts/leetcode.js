@@ -10,6 +10,12 @@ const observer = new MutationObserver(function () {
 
 observer.observe(document, { childList: true, subtree: true });
 
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+        saveTitle();
+    }
+});
+
 function autoJumpBackToEnglishVersion() {
     if (location.href.startsWith('https://leetcode.cn')) {
         location.replace(
