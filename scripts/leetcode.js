@@ -11,7 +11,10 @@ const observer = new MutationObserver(function () {
 observer.observe(document, { childList: true, subtree: true });
 
 document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') {
+    if (
+        document.visibilityState === 'visible' &&
+        location.href.includes('https://leetcode.com/problems/')
+    ) {
         saveTitle();
     }
 });
