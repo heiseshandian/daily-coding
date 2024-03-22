@@ -257,3 +257,99 @@ export function distributeCandies(n: number, limit: number): number {
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/prime-subtraction-operation/
+2601. Prime Subtraction Operation
+You are given a 0-indexed integer array nums of length n.
+
+You can perform the following operation as many times as you want:
+
+	Pick an index i that you haven’t picked before, and pick a prime p strictly less than nums[i], then subtract p from nums[i].
+
+Return true if you can make nums a strictly increasing array using the above operation and false otherwise.
+
+A strictly increasing array is an array whose each element is strictly greater than its preceding element.
+
+Example 1:
+
+Input: nums = [4,9,6,10]
+Output: true
+Explanation: In the first operation: Pick i = 0 and p = 3, and then subtract 3 from nums[0], so that nums becomes [1,9,6,10].
+In the second operation: i = 1, p = 7, subtract 7 from nums[1], so nums becomes equal to [1,2,6,10].
+After the second operation, nums is sorted in strictly increasing order, so the answer is true.
+
+Example 2:
+
+Input: nums = [6,8,11,12]
+Output: true
+Explanation: Initially nums is sorted in strictly increasing order, so we don't need to make any operations.
+
+Example 3:
+
+Input: nums = [5,8,3]
+Output: false
+Explanation: It can be proven that there is no way to perform operations to make nums sorted in strictly increasing order, so the answer is false.
+
+Constraints:
+
+	1 <= nums.length <= 1000
+	1 <= nums[i] <= 1000
+	nums.length == n
+*/
+export function primeSubOperation(nums: number[]): boolean {
+    const primes = getPrimes(Math.max(...nums));
+    nums[0] -= getBiggestPrime(primes, nums[0]) || 0;
+
+    let i = 1;
+    while (i < nums.length) {
+        let p = getBiggestPrime(primes, nums[i]);
+        while (p && nums[i] - p <= nums[i - 1]) {
+            p = getBiggestPrime(primes, p);
+        }
+        nums[i] -= p || 0;
+
+        if (nums[i] <= nums[i - 1]) {
+            return false;
+        }
+        i++;
+    }
+
+    return true;
+}
+
+export function getBiggestPrime(primes: number[], limit: number) {
+    let l = 0;
+    let r = primes.length - 1;
+    let biggest: number | null = null;
+    while (l <= r) {
+        const mid = l + ((r - l) >> 1);
+        if (primes[mid] < limit) {
+            biggest = primes[mid];
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+
+    return biggest;
+}
+
+export function getPrimes(limit: number): number[] {
+    const primes: boolean[] = Array(limit + 1).fill(true);
+    primes[0] = false;
+    primes[1] = false;
+
+    for (let n = 2; n * n <= limit; n++) {
+        if (primes[n]) {
+            for (let m = n * n; m <= limit; m += n) {
+                primes[m] = false;
+            }
+        }
+    }
+
+    return primes.reduce((acc, val, index) => {
+        if (val) acc.push(index);
+        return acc;
+    }, [] as number[]);
+}
