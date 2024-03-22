@@ -232,7 +232,7 @@ function showMessage(message, type) {
     messageElement.textContent = message;
     messageContainer.appendChild(messageElement);
 
-    messageContainer.classList.remove('hidden');
+    messageContainer.classList.remove('container-hidden');
 
     setTimeout(function () {
         hideMessage(messageContainer);
@@ -240,7 +240,7 @@ function showMessage(message, type) {
 }
 
 function hideMessage(messageContainer) {
-    messageContainer.classList.add('hidden');
+    messageContainer.classList.add('container-hidden');
     setTimeout(function () {
         document.body.removeChild(messageContainer);
     }, 500);
