@@ -253,3 +253,97 @@ function calculate(s: string): number {
 
     return sum;
 }
+
+/*
+https://leetcode.com/problems/rearranging-fruits/description/
+2561. Rearranging Fruits
+You have two fruit baskets containing n fruits each. You are given two 0-indexed integer arrays basket1 and basket2 representing the cost of fruit 
+in each basket. You want to make both baskets equal. To do so, you can use the following operation as many times as you want:
+
+	Chose two indices i and j, and swap the ith fruit of basket1 with the jth fruit of basket2.
+	The cost of the swap is min(basket1[i],basket2[j]).
+
+Two baskets are considered equal if sorting them according to the fruit cost makes them exactly the same baskets.
+
+Return the minimum cost to make both the baskets equal or -1 if impossible.
+
+Example 1:
+
+Input: basket1 = [4,2,2,2], basket2 = [1,4,1,2]
+Output: 1
+Explanation: Swap index 1 of basket1 with index 0 of basket2, which has cost 1. Now basket1 = [4,1,2,2] and basket2 = [2,4,1,2]. 
+Rearranging both the arrays makes them equal.
+
+Example 2:
+
+Input: basket1 = [2,3,4,1], basket2 = [3,2,5,1]
+Output: -1
+Explanation: It can be shown that it is impossible to make both the baskets equal.
+
+Constraints:
+
+	basket1.length == basket2.length
+	1 <= basket1.length <= 10^5
+	1 <= basket1[i],basket2[i] <= 10^9
+*/
+export function minCost(basket1: number[], basket2: number[]): number {
+    const [repeatTimes1, min1] = getRepeatTimesAndMin(basket1);
+    const [repeatTimes2, min2] = getRepeatTimesAndMin(basket2);
+
+    Object.keys(repeatTimes1).forEach((v) => {
+        if (repeatTimes2[v]) {
+            const min = Math.min(repeatTimes1[v], repeatTimes2[v]);
+            repeatTimes1[v] -= min;
+            repeatTimes2[v] -= min;
+
+            if (repeatTimes1[v] === 0) {
+                delete repeatTimes1[v];
+            }
+            if (repeatTimes2[v] === 0) {
+                delete repeatTimes2[v];
+            }
+        }
+    });
+
+    const keys1 = Object.keys(repeatTimes1);
+    const keys2 = Object.keys(repeatTimes2);
+    if (
+        keys1.some((v) => repeatTimes1[v] & 1) ||
+        keys2.some((v) => repeatTimes1[v] & 1)
+    ) {
+        return -1;
+    }
+
+    const nums1: number[] = [];
+    const nums2: number[] = [];
+    keys1.forEach((v) => {
+        nums1.push(...Array(repeatTimes1[v] >> 1).fill(+v));
+    });
+    keys2.forEach((v) => {
+        nums2.push(...Array(repeatTimes2[v] >> 1).fill(+v));
+    });
+
+    nums1.sort((a, b) => a - b);
+    nums2.sort((a, b) => b - a);
+
+    let score = 0;
+    const min = Math.min(min1, min2) << 1;
+    nums1.forEach((v, i) => {
+        score += Math.min(v, nums2[i], min);
+    });
+
+    return score;
+}
+
+function getRepeatTimesAndMin(
+    nums: number[]
+): [times: Record<number, number>, min: number] {
+    const repeatTimes: Record<number, number> = {};
+    let min = Infinity;
+    nums.forEach((v) => {
+        repeatTimes[v] = (repeatTimes[v] || 0) + 1;
+        min = Math.min(min, v);
+    });
+
+    return [repeatTimes, min];
+}
