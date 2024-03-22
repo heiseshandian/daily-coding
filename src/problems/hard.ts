@@ -290,11 +290,13 @@ export function minCost(basket1: number[], basket2: number[]): number {
     const [repeatTimes1, min1] = getRepeatTimesAndMin(basket1);
     const [repeatTimes2, min2] = getRepeatTimesAndMin(basket2);
 
+    let restLen = basket1.length;
     Object.keys(repeatTimes1).forEach((v) => {
         if (repeatTimes2[v]) {
             const min = Math.min(repeatTimes1[v], repeatTimes2[v]);
             repeatTimes1[v] -= min;
             repeatTimes2[v] -= min;
+            restLen -= min;
 
             if (repeatTimes1[v] === 0) {
                 delete repeatTimes1[v];
@@ -304,25 +306,19 @@ export function minCost(basket1: number[], basket2: number[]): number {
             }
         }
     });
+    if (restLen === 0) {
+        return 0;
+    }
 
-    const keys1 = Object.keys(repeatTimes1);
-    const keys2 = Object.keys(repeatTimes2);
     if (
-        keys1.some((v) => repeatTimes1[v] & 1) ||
-        keys2.some((v) => repeatTimes1[v] & 1)
+        Object.keys(repeatTimes1).some((v) => repeatTimes1[v] & 1) ||
+        Object.keys(repeatTimes2).some((v) => repeatTimes1[v] & 1)
     ) {
         return -1;
     }
 
-    const nums1: number[] = [];
-    const nums2: number[] = [];
-    keys1.forEach((v) => {
-        nums1.push(...Array(repeatTimes1[v] >> 1).fill(+v));
-    });
-    keys2.forEach((v) => {
-        nums2.push(...Array(repeatTimes2[v] >> 1).fill(+v));
-    });
-
+    const nums1 = fillNums(repeatTimes1, restLen);
+    const nums2 = fillNums(repeatTimes2, restLen);
     nums1.sort((a, b) => a - b);
     nums2.sort((a, b) => b - a);
 
@@ -333,6 +329,19 @@ export function minCost(basket1: number[], basket2: number[]): number {
     });
 
     return score;
+}
+
+function fillNums(times: Record<number, number>, len: number) {
+    const nums: number[] = Array(len);
+    let i = 0;
+
+    Object.keys(times).forEach((v) => {
+        Array(times[v] >> 1)
+            .fill(+v)
+            .forEach((v) => (nums[i++] = v));
+    });
+
+    return nums;
 }
 
 function getRepeatTimesAndMin(
