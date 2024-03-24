@@ -3931,5 +3931,5 @@ export function predictTheWinner(nums: number[]): boolean {
         return Math.min(first(left + 1, right), first(left, right - 1));
     });
 
-    return first(0, nums.length - 1) > last(0, nums.length - 1);
+    return first(0, nums.length - 1) >= last(0, nums.length - 1);
 }
