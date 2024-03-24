@@ -1508,3 +1508,56 @@ export function rightSideView(root: TreeNode | null): number[] {
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/find-largest-value-in-each-tree-row/description/
+515. Find Largest Value in Each Tree Row
+Given the root of a binary tree, return an array of the largest value in each row of the tree (0-indexed).
+
+Example 1:
+
+Input: root = [1,3,2,5,3,null,9]
+Output: [1,3,9]
+
+Example 2:
+
+Input: root = [1,2,3]
+Output: [1,3]
+
+Constraints:
+
+	The number of nodes in the tree will be in the range [0, 10^4].
+	2^31 <= Node.val <= 2^31 - 1
+*/
+export function largestValues(root: TreeNode | null): number[] {
+    if (!root) {
+        return [];
+    }
+
+    let curEnd = root;
+    let nextEnd = root;
+    const queue: TreeNode[] = [root];
+    let max = -Infinity;
+    const result: number[] = [];
+    while (queue.length > 0) {
+        const node = queue.shift()!;
+        max = Math.max(max, node.val);
+
+        if (node.left) {
+            queue.push(node.left);
+            nextEnd = node.left;
+        }
+        if (node.right) {
+            queue.push(node.right);
+            nextEnd = node.right;
+        }
+
+        if (node === curEnd) {
+            result.push(max);
+            curEnd = nextEnd;
+            max = -Infinity;
+        }
+    }
+
+    return result;
+}
