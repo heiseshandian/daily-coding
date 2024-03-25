@@ -3933,3 +3933,43 @@ export function predictTheWinner(nums: number[]): boolean {
 
     return first(0, nums.length - 1) >= last(0, nums.length - 1);
 }
+
+/*
+https://leetcode.com/problems/find-all-duplicates-in-an-array/description/
+442. Find All Duplicates in an Array
+Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, 
+return an array of all the integers that appears twice.
+
+You must write an algorithm that runs in O(n) time and uses only constant extra space.
+
+Example 1:
+Input: nums = [4,3,2,7,8,2,3,1]
+Output: [2,3]
+Example 2:
+Input: nums = [1,1,2]
+Output: [1]
+Example 3:
+Input: nums = [1]
+Output: []
+
+Constraints:
+
+	n == nums.length
+	1 <= n <= 10^5
+	1 <= nums[i] <= n
+	Each element in nums appears once or twice.
+*/
+export function findDuplicates(nums: number[]): number[] {
+    const result: number[] = [];
+
+    nums.forEach((v) => {
+        const index = Math.abs(v) - 1;
+        if (nums[index] > 0) {
+            nums[index] = -nums[index];
+        } else {
+            result.push(index + 1);
+        }
+    });
+
+    return result;
+}
