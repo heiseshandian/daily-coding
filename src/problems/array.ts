@@ -4084,3 +4084,69 @@ export function maxSubarrayLength(nums: number[], k: number): number {
 
     return maxLen;
 }
+
+/*
+https://leetcode.com/problems/count-subarrays-where-max-element-appears-at-least-k-times/description/
+2962. Count Subarrays Where Max Element Appears at Least K Times
+You are given an integer array nums and a positive integer k.
+
+Return the number of subarrays where the maximum element of nums appears at least k times in that subarray.
+
+A subarray is a contiguous sequence of elements within an array.
+
+Example 1:
+
+Input: nums = [1,3,2,3,3], k = 2
+Output: 6
+Explanation: The subarrays that contain the element 3 at least 2 times are: [1,3,2,3], [1,3,2,3,3], [3,2,3], [3,2,3,3], [2,3,3] and [3,3].
+
+Example 2:
+
+Input: nums = [1,4,2,1], k = 3
+Output: 0
+Explanation: No subarray contains the element 4 at least 3 times.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^6
+	1 <= k <= 10^5
+*/
+export function countSubarrays(nums: number[], k: number): number {
+    let max = -Infinity;
+    nums.forEach((v) => {
+        max = Math.max(max, v);
+    });
+
+    const prefix: number[] = [nums[0] === max ? 1 : 0];
+    for (let i = 1; i < nums.length; i++) {
+        prefix[i] = prefix[i - 1] + (nums[i] === max ? 1 : 0);
+    }
+    const totalMaxCount = prefix[nums.length - 1];
+    if (totalMaxCount < k) {
+        return 0;
+    }
+
+    const maxIndexes = Array(totalMaxCount);
+    let j = 0;
+    nums.forEach((v, i) => {
+        if (v === max) {
+            maxIndexes[j++] = i;
+        }
+    });
+
+    let count = 0;
+    for (let i = 0; i < nums.length; i++) {
+        const prev = i === 0 ? 0 : prefix[i - 1];
+        const maxCount = totalMaxCount - prev;
+
+        if (maxCount >= k) {
+            const rest = maxCount - k;
+            count += nums.length - maxIndexes[totalMaxCount - rest - 1];
+        } else {
+            break;
+        }
+    }
+
+    return count;
+}
