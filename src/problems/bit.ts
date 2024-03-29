@@ -388,3 +388,58 @@ export function missingNumber(nums: number[]): number {
 
     return xor;
 }
+
+/*
+https://leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/description/?envType=list&envId=mhgl61ev
+2571. Minimum Operations to Reduce an Integer to 0
+You are given a positive integer n, you can do the following operation any number of times:
+
+	Add or subtract a power of 2 from n.
+
+Return the minimum number of operations to make n equal to 0.
+
+A number x is power of 2 if x == 2i where i >= 0.
+
+Example 1:
+
+Input: n = 39
+Output: 3
+Explanation: We can do the following operations:
+- Add 20 = 1 to n, so now n = 40.
+- Subtract 23 = 8 from n, so now n = 32.
+- Subtract 25 = 32 from n, so now n = 0.
+It can be shown that 3 is the minimum number of operations we need to make n equal to 0.
+
+Example 2:
+
+Input: n = 54
+Output: 3
+Explanation: We can do the following operations:
+- Add 21 = 2 to n, so now n = 56.
+- Add 23 = 8 to n, so now n = 64.
+- Subtract 26 = 64 from n, so now n = 0.
+So the minimum number of operations is 3.
+
+Constraints:
+
+	1 <= n <= 10^5
+*/
+export function minOperations(n: number): number {
+    const ones = n.toString(2).split('0');
+    let prev = ones[ones.length - 1].length;
+    let minOp = 0;
+    for (let i = ones.length - 2; i >= 0; i--) {
+        if (ones[i].length >= 1 && prev >= 2) {
+            minOp++;
+            ones.splice(i, 1);
+        } else {
+            prev = ones[i].length;
+        }
+    }
+
+    ones.forEach((v) => {
+        minOp += Math.min(2, v.length);
+    });
+
+    return minOp;
+}

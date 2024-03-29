@@ -49,10 +49,13 @@ export function minScore(n: number, roads: number[][]): number {
     roads.forEach(([a, b]) => {
         unionSet.union(a, b);
     });
-    roads.sort(([, , distanceA], [, , distanceB]) => distanceA - distanceB);
 
-    const [, , distance] = roads.find(
-        ([a]) => unionSet.isSameSet(1, a) && unionSet.isSameSet(n, a)
-    )!;
-    return distance;
+    let minDistance = Infinity;
+    roads.forEach(([a, , distance]) => {
+        if (unionSet.isSameSet(1, a) && unionSet.isSameSet(n, a)) {
+            minDistance = Math.min(minDistance, distance);
+        }
+    });
+
+    return minDistance;
 }
