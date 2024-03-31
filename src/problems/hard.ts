@@ -1,5 +1,6 @@
 import { cache } from '../design-pattern/proxy';
 import { swap } from '../common/index';
+import { SlidingWindow } from '../algorithm/sliding-window';
 
 /*
 https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/description/
@@ -410,40 +411,6 @@ export function firstMissingPositive(nums: number[]): number {
 }
 
 /*
-https://leetcode.com/problems/painting-the-walls/description/
-2742. Painting the Walls
-You are given two 0-indexed integer arrays, cost and time, of size n representing the costs and the time taken to paint n different walls respectively. There are two painters available:
-
-	A paid painter that paints the ith wall in time[i] units of time and takes cost[i] units of money.
-	A free painter that paints any wall in 1 unit of time at a cost of 0. But the free painter can only be used if the paid painter is already occupied.
-
-Return the minimum amount of money required to paint the n walls.
-
-Example 1:
-
-Input: cost = [1,2,3,2], time = [1,2,3,2]
-Output: 3
-Explanation: The walls at index 0 and 1 will be painted by the paid painter, and it will take 3 units of time; meanwhile, the free painter will paint the walls at index 2 and 3, free of cost in 2 units of time. Thus, the total cost is 1 + 2 = 3.
-
-Example 2:
-
-Input: cost = [2,3,4,2], time = [1,1,1,1]
-Output: 4
-Explanation: The walls at index 0 and 3 will be painted by the paid painter, and it will take 2 units of time; meanwhile, the free painter will paint the walls at index 1 and 2, free of cost in 2 units of time. Thus, the total cost is 2 + 2 = 4.
-
-Constraints:
-
-	1 <= cost.length <= 500
-	cost.length == time.length
-	1 <= cost[i] <= 10^6
-	1 <= time[i] <= 500
-*/
-export function paintWalls(cost: number[], time: number[]): number {
-    const totalTime = time.reduce((acc, cur) => acc + cur);
-    const halfTime = Math.ceil(totalTime / 2);
-}
-
-/*
 https://leetcode.com/problems/subarrays-with-k-different-integers/description/?envType=daily-question&envId=2024-03-30
 992. Subarrays with K Different Integers
 Given an integer array nums and an integer k, return the number of good subarrays of nums.
@@ -498,6 +465,78 @@ export function subarraysWithKDistinct(nums: number[], k: number): number {
             left++;
         } else {
             break;
+        }
+    }
+
+    return count;
+}
+
+/*
+https://leetcode.com/problems/count-subarrays-with-fixed-bounds/description/
+2444. Count Subarrays With Fixed Bounds
+You are given an integer array nums and two integers minK and maxK.
+
+A fixed-bound subarray of nums is a subarray that satisfies the following conditions:
+
+	The minimum value in the subarray is equal to minK.
+	The maximum value in the subarray is equal to maxK.
+
+Return the number of fixed-bound subarrays.
+
+A subarray is a contiguous part of an array.
+
+Example 1:
+
+Input: nums = [1,3,5,2,7,5], minK = 1, maxK = 5
+Output: 2
+Explanation: The fixed-bound subarrays are [1,3,5] and [1,3,5,2].
+
+Example 2:
+
+Input: nums = [1,1,1,1], minK = 1, maxK = 1
+Output: 10
+Explanation: Every subarray of nums is a fixed-bound subarray. There are 10 possible subarrays.
+
+Constraints:
+
+	2 <= nums.length <= 10^5
+	1 <= nums[i], minK, maxK <= 10^6
+*/
+export function countSubarrays(
+    nums: number[],
+    minK: number,
+    maxK: number
+): number {
+    const minWindow = new SlidingWindow(nums, (a, b) => a - b);
+    const maxWindow = new SlidingWindow(nums, (a, b) => b - a);
+    minWindow.moveRight();
+    maxWindow.moveRight();
+
+    let count = 0;
+    let lastK = -1;
+    while (maxWindow.right < nums.length) {
+        if (minWindow.peek() === minK && maxWindow.peek() === maxK) {
+            let k = Math.max(lastK, minWindow.right);
+            while (k < nums.length && nums[k] >= minK && nums[k] <= maxK) {
+                k++;
+            }
+            lastK = k;
+
+            count += lastK - minWindow.right;
+
+            minWindow.moveLeft();
+            maxWindow.moveLeft();
+        } else if (minWindow.peek() >= minK && maxWindow.peek() <= maxK) {
+            minWindow.moveRight();
+            maxWindow.moveRight();
+        } else {
+            while (minWindow.left < minWindow.right) {
+                minWindow.moveLeft();
+                maxWindow.moveLeft();
+            }
+
+            minWindow.moveRight();
+            maxWindow.moveRight();
         }
     }
 
