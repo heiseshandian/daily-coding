@@ -442,3 +442,64 @@ export function paintWalls(cost: number[], time: number[]): number {
     const totalTime = time.reduce((acc, cur) => acc + cur);
     const halfTime = Math.ceil(totalTime / 2);
 }
+
+/*
+https://leetcode.com/problems/subarrays-with-k-different-integers/description/?envType=daily-question&envId=2024-03-30
+992. Subarrays with K Different Integers
+Given an integer array nums and an integer k, return the number of good subarrays of nums.
+
+A good array is an array where the number of different integers in that array is exactly k.
+
+	For example, [1,2,3,1,2] has 3 different integers: 1, 2, and 3.
+
+A subarray is a contiguous part of an array.
+
+Example 1:
+
+Input: nums = [1,2,1,2,3], k = 2
+Output: 7
+Explanation: Subarrays formed with exactly 2 different integers: [1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2]
+
+Example 2:
+
+Input: nums = [1,2,1,3,4], k = 3
+Output: 3
+Explanation: Subarrays formed with exactly 3 different integers: [1,2,1,3], [2,1,3], [1,3,4].
+
+Constraints:
+
+	1 <= nums.length <= 10^4
+	1 <= nums[i], k <= nums.length
+*/
+export function subarraysWithKDistinct(nums: number[], k: number): number {
+    const freqMap = new Map<number, number>();
+    freqMap.set(nums[0], 1);
+    let left = 0;
+    let right = 0;
+    let count = 0;
+    while (left < nums.length) {
+        while (freqMap.size < k && right < nums.length) {
+            right++;
+            freqMap.set(nums[right], (freqMap.get(nums[right]) ?? 0) + 1);
+        }
+
+        if (freqMap.size === k) {
+            let k = right;
+            while (k < nums.length && freqMap.has(nums[k])) {
+                count++;
+                k++;
+            }
+
+            if (freqMap.get(nums[left]) === 1) {
+                freqMap.delete(nums[left]);
+            } else {
+                freqMap.set(nums[left], freqMap.get(nums[left])! - 1);
+            }
+            left++;
+        } else {
+            break;
+        }
+    }
+
+    return count;
+}
