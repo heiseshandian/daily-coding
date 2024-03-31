@@ -484,10 +484,10 @@ export function subarraysWithKDistinct(nums: number[], k: number): number {
         }
 
         if (freqMap.size === k) {
-            let k = right;
-            while (k < nums.length && freqMap.has(nums[k])) {
+            let j = right;
+            while (j < nums.length && freqMap.has(nums[j])) {
                 count++;
-                k++;
+                j++;
             }
 
             if (freqMap.get(nums[left]) === 1) {
