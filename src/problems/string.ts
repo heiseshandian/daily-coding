@@ -1628,3 +1628,69 @@ export function longestString(x: number, y: number, z: number): number {
     const min = Math.min(x, y) << 1;
     return (min + (x === y ? 0 : 1) + z) << 1;
 }
+
+/*
+https://leetcode.com/problems/remove-adjacent-almost-equal-characters/description/?envType=list&envId=o5cftq05
+2957. Remove Adjacent Almost-Equal Characters
+You are given a 0-indexed string word.
+
+In one operation, you can pick any index i of word and change word[i] to any lowercase English letter.
+
+Return the minimum number of operations needed to remove all adjacent almost-equal characters from word.
+
+Two characters a and b are almost-equal if a == b or a and b are adjacent in the alphabet.
+
+Example 1:
+
+Input: word = "aaaaa"
+Output: 2
+Explanation: We can change word into "acaca" which does not have any adjacent almost-equal characters.
+It can be shown that the minimum number of operations needed to remove all adjacent almost-equal characters from word is 2.
+
+Example 2:
+
+Input: word = "abddez"
+Output: 2
+Explanation: We can change word into "ybdoez" which does not have any adjacent almost-equal characters.
+It can be shown that the minimum number of operations needed to remove all adjacent almost-equal characters from word is 2.
+
+Example 3:
+
+Input: word = "zyxyxyz"
+Output: 3
+Explanation: We can change word into "zaxaxaz" which does not have any adjacent almost-equal characters. 
+It can be shown that the minimum number of operations needed to remove all adjacent almost-equal characters from word is 3.
+
+Constraints:
+
+	1 <= word.length <= 100
+	word consists only of lowercase English letters.
+*/
+export function removeAlmostEqualCharacters(word: string): number {
+    const alphas = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const almostEqualMap: Record<string, string[]> = alphas.reduce(
+        (acc, cur, i) => {
+            acc[cur] = [
+                i === 0 ? undefined : alphas[i - 1],
+                cur,
+                i === 25 ? undefined : alphas[i + 1],
+            ];
+            return acc;
+        },
+        {}
+    );
+
+    let count = 0;
+    for (let i = 1; i < word.length; ) {
+        const equals = almostEqualMap[word[i]];
+
+        if (!equals.includes(word[i - 1])) {
+            i++;
+        } else {
+            count++;
+            i += 2;
+        }
+    }
+
+    return count;
+}
