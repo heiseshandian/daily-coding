@@ -4348,3 +4348,62 @@ export function furthestBuilding(
 
     return toJump - 1;
 }
+
+/*
+https://leetcode.com/problems/largest-divisible-subset/description/?envType=list&envId=o5cftq05
+368. Largest Divisible Subset
+Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:
+
+	answer[i] % answer[j] == 0, or
+	answer[j] % answer[i] == 0
+
+If there are multiple solutions, return any of them.
+
+Example 1:
+
+Input: nums = [1,2,3]
+Output: [1,2]
+Explanation: [1,3] is also accepted.
+
+Example 2:
+
+Input: nums = [1,2,4,8]
+Output: [1,2,4,8]
+
+Constraints:
+
+	1 <= nums.length <= 1000
+	1 <= nums[i] <= 10^9
+	All the integers in nums are unique.
+*/
+export function largestDivisibleSubset(nums: number[]): number[] {
+    nums.sort((a, b) => a - b);
+
+    const dp: number[][] = Array.from({ length: nums.length }, (_, i) => [
+        nums[i],
+    ]);
+
+    for (let i = 1; i < nums.length; i++) {
+        let max = 1;
+        let maxJ: number | null = null;
+        for (let j = i - 1; j >= 0; j--) {
+            if (nums[i] % nums[j] === 0 && dp[j].length + 1 > max) {
+                max = dp[j].length + 1;
+                maxJ = j;
+            }
+        }
+
+        if (maxJ !== null) {
+            dp[i] = dp[maxJ].concat(dp[i]);
+        }
+    }
+
+    let max: number[] = [];
+    dp.forEach((v) => {
+        if (v.length > max.length) {
+            max = v;
+        }
+    });
+
+    return max;
+}
