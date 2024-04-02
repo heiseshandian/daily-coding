@@ -444,7 +444,7 @@ Explanation: 13 = 4 + 9.
 
 Constraints:
 
-	1 <= n <= 10^4
+    1 <= n <= 10^4
 */
 export const numSquares = cache((n: number): number => {
     if (n === 0) {
@@ -470,8 +470,8 @@ You are given an integer array nums of size n and a positive integer k.
 
 Divide the array into one or more arrays of size 3 satisfying the following conditions:
 
-	Each element of nums should be in exactly one array.
-	The difference between any two elements in one array is less than or equal to k.
+    Each element of nums should be in exactly one array.
+    The difference between any two elements in one array is less than or equal to k.
 
 Return a 2D array containing all the arrays. If it is impossible to satisfy the conditions, return an empty array. And if there are multiple answers, return any of them.
 
@@ -491,11 +491,11 @@ Explanation: It is not possible to divide the array satisfying all the condition
 
 Constraints:
 
-	n == nums.length
-	1 <= n <= 10^5
-	n is a multiple of 3.
-	1 <= nums[i] <= 10^5
-	1 <= k <= 10^5
+    n == nums.length
+    1 <= n <= 10^5
+    n is a multiple of 3.
+    1 <= nums[i] <= 10^5
+    1 <= k <= 10^5
 */
 export function divideArray(nums: number[], k: number): number[][] {
     nums.sort((a, b) => a - b);
@@ -528,7 +528,7 @@ Output: [1234,2345,3456,4567,5678,6789,12345]
 
 Constraints:
 
-	10 <= low <= high <= 10^9
+    10 <= low <= high <= 10^9
 
 注意：对于分类讨论的场景需要考虑以下因素
 - 分类是否完备？分类是否覆盖所有场景？
@@ -618,9 +618,9 @@ You are given an array items, where each items[i] = [typei, colori, namei] descr
 
 The ith item is said to match the rule if one of the following is true:
 
-	ruleKey == "type" and ruleValue == typei.
-	ruleKey == "color" and ruleValue == colori.
-	ruleKey == "name" and ruleValue == namei.
+    ruleKey == "type" and ruleValue == typei.
+    ruleKey == "color" and ruleValue == colori.
+    ruleKey == "name" and ruleValue == namei.
 
 Return the number of items that match the given rule.
 
@@ -638,10 +638,10 @@ Explanation: There are only two items matching the given rule, which are ["phone
 
 Constraints:
 
-	1 <= items.length <= 10^4
-	1 <= typei.length, colori.length, namei.length, ruleValue.length <= 10
-	ruleKey is equal to either "type", "color", or "name".
-	All strings consist only of lowercase letters.
+    1 <= items.length <= 10^4
+    1 <= typei.length, colori.length, namei.length, ruleValue.length <= 10
+    ruleKey is equal to either "type", "color", or "name".
+    All strings consist only of lowercase letters.
 */
 export function countMatches(
     items: string[][],
@@ -678,8 +678,8 @@ Output: false
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	-10^5 <= nums[i] <= 10^5
+    1 <= nums.length <= 10^5
+    -10^5 <= nums[i] <= 10^5
 */
 export function isMonotonic(nums: number[]): boolean {
     let i = 0;
@@ -734,8 +734,8 @@ Output: [0,0,0,0]
 
 Constraints:
 
-	2 <= nums.length <= 500
-	0 <= nums[i] <= 100
+    2 <= nums.length <= 500
+    0 <= nums[i] <= 100
 */
 export function smallerNumbersThanCurrent(nums: number[]): number[] {
     const sorted = [...nums].sort((a, b) => a - b);
@@ -772,8 +772,8 @@ Explanation: The array is already non-decreasing. We do not need to remove any e
 
 Constraints:
 
-	1 <= arr.length <= 10^5
-	0 <= arr[i] <= 10^9
+    1 <= arr.length <= 10^5
+    0 <= arr[i] <= 10^9
 
 思路分析
 - 先找到以0开始的最长增长子串 prefix 和以最后一个元素结尾的最长增长子串 suffix
@@ -827,15 +827,15 @@ You are given an integer array matches where matches[i] = [winneri, loseri] indi
 
 Return a list answer of size 2 where:
 
-	answer[0] is a list of all players that have not lost any matches.
-	answer[1] is a list of all players that have lost exactly one match.
+    answer[0] is a list of all players that have not lost any matches.
+    answer[1] is a list of all players that have lost exactly one match.
 
 The values in the two lists should be returned in increasing order.
 
 Note:
 
-	You should only consider the players that have played at least one match.
-	The testcases will be generated such that no two matches will have the same outcome.
+    You should only consider the players that have played at least one match.
+    The testcases will be generated such that no two matches will have the same outcome.
 
 Example 1:
 
@@ -858,11 +858,11 @@ Thus, answer[0] = [1,2,5,6] and answer[1] = [].
 
 Constraints:
 
-	1 <= matches.length <= 10^5
-	matches[i].length == 2
-	1 <= winneri, loseri <= 10^5
-	winneri != loseri
-	All matches[i] are unique.
+    1 <= matches.length <= 10^5
+    matches[i].length == 2
+    1 <= winneri, loseri <= 10^5
+    winneri != loseri
+    All matches[i] are unique.
 */
 export function findWinners(matches: number[][]): number[][] {
     const losersMap: Record<number, number> = {};
@@ -955,10 +955,10 @@ The 2nd largest integer in nums is "0".
 
 Constraints:
 
-	1 <= k <= nums.length <= 10^4
-	1 <= nums[i].length <= 100
-	nums[i] consists of only digits.
-	nums[i] will not have any leading zeros.
+    1 <= k <= nums.length <= 10^4
+    1 <= nums[i].length <= 100
+    nums[i] consists of only digits.
+    nums[i] will not have any leading zeros.
 */
 export function kthLargestNumber(nums: string[], k: number): string {
     const minHeap = new GenericHeap<string>((a, b) => {
@@ -1046,12 +1046,12 @@ The board is a 3 x 3 array that consists of characters ' ', 'X', and 'O'. The ' 
 
 Here are the rules of Tic-Tac-Toe:
 
-	Players take turns placing characters into empty squares ' '.
-	The first player always places 'X' characters, while the second player always places 'O' characters.
-	'X' and 'O' characters are always placed into empty squares, never filled ones.
-	The game ends when there are three of the same (non-empty) character filling any row, column, or diagonal.
-	The game also ends if all squares are non-empty.
-	No more moves can be played if the game is over.
+    Players take turns placing characters into empty squares ' '.
+    The first player always places 'X' characters, while the second player always places 'O' characters.
+    'X' and 'O' characters are always placed into empty squares, never filled ones.
+    The game ends when there are three of the same (non-empty) character filling any row, column, or diagonal.
+    The game also ends if all squares are non-empty.
+    No more moves can be played if the game is over.
 
 Example 1:
 
@@ -1072,9 +1072,9 @@ Output: true
 
 Constraints:
 
-	board.length == 3
-	board[i].length == 3
-	board[i][j] is either 'X', 'O', or ' '.
+    board.length == 3
+    board[i].length == 3
+    board[i][j] is either 'X', 'O', or ' '.
 
 分析：
 - 如果X赢了则x必然比o多一个子 且 O不可能赢
@@ -1145,12 +1145,12 @@ https://leetcode.com/problems/most-profit-assigning-work/description/
 826. Most Profit Assigning Work
 You have n jobs and m workers. You are given three arrays: difficulty, profit, and worker where:
 
-	difficulty[i] and profit[i] are the difficulty and the profit of the ith job, and
-	worker[j] is the ability of jth worker (i.e., the jth worker can only complete a job with difficulty at most worker[j]).
+    difficulty[i] and profit[i] are the difficulty and the profit of the ith job, and
+    worker[j] is the ability of jth worker (i.e., the jth worker can only complete a job with difficulty at most worker[j]).
 
 Every worker can be assigned at most one job, but one job can be completed multiple times.
 
-	For example, if three workers attempt the same job that pays $1, then the total profit will be $3. If a worker cannot complete any job, their profit is $0.
+    For example, if three workers attempt the same job that pays $1, then the total profit will be $3. If a worker cannot complete any job, their profit is $0.
 
 Return the maximum profit we can achieve after assigning the workers to the jobs.
 
@@ -1167,11 +1167,11 @@ Output: 0
 
 Constraints:
 
-	n == difficulty.length
-	n == profit.length
-	m == worker.length
-	1 <= n, m <= 10^4
-	1 <= difficulty[i], profit[i], worker[i] <= 10^5
+    n == difficulty.length
+    n == profit.length
+    m == worker.length
+    1 <= n, m <= 10^4
+    1 <= difficulty[i], profit[i], worker[i] <= 10^5
 
 思路分析
 - 直接组合 difficulty 和 profit 之后按照 profit 从大到小排序，每个 worker 从 profit 最大的job开始挑选，时间复杂度 O(n^2)
@@ -1212,9 +1212,9 @@ You are given a 0-indexed integer array nums of even length consisting of an equ
 
 You should rearrange the elements of nums such that the modified array follows the given conditions:
 
-	Every consecutive pair of integers have opposite signs.
-	For all integers with the same sign, the order in which they were present in nums is preserved.
-	The rearranged array begins with a positive integer.
+    Every consecutive pair of integers have opposite signs.
+    For all integers with the same sign, the order in which they were present in nums is preserved.
+    The rearranged array begins with a positive integer.
 
 Return the modified array after rearranging the elements to satisfy the aforementioned conditions.
 
@@ -1237,10 +1237,10 @@ So nums is rearranged to [1,-1].
 
 Constraints:
 
-	2 <= nums.length <= 10^5
-	nums.length is even
-	1 <= |nums[i]| <= 10^5
-	nums consists of equal number of positive and negative integers.
+    2 <= nums.length <= 10^5
+    nums.length is even
+    1 <= |nums[i]| <= 10^5
+    nums consists of equal number of positive and negative integers.
 */
 export function rearrangeArray(nums: number[]): number[] {
     const halfLen = nums.length >> 1;
@@ -1321,8 +1321,8 @@ Explanation: There is no possible way to form a polygon from nums, as a polygon 
 
 Constraints:
 
-	3 <= n <= 10^5
-	1 <= nums[i] <= 10^9
+    3 <= n <= 10^5
+    1 <= nums[i] <= 10^9
 */
 export function largestPerimeter(nums: number[]): number {
     nums.sort((a, b) => a - b);
@@ -1350,8 +1350,8 @@ You are given an integer array nums. In one operation, you can replace any eleme
 
 nums is considered continuous if both of the following conditions are fulfilled:
 
-	All elements in nums are unique.
-	The difference between the maximum element and the minimum element in nums equals nums.length - 1.
+    All elements in nums are unique.
+    The difference between the maximum element and the minimum element in nums equals nums.length - 1.
 
 For example, nums = [4, 2, 5, 3] is continuous, but nums = [1, 2, 3, 5, 6] is not continuous.
 
@@ -1382,8 +1382,8 @@ The resulting array is [1,2,3,4], which is continuous.
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	1 <= nums[i] <= 10^9
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^9
 
 Hint:
 - Sort the array.
@@ -1472,9 +1472,9 @@ You are given a 2D integer array meetings where meetings[i] = [starti, endi] mea
 
 Meetings are allocated to rooms in the following manner:
 
-	Each meeting will take place in the unused room with the lowest number.
-	If there are no available rooms, the meeting will be delayed until a room becomes free. The delayed meeting should have the same duration as the original meeting.
-	When a room becomes unused, meetings that have an earlier original start time should be given the room.
+    Each meeting will take place in the unused room with the lowest number.
+    If there are no available rooms, the meeting will be delayed until a room becomes free. The delayed meeting should have the same duration as the original meeting.
+    When a room becomes unused, meetings that have an earlier original start time should be given the room.
 
 Return the number of the room that held the most meetings. If there are multiple rooms, return the room with the lowest number.
 
@@ -1509,11 +1509,11 @@ Room 0 held 1 meeting while rooms 1 and 2 each held 2 meetings, so we return 1.
 
 Constraints:
 
-	1 <= n <= 100
-	1 <= meetings.length <= 10^5
-	meetings[i].length == 2
-	0 <= starti < endi <= 10^5
-	All the values of starti are unique.
+    1 <= n <= 100
+    1 <= meetings.length <= 10^5
+    meetings[i].length == 2
+    0 <= starti < endi <= 10^5
+    All the values of starti are unique.
 
 Hints:
 - Sort meetings based on start times.
@@ -1675,8 +1675,8 @@ Explanation: The good meals are (1,1) with 3 ways, (1,3) with 9 ways, and (1,7) 
 
 Constraints:
 
-	1 <= deliciousness.length <= 10^5
-	0 <= deliciousness[i] <= 2^20
+    1 <= deliciousness.length <= 10^5
+    0 <= deliciousness[i] <= 2^20
 */
 export function countPairs(deliciousness: number[]): number {
     deliciousness.sort((a, b) => a - b);
@@ -1744,8 +1744,8 @@ You are given an integer array nums that is sorted in non-decreasing order.
 
 Determine if it is possible to split nums into one or more subsequences such that both of the following conditions are true:
 
-	Each subsequence is a consecutive increasing sequence (i.e. each integer is exactly one more than the previous integer).
-	All subsequences have a length of 3 or more.
+    Each subsequence is a consecutive increasing sequence (i.e. each integer is exactly one more than the previous integer).
+    All subsequences have a length of 3 or more.
 
 Return true if you can split nums according to the above conditions, or false otherwise.
 
@@ -1776,9 +1776,9 @@ Explanation: It is impossible to split nums into consecutive increasing subseque
 
 Constraints:
 
-	1 <= nums.length <= 10^4
-	-1000 <= nums[i] <= 1000
-	nums is sorted in non-decreasing order.
+    1 <= nums.length <= 10^4
+    -1000 <= nums[i] <= 1000
+    nums is sorted in non-decreasing order.
 */
 export function isPossible(nums: number[]): boolean {
     const freqMap: Record<number, number> = {};
@@ -1840,10 +1840,10 @@ Output: 0
 
 Constraints:
 
-	1 <= nums.length <= 1000
-	1 <= nums[i] <= 10^4
-	nums is sorted in ascending order.
-	1 <= n <= 2^31 - 1
+    1 <= nums.length <= 1000
+    1 <= nums[i] <= 10^4
+    nums is sorted in ascending order.
+    1 <= n <= 2^31 - 1
 */
 export function minPatches(nums: number[], n: number): number {
     let currentMax = 0;
@@ -1872,9 +1872,9 @@ In a town, there are n people labeled from 1 to n. There is a rumor that one of 
 
 If the town judge exists, then:
 
-	The town judge trusts nobody.
-	Everybody (except for the town judge) trusts the town judge.
-	There is exactly one person that satisfies properties 1 and 2.
+    The town judge trusts nobody.
+    Everybody (except for the town judge) trusts the town judge.
+    There is exactly one person that satisfies properties 1 and 2.
 
 You are given an array trust where trust[i] = [ai, bi] representing that the person labeled ai trusts the person labeled bi. 
 If a trust relationship does not exist in trust array, then such a trust relationship does not exist.
@@ -1898,12 +1898,12 @@ Output: -1
 
 Constraints:
 
-	1 <= n <= 1000
-	0 <= trust.length <= 10^4
-	trust[i].length == 2
-	All the pairs of trust are unique.
-	ai != bi
-	1 <= ai, bi <= n
+    1 <= n <= 1000
+    0 <= trust.length <= 10^4
+    trust[i].length == 2
+    All the pairs of trust are unique.
+    ai != bi
+    1 <= ai, bi <= n
 */
 export function findJudge(n: number, trust: number[][]): number {
     if (n === 1 && trust.length === 0) {
@@ -2082,13 +2082,13 @@ Thus, people 0, 1, 2, 3, and 4 know the secret after all the meetings.
 
 Constraints:
 
-	2 <= n <= 10^5
-	1 <= meetings.length <= 10^5
-	meetings[i].length == 3
-	0 <= xi, yi <= n - 1
-	xi != yi
-	1 <= timei <= 10^5
-	1 <= firstPerson <= n - 1
+    2 <= n <= 10^5
+    1 <= meetings.length <= 10^5
+    meetings[i].length == 3
+    0 <= xi, yi <= n - 1
+    xi != yi
+    1 <= timei <= 10^5
+    1 <= firstPerson <= n - 1
 
 Hints
 - Could you model all the meetings happening at the same time as a graph?
@@ -2193,12 +2193,12 @@ Output: [100000,-100000]
 
 Constraints:
 
-	nums.length == n
-	adjacentPairs.length == n - 1
-	adjacentPairs[i].length == 2
-	2 <= n <= 10^5
-	-10^5 <= nums[i], ui, vi <= 10^5
-	There exists some nums that has adjacentPairs as its pairs.
+    nums.length == n
+    adjacentPairs.length == n - 1
+    adjacentPairs[i].length == 2
+    2 <= n <= 10^5
+    -10^5 <= nums[i], ui, vi <= 10^5
+    There exists some nums that has adjacentPairs as its pairs.
 
 Hints:
 - Find the first element of nums - it will only appear once in adjacentPairs.
@@ -2263,9 +2263,9 @@ There are no more pairs that sum up to 6, hence a total of 1 operation.
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	1 <= nums[i] <= 10^9
-	1 <= k <= 10^9
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^9
+    1 <= k <= 10^9
 */
 export function maxOperations(nums: number[], k: number): number {
     nums.sort((a, b) => a - b);
@@ -2319,10 +2319,10 @@ Output: 0
 
 Constraints:
 
-	1 <= nums.length <= 200
-	1 <= nums[i] <= 1000
-	All the elements of nums are unique.
-	1 <= target <= 1000
+    1 <= nums.length <= 200
+    1 <= nums[i] <= 1000
+    All the elements of nums are unique.
+    1 <= target <= 1000
 
 Follow up: What if negative numbers are allowed in the given array? How does it change the problem? 
 What limitation we need to add to the question to allow negative numbers?
@@ -2355,8 +2355,8 @@ There are two mice and n different types of cheese, each type of cheese should b
 
 A point of the cheese with index i (0-indexed) is:
 
-	reward1[i] if the first mouse eats it.
-	reward2[i] if the second mouse eats it.
+    reward1[i] if the first mouse eats it.
+    reward2[i] if the second mouse eats it.
 
 You are given a positive integer array reward1, a positive integer array reward2, and a non-negative integer k.
 
@@ -2380,9 +2380,9 @@ It can be proven that 2 is the maximum total points that the mice can achieve.
 
 Constraints:
 
-	1 <= n == reward1.length == reward2.length <= 10^5
-	1 <= reward1[i], reward2[i] <= 1000
-	0 <= k <= n
+    1 <= n == reward1.length == reward2.length <= 10^5
+    1 <= reward1[i], reward2[i] <= 1000
+    0 <= k <= n
 */
 export function miceAndCheese(
     reward1: number[],
@@ -2418,9 +2418,9 @@ Explanation: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will 
 
 Constraints:
 
-	1 <= arr.length <= 10^5
-	1 <= arr[i] <= 10^9
-	0 <= k <= arr.length
+    1 <= arr.length <= 10^5
+    1 <= arr[i] <= 10^9
+    0 <= k <= arr.length
 */
 export function findLeastNumOfUniqueInts(arr: number[], k: number): number {
     const repeatTimes: Record<number, number> = {};
@@ -2468,9 +2468,9 @@ Explanation: One of the '1's must be in the last position. The maximum number th
 
 Constraints:
 
-	1 <= s.length <= 100
-	s consists only of '0' and '1'.
-	s contains at least one '1'.
+    1 <= s.length <= 100
+    s consists only of '0' and '1'.
+    s contains at least one '1'.
 */
 export function maximumOddBinaryNumber(s: string): string {
     let oneCount = 0;
@@ -2502,9 +2502,9 @@ Output: [4,9,9,49,121]
 
 Constraints:
 
-	1 <= nums.length <= 10^4
-	-10^4 <= nums[i] <= 10^4
-	nums is sorted in non-decreasing order.
+    1 <= nums.length <= 10^4
+    -10^4 <= nums[i] <= 10^4
+    nums is sorted in non-decreasing order.
 
 Follow up: Squaring each element and sorting the new array is very trivial, could you find an O(n) solution using a different approach?
 */
@@ -2546,9 +2546,9 @@ You are given a 0-indexed integer array nums and a positive integer x.
 
 You are initially at position 0 in the array and you can visit other positions according to the following rules:
 
-	If you are currently in position i, then you can move to any position j such that i < j.
-	For each position i that you visit, you get a score of nums[i].
-	If you move from a position i to a position j and the parities of nums[i] and nums[j] differ, then you lose a score of x.
+    If you are currently in position i, then you can move to any position j such that i < j.
+    For each position i that you visit, you get a score of nums[i].
+    If you move from a position i to a position j and the parities of nums[i] and nums[j] differ, then you lose a score of x.
 
 Return the maximum total score you can get.
 
@@ -2571,8 +2571,8 @@ The total score is: 2 + 4 + 6 + 8 = 20.
 
 Constraints:
 
-	2 <= nums.length <= 10^5
-	1 <= nums[i], x <= 10^6
+    2 <= nums.length <= 10^5
+    1 <= nums[i], x <= 10^6
 */
 export function maxScore(nums: number[], x: number): number {
     const dfs = cache((i: number, even: boolean) => {
@@ -2597,7 +2597,7 @@ You are given a 0-indexed permutation of n integers nums.
 
 A permutation is called semi-ordered if the first number equals 1 and the last number equals n. You can perform the below operation as many times as you want until you make nums a semi-ordered permutation:
 
-	Pick two adjacent elements in nums, then swap them.
+    Pick two adjacent elements in nums, then swap them.
 
 Return the minimum number of operations to make nums a semi-ordered permutation.
 
@@ -2630,9 +2630,9 @@ Explanation: The permutation is already a semi-ordered permutation.
 
 Constraints:
 
-	2 <= nums.length == n <= 50
-	1 <= nums[i] <= 50
-	nums is a permutation.
+    2 <= nums.length == n <= 50
+    1 <= nums[i] <= 50
+    nums is a permutation.
 */
 export function semiOrderedPermutation(nums: number[]): number {
     let oneIndex = -1;
@@ -2657,8 +2657,8 @@ You start with an initial power of power, an initial score of 0, and a bag of to
 
 Your goal is to maximize the total score by strategically playing these tokens. In one move, you can play an unplayed token in one of the two ways (but not both for the same token):
 
-	Face-up: If your current power is at least tokens[i], you may play tokeni, losing tokens[i] power and gaining 1 score.
-	Face-down: If your current score is at least 1, you may play tokeni, gaining tokens[i] power and losing 1 score.
+    Face-up: If your current power is at least tokens[i], you may play tokeni, losing tokens[i] power and gaining 1 score.
+    Face-down: If your current score is at least 1, you may play tokeni, gaining tokens[i] power and losing 1 score.
 
 Return the maximum possible score you can achieve after playing any number of tokens.
 
@@ -2688,17 +2688,17 @@ Output: 2
 
 Explanation: Play the tokens in this order to get a score of 2:
 
-	Play token0 (100) face-up, reducing power to 100 and increasing score to 1.
-	Play token3 (400) face-down, increasing power to 500 and reducing score to 0.
-	Play token1 (200) face-up, reducing power to 300 and increasing score to 1.
-	Play token2 (300) face-up, reducing power to 0 and increasing score to 2.
+    Play token0 (100) face-up, reducing power to 100 and increasing score to 1.
+    Play token3 (400) face-down, increasing power to 500 and reducing score to 0.
+    Play token1 (200) face-up, reducing power to 300 and increasing score to 1.
+    Play token2 (300) face-up, reducing power to 0 and increasing score to 2.
 
 The maximum score achievable is 2.
 
 Constraints:
 
-	0 <= tokens.length <= 1000
-	0 <= tokens[i], power < 10^4
+    0 <= tokens.length <= 1000
+    0 <= tokens[i], power < 10^4
 */
 export function bagOfTokensScore(tokens: number[], power: number): number {
     tokens.sort((a, b) => a - b);
@@ -2732,23 +2732,23 @@ If a given id exists in one array but not the other, the single object with th
 
 If two objects share an id, their properties should be merged into a single object:
 
-	If a key only exists in one object, that single key-value pair should be included in the object.
-	If a key is included in both objects, the value in the object from arr2 should override the value from arr1.
+    If a key only exists in one object, that single key-value pair should be included in the object.
+    If a key is included in both objects, the value in the object from arr2 should override the value from arr1.
 
 Example 1:
 
 Input: 
 arr1 = [
-    {"id": 1, "x": 1},
-    {"id": 2, "x": 9}
+    {"id": 1, "x": 1},
+    {"id": 2, "x": 9}
 ], 
 arr2 = [
     {"id": 3, "x": 5}
 ]
 Output: 
 [
-    {"id": 1, "x": 1},
-    {"id": 2, "x": 9},
+    {"id": 1, "x": 1},
+    {"id": 2, "x": 9},
     {"id": 3, "x": 5}
 ]
 Explanation: There are no duplicate ids so arr1 is simply concatenated with arr2.
@@ -2768,7 +2768,7 @@ Output:
 [
     {"id": 1, "x": 2, "y": 3},
     {"id": 2, "x": 10, "y": 20},
-    {"id": 3, "x": 0, "y": 0}
+    {"id": 3, "x": 0, "y": 0}
 ]
 Explanation: The two objects with id=1 and id=3 are included in the result array without modifiction. The two objects with id=2 are merged together. The keys from arr2 override the values in arr1.
 
@@ -2788,10 +2788,10 @@ Explanation: The two objects with id=1 are merged together. For the keys "b" and
 
 Constraints:
 
-	arr1 and arr2 are valid JSON arrays
-	Each object in arr1 and arr2 has a unique integer id key
-	2 <= JSON.stringify(arr1).length <= 10^6
-	2 <= JSON.stringify(arr2).length <= 10^6
+    arr1 and arr2 are valid JSON arrays
+    Each object in arr1 and arr2 has a unique integer id key
+    2 <= JSON.stringify(arr1).length <= 10^6
+    2 <= JSON.stringify(arr2).length <= 10^6
 */
 type JSONValue =
     | null
@@ -2855,8 +2855,8 @@ The earlier year between them is 1960.
 
 Constraints:
 
-	1 <= logs.length <= 100
-	1950 <= birthi < deathi <= 2050
+    1 <= logs.length <= 100
+    1950 <= birthi < deathi <= 2050
 */
 export function maximumPopulation(logs: number[][]): number {
     const minYear = Math.min(...logs.map(([birth]) => birth));
@@ -2908,10 +2908,10 @@ Output: [4,2,0,7,4]
 
 Constraints:
 
-	2 <= n <= 10^4
-	encoded.length == n - 1
-	0 <= encoded[i] <= 10^5
-	0 <= first <= 10^5
+    2 <= n <= 10^4
+    encoded.length == n - 1
+    0 <= encoded[i] <= 10^5
+    0 <= first <= 10^5
 */
 export function decode(encoded: number[], first: number): number[] {
     encoded[0] ^= first;
@@ -2930,9 +2930,9 @@ You want to water n plants in your garden with a watering can. The plants are ar
 
 Each plant needs a specific amount of water. You will water the plants in the following way:
 
-	Water the plants in order from left to right.
-	After watering the current plant, if you do not have enough water to completely water the next plant, return to the river to fully refill the watering can.
-	You cannot refill the watering can early.
+    Water the plants in order from left to right.
+    After watering the current plant, if you do not have enough water to completely water the next plant, return to the river to fully refill the watering can.
+    You cannot refill the watering can early.
 
 You are initially at the river (i.e., x = -1). It takes one step to move one unit on the x-axis.
 
@@ -2971,10 +2971,10 @@ Steps needed = 1 + 1 + 2 + 2 + 3 + 3 + 4 + 4 + 5 + 5 + 6 + 6 + 7 = 49.
 
 Constraints:
 
-	n == plants.length
-	1 <= n <= 1000
-	1 <= plants[i] <= 10^6
-	max(plants[i]) <= capacity <= 10^9
+    n == plants.length
+    1 <= n <= 1000
+    1 <= plants[i] <= 10^6
+    max(plants[i]) <= capacity <= 10^9
 */
 export function wateringPlants(plants: number[], capacity: number): number {
     let steps = 0;
@@ -3000,12 +3000,12 @@ from left to right where the ith plant is located at x = i.
 Each plant needs a specific amount of water. Alice and Bob have a watering can each, initially full. 
 They water the plants in the following way:
 
-	Alice waters the plants in order from left to right, starting from the 0th plant. Bob waters the plants in order 
+    Alice waters the plants in order from left to right, starting from the 0th plant. Bob waters the plants in order 
     from right to left, starting from the (n - 1)th plant. They begin watering the plants simultaneously.
-	It takes the same amount of time to water each plant regardless of how much water it needs.
-	Alice/Bob must water the plant if they have enough in their can to fully water it. Otherwise, they first 
+    It takes the same amount of time to water each plant regardless of how much water it needs.
+    Alice/Bob must water the plant if they have enough in their can to fully water it. Otherwise, they first 
     refill their can (instantaneously) then water the plant.
-	In case both Alice and Bob reach the same plant, the one with more water currently in his/her watering can 
+    In case both Alice and Bob reach the same plant, the one with more water currently in his/her watering can 
     should water this plant. If they have the same amount of water, then Alice should water this plant.
 
 Given a 0-indexed integer array plants of n integers, where plants[i] is the amount of water the ith plant needs, 
@@ -3047,10 +3047,10 @@ So, the total number of times they have to refill is 0.
 
 Constraints:
 
-	n == plants.length
-	1 <= n <= 10^5
-	1 <= plants[i] <= 10^6
-	max(plants[i]) <= capacityA, capacityB <= 10^9
+    n == plants.length
+    1 <= n <= 10^5
+    1 <= plants[i] <= 10^6
+    max(plants[i]) <= capacityA, capacityB <= 10^9
 */
 export function minimumRefill(
     plants: number[],
@@ -3098,11 +3098,11 @@ To achieve this goal, let's define two empty arrays: seen and ans.
 
 Start iterating from the beginning of the array nums.
 
-	If a positive integer is encountered, prepend it to the front of seen.
-	If -1 is encountered, let k be the number of consecutive -1s seen so far (including the current -1),
+    If a positive integer is encountered, prepend it to the front of seen.
+    If -1 is encountered, let k be the number of consecutive -1s seen so far (including the current -1),
 
-		If k is less than or equal to the length of seen, append the k-th element of seen to ans.
-		If k is strictly greater than the length of seen, append -1 to ans.
+        If k is less than or equal to the length of seen, append the k-th element of seen to ans.
+        If k is strictly greater than the length of seen, append -1 to ans.
 
 Return the array ans.
 
@@ -3114,11 +3114,11 @@ Output: [2,1,-1]
 
 Explanation: Start with seen = [] and ans = [].
 
-	Process nums[0]: The first element in nums is 1. We prepend it to the front of seen. Now, seen == [1].
-	Process nums[1]: The next element is 2. We prepend it to the front of seen. Now, seen == [2, 1].
-	Process nums[2]: The next element is -1. This is the first occurrence of -1, so k == 1. We look for the first element in seen. We append 2 to ans. Now, ans == [2].
-	Process nums[3]: Another -1. This is the second consecutive -1, so k == 2. The second element in seen is 1, so we append 1 to ans. Now, ans == [2, 1].
-	Process nums[4]: Another -1, the third in a row, making k = 3. However, seen only has two elements ([2, 1]). Since k is greater than the number of elements in seen, we append -1 to ans. Finally, ans == [2, 1, -1].
+    Process nums[0]: The first element in nums is 1. We prepend it to the front of seen. Now, seen == [1].
+    Process nums[1]: The next element is 2. We prepend it to the front of seen. Now, seen == [2, 1].
+    Process nums[2]: The next element is -1. This is the first occurrence of -1, so k == 1. We look for the first element in seen. We append 2 to ans. Now, ans == [2].
+    Process nums[3]: Another -1. This is the second consecutive -1, so k == 2. The second element in seen is 1, so we append 1 to ans. Now, ans == [2, 1].
+    Process nums[4]: Another -1, the third in a row, making k = 3. However, seen only has two elements ([2, 1]). Since k is greater than the number of elements in seen, we append -1 to ans. Finally, ans == [2, 1, -1].
 
 Example 2:
 
@@ -3128,16 +3128,16 @@ Output: [1,2,1]
 
 Explanation: Start with seen = [] and ans = [].
 
-	Process nums[0]: The first element in nums is 1. We prepend it to the front of seen. Now, seen == [1].
-	Process nums[1]: The next element is -1. This is the first occurrence of -1, so k == 1. We look for the first element in seen, which is 1. Append 1 to ans. Now, ans == [1].
-	Process nums[2]: The next element is 2. Prepend this to the front of seen. Now, seen == [2, 1].
-	Process nums[3]: The next element is -1. This -1 is not consecutive to the first -1 since 2 was in between. Thus, k resets to 1. The first element in seen is 2, so append 2 to ans. Now, ans == [1, 2].
-	Process nums[4]: Another -1. This is consecutive to the previous -1, so k == 2. The second element in seen is 1, append 1 to ans. Finally, ans == [1, 2, 1].
+    Process nums[0]: The first element in nums is 1. We prepend it to the front of seen. Now, seen == [1].
+    Process nums[1]: The next element is -1. This is the first occurrence of -1, so k == 1. We look for the first element in seen, which is 1. Append 1 to ans. Now, ans == [1].
+    Process nums[2]: The next element is 2. Prepend this to the front of seen. Now, seen == [2, 1].
+    Process nums[3]: The next element is -1. This -1 is not consecutive to the first -1 since 2 was in between. Thus, k resets to 1. The first element in seen is 2, so append 2 to ans. Now, ans == [1, 2].
+    Process nums[4]: Another -1. This is consecutive to the previous -1, so k == 2. The second element in seen is 1, append 1 to ans. Finally, ans == [1, 2, 1].
 
 Constraints:
 
-	1 <= nums.length <= 100
-	nums[i] == -1 or 1 <= nums[i] <= 100
+    1 <= nums.length <= 100
+    nums[i] == -1 or 1 <= nums[i] <= 100
 */
 export function lastVisitedIntegers(nums: number[]): number[] {
     const seen: number[] = [];
@@ -3191,8 +3191,8 @@ Their dot product is -1.
 
 Constraints:
 
-	1 <= nums1.length, nums2.length <= 500
-	-1000 <= nums1[i], nums2[i] <= 1000
+    1 <= nums1.length, nums2.length <= 500
+    -1000 <= nums1[i], nums2[i] <= 1000
 */
 export function maxDotProduct(nums1: number[], nums2: number[]): number {
     const dp: number[][] = Array.from({ length: nums1.length + 1 }, () =>
@@ -3289,8 +3289,8 @@ Explanation: It can be shown that it is not possible to sort the input array usi
 
 Constraints:
 
-	1 <= nums.length <= 100
-	1 <= nums[i] <= 28
+    1 <= nums.length <= 100
+    1 <= nums[i] <= 28
 */
 export function canSortArray(nums: number[]): boolean {
     let prev = countBits(nums[0]);
@@ -3345,9 +3345,9 @@ Explanation: There are two common elements in the array 2 and 3 out of which 2 i
 
 Constraints:
 
-	1 <= nums1.length, nums2.length <= 10^5
-	1 <= nums1[i], nums2[j] <= 10^9
-	Both nums1 and nums2 are sorted in non-decreasing order.
+    1 <= nums1.length, nums2.length <= 10^5
+    1 <= nums1[i], nums2[j] <= 10^9
+    Both nums1 and nums2 are sorted in non-decreasing order.
 */
 export function getCommon(nums1: number[], nums2: number[]): number {
     let i = 0;
@@ -3382,13 +3382,13 @@ Return the sum of distances between all the pairs of robots d seconds after th
 
 Note: 
 
-	For two robots at the index i and j, pair (i,j) and pair (j,i) are considered the same pair.
-	When robots collide, they instantly change their directions without wasting any time.
-	Collision happens when two robots share the same place in a moment.
+    For two robots at the index i and j, pair (i,j) and pair (j,i) are considered the same pair.
+    When robots collide, they instantly change their directions without wasting any time.
+    Collision happens when two robots share the same place in a moment.
 
-		For example, if a robot is positioned in 0 going to the right and another is positioned in 2 going to the left, the next second they'll 
+        For example, if a robot is positioned in 0 going to the right and another is positioned in 2 going to the left, the next second they'll 
         be both in 1 and they will change direction and the next second the first one will be in 0, heading left, and another will be in 2, heading right.
-		For example, if a robot is positioned in 0 going to the right and another is positioned in 1 going to the left, the next second the 
+        For example, if a robot is positioned in 0 going to the right and another is positioned in 1 going to the left, the next second the 
         first one will be in 0, heading left, and another will be in 1, heading right.
 
 Example 1:
@@ -3415,12 +3415,12 @@ The distance between the two robots is abs(-2 - 3) = 5.
 
 Constraints:
 
-	2 <= nums.length <= 10^5
-	-2 * 10^9 <= nums[i] <= 10^9
-	0 <= d <= 10^9
-	nums.length == s.length 
-	s consists of 'L' and 'R' only
-	nums[i] will be unique.
+    2 <= nums.length <= 10^5
+    -2 * 10^9 <= nums[i] <= 10^9
+    0 <= d <= 10^9
+    nums.length == s.length 
+    s consists of 'L' and 'R' only
+    nums[i] will be unique.
 
 Hints
 - Observe that if you ignore collisions, the resultant positions of robots after d seconds would be the same.
@@ -3449,7 +3449,7 @@ https://leetcode.com/problems/find-the-original-array-of-prefix-xor/description/
 2433. Find The Original Array of Prefix Xor
 You are given an integer array pref of size n. Find and return the array arr of size n that satisfies:
 
-	pref[i] = arr[0] ^ arr[1] ^ ... ^ arr[i].
+    pref[i] = arr[0] ^ arr[1] ^ ... ^ arr[i].
 
 Note that ^ denotes the bitwise-xor operation.
 
@@ -3474,8 +3474,8 @@ Explanation: We have pref[0] = arr[0] = 13.
 
 Constraints:
 
-	1 <= pref.length <= 10^5
-	0 <= pref[i] <= 10^6
+    1 <= pref.length <= 10^5
+    0 <= pref[i] <= 10^6
 */
 export function findArray(pref: number[]): number[] {
     let prev = pref[0];
@@ -3519,10 +3519,10 @@ The person at position 0 has successfully bought 5 tickets and it took 4 + 1 + 
 
 Constraints:
 
-	n == tickets.length
-	1 <= n <= 100
-	1 <= tickets[i] <= 100
-	0 <= k < n
+    n == tickets.length
+    1 <= n <= 100
+    1 <= tickets[i] <= 100
+    0 <= k < n
 */
 export function timeRequiredToBuy(tickets: number[], k: number): number {
     const getSeconds = (start: number, end: number, min: number) => {
@@ -3564,9 +3564,9 @@ Output: 15
 
 Constraints:
 
-	1 <= nums.length <= 10^4
-	nums[i] is either 0 or 1.
-	0 <= goal <= nums.length
+    1 <= nums.length <= 10^4
+    nums[i] is either 0 or 1.
+    0 <= goal <= nums.length
 */
 export function numSubarraysWithSum(nums: number[], goal: number): number {
     let prefix = 0;
@@ -3600,9 +3600,9 @@ Output: [0,0,9,0,0]
 
 Constraints:
 
-	2 <= nums.length <= 10^5
-	-30 <= nums[i] <= 30
-	The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+    2 <= nums.length <= 10^5
+    -30 <= nums[i] <= 30
+    The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
 
 Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
 */
@@ -3648,8 +3648,8 @@ Explanation: [0, 1] (or [1, 0]) is a longest contiguous subarray with equal numb
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	nums[i] is either 0 or 1.
+    1 <= nums.length <= 10^5
+    nums[i] is either 0 or 1.
 */
 export function findMaxLength(nums: number[]): number {
     let prefix = 0;
@@ -3702,9 +3702,9 @@ Explanation: The balloons can be burst by 2 arrows:
 
 Constraints:
 
-	1 <= points.length <= 10^5
-	points[i].length == 2
-	2^31 <= xstart < xend <= 2^31 - 1
+    1 <= points.length <= 10^5
+    points[i].length == 2
+    2^31 <= xstart < xend <= 2^31 - 1
 */
 export function findMinArrowShots(points: number[][]): number {
     points.sort(([startA], [startB]) => startA - startB);
@@ -3730,7 +3730,7 @@ https://leetcode.com/problems/arithmetic-slices/description/
 An integer array is called arithmetic if it consists of at least three elements and if the difference 
 between any two consecutive elements is the same.
 
-	For example, [1,3,5,7,9], [7,7,7,7], and [3,-1,-5,-9] are arithmetic sequences.
+    For example, [1,3,5,7,9], [7,7,7,7], and [3,-1,-5,-9] are arithmetic sequences.
 
 Given an integer array nums, return the number of arithmetic subarrays of nums.
 
@@ -3749,8 +3749,8 @@ Output: 0
 
 Constraints:
 
-	1 <= nums.length <= 5000
-	-1000 <= nums[i] <= 1000
+    1 <= nums.length <= 5000
+    -1000 <= nums[i] <= 1000
 */
 export function numberOfArithmeticSlices(nums: number[]): number {
     let count = 0;
@@ -3798,9 +3798,9 @@ Output: [2,3,3,4]
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	0 <= nums[i] <= 10^9
-	1 <= k <= nums.length
+    1 <= nums.length <= 10^5
+    0 <= nums[i] <= 10^9
+    1 <= k <= nums.length
 */
 export function mostCompetitive(nums: number[], k: number): number[] {
     const result: number[] = Array(k);
@@ -3853,15 +3853,15 @@ Output: 3
 
 Constraints:
 
-	1 <= n <= 10^5
-	nums.length == n + 1
-	1 <= nums[i] <= n
-	All the integers in nums appear only once except for precisely one integer which appears two or more times.
+    1 <= n <= 10^5
+    nums.length == n + 1
+    1 <= nums[i] <= n
+    All the integers in nums appear only once except for precisely one integer which appears two or more times.
 
 Follow up:
 
-	How can we prove that at least one duplicate number must exist in nums?
-	Can you solve the problem in linear runtime complexity?
+    How can we prove that at least one duplicate number must exist in nums?
+    Can you solve the problem in linear runtime complexity?
 
 本质上是个链表入环节点检测问题
 */
@@ -3908,8 +3908,8 @@ Finally, player 1 has more score (234) than player 2 (12), so you need to return
 
 Constraints:
 
-	1 <= nums.length <= 20
-	0 <= nums[i] <= 10^7
+    1 <= nums.length <= 20
+    0 <= nums[i] <= 10^7
 */
 export function predictTheWinner(nums: number[]): boolean {
     const first = cache((left: number, right: number): number => {
@@ -3954,10 +3954,10 @@ Output: []
 
 Constraints:
 
-	n == nums.length
-	1 <= n <= 10^5
-	1 <= nums[i] <= n
-	Each element in nums appears once or twice.
+    n == nums.length
+    1 <= n <= 10^5
+    1 <= nums[i] <= n
+    Each element in nums appears once or twice.
 */
 export function findDuplicates(nums: number[]): number[] {
     const result: number[] = [];
@@ -4057,9 +4057,9 @@ It can be shown that there are no good subarrays with length more than 4.
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	1 <= nums[i] <= 10^9
-	1 <= k <= nums.length
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^9
+    1 <= k <= nums.length
 */
 export function maxSubarrayLength(nums: number[], k: number): number {
     let freqMap: Record<number, number> = {};
@@ -4108,9 +4108,9 @@ Explanation: No subarray contains the element 4 at least 3 times.
 
 Constraints:
 
-	1 <= nums.length <= 10^5
-	1 <= nums[i] <= 10^6
-	1 <= k <= 10^5
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^6
+    1 <= k <= 10^5
 */
 export function countSubarrays(nums: number[], k: number): number {
     let max = -Infinity;
@@ -4197,11 +4197,11 @@ The maximum depth of any subarray is 1. Thus, all of them are flattened.
 
 Constraints:
 
-	0 <= count of numbers in arr <= 10^5
-	0 <= count of subarrays in arr <= 10^5
-	maxDepth <= 1000
-	-1000 <= each number <= 1000
-	0 <= n <= 1000
+    0 <= count of numbers in arr <= 10^5
+    0 <= count of subarrays in arr <= 10^5
+    maxDepth <= 1000
+    -1000 <= each number <= 1000
+    0 <= n <= 1000
 */
 type MultiDimensionalArray = (number | MultiDimensionalArray)[];
 
@@ -4254,12 +4254,12 @@ Explanation: We can not enter room number 2 since the only key that unlocks it i
 
 Constraints:
 
-	n == rooms.length
-	2 <= n <= 1000
-	0 <= rooms[i].length <= 1000
-	1 <= sum(rooms[i].length) <= 3000
-	0 <= rooms[i][j] < n
-	All the values of rooms[i] are unique.
+    n == rooms.length
+    2 <= n <= 1000
+    0 <= rooms[i].length <= 1000
+    1 <= sum(rooms[i].length) <= 3000
+    0 <= rooms[i][j] < n
+    All the values of rooms[i] are unique.
 */
 export function canVisitAllRooms(rooms: number[][]): boolean {
     const visited = new Set<number>();
@@ -4289,8 +4289,8 @@ You start your journey from building 0 and move to the next building by possibly
 
 While moving from building i to building i+1 (0-indexed),
 
-	If the current building's height is greater than or equal to the next building's height, you do not need a ladder or bricks.
-	If the current building's height is less than the next building's height, you can either use one ladder or (h[i+1] - h[i]) bricks.
+    If the current building's height is greater than or equal to the next building's height, you do not need a ladder or bricks.
+    If the current building's height is less than the next building's height, you can either use one ladder or (h[i+1] - h[i]) bricks.
 
 Return the furthest building index (0-indexed) you can reach if you use the given ladders and bricks optimally.
 
@@ -4317,10 +4317,10 @@ Output: 3
 
 Constraints:
 
-	1 <= heights.length <= 10^5
-	1 <= heights[i] <= 10^6
-	0 <= bricks <= 10^9
-	0 <= ladders <= heights.length
+    1 <= heights.length <= 10^5
+    1 <= heights[i] <= 10^6
+    0 <= bricks <= 10^9
+    0 <= ladders <= heights.length
 */
 export function furthestBuilding(
     heights: number[],
@@ -4354,8 +4354,8 @@ https://leetcode.com/problems/largest-divisible-subset/description/?envType=list
 368. Largest Divisible Subset
 Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:
 
-	answer[i] % answer[j] == 0, or
-	answer[j] % answer[i] == 0
+    answer[i] % answer[j] == 0, or
+    answer[j] % answer[i] == 0
 
 If there are multiple solutions, return any of them.
 
@@ -4372,9 +4372,9 @@ Output: [1,2,4,8]
 
 Constraints:
 
-	1 <= nums.length <= 1000
-	1 <= nums[i] <= 10^9
-	All the integers in nums are unique.
+    1 <= nums.length <= 1000
+    1 <= nums[i] <= 10^9
+    All the integers in nums are unique.
 */
 export function largestDivisibleSubset(nums: number[]): number[] {
     nums.sort((a, b) => a - b);
@@ -4406,4 +4406,46 @@ export function largestDivisibleSubset(nums: number[]): number[] {
     });
 
     return max;
+}
+
+/*
+https://leetcode.com/problems/count-elements-with-strictly-smaller-and-greater-elements/description/?envType=list&envId=o5cftq05
+2148. Count Elements With Strictly Smaller and Greater Elements 
+Given an integer array nums, return the number of elements that have both a strictly smaller and a strictly greater element appear in nums.
+
+Example 1:
+
+Input: nums = [11,7,2,15]
+Output: 2
+Explanation: The element 7 has the element 2 strictly smaller than it and the element 11 strictly greater than it.
+Element 11 has element 7 strictly smaller than it and element 15 strictly greater than it.
+In total there are 2 elements having both a strictly smaller and a strictly greater element appear in nums.
+
+Example 2:
+
+Input: nums = [-3,3,3,90]
+Output: 2
+Explanation: The element 3 has the element -3 strictly smaller than it and the element 90 strictly greater than it.
+Since there are two elements with the value 3, in total there are 2 elements having both a strictly smaller and a strictly greater element appear in nums.
+
+Constraints:
+
+    1 <= nums.length <= 100
+    -10^5 <= nums[i] <= 10^5
+*/
+export function countElements(nums: number[]): number {
+    let min = Infinity;
+    let max = -Infinity;
+    const freqMap: Record<number, number> = {};
+    nums.forEach((v) => {
+        min = Math.min(min, v);
+        max = Math.max(max, v);
+
+        freqMap[v] = (freqMap[v] ?? 0) + 1;
+    });
+
+    delete freqMap[min];
+    delete freqMap[max];
+
+    return Object.values(freqMap).reduce((acc, cur) => acc + cur, 0);
 }
