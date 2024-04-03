@@ -459,5 +459,3 @@ export function distanceTraveled(
 
     return count;
 }
-
-distanceTraveled(5, 1);
