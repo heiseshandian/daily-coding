@@ -459,3 +459,93 @@ export function distanceTraveled(
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/integer-to-roman/description/?envType=list&envId=o5cftq05
+12. Integer to Roman
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+
+For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four 
+is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, 
+which is written as IX. There are six instances where subtraction is used:
+
+	I can be placed before V (5) and X (10) to make 4 and 9. 
+	X can be placed before L (50) and C (100) to make 40 and 90. 
+	C can be placed before D (500) and M (1000) to make 400 and 900.
+
+Given an integer, convert it to a roman numeral.
+
+Example 1:
+
+Input: num = 3
+Output: "III"
+Explanation: 3 is represented as 3 ones.
+
+Example 2:
+
+Input: num = 58
+Output: "LVIII"
+Explanation: L = 50, V = 5, III = 3.
+
+Example 3:
+
+Input: num = 1994
+Output: "MCMXCIV"
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+Constraints:
+
+	1 <= num <= 3999
+*/
+export function intToRoman(num: number): string {
+    const getRoman = (
+        v: number,
+        first: string,
+        second: string,
+        third: string
+    ): string => {
+        if (v >= 1 && v <= 3) {
+            return Array(v).fill(first).join('');
+        }
+        if (v === 4) {
+            return `${first}${second}`;
+        }
+        if (v === 5) {
+            return second;
+        }
+        if (v >= 6 && v <= 8) {
+            return `${second}${Array(v - 5)
+                .fill(first)
+                .join('')}`;
+        }
+        if (v === 9) {
+            return `${first}${third}`;
+        }
+        return '';
+    };
+    const map = {
+        0: (v: number) => getRoman(v, 'I', 'V', 'X'),
+        1: (v: number) => getRoman(v, 'X', 'L', 'C'),
+        2: (v: number) => getRoman(v, 'C', 'D', 'M'),
+        3: (v: number) => Array(v).fill('M').join(''),
+    };
+
+    const digits = num
+        .toString()
+        .split('')
+        .map((v) => +v);
+    const end = digits.length - 1;
+
+    return digits.map((v, i) => map[end - i](v)).join('');
+}
