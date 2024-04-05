@@ -1,4 +1,4 @@
-import { swap } from '../common/index';
+import { getCharIndex, swap } from '../common/index';
 /*
 https://leetcode.com/problems/construct-k-palindrome-strings/
 1400. Construct K Palindrome Strings
@@ -1883,4 +1883,46 @@ export function makeGood(s: string): string {
     }
 
     return stack.join('');
+}
+
+/*
+https://leetcode.com/problems/find-common-characters/description/?envType=list&envId=o5cftq05
+1002. Find Common Characters
+Given a string array words, return an array of all characters that show up in all strings within the words (including duplicates). You may return the answer in any order.
+
+Example 1:
+Input: words = ["bella","label","roller"]
+Output: ["e","l","l"]
+Example 2:
+Input: words = ["cool","lock","cook"]
+Output: ["c","o"]
+
+Constraints:
+
+	1 <= words.length <= 100
+	1 <= words[i].length <= 100
+	words[i] consists of lowercase English letters.
+*/
+export function commonChars(words: string[]): string[] {
+    const nums = Array.from({ length: words.length }, () => Array(26).fill(0));
+    words.forEach((w, i) => {
+        for (let j = 0; j < w.length; j++) {
+            nums[i][getCharIndex(w[j])]++;
+        }
+    });
+
+    const result: number[] = [];
+    for (let i = 0; i < 26; i++) {
+        result[i] = Math.min(...nums.map((v) => v[i]));
+    }
+
+    return result.reduce<string[]>((acc, cur, i) => {
+        if (cur === 0) {
+            return acc;
+        }
+
+        return acc.concat(
+            Array(cur).fill(String.fromCharCode(i + 'a'.charCodeAt(0)))
+        );
+    }, []);
 }
