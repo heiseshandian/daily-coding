@@ -4736,3 +4736,95 @@ export function sampleStats(count: number[]): number[] {
 
     return [min!, max, sum / times, median, mode];
 }
+
+/*
+https://leetcode.com/problems/ways-to-split-array-into-three-subarrays/description/?envType=list&envId=o5cftq05
+1712. Ways to Split Array Into Three Subarrays
+A split of an integer array is good if:
+
+	The array is split into three non-empty contiguous subarrays - named left, mid, right respectively from left to right.
+	The sum of the elements in left is less than or equal to the sum of the elements in mid, and the sum of the elements in mid is less than or equal to the sum of the elements in right.
+
+Given nums, an array of non-negative integers, return the number of good ways to split nums. As the number may be too large, return it modulo 109 + 7.
+
+Example 1:
+
+Input: nums = [1,1,1]
+Output: 1
+Explanation: The only good way to split nums is [1] [1] [1].
+
+Example 2:
+
+Input: nums = [1,2,2,2,5,0]
+Output: 3
+Explanation: There are three good ways of splitting nums:
+[1] [2] [2,2,5,0]
+[1] [2,2] [2,5,0]
+[1,2] [2,2] [5,0]
+
+Example 3:
+
+Input: nums = [3,2,1]
+Output: 0
+Explanation: There is no good way to split nums.
+
+Constraints:
+
+	3 <= nums.length <= 10^5
+	0 <= nums[i] <= 10^4
+*/
+export function waysToSplit(nums: number[]): number {
+    const modulo = Math.pow(10, 9) + 7;
+
+    const prefix = [nums[0]];
+    for (let i = 1; i < nums.length; i++) {
+        prefix[i] = prefix[i - 1] + nums[i];
+    }
+
+    const sum = prefix[prefix.length - 1];
+    const firstEnd = Math.ceil(sum / 3);
+
+    let count = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (prefix[i] > firstEnd) {
+            break;
+        }
+
+        let left = i + 1;
+        let right = nums.length - 2;
+        let downBound: number | null = null;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (prefix[mid] - prefix[i] < prefix[i]) {
+                left = mid + 1;
+            } else if (sum - prefix[mid] < prefix[mid] - prefix[i]) {
+                right = mid - 1;
+            } else {
+                downBound = mid;
+                right = mid - 1;
+            }
+        }
+        if (downBound === null) {
+            continue;
+        }
+
+        let upperBound: number | null = null;
+        left = i + 1;
+        right = nums.length - 2;
+        while (left <= right) {
+            const mid = left + ((right - left) >> 1);
+            if (prefix[mid] - prefix[i] < prefix[i]) {
+                left = mid + 1;
+            } else if (sum - prefix[mid] < prefix[mid] - prefix[i]) {
+                right = mid - 1;
+            } else {
+                upperBound = mid;
+                left = mid + 1;
+            }
+        }
+
+        count = (count + upperBound! - downBound + 1) % modulo;
+    }
+
+    return count;
+}
