@@ -376,3 +376,55 @@ export function minMoves2(nums: number[]): number {
     const mid = nums[nums.length >> 1];
     return nums.reduce((acc, cur) => acc + Math.abs(cur - mid), 0);
 }
+
+/*
+https://leetcode.com/problems/valid-parenthesis-string/description/
+678. Valid Parenthesis String
+Given a string s containing only three types of characters: '(', ')' and '*', return true if s is valid.
+
+The following rules define a valid string:
+
+	Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+	Any right parenthesis ')' must have a corresponding left parenthesis '('.
+	Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+	'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string "".
+
+Example 1:
+Input: s = "()"
+Output: true
+Example 2:
+Input: s = "(*)"
+Output: true
+Example 3:
+Input: s = "(*))"
+Output: true
+
+Constraints:
+
+	1 <= s.length <= 100
+	s[i] is '(', ')' or '*'.
+*/
+export function checkValidString(s: string): boolean {
+    let leftMin = 0;
+    let leftMax = 0;
+    let i = 0;
+    while (i < s.length) {
+        if (s[i] === '(') {
+            leftMin++;
+            leftMax++;
+        } else if (s[i] === ')') {
+            leftMin = Math.max(leftMin - 1, 0);
+            leftMax--;
+        } else {
+            leftMin = Math.max(leftMin - 1, 0);
+            leftMax++;
+        }
+
+        if (leftMax < 0) {
+            return false;
+        }
+        i++;
+    }
+
+    return leftMin === 0;
+}
