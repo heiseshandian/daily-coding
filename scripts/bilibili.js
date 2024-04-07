@@ -46,7 +46,9 @@ async function addChangeSpeedBtn() {
         speedListContainer.style.display = 'block';
     };
 
-    speedListContainer.onmouseleave = function (event) {
+    document.querySelector(
+        '#bilibili-player .bpx-player-control-wrap'
+    ).onmouseleave = speedListContainer.onmouseleave = function (event) {
         if (
             !btn.contains(event.relatedTarget) &&
             !speedListContainer.contains(event.relatedTarget)
