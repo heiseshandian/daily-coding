@@ -25,7 +25,7 @@ async function addChangeSpeedBtn() {
     const speedListContainer = document.createElement('div');
     speedListContainer.classList.add('speed-list-container');
 
-    const speeds = [1.25, 1.5, 1.75, 2.0];
+    const speeds = [1, 1.25, 1.5, 1.75, 2.0];
     speeds.forEach((speed) => {
         const speedOption = document.createElement('div');
         speedOption.textContent = `${speed}`;
