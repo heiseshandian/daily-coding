@@ -1,39 +1,19 @@
-.change-speed-btn {
+.change-speed-btn.bpx-player-ctrl-btn {
     position: relative;
-    background-color: #00a1d6;
-    color: white; /* 白色文本 */
-    border: none;
-    border-radius: 5px; /* 圆角边框 */
-    padding: 4px 6px; /* 减小填充使按钮更小 */
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 12px; /* 减小字体大小 */
-    transition: background-color 0.3s ease; /* 平滑的背景色变化 */
-}
-
-.change-speed-btn:hover {
-    background-color: #008cb2; /* 深蓝色背景 */
 }
 
 .speed-list-container {
     width: 100%; /* 确保选项容器宽度与按钮宽度相同 */
-    display: none;
+    display: none; /* 初始不可见 */
     position: absolute;
     left: 0;
-    top: 100%;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border-radius: 5px;
 }
 
 .speed-option {
-    padding: 4px;
     cursor: pointer;
-    color: #333; /* 深灰色文本，确保在白色背景上清晰可见 */
-    transition: background-color 0.2s ease; /* 平滑的背景色变化 */
-}
-
-.speed-option:hover {
-    background-color: #f0f0f0; /* 鼠标悬停时的背景色 */
 }

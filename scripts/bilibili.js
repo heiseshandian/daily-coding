@@ -10,7 +10,7 @@ function addBtns() {
     setVideoPlaybackRate(); // 确保视频播放速度被设置
 }
 
-const CHANGE_SPEED = 'change speed';
+const CHANGE_SPEED = '倍速';
 
 async function addChangeSpeedBtn() {
     const btnContainer = await getBtnContainer();
@@ -18,18 +18,21 @@ async function addChangeSpeedBtn() {
         return;
     }
 
-    const btn = document.createElement('button');
+    const btn = document.createElement('div');
     btn.textContent = CHANGE_SPEED;
+    btn.classList.add('bpx-player-ctrl-btn');
     btn.classList.add('change-speed-btn');
 
     const speedListContainer = document.createElement('div');
     speedListContainer.classList.add('speed-list-container');
+    speedListContainer.classList.add('bpx-player-ctrl-playbackrate-menu');
 
-    const speeds = [1, 1.25, 1.5, 1.75, 2.0];
+    const speeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0];
     speeds.forEach((speed) => {
         const speedOption = document.createElement('div');
         speedOption.textContent = `${speed}`;
         speedOption.classList.add('speed-option');
+        speedOption.classList.add('bpx-player-ctrl-playbackrate-menu-item');
         speedOption.onclick = function () {
             localStorage.setItem('videoPlaybackRate', speed);
             setVideoPlaybackRate(speed); // 更新视频播放速度
@@ -39,10 +42,11 @@ async function addChangeSpeedBtn() {
     });
 
     btn.onmouseover = function () {
+        // 直接显示speedListContainer，无需再动态计算位置
         speedListContainer.style.display = 'block';
     };
 
-    btn.onmouseleave = speedListContainer.onmouseleave = function (event) {
+    speedListContainer.onmouseleave = function (event) {
         if (
             !btn.contains(event.relatedTarget) &&
             !speedListContainer.contains(event.relatedTarget)
@@ -57,7 +61,7 @@ async function addChangeSpeedBtn() {
 }
 
 function getBtnContainer(
-    selectors = '#arc_toolbar_report .video-toolbar-left .video-toolbar-left-main'
+    selectors = '#bilibili-player .bpx-player-control-bottom-center'
 ) {
     let btnContainer;
     let resolveFn;
