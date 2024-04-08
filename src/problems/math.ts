@@ -549,3 +549,45 @@ export function intToRoman(num: number): string {
 
     return digits.map((v, i) => map[end - i](v)).join('');
 }
+
+/*
+https://leetcode.com/problems/integer-break/description/
+343. Integer Break
+Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
+
+Return the maximum product you can get.
+
+Example 1:
+
+Input: n = 2
+Output: 1
+Explanation: 2 = 1 + 1, 1 × 1 = 1.
+
+Example 2:
+
+Input: n = 10
+Output: 36
+Explanation: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36.
+
+Constraints:
+
+	2 <= n <= 58
+*/
+export function integerBreak(n: number): number {
+    if (n < 4) {
+        return n - 1;
+    }
+
+    let threeCount = Math.floor(n / 3);
+    let rest = n % 3;
+    if (rest === 1) {
+        threeCount--;
+        rest = 4;
+    }
+
+    const threeProduct = Array(threeCount)
+        .fill(3)
+        .reduce((acc, cur) => acc * cur, 1);
+
+    return rest === 0 ? threeProduct : threeProduct * rest;
+}
