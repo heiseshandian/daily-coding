@@ -4950,3 +4950,80 @@ export function countStudents(
 
     return students.length - count;
 }
+
+/*
+https://leetcode.com/problems/matchsticks-to-square/description/?envType=list&envId=o5cftq05
+473. Matchsticks to Square
+You are given an integer array matchsticks where matchsticks[i] is the length of the ith matchstick. You want to use all the matchsticks to make one square. You should not break any stick, but you can link them up, and each matchstick must be used exactly one time.
+
+Return true if you can make this square and false otherwise.
+
+Example 1:
+
+Input: matchsticks = [1,1,2,2,2]
+Output: true
+Explanation: You can form a square with length 2, one side of the square came two sticks with length 1.
+
+Example 2:
+
+Input: matchsticks = [3,3,3,3,4]
+Output: false
+Explanation: You cannot find a way to form a square with all the matchsticks.
+
+Constraints:
+
+	1 <= matchsticks.length <= 15
+	1 <= matchsticks[i] <= 10^8
+*/
+export function makesquare(matchsticks: number[]): boolean {
+    const sum = matchsticks.reduce((acc, cur) => acc + cur);
+    const target = sum / 4;
+    if (!Number.isInteger(target)) {
+        return false;
+    }
+
+    matchsticks.sort((a, b) => b - a);
+    if (matchsticks[0] > target) {
+        return false;
+    }
+
+    const dfs = (index: number, squares: number[]): boolean => {
+        if (index === matchsticks.length) {
+            return true;
+        }
+
+        for (let i = 0; i < 4; i++) {
+            if (squares[i] + matchsticks[index] > target) {
+                continue;
+            }
+
+            /* 
+            lets say sides are currently : [5,7,5,9] , the next element is 3.
+            Therefore we will be applying dfs on the following:
+            [5+3,7,5,9]
+            [5,7+3,5,9]
+            [5,7,5+3,9]
+            [5,7,5,9+3]
+
+            First and third are basically the same, only in a different order. 
+            If in the first case, dfs returned false, the third case will return false too.
+            So we don't run dfs in third case.
+            */
+            let j = i;
+            while (--j >= 0) if (squares[i] == squares[j]) break;
+            if (j != -1) {
+                continue;
+            }
+
+            squares[i] += matchsticks[index];
+            if (dfs(index + 1, squares)) {
+                return true;
+            }
+            squares[i] -= matchsticks[index];
+        }
+
+        return false;
+    };
+
+    return dfs(0, Array(4).fill(0));
+}
