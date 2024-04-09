@@ -39,6 +39,17 @@ async function bindEvents() {
         return;
     }
 
+    const anchor = speedMenu.querySelector(
+        '.bpx-player-ctrl-playbackrate-menu-item:nth-child(2)'
+    );
+    const speeds = [1.85, 1.75];
+    speeds.forEach((v) => {
+        const node = anchor.cloneNode(true);
+        node.textContent = `${v}x`;
+        node.classList.remove('bpx-state-active');
+        speedMenu.insertBefore(node, anchor);
+    });
+
     Array.from(
         speedMenu.querySelectorAll('.bpx-player-ctrl-playbackrate-menu-item')
     ).forEach((node) => {
