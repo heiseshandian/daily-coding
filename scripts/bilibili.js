@@ -45,8 +45,9 @@ async function bindEvents() {
     const speeds = [1.85, 1.75];
     speeds.forEach((v) => {
         const node = anchor.cloneNode(true);
-        node.textContent = `${v}x`;
         node.classList.remove('bpx-state-active');
+        node.setAttribute('data-value', v);
+        node.textContent = `${v}x`;
         speedMenu.insertBefore(node, anchor);
     });
 
