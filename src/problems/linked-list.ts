@@ -772,3 +772,40 @@ export function removeZeroSumSublists(head: ListNode | null): ListNode | null {
 
     return nodes[0] || null;
 }
+
+/*
+https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china
+83. Remove Duplicates from Sorted List
+Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+
+Example 1:
+
+Input: head = [1,1,2]
+Output: [1,2]
+
+Example 2:
+
+Input: head = [1,1,2,3,3]
+Output: [1,2,3]
+
+Constraints:
+
+	The number of nodes in the list is in the range [0, 300].
+	-100 <= Node.val <= 100
+	The list is guaranteed to be sorted in ascending order.
+*/
+export function deleteDuplicates3(head: ListNode | null): ListNode | null {
+    const set = new Set<number>();
+    let cur = head;
+    while (cur) {
+        set.add(cur.val);
+        cur = cur.next;
+    }
+
+    const nodes = Array.from(set).map((v) => new ListNode(v));
+    nodes.forEach((n, i) => {
+        n.next = nodes[i + 1] ?? null;
+    });
+
+    return nodes[0] ?? null;
+}
