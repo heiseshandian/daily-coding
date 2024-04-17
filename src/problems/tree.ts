@@ -1934,3 +1934,105 @@ export function addOneRow(
 
     return root;
 }
+
+/*
+https://leetcode.com/problems/smallest-string-starting-from-leaf/description/
+988. Smallest String Starting From Leaf
+You are given the root of a binary tree where each node has a value in the range [0, 25] representing the letters 'a' to 'z'.
+
+Return the lexicographically smallest string that starts at a leaf of this tree and ends at the root.
+
+As a reminder, any shorter prefix of a string is lexicographically smaller.
+
+	For example, "ab" is lexicographically smaller than "aba".
+
+A leaf of a node is a node that has no children.
+
+Example 1:
+
+Input: root = [0,1,2,3,4,3,4]
+Output: "dba"
+
+Example 2:
+
+Input: root = [25,1,3,1,3,0,2]
+Output: "adz"
+
+Example 3:
+
+Input: root = [2,2,1,null,1,0,null,0]
+Output: "abc"
+
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 8500].
+	0 <= Node.val <= 25
+
+TODO:优化点：1.更改了原数据需要恢复. 2.另外时间复杂度较高，属于偏暴力的解法
+*/
+export function smallestFromLeaf(root: TreeNode): string {
+    const levels = getLevels(root);
+    const smallest = new Set<TreeNode>();
+    for (let i = levels.length - 1; i >= 0; i--) {
+        const leafs = levels[i].filter((n) => isLeaf(n));
+        const min = Math.min(...leafs.map((n) => n.val));
+        leafs.forEach((node) => {
+            if (node.val === min) {
+                smallest.add(node);
+            }
+        });
+    }
+
+    const strings: string[] = [];
+    smallest.forEach((n) => {
+        let s = toAlpha(n.val);
+        // @ts-expect-error
+        while (n.parent) {
+            // @ts-expect-error
+            s += toAlpha(n.parent.val);
+            // @ts-expect-error
+            n = n.parent;
+        }
+
+        strings.push(s);
+    });
+
+    return strings.reduce((a, b) => (a < b ? a : b));
+}
+
+function getLevels(root: TreeNode): TreeNode[][] {
+    let curEnd = root;
+    let nextEnd = root;
+    const queue: TreeNode[] = [root];
+    const levels: TreeNode[][] = [];
+    const currentLevel: TreeNode[] = [];
+    while (queue.length) {
+        const node = queue.shift()!;
+        currentLevel.push(node);
+
+        if (node.left) {
+            // @ts-expect-error
+            node.left.parent = node;
+            nextEnd = node.left;
+            queue.push(node.left);
+        }
+        if (node.right) {
+            // @ts-expect-error
+            node.right.parent = node;
+            nextEnd = node.right;
+            queue.push(node.right);
+        }
+
+        if (curEnd === node) {
+            levels.push(currentLevel.slice());
+            currentLevel.length = 0;
+            curEnd = nextEnd;
+        }
+    }
+
+    return levels;
+}
+
+function toAlpha(index: number) {
+    return String.fromCharCode(index + 'a'.charCodeAt(0));
+}
