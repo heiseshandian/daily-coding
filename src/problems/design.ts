@@ -719,7 +719,7 @@ Constraints:
 */
 class MyLinkedListNode {
     val: number;
-    next: MyLinkedListNode | null;
+    next: MyLinkedListNode | null = null;
 
     constructor(val: number) {
         this.val = val;
@@ -1228,4 +1228,64 @@ export class EventEmitter {
         });
         return results;
     }
+}
+
+/*
+https://leetcode.com/problems/compact-object/description/
+2705. Compact Object
+Given an object or array obj, return a compact object.
+
+A compact object is the same as the original object, except with keys containing falsy values removed. 
+This operation applies to the object and any nested objects. Arrays are considered objects where the indices are keys. 
+A value is considered falsy when Boolean(value) returns false.
+
+You may assume the obj is the output of JSON.parse. In other words, it is valid JSON.
+
+Example 1:
+
+Input: obj = [null, 0, false, 1]
+Output: [1]
+Explanation: All falsy values have been removed from the array.
+
+Example 2:
+
+Input: obj = {"a": null, "b": [false, 1]}
+Output: {"b": [1]}
+Explanation: obj["a"] and obj["b"][0] had falsy values and were removed.
+
+Example 3:
+
+Input: obj = [null, 0, 5, [0], [false, 16]]
+Output: [5, [], [16]]
+Explanation: obj[0], obj[1], obj[3][0], and obj[4][0] were falsy and removed.
+
+Constraints:
+
+	obj is a valid JSON object
+	2 <= JSON.stringify(obj).length <= 10^6
+*/
+type Obj = Record<string, JSONValue> | Array<JSONValue>;
+export function compactObject(obj: Obj): Obj {
+    // @ts-expect-error
+    if (obj === true || typeof obj === 'string' || typeof obj === 'number') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj
+            .filter((v) => Boolean(v))
+            .map((v) => compactObject(v as Obj));
+    }
+    const filteredKeys = Object.keys(obj).filter((k) => Boolean(obj[k]));
+
+    return filteredKeys.reduce((acc, k) => {
+        const val = obj[k];
+        if (Object.keys(val ?? {}).length > 0) {
+            acc[k] = compactObject(val as Obj);
+        } else {
+            acc[k] = val;
+        }
+
+        return acc;
+    }, {});
 }
