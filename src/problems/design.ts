@@ -1335,10 +1335,10 @@ Constraints:
 	0 <= functions.length <= 1000
 	all functions accept and return a single integer
 */
-export type F = (x: number) => number;
-function compose(functions: F[]): F {
+type F = (x: number) => number;
+export function compose(functions: F[]): F {
     return function (x) {
-        for (let i = functions.length - 1; i >= 0; i++) {
+        for (let i = functions.length - 1; i >= 0; i--) {
             x = functions[i](x);
         }
         return x;
