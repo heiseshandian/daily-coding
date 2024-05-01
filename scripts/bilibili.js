@@ -1,24 +1,9 @@
 init();
-autoJumpToAlgorithms();
 
 const observer = new MutationObserver(function () {
     init();
 });
 observer.observe(document, { childList: true, subtree: true });
-
-// 自动跳转到算法课程界面
-function autoJumpToAlgorithms() {
-    if (location.href.includes('https://www.bilibili.com/list')) {
-        return;
-    }
-
-    location.replace(
-        location.href.replace(
-            'https://www.bilibili.com/',
-            'https://www.bilibili.com/list/8888480'
-        )
-    );
-}
 
 function init() {
     setVideoPlaybackRate();
