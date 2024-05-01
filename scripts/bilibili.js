@@ -54,17 +54,20 @@ async function bindEvents() {
         return;
     }
 
-    const anchor = speedMenu.querySelector(
-        '.bpx-player-ctrl-playbackrate-menu-item:nth-child(2)'
+    addSpeeds(
+        speedMenu,
+        [1.85, 1.75],
+        speedMenu.querySelector(
+            '.bpx-player-ctrl-playbackrate-menu-item:nth-child(2)'
+        )
     );
-    const speeds = [1.85, 1.75];
-    speeds.forEach((v) => {
-        const node = anchor.cloneNode(true);
-        node.classList.remove('bpx-state-active');
-        node.setAttribute('data-value', v);
-        node.textContent = `${v}x`;
-        speedMenu.insertBefore(node, anchor);
-    });
+    addSpeeds(
+        speedMenu,
+        [3, 2.75, 2.5, 2.25],
+        speedMenu.querySelector(
+            '.bpx-player-ctrl-playbackrate-menu-item:nth-child(1)'
+        )
+    );
 
     Array.from(
         speedMenu.querySelectorAll('.bpx-player-ctrl-playbackrate-menu-item')
@@ -77,6 +80,22 @@ async function bindEvents() {
     });
 
     speedMenu.hasBoundEvents = true;
+}
+
+/**
+ * 添加速度选项
+ * @param {HTMLDivElement} speedMenu
+ * @param {number[]} speeds
+ * @param {HTMLDivElement} anchor
+ */
+function addSpeeds(speedMenu, speeds, anchor) {
+    speeds.forEach((v) => {
+        const node = anchor.cloneNode(true);
+        node.classList.remove('bpx-state-active');
+        node.setAttribute('data-value', v);
+        node.textContent = `${v}x`;
+        speedMenu.insertBefore(node, anchor);
+    });
 }
 
 function setVideoPlaybackRate(
