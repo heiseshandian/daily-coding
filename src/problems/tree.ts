@@ -708,6 +708,23 @@ export function lowestCommonAncestor(
     return null;
 }
 
+export function lowestCommonAncestor2(
+    root: TreeNode | null,
+    p: TreeNode | null,
+    q: TreeNode | null
+): TreeNode | null {
+    if (!root || root === p || root === q) {
+        return root;
+    }
+
+    const l = lowestCommonAncestor2(root.left, p, q);
+    const r = lowestCommonAncestor2(root.right, p, q);
+    if (l && r) {
+        return root;
+    }
+    return l || r;
+}
+
 /* 
 https://leetcode.com/problems/house-robber-iii/description/
 The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.
