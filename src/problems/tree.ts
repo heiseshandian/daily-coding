@@ -966,6 +966,27 @@ export function isBalanced(root: TreeNode | null): boolean {
     return dfs(root)[1];
 }
 
+export function isBalanced2(root: TreeNode | null): boolean {
+    let balanced = true;
+
+    const dfs = (node: TreeNode | null): number => {
+        if (!balanced || !node) {
+            return 0;
+        }
+
+        const l = dfs(node.left);
+        const r = dfs(node.right);
+        if (Math.abs(l - r) > 1) {
+            balanced = false;
+        }
+
+        return Math.max(l, r) + 1;
+    };
+    dfs(root);
+
+    return balanced;
+}
+
 /* 
 https://leetcode.com/problems/minimum-depth-of-binary-tree/description/
 
