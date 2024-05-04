@@ -91,7 +91,8 @@ function handleClickCopyBtn() {
  * @returns 当前日期字符串
  */
 function getTime() {
-    const today = new Date();
+    // 往前推 5 小时，对于凌晨 5 点以前的场景算作 前一天的工作量
+    const today = new Date(Date.now() - 5 * 60 * 60 * 1000);
 
     const month = today.getMonth() + 1;
     const day = today.getDate();
