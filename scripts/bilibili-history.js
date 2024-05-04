@@ -64,14 +64,19 @@ function handleClickCopyBtn() {
     const prevToCopy = localStorage.getItem(CACHE_KEY) ?? '[]';
     const prevSet = new Set(JSON.parse(prevToCopy));
 
-    const pattern = /^算法讲解.*/;
+    const pattern = /^\[算法讲解.*/;
     const toCopy = Array.from(txts)
         .filter(
             (n) =>
                 n.querySelector('.time-wrap .progress')?.textContent?.trim() ===
                 '已看完'
         )
-        .map((n) => n.querySelector('.title')?.textContent?.trim())
+        .map((n) => {
+            const titleLink = n.querySelector('.title');
+            const href = titleLink.getAttribute('href');
+            const title = titleLink.textContent.trim();
+            return `[${title}](https:${href})`;
+        })
         .filter((t) => pattern.test(t))
         .filter((t) => !prevSet.has(t));
 
