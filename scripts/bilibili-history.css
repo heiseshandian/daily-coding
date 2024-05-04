@@ -1,0 +1,46 @@
+.baymax-copy-btn {
+    border: 1px solid;
+    display: inline-block;
+    text-align: center;
+    padding: 5px 8px;
+    border-radius: 5px;
+    margin-left: 20px;
+    height: 18px;
+    line-height: 18px;
+
+    outline: 0;
+    color: #00a1d6;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.message-container {
+    position: fixed;
+    top: 170px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.message {
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.success {
+    background-color: #4caf50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.container-hidden {
+    display: none;
+}
