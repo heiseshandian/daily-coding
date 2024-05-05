@@ -1,5 +1,5 @@
 import { cache } from '../design-pattern/proxy';
-import { swap } from '../common/index';
+import { lcm, swap } from '../common/index';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { GenericHeap } from '../algorithm/generic-heap';
 
@@ -989,4 +989,56 @@ export function totalNQueens(n: number): number {
     };
 
     return dfs(0, 0, 0);
+}
+
+/*
+https://leetcode.com/problems/nth-magical-number/description/
+878. Nth Magical Number
+A positive integer is magical if it is divisible by either a or b.
+
+Given the three integers n, a, and b, return the nth magical number. Since the answer may be very large, return it modulo 10^9 + 7.
+
+Example 1:
+
+Input: n = 1, a = 2, b = 3
+Output: 2
+
+Example 2:
+
+Input: n = 4, a = 2, b = 3
+Output: 6
+
+Constraints:
+
+	1 <= n <= 10^9
+	2 <= a, b <= 10^4
+
+* 采用二分答案的思路来求解
+*/
+export function nthMagicalNumber(n: number, a: number, b: number): number {
+    const countMagicNumbers = (x: number) =>
+        Math.floor(x / a) + Math.floor(x / b) - Math.floor(x / lcm(a, b));
+    const modulo = Math.pow(10, 9) + 7;
+
+    let left = 1;
+    let right = n * Math.min(a, b);
+    let closest = right;
+    while (left <= right) {
+        // ! 此处不可使用 位运算 来求解 mid ，会溢出导致超时
+        const mid = left + Math.floor((right - left) / 2);
+
+        /**
+         * ! 此处找到 n 个 magic number 的时候不能直接返回 mid，因为 mid 有可能比第 n 个
+         * ! magic number 大，比如说 n=3,a=6,b=4 此时 mid = 9，1-9 一共三个 magic number
+         * ! 但是 9 本身并不是 magic number ，我们需要继续缩小范围，找到第 n 个 magic number
+         */
+        if (countMagicNumbers(mid) >= n) {
+            closest = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return closest % modulo;
 }

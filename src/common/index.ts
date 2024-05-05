@@ -101,3 +101,13 @@ export function isEven(n: number) {
 export function isOdd(n: number) {
     return (n & 1) === 1;
 }
+
+// 辗转相除法求 a 和 b 的最大公约数
+export function gcd(a: number, b: number) {
+    return b === 0 ? a : gcd(b, a % b);
+}
+
+// 最小公倍数
+export function lcm(a: number, b: number) {
+    return (a * b) / gcd(a, b);
+}
