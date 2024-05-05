@@ -1016,8 +1016,9 @@ Constraints:
 * 采用二分答案的思路来求解
 */
 export function nthMagicalNumber(n: number, a: number, b: number): number {
+    const l = lcm(a, b);
     const countMagicNumbers = (x: number) =>
-        Math.floor(x / a) + Math.floor(x / b) - Math.floor(x / lcm(a, b));
+        Math.floor(x / a) + Math.floor(x / b) - Math.floor(x / l);
     const modulo = Math.pow(10, 9) + 7;
 
     let left = 1;
