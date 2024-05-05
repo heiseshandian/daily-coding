@@ -366,3 +366,66 @@ function getAndRemoveLastElement(stack: number[]) {
     stack.push(num);
     return last;
 }
+
+/**
+ * 仅用递归实现一个栈的排序
+ */
+export function sortStack(stack: number[]) {
+    let depth = getDepth(stack);
+    while (depth) {
+        const max = getMaxFromStack(stack, depth);
+        const times = countRepeatTimes(stack, max, depth);
+        down(stack, max, times, depth);
+        depth -= times;
+    }
+}
+
+function getDepth(stack: number[]) {
+    if (stack.length === 0) {
+        return 0;
+    }
+
+    const num = stack.pop()!;
+    const d = getDepth(stack) + 1;
+    stack.push(num);
+    return d;
+}
+
+function getMaxFromStack(stack: number[], depth: number) {
+    if (depth === 0) {
+        return -Infinity;
+    }
+
+    const num = stack.pop()!;
+    const m = Math.max(num, getMaxFromStack(stack, depth - 1));
+    stack.push(num);
+    return m;
+}
+
+function countRepeatTimes(stack: number[], repeatNum: number, depth: number) {
+    if (depth === 0) {
+        return 0;
+    }
+
+    const n = stack.pop()!;
+    const count =
+        countRepeatTimes(stack, repeatNum, depth - 1) +
+        (n === repeatNum ? 1 : 0);
+    stack.push(n);
+    return count;
+}
+
+function down(stack: number[], max: number, k: number, depth: number) {
+    if (depth === 0) {
+        for (let i = 0; i < k; i++) {
+            stack.push(max);
+        }
+        return;
+    }
+
+    const num = stack.pop()!;
+    down(stack, max, k, depth - 1);
+    if (num !== max) {
+        stack.push(num);
+    }
+}
