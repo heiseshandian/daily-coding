@@ -78,7 +78,8 @@ function handleClickCopyBtn() {
             return `[${title}](https:${href})`;
         })
         .filter((t) => pattern.test(t))
-        .filter((t) => !prevSet.has(t));
+        .filter((t) => !prevSet.has(t))
+        .reverse();
 
     localStorage.setItem(CACHE_KEY, JSON.stringify(toCopy));
 
