@@ -342,3 +342,27 @@ export function minRemoveToMakeValid(s: string): string {
         .filter((_, i) => !stack.includes(i))
         .join('');
 }
+
+/**
+ * 仅用递归实现一个堆栈的逆序
+ */
+export function reverseStack(stack: number[]) {
+    if (stack.length === 0) {
+        return;
+    }
+
+    const last = getAndRemoveLastElement(stack);
+    reverseStack(stack);
+    stack.push(last);
+}
+
+function getAndRemoveLastElement(stack: number[]) {
+    if (stack.length === 1) {
+        return stack.pop();
+    }
+
+    const num = stack.pop()!;
+    const last = getAndRemoveLastElement(stack);
+    stack.push(num);
+    return last;
+}
