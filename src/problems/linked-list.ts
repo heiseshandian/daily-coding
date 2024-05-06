@@ -3,6 +3,7 @@ import {
     SingleLinkedList,
     reverseSingleLinkedList,
 } from '../algorithm/linked-list';
+import { getClosestMaxArr } from '../algorithm/monotonous-stack';
 //https://leetcode.com/problems/copy-list-with-random-pointer/
 // 深度copy如下带有random指针的节点
 export class NodeWithRandom {
@@ -807,5 +808,59 @@ export function deleteDuplicates3(head: ListNode | null): ListNode | null {
         n.next = nodes[i + 1] ?? null;
     });
 
+    return nodes[0] ?? null;
+}
+
+/*
+https://leetcode.com/problems/remove-nodes-from-linked-list/description/
+2487. Remove Nodes From Linked List
+You are given the head of a linked list.
+
+Remove every node which has a node with a greater value anywhere to the right side of it.
+
+Return the head of the modified linked list.
+
+Example 1:
+
+Input: head = [5,2,13,3,8]
+Output: [13,8]
+Explanation: The nodes that should be removed are 5, 2 and 3.
+- Node 13 is to the right of node 5.
+- Node 13 is to the right of node 2.
+- Node 8 is to the right of node 3.
+
+Example 2:
+
+Input: head = [1,1,1,1]
+Output: [1,1,1,1]
+Explanation: Every node has value 1, so no nodes are removed.
+
+Constraints:
+
+	The number of the nodes in the given list is in the range [1, 10^5].
+	1 <= Node.val <= 10^5
+*/
+export function removeNodes(head: ListNode | null): ListNode | null {
+    if (!head) {
+        return head;
+    }
+
+    const nodeVals: number[] = [];
+    let cur: ListNode | null = head;
+    while (cur) {
+        nodeVals.push(cur.val);
+        cur = cur.next;
+    }
+
+    const closestMax = getClosestMaxArr(nodeVals);
+    const filteredNodeVals = nodeVals
+        .map((val, i) => [closestMax[i][1], val])
+        .filter(([biggerIndex]) => biggerIndex === undefined)
+        .map(([, val]) => val);
+
+    const nodes = filteredNodeVals.map((val) => new ListNode(val));
+    nodes.forEach((n, i) => {
+        n.next = nodes[i + 1] ?? null;
+    });
     return nodes[0] ?? null;
 }
