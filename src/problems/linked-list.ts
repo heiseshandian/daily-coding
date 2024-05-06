@@ -839,6 +839,8 @@ Constraints:
 
 	The number of the nodes in the given list is in the range [1, 10^5].
 	1 <= Node.val <= 10^5
+
+TODO:暴力解法，需用其他方式优化下性能
 */
 export function removeNodes(head: ListNode | null): ListNode | null {
     if (!head) {
