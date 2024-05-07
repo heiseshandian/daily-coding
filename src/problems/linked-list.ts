@@ -866,3 +866,63 @@ export function removeNodes(head: ListNode | null): ListNode | null {
     });
     return nodes[0] ?? null;
 }
+
+/*
+https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/description/
+2816. Double a Number Represented as a Linked List
+You are given the head of a non-empty linked list representing a non-negative integer without leading zeroes.
+
+Return the head of the linked list after doubling it.
+
+Example 1:
+
+Input: head = [1,8,9]
+Output: [3,7,8]
+Explanation: The figure above corresponds to the given linked list which represents the number 189. Hence, the returned linked list represents the number 189 * 2 = 378.
+
+Example 2:
+
+Input: head = [9,9,9]
+Output: [1,9,9,8]
+Explanation: The figure above corresponds to the given linked list which represents the number 999. Hence, the returned linked list reprersents the number 999 * 2 = 1998. 
+
+Constraints:
+
+	The number of nodes in the list is in the range [1, 10^4]
+	0 <= Node.val <= 9
+	The input is generated such that the list represents a number that does not have leading zeros, except the number 0 itself.
+*/
+export function doubleIt(head: ListNode): ListNode {
+    const tail = reverse(head);
+
+    let cur: ListNode | null = tail;
+    let carry = 0;
+    let tmp = 0;
+    while (cur) {
+        tmp = cur.val * 2 + carry;
+        cur.val = tmp % 10;
+        carry = Math.floor(tmp / 10);
+
+        if (!cur.next && carry) {
+            cur.next = new ListNode(carry);
+            break;
+        }
+
+        cur = cur.next;
+    }
+
+    return reverse(tail);
+}
+
+function reverse(head: ListNode): ListNode {
+    let prev: ListNode | null = null;
+    let cur: ListNode | null = head;
+    while (cur) {
+        const next = cur.next;
+        cur.next = prev;
+        prev = cur;
+        cur = next;
+    }
+
+    return prev!;
+}
