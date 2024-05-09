@@ -5338,6 +5338,8 @@ Constraints:
 	1 <= n == happiness.length <= 10^5
 	1 <= happiness[i] <= 10^8
 	1 <= k <= n
+
+TODO:此题可用小顶堆把时间复杂度优化成 O(logk)
 */
 export function maximumHappinessSum(happiness: number[], k: number): number {
     happiness.sort((a, b) => b - a);
