@@ -1073,8 +1073,6 @@ Constraints:
 	n == quality.length == wage.length
 	1 <= k <= n <= 10^4
 	1 <= quality[i], wage[i] <= 10^4
-
-FIXME: TLE 待优化性能
 */
 export function mincostToHireWorkers(
     quality: number[],
@@ -1082,34 +1080,21 @@ export function mincostToHireWorkers(
     k: number
 ): number {
     const sorted = quality
-        .map((q, i) => [q, wage[i]])
-        .sort(([qA, wA], [qB, wB]) => wB / qB - wA / qA);
+        .map((q, i) => [wage[i] / q, q])
+        .sort(([a], [b]) => a - b);
 
-    const heap = new GenericHeap((a, b) => b - a);
-    let min = Infinity;
-
-    let baseQuality = 0;
-    let baseWage = 0;
-    let baseRatio = 0;
-    for (let i = 0; i <= sorted.length - k; i++) {
-        [baseQuality, baseWage] = sorted[i];
-        baseRatio = baseWage / baseQuality;
-
-        for (let j = i; j < sorted.length; j++) {
-            if (heap.size() < k) {
-                heap.push(sorted[j][0]);
-            } else if (heap.peek() > sorted[j][0]) {
-                heap.pop();
-                heap.push(sorted[j][0]);
-            }
+    let sum = 0;
+    const maxHeap = new GenericHeap((a, b) => b - a);
+    let minCost = Infinity;
+    for (const [ratio, q] of sorted) {
+        sum += q;
+        maxHeap.push(q);
+        if (maxHeap.size() > k) {
+            sum -= maxHeap.pop()!;
         }
-
-        min = Math.min(
-            min,
-            heap.container.reduce((sum, cur) => sum + cur) * baseRatio
-        );
-        heap.container.length = 0;
+        if (maxHeap.size() === k) {
+            minCost = Math.min(minCost, sum * ratio);
+        }
     }
-
-    return min;
+    return minCost;
 }
