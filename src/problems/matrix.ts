@@ -1167,3 +1167,60 @@ export function rowAndMaximumOnes(mat: number[][]): number[] {
 
     return [maxIndex, maxOnes];
 }
+
+/*
+https://leetcode.com/problems/largest-1-bordered-square/description/
+1139. Largest 1-Bordered Square
+Given a 2D grid of 0s and 1s, return the number of elements in the largest square subgrid that has all 
+1s on its border, or 0 if such a subgrid doesn't exist in the grid.
+
+Example 1:
+
+Input: grid = [[1,1,1],[1,0,1],[1,1,1]]
+Output: 9
+
+Example 2:
+
+Input: grid = [[1,1,0,0]]
+Output: 1
+
+Constraints:
+
+	1 <= grid.length <= 100
+	1 <= grid[0].length <= 100
+	grid[i][j] is 0 or 1
+*/
+export function largest1BorderedSquare(grid: number[][]): number {
+    const m = grid.length;
+    const n = grid[0].length;
+    const numMatrix = new NumMatrix(grid);
+
+    let max = 0;
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            const maxLen = Math.min(n - j, m - i);
+            for (let len = 1; len <= maxLen; len++) {
+                const outer = numMatrix.sumRegion(
+                    i,
+                    j,
+                    i + len - 1,
+                    j + len - 1
+                );
+                const inner =
+                    len > 2
+                        ? numMatrix.sumRegion(
+                              i + 1,
+                              j + 1,
+                              i + len - 2,
+                              j + len - 2
+                          )
+                        : 0;
+                if (outer - inner === (len === 1 ? 1 : (len - 1) * 4)) {
+                    max = Math.max(max, len * len);
+                }
+            }
+        }
+    }
+
+    return max;
+}
