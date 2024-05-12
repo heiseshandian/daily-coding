@@ -1151,7 +1151,7 @@ export function splitArray(nums: number[], k: number): number {
 }
 
 function canSplit(nums: number[], k: number, range: number): boolean {
-    let parts = 0;
+    let parts = 1;
     let sum = 0;
     let i = 0;
     while (i < nums.length) {
@@ -1159,11 +1159,12 @@ function canSplit(nums: number[], k: number, range: number): boolean {
             return false;
         }
 
-        while (i < nums.length && sum + nums[i] <= range) {
+        if (sum + nums[i] > range) {
+            parts++;
+            sum = nums[i++];
+        } else {
             sum += nums[i++];
         }
-        parts++;
-        sum = 0;
     }
 
     return parts <= k;
