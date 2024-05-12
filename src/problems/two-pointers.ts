@@ -50,7 +50,10 @@ export function maxArea(height: number[]): number {
     let left = 0;
     let right = height.length - 1;
     while (left < right) {
-        max = Math.max(max, (right - left) * Math.min(height[left], height[right]));
+        max = Math.max(
+            max,
+            (right - left) * Math.min(height[left], height[right])
+        );
 
         if (height[left] < height[right]) {
             left++;
@@ -77,7 +80,12 @@ export function numRescueBoats(people: number[], limit: number): number {
     let count = 0;
     let closestMaxOrEqual = people.length;
     if (people[people.length - 1] >= limit) {
-        closestMaxOrEqual = getClosestMaxOrEqual(people, limit, 0, people.length - 1);
+        closestMaxOrEqual = getClosestMaxOrEqual(
+            people,
+            limit,
+            0,
+            people.length - 1
+        );
         count += people.length - closestMaxOrEqual;
     }
 
@@ -141,4 +149,59 @@ export function compress(chars: string[]): number {
     }
 
     return chars.length;
+}
+
+/*
+https://leetcode.com/problems/heaters/description/
+475. Heaters
+Winter is coming! During the contest, your first job is to design a standard heater with a fixed warm radius to warm all the houses.
+
+Every house can be warmed, as long as the house is within the heater's warm radius range. 
+
+Given the positions of houses and heaters on a horizontal line, return the minimum radius standard of heaters so that those heaters could cover all houses.
+
+Notice that all the heaters follow your radius standard, and the warm radius will the same.
+
+Example 1:
+
+Input: houses = [1,2,3], heaters = [2]
+Output: 1
+Explanation: The only heater was placed in the position 2, and if we use the radius 1 standard, then all the houses can be warmed.
+
+Example 2:
+
+Input: houses = [1,2,3,4], heaters = [1,4]
+Output: 1
+Explanation: The two heaters were placed at positions 1 and 4. We need to use a radius 1 standard, then all the houses can be warmed.
+
+Example 3:
+
+Input: houses = [1,5], heaters = [2]
+Output: 3
+
+Constraints:
+
+	1 <= houses.length, heaters.length <= 10^4
+	1 <= houses[i], heaters[i] <= 10^9
+*/
+export function findRadius(houses: number[], heaters: number[]): number {
+    houses.sort((a, b) => a - b);
+    heaters.sort((a, b) => a - b);
+
+    let l = 0;
+    let r = 0;
+    let radius = 0;
+    while (l < houses.length) {
+        while (
+            r + 1 < heaters.length &&
+            Math.abs(heaters[r + 1] - houses[l]) <=
+                Math.abs(heaters[r] - houses[l])
+        ) {
+            r++;
+        }
+
+        radius = Math.max(radius, Math.abs(heaters[r] - houses[l++]));
+    }
+
+    return radius;
 }
