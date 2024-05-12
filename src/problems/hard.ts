@@ -448,7 +448,7 @@ export function subarraysWithKDistinct(nums: number[], k: number): number {
     while (left < nums.length) {
         while (freqMap.size < k && right < nums.length) {
             right++;
-            freqMap.set(nums[right], (freqMap.get(nums[right]) ?? 0) + 1);
+            freqMap.set(nums[right], (freqMap.get(nums[right]) || 0) + 1);
         }
 
         if (freqMap.size === k) {
@@ -1097,4 +1097,74 @@ export function mincostToHireWorkers(
         }
     }
     return minCost;
+}
+
+/*
+https://leetcode.com/problems/split-array-largest-sum/description/
+410. Split Array Largest Sum
+Given an integer array nums and an integer k, split nums into k non-empty subarrays such that the largest sum of any subarray is minimized.
+
+Return the minimized largest sum of the split.
+
+A subarray is a contiguous part of the array.
+
+Example 1:
+
+Input: nums = [7,2,5,10,8], k = 2
+Output: 18
+Explanation: There are four ways to split nums into two subarrays.
+The best way is to split it into [7,2,5] and [10,8], where the largest sum among the two subarrays is only 18.
+
+Example 2:
+
+Input: nums = [1,2,3,4,5], k = 2
+Output: 9
+Explanation: There are four ways to split nums into two subarrays.
+The best way is to split it into [1,2,3] and [4,5], where the largest sum among the two subarrays is only 9.
+
+Constraints:
+
+	1 <= nums.length <= 1000
+	0 <= nums[i] <= 10^6
+	1 <= k <= min(50, nums.length)
+
+分析
+1. 范围分析：range 必然在 [0, sum of nums]
+2. 单调性分析：range 越大，则需要更少的份数即可满足条件
+3. f 函数分析：给定 nums 和 range，问分出的份数是否小于等于 k
+*/
+export function splitArray(nums: number[], k: number): number {
+    let l = 0;
+    let r = nums.reduce((sum, cur) => sum + cur);
+    let result = 0;
+    while (l <= r) {
+        const m = l + ((r - l) >> 1);
+        if (canSplit(nums, k, m)) {
+            result = m;
+            r = m - 1;
+        } else {
+            l = m + 1;
+        }
+    }
+
+    return result;
+}
+
+function canSplit(nums: number[], k: number, range: number): boolean {
+    let parts = 0;
+    let sum = 0;
+    let i = 0;
+    while (i < nums.length) {
+        if (nums[i] > range) {
+            return false;
+        }
+
+        while (i < nums.length && sum + nums[i] <= range) {
+            sum += nums[i++];
+        }
+        parts++;
+        sum = 0;
+    }
+
+    return parts <= k;
 }
