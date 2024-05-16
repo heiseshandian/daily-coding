@@ -1421,3 +1421,149 @@ export function getMaximumGold(grid: number[][]): number {
 
     return maxGold;
 }
+
+/*
+https://leetcode.com/problems/find-the-safest-path-in-a-grid/description/
+2812. Find the Safest Path in a Grid
+You are given a 0-indexed 2D matrix grid of size n x n, where (r, c) represents:
+
+	A cell containing a thief if grid[r][c] = 1
+	An empty cell if grid[r][c] = 0
+
+You are initially positioned at cell (0, 0). In one move, you can move to any adjacent cell in the grid, including cells containing thieves.
+
+The safeness factor of a path on the grid is defined as the minimum manhattan distance from any cell in the path to any thief in the grid.
+
+Return the maximum safeness factor of all paths leading to cell (n - 1, n - 1).
+
+An adjacent cell of cell (r, c), is one of the cells (r, c + 1), (r, c - 1), (r + 1, c) and (r - 1, c) if it exists.
+
+The Manhattan distance between two cells (a, b) and (x, y) is equal to |a - x| + |b - y|, where |val| denotes the absolute value of val.
+
+Example 1:
+
+Input: grid = [[1,0,0],[0,0,0],[0,0,1]]
+Output: 0
+Explanation: All paths from (0, 0) to (n - 1, n - 1) go through the thieves in cells (0, 0) and (n - 1, n - 1).
+
+Example 2:
+
+Input: grid = [[0,0,1],[0,0,0],[0,0,0]]
+Output: 2
+Explanation: The path depicted in the picture above has a safeness factor of 2 since:
+- The closest cell of the path to the thief at cell (0, 2) is cell (0, 0). The distance between them is | 0 - 0 | + | 0 - 2 | = 2.
+It can be shown that there are no other paths with a higher safeness factor.
+
+Example 3:
+
+Input: grid = [[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]
+Output: 2
+Explanation: The path depicted in the picture above has a safeness factor of 2 since:
+- The closest cell of the path to the thief at cell (0, 3) is cell (1, 2). The distance between them is | 0 - 1 | + | 3 - 2 | = 2.
+- The closest cell of the path to the thief at cell (3, 0) is cell (3, 2). The distance between them is | 3 - 3 | + | 0 - 2 | = 2.
+It can be shown that there are no other paths with a higher safeness factor.
+
+Constraints:
+
+	1 <= grid.length == n <= 400
+	grid[i].length == n
+	grid[i][j] is either 0 or 1.
+	There is at least one thief in the grid.
+*/
+export function maximumSafenessFactor(grid: number[][]): number {
+    const n = grid.length;
+    const distance = Array.from({ length: n }, () => Array(n).fill(n));
+
+    let queue: number[][] = [];
+    grid.forEach((row, i) => {
+        row.forEach((v, j) => {
+            if (v) {
+                queue.push([i, j]);
+                distance[i][j] = 0;
+            }
+        });
+    });
+
+    const dirs: number[][] = [
+        [0, -1],
+        [0, 1],
+        [1, 0],
+        [-1, 0],
+    ];
+    let d = 1;
+    while (queue.length) {
+        const len = queue.length;
+        let tmp: number[][] = [];
+        for (let i = 0; i < len; i++) {
+            const [x, y] = queue[i];
+
+            dirs.forEach(([xDelta, yDelta]) => {
+                const nextI = x + xDelta;
+                const nextJ = y + yDelta;
+
+                if (
+                    nextI >= 0 &&
+                    nextI < n &&
+                    nextJ >= 0 &&
+                    nextJ < n &&
+                    grid[nextI][nextJ] === 0 &&
+                    distance[nextI][nextJ] > d
+                ) {
+                    tmp.push([nextI, nextJ]);
+                    distance[nextI][nextJ] = d;
+                }
+            });
+        }
+
+        queue = tmp;
+        d++;
+        if (d > n) {
+            break;
+        }
+    }
+
+    const isConnected = (factor: number): boolean => {
+        const queue: number[][] = [[0, 0]];
+        const visited = new Set([`0,0`]);
+        while (queue.length) {
+            const [x, y] = queue.shift()!;
+            if (x === n - 1 && y === n - 1) {
+                return true;
+            }
+
+            dirs.forEach(([xDelta, yDelta]) => {
+                const nextI = x + xDelta;
+                const nextJ = y + yDelta;
+
+                if (
+                    nextI >= 0 &&
+                    nextI < n &&
+                    nextJ >= 0 &&
+                    nextJ < n &&
+                    distance[nextI][nextJ] >= factor &&
+                    !visited.has(`${nextI},${nextJ}`)
+                ) {
+                    visited.add(`${nextI},${nextJ}`);
+                    queue.push([nextI, nextJ]);
+                }
+            });
+        }
+
+        return false;
+    };
+
+    let l = 0;
+    let r = Math.min(distance[0][0], distance[n - 1][n - 1]);
+    let max = 0;
+    while (l <= r) {
+        const m = l + ((r - l) >> 1);
+        if (isConnected(m)) {
+            max = Math.max(max, m);
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+
+    return max;
+}
