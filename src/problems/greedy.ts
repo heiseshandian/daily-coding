@@ -621,3 +621,63 @@ export function scheduleCourse(courses: number[][]): number {
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/description/
+1353. Maximum Number of Events That Can Be Attended
+You are given an array of events where events[i] = [startDayi, endDayi]. Every event i starts at startDayi and ends at endDayi.
+
+You can attend an event i at any day d where startTimei <= d <= endTimei. You can only attend one event at any time d.
+
+Return the maximum number of events you can attend.
+
+Example 1:
+
+Input: events = [[1,2],[2,3],[3,4]]
+Output: 3
+Explanation: You can attend all the three events.
+One way to attend them all is as shown.
+Attend the first event on day 1.
+Attend the second event on day 2.
+Attend the third event on day 3.
+
+Example 2:
+
+Input: events= [[1,2],[2,3],[3,4],[1,2]]
+Output: 4
+
+Constraints:
+
+	1 <= events.length <= 10^5
+	events[i].length == 2
+	1 <= startDayi <= endDayi <= 10^5
+*/
+export function maxEvents(events: number[][]): number {
+    const maxEndDay = events.reduce(
+        (m, [, endDay]) => Math.max(m, endDay),
+        -Infinity
+    );
+
+    events.sort(([startA], [startB]) => startA - startB);
+    const heap = new GenericHeap((a, b) => a - b);
+    let day = 1;
+    let i = 0;
+    let max = 0;
+    while (day <= maxEndDay) {
+        while (i < events.length && events[i][0] <= day) {
+            heap.push(events[i++][1]);
+        }
+
+        if (heap.size() > 0 && heap.peek() >= day) {
+            heap.pop();
+            max++;
+        }
+
+        while (heap.size() > 0 && heap.peek() <= day) {
+            heap.pop();
+        }
+        day++;
+    }
+
+    return max;
+}
