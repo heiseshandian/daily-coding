@@ -5634,3 +5634,79 @@ export function maxSlidingWindow(nums: number[], k: number): number[] {
 
     return result;
 }
+
+/*
+https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/description/
+1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit
+Given an array of integers nums and an integer limit, return the size of the longest non-empty subarray such that the 
+absolute difference between any two elements of this subarray is less than or equal to limit.
+
+Example 1:
+
+Input: nums = [8,2,4,7], limit = 4
+Output: 2 
+Explanation: All subarrays are: 
+[8] with maximum absolute diff |8-8| = 0 <= 4.
+[8,2] with maximum absolute diff |8-2| = 6 > 4. 
+[8,2,4] with maximum absolute diff |8-2| = 6 > 4.
+[8,2,4,7] with maximum absolute diff |8-2| = 6 > 4.
+[2] with maximum absolute diff |2-2| = 0 <= 4.
+[2,4] with maximum absolute diff |2-4| = 2 <= 4.
+[2,4,7] with maximum absolute diff |2-7| = 5 > 4.
+[4] with maximum absolute diff |4-4| = 0 <= 4.
+[4,7] with maximum absolute diff |4-7| = 3 <= 4.
+[7] with maximum absolute diff |7-7| = 0 <= 4. 
+Therefore, the size of the longest subarray is 2.
+
+Example 2:
+
+Input: nums = [10,1,2,4,7,2], limit = 5
+Output: 4 
+Explanation: The subarray [2,4,7,2] is the longest since the maximum absolute diff is |2-7| = 5 <= 5.
+
+Example 3:
+
+Input: nums = [4,2,2,2,4,4,2,2], limit = 0
+Output: 3
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^9
+	0 <= limit <= 10^9
+*/
+export function longestSubarray(nums: number[], limit: number): number {
+    const minQ: number[] = [];
+    const maxQ: number[] = [];
+    let max = 0;
+
+    let l = 0;
+    let r = 0;
+    while (r < nums.length) {
+        while (minQ.length > 0 && nums[minQ[minQ.length - 1]] >= nums[r]) {
+            minQ.pop();
+        }
+        while (maxQ.length > 0 && nums[maxQ[maxQ.length - 1]] <= nums[r]) {
+            maxQ.pop();
+        }
+
+        minQ.push(r);
+        maxQ.push(r);
+
+        if (nums[maxQ[0]] - nums[minQ[0]] <= limit) {
+            max = Math.max(max, r - l + 1);
+            r++;
+        } else {
+            l++;
+
+            if (minQ[0] < l) {
+                minQ.shift();
+            }
+            if (maxQ[0] < l) {
+                maxQ.shift();
+            }
+        }
+    }
+
+    return max;
+}
