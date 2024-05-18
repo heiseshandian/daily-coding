@@ -660,7 +660,7 @@ export function maxEvents(events: number[][]): number {
 
     events.sort(([startA], [startB]) => startA - startB);
     const heap = new GenericHeap((a, b) => a - b);
-    let day = 1;
+    let day = events[0][0];
     let i = 0;
     let max = 0;
     while (day <= maxEndDay) {
