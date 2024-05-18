@@ -5568,3 +5568,69 @@ export function sortArrayByParityII(nums: number[]): number[] {
 
     return nums;
 }
+
+/*
+https://leetcode.com/problems/sliding-window-maximum/description/
+239. Sliding Window Maximum
+You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+
+Return the max sliding window.
+
+Example 1:
+
+Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]
+Explanation: 
+Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	-10^4 <= nums[i] <= 10^4
+	1 <= k <= nums.length
+*/
+export function maxSlidingWindow(nums: number[], k: number): number[] {
+    const queue: number[] = [];
+
+    const addPositions = (p: number) => {
+        while (queue.length > 0 && nums[queue[queue.length - 1]] <= nums[p]) {
+            queue.pop();
+        }
+
+        queue.push(p);
+    };
+
+    let l = 0;
+    let r = 0;
+    while (r < k) {
+        addPositions(r++);
+    }
+
+    const result = Array(nums.length - k + 1);
+    let i = 0;
+    result[i++] = nums[queue[0]];
+    while (r < nums.length) {
+        addPositions(r++);
+
+        l++;
+        if (queue[0] < l) {
+            queue.shift();
+        }
+
+        result[i++] = nums[queue[0]];
+    }
+
+    return result;
+}
