@@ -1252,3 +1252,55 @@ function countPairsWithSmallerDistance(
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/description/
+862. Shortest Subarray with Sum at Least K
+Given an integer array nums and an integer k, return the length of the shortest non-empty subarray of 
+nums with a sum of at least k. If there is no such subarray, return -1.
+
+A subarray is a contiguous part of an array.
+
+Example 1:
+Input: nums = [1], k = 1
+Output: 1
+Example 2:
+Input: nums = [1,2], k = 4
+Output: -1
+Example 3:
+Input: nums = [2,-1,2], k = 3
+Output: 3
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	-10^5 <= nums[i] <= 10^5
+	1 <= k <= 10^9
+*/
+export function shortestSubarray(nums: number[], k: number): number {
+    const minQ: number[] = [];
+    const prefix: number[] = Array(nums.length);
+    let i = 0;
+    let sum = 0;
+    let min = Infinity;
+    while (i < nums.length) {
+        sum += nums[i];
+        prefix[i] = sum;
+        if (sum >= k) {
+            min = Math.min(min, i + 1);
+        }
+
+        while (minQ.length && prefix[minQ[minQ.length - 1]] >= sum) {
+            minQ.pop();
+        }
+        minQ.push(i);
+
+        while (minQ.length && prefix[minQ[0]] <= sum - k) {
+            min = Math.min(min, i - minQ[0]);
+            minQ.shift();
+        }
+        i++;
+    }
+
+    return min === Infinity ? -1 : min;
+}
