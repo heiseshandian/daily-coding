@@ -53,6 +53,8 @@ function addBtn(content, clickHandler) {
 
 const CACHE_KEY = 'baymax_algorithm_5_7';
 
+const TIME_REG = /\b\d{1,2}:\d{2}(?::\d{2})?\b/;
+
 /**
  * 处理复制逻辑
  */
@@ -66,11 +68,18 @@ function handleClickCopyBtn() {
 
     const pattern = /^\[算法讲解.*/;
     const toCopy = Array.from(txts)
-        .filter(
-            (n) =>
-                n.querySelector('.time-wrap .progress')?.textContent?.trim() ===
-                '已看完'
-        )
+        .filter((n) => {
+            const progress = n
+                .querySelector('.time-wrap .progress')
+                ?.textContent?.trim();
+
+            if (TIME_REG.test(progress)) {
+                const [time] = progress.match(TIME_REG);
+                const minutes = parseMinutes(time);
+                return minutes >= 30;
+            }
+            return progress === '已看完';
+        })
         .map((n) => {
             const titleLink = n.querySelector('.title');
             const href = titleLink.getAttribute('href');
@@ -84,6 +93,20 @@ function handleClickCopyBtn() {
     localStorage.setItem(CACHE_KEY, JSON.stringify(toCopy));
 
     copyToClipboard(`- ${getTime()}\n${toCopy.join('\n')}`);
+}
+
+/**
+ * 根据字符串解析出分钟数
+ *
+ * @param {string} timeStr (00:00:)?00 形式的时间（小时和分钟部分可能没有）
+ */
+function parseMinutes(timeStr) {
+    const segments = timeStr.split(':');
+    const len = segments.length - 1;
+
+    return segments
+        .slice(0, len)
+        .reduce((s, c, i) => s + Number(c) * Math.pow(60, len - i - 1), 0);
 }
 
 /**
