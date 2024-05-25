@@ -76,6 +76,7 @@ function handleClickCopyBtn() {
             if (TIME_REG.test(progress)) {
                 const [time] = progress.match(TIME_REG);
                 const minutes = parseMinutes(time);
+                // 观看超过 30 分钟的视频即可加入学习进度
                 return minutes >= 30;
             }
             return progress === '已看完';
@@ -84,7 +85,16 @@ function handleClickCopyBtn() {
             const titleLink = n.querySelector('.title');
             const href = titleLink.getAttribute('href');
             const title = titleLink.textContent.trim();
-            return `[${title}](https:${href})`;
+
+            const base = `[${title}](https:${href})`;
+            const progress = n
+                .querySelector('.time-wrap .progress')
+                ?.textContent?.trim();
+
+            if (TIME_REG.test(progress)) {
+                return base + ` (${progress})`;
+            }
+            return base;
         })
         .filter((t) => pattern.test(t))
         .filter((t) => !prevSet.has(t))
