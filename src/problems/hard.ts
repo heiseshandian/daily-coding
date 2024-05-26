@@ -1793,7 +1793,6 @@ export function largestIsland(grid: number[][]): number {
         [0, -1],
         [0, 1],
     ];
-    let max = 0;
     const infect = (i: number, j: number) => {
         if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] !== 1) {
             return;
@@ -1801,17 +1800,17 @@ export function largestIsland(grid: number[][]): number {
 
         grid[i][j] = id;
         islandCount[id] = (islandCount[id] || 0) + 1;
-        max = Math.max(max, islandCount[id]);
         dirs.forEach(([x, y]) => {
             infect(i + x, j + y);
         });
     };
 
+    let max = 0;
     for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
             if (grid[i][j] === 1) {
                 infect(i, j);
-                id++;
+                max = Math.max(max, islandCount[id++]);
             }
         }
     }
