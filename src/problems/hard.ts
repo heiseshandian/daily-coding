@@ -1746,3 +1746,102 @@ export function numberOfGoodPaths(vals: number[], edges: number[][]): number {
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/making-a-large-island/description/
+827. Making A Large Island
+You are given an n x n binary matrix grid. You are allowed to change at most one 0 to be 1.
+
+Return the size of the largest island in grid after applying this operation.
+
+An island is a 4-directionally connected group of 1s.
+
+Example 1:
+
+Input: grid = [[1,0],[0,1]]
+Output: 3
+Explanation: Change one 0 to 1 and connect two 1s, then we get an island with area = 3.
+
+Example 2:
+
+Input: grid = [[1,1],[1,0]]
+Output: 4
+Explanation: Change the 0 to 1 and make the island bigger, only one island with area = 4.
+
+Example 3:
+
+Input: grid = [[1,1],[1,1]]
+Output: 4
+Explanation: Can't change any 0 to 1, only one island with area = 4.
+
+Constraints:
+
+	n == grid.length
+	n == grid[i].length
+	1 <= n <= 500
+	grid[i][j] is either 0 or 1.
+*/
+export function largestIsland(grid: number[][]): number {
+    let id = 2;
+    const m = grid.length;
+    const n = grid[0].length;
+    const islandCount: number[] = [];
+
+    const dirs = [
+        [1, 0],
+        [-1, 0],
+        [0, -1],
+        [0, 1],
+    ];
+    let max = 0;
+    const infect = (i: number, j: number) => {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] !== 1) {
+            return;
+        }
+
+        grid[i][j] = id;
+        islandCount[id] = (islandCount[id] || 0) + 1;
+        max = Math.max(max, islandCount[id]);
+        dirs.forEach(([x, y]) => {
+            infect(i + x, j + y);
+        });
+    };
+
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (grid[i][j] === 1) {
+                infect(i, j);
+                id++;
+            }
+        }
+    }
+
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (grid[i][j] === 0) {
+                const set = new Set<number>();
+                dirs.forEach(([x, y]) => {
+                    const nextI = i + x;
+                    const nextJ = j + y;
+
+                    if (
+                        nextI >= 0 &&
+                        nextI < m &&
+                        nextJ >= 0 &&
+                        nextJ < n &&
+                        grid[nextI][nextJ]
+                    ) {
+                        set.add(grid[nextI][nextJ]);
+                    }
+                });
+
+                max = Math.max(
+                    max,
+                    Array.from(set).reduce((s, c) => s + islandCount[c], 1)
+                );
+            }
+        }
+    }
+
+    return max;
+}
