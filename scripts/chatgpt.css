@@ -1,6 +1,7 @@
 #search-bar {
     border-radius: 20px;
     border: none;
+    width: 100%;
 }
 
 .dark #search-bar {

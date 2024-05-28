@@ -32,7 +32,6 @@ onElementReady('nav > div:nth-child(2)', function (element) {
     // Create the search bar container
     const searchBarContainer = document.createElement('div');
     searchBarContainer.id = 'search-bar-container';
-    searchBarContainer.style.padding = '10px';
 
     // Create the input element
     const searchBar = document.createElement('input');
