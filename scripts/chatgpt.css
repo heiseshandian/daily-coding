@@ -20,3 +20,7 @@
     outline: unset;
     border-color: unset;
 }
+
+#search-bar::placeholder {
+    text-indent: 10px;
+}
