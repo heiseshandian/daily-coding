@@ -1,5 +1,6 @@
 #search-bar {
-    border-radius: 26px;
+    border-radius: 20px;
+    border: none;
 }
 
 .dark #search-bar {
@@ -11,4 +12,10 @@
     transition-property: color, background-color, border-color,
         text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#search-bar:focus {
+    box-shadow: unset;
+    outline: unset;
+    border-color: unset;
 }
