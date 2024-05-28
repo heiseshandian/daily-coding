@@ -1,4 +1,4 @@
-import { getCharIndex, isEven, swap } from '../common/index';
+import { getCharIndex, swap } from '../common/index';
 /*
 https://leetcode.com/problems/construct-k-palindrome-strings/
 1400. Construct K Palindrome Strings
@@ -2201,6 +2201,81 @@ export function findTheLongestSubstring(s: string): number {
             max = Math.max(max, i - map[status]);
         } else {
             map[status] = i;
+        }
+    }
+
+    return max;
+}
+
+/*
+https://leetcode.com/problems/get-equal-substrings-within-budget/description/
+1208. Get Equal Substrings Within Budget
+You are given two strings s and t of the same length and an integer maxCost.
+
+You want to change s to t. Changing the ith character of s to ith character of t costs |s[i] - t[i]| 
+(i.e., the absolute difference between the ASCII values of the characters).
+
+Return the maximum length of a substring of s that can be changed to be the same as the corresponding substring of 
+t with a cost less than or equal to maxCost. If there is no substring from s that can be changed to its corresponding substring from t, return 0.
+
+Example 1:
+
+Input: s = "abcd", t = "bcdf", maxCost = 3
+Output: 3
+Explanation: "abc" of s can change to "bcd".
+That costs 3, so the maximum length is 3.
+
+Example 2:
+
+Input: s = "abcd", t = "cdef", maxCost = 3
+Output: 1
+Explanation: Each character in s costs 2 to change to character in t,  so the maximum length is 1.
+
+Example 3:
+
+Input: s = "abcd", t = "acde", maxCost = 0
+Output: 1
+Explanation: You cannot make any change, so the maximum length is 1.
+
+Constraints:
+
+    1 <= s.length <= 10^5
+    t.length == s.length
+    0 <= maxCost <= 10^6
+    s and t consist of only lowercase English letters.
+*/
+export function equalSubstring(s: string, t: string, maxCost: number): number {
+    const n = s.length;
+    const prefix: number[] = Array(n + 1).fill(0);
+
+    for (let i = 0; i < n; i++) {
+        prefix[i + 1] =
+            prefix[i] + Math.abs(s[i].charCodeAt(0) - t[i].charCodeAt(0));
+    }
+
+    const isValid = (len: number) => {
+        let i = 1;
+        while (i + len - 1 <= n) {
+            if (prefix[i + len - 1] - prefix[i - 1] <= maxCost) {
+                return true;
+            }
+
+            i++;
+        }
+
+        return false;
+    };
+
+    let l = 0;
+    let r = n;
+    let max = 0;
+    while (l <= r) {
+        const m = l + ((r - l) >> 1);
+        if (isValid(m)) {
+            max = m;
+            l = m + 1;
+        } else {
+            r = m - 1;
         }
     }
 
