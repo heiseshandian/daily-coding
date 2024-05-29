@@ -553,11 +553,10 @@ export function numSteps(s: string): number {
 
         if (last === '0') {
             bits.pop();
-            steps++;
         } else {
             addOneToBinaryArrayInPlace(bits);
-            steps++;
         }
+        steps++;
     }
 
     return steps;
