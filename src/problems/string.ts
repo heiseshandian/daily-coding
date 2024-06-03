@@ -2281,3 +2281,79 @@ export function equalSubstring(s: string, t: string, maxCost: number): number {
 
     return max;
 }
+
+/*
+https://leetcode.com/problems/append-characters-to-string-to-make-subsequence/description/
+2486. Append Characters to String to Make Subsequence
+You are given two strings s and t consisting of only lowercase English letters.
+
+Return the minimum number of characters that need to be appended to the end of s so that t becomes a subsequence of s.
+
+A subsequence is a string that can be derived from another string by deleting some or no characters without changing the order of the remaining characters.
+
+Example 1:
+
+Input: s = "coaching", t = "coding"
+Output: 4
+Explanation: Append the characters "ding" to the end of s so that s = "coachingding".
+Now, t is a subsequence of s ("coachingding").
+It can be shown that appending any 3 characters to the end of s will never make t a subsequence.
+
+Example 2:
+
+Input: s = "abcde", t = "a"
+Output: 0
+Explanation: t is already a subsequence of s ("abcde").
+
+Example 3:
+
+Input: s = "z", t = "abcde"
+Output: 5
+Explanation: Append the characters "abcde" to the end of s so that s = "zabcde".
+Now, t is a subsequence of s ("zabcde").
+It can be shown that appending any 4 characters to the end of s will never make t a subsequence.
+
+Constraints:
+
+	1 <= s.length, t.length <= 10^5
+	s and t consist only of lowercase English letters.
+*/
+export function appendCharacters(s: string, t: string): number {
+    let l = 0;
+    let r = t.length;
+
+    let prevI = 0;
+    let prevJ = 0;
+    const exists = (len: number) => {
+        let i = prevI;
+        let j = prevJ;
+        while (i < s.length && j < len) {
+            if (s[i] === t[j]) {
+                i++;
+                j++;
+            } else {
+                i++;
+            }
+        }
+
+        if (j === len) {
+            prevI = i;
+            prevJ = j;
+        }
+
+        return j === len;
+    };
+
+    let max = 0;
+    while (l <= r) {
+        const m = l + ((r - l) >> 1);
+        if (exists(m)) {
+            max = Math.max(max, m);
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+
+    return t.length - max;
+}
