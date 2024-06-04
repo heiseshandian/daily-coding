@@ -2319,41 +2319,16 @@ Constraints:
 	s and t consist only of lowercase English letters.
 */
 export function appendCharacters(s: string, t: string): number {
-    let l = 0;
-    let r = t.length;
-
-    let prevI = 0;
-    let prevJ = 0;
-    const exists = (len: number) => {
-        let i = prevI;
-        let j = prevJ;
-        while (i < s.length && j < len) {
-            if (s[i] === t[j]) {
-                i++;
-                j++;
-            } else {
-                i++;
-            }
-        }
-
-        if (j === len) {
-            prevI = i;
-            prevJ = j;
-        }
-
-        return j === len;
-    };
-
-    let max = 0;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (exists(m)) {
-            max = Math.max(max, m);
-            l = m + 1;
+    let i = 0;
+    let j = 0;
+    while (i < s.length && j < t.length) {
+        if (s[i] === t[j]) {
+            i++;
+            j++;
         } else {
-            r = m - 1;
+            i++;
         }
     }
 
-    return t.length - max;
+    return t.length - j;
 }
