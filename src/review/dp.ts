@@ -99,3 +99,48 @@ export function longestCommonSubsequence(text1: string, text2: string): number {
 
     return dp[n];
 }
+
+/*
+https://leetcode.com/problems/longest-palindromic-subsequence/description/
+516. Longest Palindromic Subsequence
+Given a string s, find the longest palindromic subsequence's length in s.
+
+A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
+
+Example 1:
+
+Input: s = "bbbab"
+Output: 4
+Explanation: One possible longest palindromic subsequence is "bbbb".
+
+Example 2:
+
+Input: s = "cbbd"
+Output: 2
+Explanation: One possible longest palindromic subsequence is "bb".
+
+Constraints:
+
+	1 <= s.length <= 1000
+	s consists only of lowercase English letters.
+*/
+export function longestPalindromeSubseq(s: string): number {
+    const n = s.length;
+    const dp: number[] = Array(n).fill(1);
+
+    for (let i = n - 2; i >= 0; i--) {
+        let leftDown = 0;
+        let backup = 0;
+        for (let j = i + 1; j < n; j++) {
+            backup = dp[j];
+            if (s[j] === s[i]) {
+                dp[j] = 2 + leftDown;
+            } else {
+                dp[j] = Math.max(dp[j - 1], dp[j]);
+            }
+            leftDown = backup;
+        }
+    }
+
+    return dp[n - 1];
+}
