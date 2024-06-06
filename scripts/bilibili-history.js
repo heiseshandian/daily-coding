@@ -76,8 +76,8 @@ function handleClickCopyBtn() {
             if (TIME_REG.test(progress)) {
                 const [time] = progress.match(TIME_REG);
                 const minutes = parseMinutes(time);
-                // 观看超过 30 分钟的视频即可加入学习进度
-                return minutes >= 30;
+                // 观看超过 10 分钟的视频即可加入学习进度
+                return minutes >= 10;
             }
             return progress === '已看完';
         })
