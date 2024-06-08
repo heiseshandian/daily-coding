@@ -144,3 +144,46 @@ export function longestPalindromeSubseq(s: string): number {
 
     return dp[n - 1];
 }
+
+/*
+https://leetcode.com/problems/longest-palindromic-substring/description/
+5. Longest Palindromic Substring
+Given a string s, return the longest palindromic substring in s.
+
+Example 1:
+
+Input: s = "babad"
+Output: "bab"
+Explanation: "aba" is also a valid answer.
+
+Example 2:
+
+Input: s = "cbbd"
+Output: "bb"
+
+Constraints:
+
+	1 <= s.length <= 1000
+	s consist of only digits and English letters.
+*/
+export function longestPalindrome(s: string): string {
+    const n = s.length;
+    const dp: boolean[] = Array(n).fill(false);
+    let [l, r] = [0, 0];
+    for (let i = n - 1; i >= 0; i--) {
+        dp[i] = true;
+        for (let j = n - 1; j > i; j--) {
+            if (s[j] === s[i] && (j - i === 1 || dp[j - 1])) {
+                dp[j] = true;
+                if (r - l < j - i) {
+                    l = i;
+                    r = j;
+                }
+            } else {
+                dp[j] = false;
+            }
+        }
+    }
+
+    return s.slice(l, r + 1);
+}
