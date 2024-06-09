@@ -5917,21 +5917,14 @@ export function subarraysDivByK(nums: number[], k: number): number {
     times.set(0, 1);
 
     let sum = 0;
-    let tmp = 0;
-    nums.forEach((v) => {
-        sum += v;
-        tmp = sum % k;
-        if (tmp < 0) {
-            tmp += k;
-        }
-
-        times.set(tmp, (times.get(tmp) ?? 0) + 1);
-    });
-
     let count = 0;
-    for (const t of times.values()) {
-        count += (t * (t - 1)) / 2;
-    }
+    nums.forEach((v) => {
+        sum = (sum + (v % k) + k) % k;
+        if (times.has(sum)) {
+            count += times.get(sum)!;
+        }
+        times.set(sum, (times.get(sum) ?? 0) + 1);
+    });
 
     return count;
 }
