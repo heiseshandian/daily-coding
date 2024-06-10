@@ -551,10 +551,47 @@ Constraints:
 	1 <= nums[i] <= 10^9
 	1 <= k <= (nums.length + 1)/2
 */
+export function minCapability1(nums: number[], k: number): number {
+    const canSteal = (m: number): boolean => {
+        let prePrev = nums[0] <= m ? 1 : 0;
+        let prev = Math.max(nums[1] <= m ? 1 : 0, prePrev);
+        let cur = prev;
+        for (let i = 2; i < nums.length; i++) {
+            if (nums[i] <= m) {
+                cur = Math.max(prev, prePrev + 1);
+            } else {
+                cur = prev;
+            }
+
+            prePrev = prev;
+            prev = cur;
+        }
+
+        return cur >= k;
+    };
+
+    let l = 0;
+    let r = Math.max(...nums);
+    let min = r;
+    while (l <= r) {
+        const m = l + ((r - l) >> 1);
+        if (canSteal(m)) {
+            r = m - 1;
+            min = m;
+        } else {
+            l = m + 1;
+        }
+    }
+
+    return min;
+}
+
 export function minCapability(nums: number[], k: number): number {
     const canSteal = (m: number): boolean => {
         let sum = 0;
         for (let i = 0; i < nums.length; i++) {
+            // 能偷的时候尽早偷即可（因为偷前面的还是偷后面的都是偷了一间房）
+            // 能偷之后直接绕过下一间房
             if (nums[i] <= m) {
                 sum++;
                 i++;
