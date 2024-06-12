@@ -1572,3 +1572,20 @@ export function checkIfInstanceOf(obj: any, classFunction: any): boolean {
         Object(obj) instanceof classFunction
     );
 }
+
+export function checkIfInstanceOf2(obj: any, classFunction: any) {
+    if (obj === null || obj === undefined) {
+        return false;
+    }
+
+    // Traverse the prototype chain
+    let currentProto = Object.getPrototypeOf(obj);
+    while (currentProto !== null) {
+        if (currentProto.constructor === classFunction) {
+            return true;
+        }
+        currentProto = Object.getPrototypeOf(currentProto);
+    }
+
+    return false;
+}
