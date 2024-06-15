@@ -1,7 +1,6 @@
 import { GenericHeap } from '../algorithm/generic-heap';
 import { getCharIndex } from '../common';
 import { PrefixTreeNode } from '../algorithm/prefix-tree';
-import { isNumber } from './hard';
 /* 
 https://leetcode.com/problems/find-median-from-data-stream/description/
 
@@ -1273,6 +1272,7 @@ export function compactObject(obj: Obj): Obj {
     }
 
     if (Array.isArray(obj)) {
+        // @ts-expect-error
         return obj
             .filter((v) => Boolean(v))
             .map((v) => compactObject(v as Obj));
@@ -1622,3 +1622,34 @@ export interface Array<T> {
 Array.prototype.last = function () {
     return this.length > 0 ? this[this.length - 1] : -1;
 };
+
+/*
+https://leetcode.com/problems/sleep/description/
+2621. Sleep
+Given a positive integer millis, write an asynchronous function that sleeps for millis milliseconds. It can resolve any value.
+
+Example 1:
+
+Input: millis = 100
+Output: 100
+Explanation: It should return a promise that resolves after 100ms.
+let t = Date.now();
+sleep(100).then(() => {
+  console.log(Date.now() - t); // 100
+});
+
+Example 2:
+
+Input: millis = 200
+Output: 200
+Explanation: It should return a promise that resolves after 200ms.
+
+Constraints:
+
+	1 <= millis <= 1000
+*/
+export async function sleep(millis: number): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(resolve, millis);
+    });
+}
