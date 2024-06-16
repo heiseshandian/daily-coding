@@ -1639,7 +1639,7 @@ Constraints:
 export function maximumValueSum(
     nums: number[],
     k: number,
-    edges: number[][]
+    _edges: number[][]
 ): number {
     const sum = nums.reduce((s, c) => s + c, 0);
     let minDiff = Infinity;
@@ -1841,6 +1841,64 @@ export function largestIsland(grid: number[][]): number {
             }
         }
     }
+
+    return max;
+}
+
+/*
+https://leetcode.com/problems/russian-doll-envelopes/description/
+354. Russian Doll Envelopes
+You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.
+
+One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.
+
+Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).
+
+Note: You cannot rotate an envelope.
+
+Example 1:
+
+Input: envelopes = [[5,4],[6,4],[6,7],[2,3]]
+Output: 3
+Explanation: The maximum number of envelopes you can Russian doll is 3 ([2,3] => [5,4] => [6,7]).
+
+Example 2:
+
+Input: envelopes = [[1,1],[1,1],[1,1]]
+Output: 1
+
+Constraints:
+
+	1 <= envelopes.length <= 10^5
+	envelopes[i].length == 2
+	1 <= wi, hi <= 10^5
+*/
+export function maxEnvelopes(envelopes: number[][]): number {
+    const heights = envelopes
+        .sort(([wa, ha], [wb, hb]) => wa - wb || hb - ha)
+        .map(([, h]) => h);
+
+    const ends: number[] = [];
+    const dp = Array<number>(heights.length);
+    let max = -Infinity;
+    heights.forEach((v, i) => {
+        let l = 0;
+        let r = ends.length - 1;
+        let closest = r + 1;
+        while (l <= r) {
+            const m = l + ((r - l) >> 1);
+            if (ends[m] >= v) {
+                closest = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        ends[closest] = v;
+        dp[i] = closest + 1;
+        max = Math.max(max, dp[i]);
+    });
 
     return max;
 }
