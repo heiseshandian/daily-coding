@@ -1567,7 +1567,7 @@ export function wordBreak(s: string, wordDict: string[]): string[] {
     });
 
     const result: string[] = [];
-    const backgracking = (index: number, path: string) => {
+    const backtracking = (index: number, path: string) => {
         if (index === s.length) {
             result.push(path.trim());
             return;
@@ -1576,11 +1576,11 @@ export function wordBreak(s: string, wordDict: string[]): string[] {
         for (let l = min; l <= max; l++) {
             const w = s.slice(index, index + l);
             if (set.has(w)) {
-                backgracking(index + l, path + ' ' + w);
+                backtracking(index + l, path + ' ' + w);
             }
         }
     };
-    backgracking(0, '');
+    backtracking(0, '');
 
     return result;
 }
