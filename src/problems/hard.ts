@@ -1879,9 +1879,8 @@ export function maxEnvelopes(envelopes: number[][]): number {
         .map(([, h]) => h);
 
     const ends: number[] = [];
-    const dp = Array<number>(heights.length);
     let max = -Infinity;
-    heights.forEach((v, i) => {
+    heights.forEach((v) => {
         let l = 0;
         let r = ends.length - 1;
         let closest = r + 1;
@@ -1896,8 +1895,7 @@ export function maxEnvelopes(envelopes: number[][]): number {
         }
 
         ends[closest] = v;
-        dp[i] = closest + 1;
-        max = Math.max(max, dp[i]);
+        max = Math.max(max, closest + 1);
     });
 
     return max;
