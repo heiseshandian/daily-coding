@@ -6144,3 +6144,61 @@ export function minIncrementForUnique(nums: number[]): number {
 
     return minOp;
 }
+
+/*
+https://leetcode.com/problems/maximum-length-of-pair-chain/description/
+646. Maximum Length of Pair Chain
+You are given an array of n pairs pairs where pairs[i] = [lefti, righti] and lefti < righti.
+
+A pair p2 = [c, d] follows a pair p1 = [a, b] if b < c. A chain of pairs can be formed in this fashion.
+
+Return the length longest chain which can be formed.
+
+You do not need to use up all the given intervals. You can select pairs in any order.
+
+Example 1:
+
+Input: pairs = [[1,2],[2,3],[3,4]]
+Output: 2
+Explanation: The longest chain is [1,2] -> [3,4].
+
+Example 2:
+
+Input: pairs = [[1,2],[7,8],[4,5]]
+Output: 3
+Explanation: The longest chain is [1,2] -> [4,5] -> [7,8].
+
+Constraints:
+
+	n == pairs.length
+	1 <= n <= 1000
+	-1000 <= lefti < righti <= 1000
+*/
+export function findLongestChain(pairs: number[][]): number {
+    pairs.sort(([la], [lb]) => la - lb);
+
+    const ends: number[] = [];
+    let max = 0;
+    pairs.forEach(([left, right]) => {
+        let l = 0;
+        let r = ends.length - 1;
+        let closest = r + 1;
+        while (l <= r) {
+            const m = l + ((r - l) >> 1);
+            if (ends[m] >= left) {
+                closest = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        if (ends[closest] === undefined || ends[closest] > right) {
+            ends[closest] = right;
+        }
+
+        max = Math.max(max, closest + 1);
+    });
+
+    return max;
+}
