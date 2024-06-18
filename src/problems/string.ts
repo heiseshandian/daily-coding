@@ -2367,20 +2367,23 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function longestIdealString(s: string, k: number): number {
-    const codes = s.split('').map((v) => v.charCodeAt(0) - 'a'.charCodeAt(0));
-    const n = codes.length;
+    const codeA = 'a'.charCodeAt(0);
+    const n = s.length;
     const dp = Array(26).fill(0);
-    dp[codes[0]] = 1;
     let max = 1;
-    for (let i = 1; i < n; i++) {
-        let m = 0;
-        for (let diff = -k; diff <= k; diff++) {
-            let prev = Math.min(Math.max(0, codes[i] + diff), 25);
-            m = Math.max(m, dp[prev]);
+    for (let i = 0; i < n; i++) {
+        const code = s[i].charCodeAt(0) - codeA;
+        let best = 0;
+        let diff = Math.max(code - k, 0);
+        let m = Math.min(code + k, 25);
+        for (; diff <= m; diff++) {
+            if (dp[diff] > best) best = dp[diff];
         }
 
-        dp[codes[i]] = Math.max(dp[codes[i]], m + 1);
-        max = Math.max(max, m + 1);
+        if (best >= dp[code]) {
+            dp[code] = best + 1;
+            max = Math.max(max, dp[code]);
+        }
     }
 
     return max;
