@@ -123,7 +123,11 @@ Constraints:
 1 <= indexDiff <= nums.length
 0 <= valueDiff <= 10^9
 */
-export function containsNearbyAlmostDuplicate(nums: number[], indexDiff: number, valueDiff: number): boolean {
+export function containsNearbyAlmostDuplicate(
+    nums: number[],
+    indexDiff: number,
+    valueDiff: number
+): boolean {
     const window = nums.slice(0, indexDiff + 1).sort((a, b) => a - b);
     for (let i = 1; i < window.length; i++) {
         if (window[i] - window[i - 1] <= valueDiff) {
@@ -135,16 +139,28 @@ export function containsNearbyAlmostDuplicate(nums: number[], indexDiff: number,
     let right = indexDiff;
     while (right < nums.length) {
         // 删除已经出窗口的元素
-        const toDelete = getClosestMaxOrEqual(window, nums[left - indexDiff], 0, window.length - 1);
+        const toDelete = getClosestMaxOrEqual(
+            window,
+            nums[left - indexDiff],
+            0,
+            window.length - 1
+        );
         window.splice(toDelete, 1);
 
         left++;
         right++;
 
-        const closestMaxOrEqual = getClosestMaxOrEqual(window, nums[right], 0, window.length - 1);
+        const closestMaxOrEqual = getClosestMaxOrEqual(
+            window,
+            nums[right],
+            0,
+            window.length - 1
+        );
         if (
-            (closestMaxOrEqual < window.length && window[closestMaxOrEqual] - nums[right] <= valueDiff) ||
-            (closestMaxOrEqual - 1 >= 0 && nums[right] - window[closestMaxOrEqual - 1] <= valueDiff)
+            (closestMaxOrEqual < window.length &&
+                window[closestMaxOrEqual] - nums[right] <= valueDiff) ||
+            (closestMaxOrEqual - 1 >= 0 &&
+                nums[right] - window[closestMaxOrEqual - 1] <= valueDiff)
         ) {
             return true;
         }
@@ -152,4 +168,63 @@ export function containsNearbyAlmostDuplicate(nums: number[], indexDiff: number,
     }
 
     return false;
+}
+
+/*
+https://leetcode.com/problems/grumpy-bookstore-owner/description/
+1052. Grumpy Bookstore Owner
+There is a bookstore owner that has a store open for n minutes. Every minute, some number of customers enter the store. You are given an integer array customers of length n where customers[i] is the number of the customer that enters the store at the start of the ith minute and all those customers leave after the end of that minute.
+
+On some minutes, the bookstore owner is grumpy. You are given a binary array grumpy where grumpy[i] is 1 if the bookstore owner is grumpy during the ith minute, and is 0 otherwise.
+
+When the bookstore owner is grumpy, the customers of that minute are not satisfied, otherwise, they are satisfied.
+
+The bookstore owner knows a secret technique to keep themselves not grumpy for minutes consecutive minutes, but can only use it once.
+
+Return the maximum number of customers that can be satisfied throughout the day.
+
+Example 1:
+
+Input: customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], minutes = 3
+Output: 16
+Explanation: The bookstore owner keeps themselves not grumpy for the last 3 minutes. 
+The maximum number of customers that can be satisfied = 1 + 1 + 1 + 1 + 7 + 5 = 16.
+
+Example 2:
+
+Input: customers = [1], grumpy = [0], minutes = 1
+Output: 1
+
+Constraints:
+
+	n == customers.length == grumpy.length
+	1 <= minutes <= n <= 10^4
+	0 <= customers[i] <= 1000
+	grumpy[i] is either 0 or 1.
+*/
+export function maxSatisfied(
+    customers: number[],
+    grumpy: number[],
+    minutes: number
+): number {
+    const n = customers.length;
+
+    let sum = 0;
+    let max = 0;
+    let minutesMax = 0;
+    let i = 0;
+    for (; i < minutes; i++) {
+        minutesMax += grumpy[i] === 1 ? customers[i] : 0;
+        sum += grumpy[i] === 0 ? customers[i] : 0;
+    }
+    max = minutesMax;
+
+    for (; i < n; i++) {
+        minutesMax -= grumpy[i - minutes] === 1 ? customers[i - minutes] : 0;
+        minutesMax += grumpy[i] === 1 ? customers[i] : 0;
+        sum += grumpy[i] === 0 ? customers[i] : 0;
+        max = Math.max(max, minutesMax);
+    }
+
+    return sum + max;
 }
