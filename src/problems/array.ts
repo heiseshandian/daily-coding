@@ -6574,9 +6574,9 @@ export function lastStoneWeightII(stones: number[]): number {
     const n = stones.length;
     const dp = Array(half + 1).fill(0);
 
-    for (let i = 1; i <= n; i++) {
-        for (let j = half; j >= stones[i - 1]; j--) {
-            dp[j] = Math.max(dp[j], dp[j - stones[i - 1]] + stones[i - 1]);
+    for (let i = 0; i < n; i++) {
+        for (let j = half; j >= stones[i]; j--) {
+            dp[j] = Math.max(dp[j], dp[j - stones[i]] + stones[i]);
         }
     }
 
