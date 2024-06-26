@@ -3,6 +3,7 @@ import {
     TreeNode,
     deserializeByLevel,
     getMaxDistance,
+    serializeByLevel,
 } from '../algorithm/tree';
 import { cache } from '../design-pattern/proxy';
 /* 
@@ -2595,4 +2596,57 @@ export function bstToGst(root: TreeNode | null): TreeNode | null {
     }
 
     return root;
+}
+
+/*
+https://leetcode.com/problems/balance-a-binary-search-tree/description/
+1382. Balance a Binary Search Tree
+Given the root of a binary search tree, return a balanced binary search tree with the same node values. If there is more than one answer, return any of them.
+
+A binary search tree is balanced if the depth of the two subtrees of every node never differs by more than 1.
+
+Example 1:
+
+Input: root = [1,null,2,null,3,null,4,null,null]
+Output: [2,1,3,null,null,null,4]
+Explanation: This is not the only correct answer, [3,1,4,null,2] is also correct.
+
+Example 2:
+
+Input: root = [2,1,3]
+Output: [2,1,3]
+
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 10^4].
+	1 <= Node.val <= 10^5
+*/
+export function balanceBST(root: TreeNode | null): TreeNode | null {
+    const values: number[] = [];
+    const pre = (node: TreeNode | null) => {
+        if (!node) {
+            return;
+        }
+
+        pre(node.left);
+        values.push(node.val);
+        pre(node.right);
+    };
+    pre(root);
+
+    const build = (left: number, right: number): TreeNode => {
+        const mid = left + ((right - left) >> 1);
+        const node = new TreeNode(values[mid]);
+
+        if (left <= mid - 1) {
+            node.left = build(left, mid - 1);
+        }
+        if (mid + 1 <= right) {
+            node.right = build(mid + 1, right);
+        }
+
+        return node;
+    };
+
+    return build(0, values.length - 1);
 }
