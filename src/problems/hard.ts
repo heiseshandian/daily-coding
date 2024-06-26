@@ -2004,23 +2004,29 @@ Constraints:
 */
 export function minFallingPathSum(grid: number[][]): number {
     const n = grid.length;
-    const dp: number[][] = Array.from({ length: n }, () => Array(n));
+    const dp: number[] = Array(n);
     for (let j = 0; j < n; j++) {
-        dp[0][j] = grid[0][j];
+        dp[j] = grid[0][j];
     }
 
     for (let i = 1; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            let min = Infinity;
-            for (let k = 0; k < n; k++) {
-                if (k !== j) {
-                    min = Math.min(min, dp[i - 1][k]);
-                }
+        let min = Infinity;
+        let minIndex = -1;
+        let secondMin = Infinity;
+        for (let k = 0; k < n; k++) {
+            if (dp[k] < min) {
+                secondMin = min;
+                min = dp[k];
+                minIndex = k;
+            } else if (dp[k] >= min && dp[k] < secondMin) {
+                secondMin = dp[k];
             }
+        }
 
-            dp[i][j] = min + grid[i][j];
+        for (let j = 0; j < n; j++) {
+            dp[j] = (j === minIndex ? secondMin : min) + grid[i][j];
         }
     }
 
-    return Math.min(...dp[n - 1]);
+    return Math.min(...dp);
 }
