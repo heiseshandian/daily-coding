@@ -2711,3 +2711,86 @@ function getRightHeight(node: TreeNode | null) {
 
     return h;
 }
+
+/*
+https://leetcode.com/problems/cousins-in-binary-tree-ii/description/?envType=problem-list-v2&envId=o5cftq05
+2641. Cousins in Binary Tree II
+Given the root of a binary tree, replace the value of each node in the tree with the sum of all its cousins' values.
+
+Two nodes of a binary tree are cousins if they have the same depth with different parents.
+
+Return the root of the modified tree.
+
+Note that the depth of a node is the number of edges in the path from the root node to it.
+
+Example 1:
+
+Input: root = [5,4,9,1,10,null,7]
+Output: [0,0,0,7,7,null,11]
+Explanation: The diagram above shows the initial binary tree and the binary tree after changing the value of each node.
+- Node with value 5 does not have any cousins so its sum is 0.
+- Node with value 4 does not have any cousins so its sum is 0.
+- Node with value 9 does not have any cousins so its sum is 0.
+- Node with value 1 has a cousin with value 7 so its sum is 7.
+- Node with value 10 has a cousin with value 7 so its sum is 7.
+- Node with value 7 has cousins with values 1 and 10 so its sum is 11.
+
+Example 2:
+
+Input: root = [3,1,2]
+Output: [0,0,0]
+Explanation: The diagram above shows the initial binary tree and the binary tree after changing the value of each node.
+- Node with value 3 does not have any cousins so its sum is 0.
+- Node with value 1 does not have any cousins so its sum is 0.
+- Node with value 2 does not have any cousins so its sum is 0.
+
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 10^5].
+	1 <= Node.val <= 10^4
+*/
+export function replaceValueInTree(root: TreeNode): TreeNode {
+    const parent = new Map<TreeNode, TreeNode>();
+    const queue: TreeNode[] = [root];
+    let curEnd = root;
+    let nextEnd = root;
+    let level: TreeNode[] = [];
+    while (queue.length) {
+        const node = queue.shift()!;
+        level.push(node);
+        if (node.left) {
+            queue.push(node.left);
+            parent.set(node.left, node);
+            nextEnd = node.left;
+        }
+        if (node.right) {
+            queue.push(node.right);
+            parent.set(node.right, node);
+            nextEnd = node.right;
+        }
+
+        if (curEnd === node) {
+            const sum = level.reduce((s, { val }) => s + val, 0);
+            let i = 0;
+            while (i < level.length) {
+                if (
+                    i + 1 < level.length &&
+                    parent.get(level[i]) === parent.get(level[i + 1])
+                ) {
+                    const v = sum - level[i].val - level[i + 1].val;
+                    level[i].val = v;
+                    level[i + 1].val = v;
+                    i += 2;
+                } else {
+                    level[i].val = sum - level[i].val;
+                    i++;
+                }
+            }
+            level.length = 0;
+
+            curEnd = nextEnd;
+        }
+    }
+
+    return root;
+}
