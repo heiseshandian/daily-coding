@@ -1002,8 +1002,10 @@ export function minOperations(logs: string[]): number {
         default: 1,
     };
 
-    return Math.max(
-        0,
-        logs.reduce((s, c) => s + (map[c] ?? map.default), 0)
-    );
+    let sum = 0;
+    logs.forEach((v) => {
+        sum = Math.max(0, sum + (map[v] ?? map.default));
+    });
+
+    return sum;
 }
