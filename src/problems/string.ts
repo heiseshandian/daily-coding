@@ -866,12 +866,12 @@ export function reverseParentheses(s: string): string {
         }
     };
 
-    const stack: Array<[index: number]> = [[0]];
+    const stack: number[] = [0];
     for (let i = 1; i < s.length; i++) {
         if (s[i] === '(') {
-            stack.push([i]);
+            stack.push(i);
         } else if (s[i] === ')') {
-            const [index] = stack.pop()!;
+            const index = stack.pop()!;
             reverse(index + 1, i - 1);
         }
     }
