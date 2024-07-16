@@ -6902,3 +6902,79 @@ export function averageWaitingTime(customers: number[][]): number {
 
     return sum / customers.length;
 }
+
+/*
+https://leetcode.com/problems/friends-of-appropriate-ages/description/?envType=problem-list-v2&envId=o5cftq05
+825. Friends Of Appropriate Ages
+There are n persons on a social media website. You are given an integer array ages where ages[i] is the age of the ith person.
+
+A Person x will not send a friend request to a person y (x != y) if any of the following conditions is true:
+
+	age[y] <= 0.5 * age[x] + 7
+	age[y] > age[x]
+	age[y] > 100 && age[x] < 100
+
+Otherwise, x will send a friend request to y.
+
+Note that if x sends a request to y, y will not necessarily send a request to x. Also, a person will not send a friend request to themself.
+
+Return the total number of friend requests made.
+
+Example 1:
+
+Input: ages = [16,16]
+Output: 2
+Explanation: 2 people friend request each other.
+
+Example 2:
+
+Input: ages = [16,17,18]
+Output: 2
+Explanation: Friend requests are made 17 -> 16, 18 -> 17.
+
+Example 3:
+
+Input: ages = [20,30,100,110,120]
+Output: 3
+Explanation: Friend requests are made 110 -> 100, 120 -> 110, 120 -> 100.
+
+Constraints:
+
+	n == ages.length
+	1 <= n <= 10^4
+	1 <= ages[i] <= 120
+*/
+export function numFriendRequests(ages: number[]): number {
+    ages.sort((a, b) => b - a);
+    let count = 0;
+    for (let i = 0; i < ages.length; i++) {
+        let left = i + 1;
+        let right = ages.length - 1;
+        const target = 0.5 * ages[i] + 7;
+
+        let repeat = 1;
+        while (
+            i + 1 < ages.length &&
+            ages[i] === ages[i + 1] &&
+            ages[i] > target
+        ) {
+            i++;
+            repeat++;
+        }
+
+        let closest = i;
+        while (left <= right) {
+            const m = left + ((right - left) >> 1);
+            if (ages[m] > target) {
+                closest = m;
+                left = m + 1;
+            } else {
+                right = m - 1;
+            }
+        }
+
+        count += (closest - i) * repeat + repeat * (repeat - 1);
+    }
+
+    return count;
+}
