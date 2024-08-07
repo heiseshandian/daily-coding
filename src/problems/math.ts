@@ -802,3 +802,103 @@ export function findTheWinner(n: number, k: number): number {
 
     return list[0];
 }
+
+/*
+https://leetcode.com/problems/integer-to-english-words/description/?envType=daily-question&envId=2024-08-07
+273. Integer to English Words
+Convert a non-negative integer num to its English words representation.
+
+Example 1:
+
+Input: num = 123
+Output: "One Hundred Twenty Three"
+
+Example 2:
+
+Input: num = 12345
+Output: "Twelve Thousand Three Hundred Forty Five"
+
+Example 3:
+
+Input: num = 1234567
+Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+
+Constraints:
+
+	0 <= num <= 2^31 - 1
+*/
+export function numberToWords(num: number): string {
+    if (num === 0) {
+        return 'Zero';
+    }
+
+    const singleDigits: string[] = [
+        '',
+        'One',
+        'Two',
+        'Three',
+        'Four',
+        'Five',
+        'Six',
+        'Seven',
+        'Eight',
+        'Nine',
+    ];
+    const twoDigits: string[] = [
+        '',
+        'Eleven',
+        'Twelve',
+        'Thirteen',
+        'Fourteen',
+        'Fifteen',
+        'Sixteen',
+        'Seventeen',
+        'Eighteen',
+        'Nineteen',
+    ];
+    const tenDigits: string[] = [
+        '',
+        'Ten',
+        'Twenty',
+        'Thirty',
+        'Forty',
+        'Fifty',
+        'Sixty',
+        'Seventy',
+        'Eighty',
+        'Ninety',
+    ];
+    const units: string[] = ['', 'Thousand', 'Million', 'Billion'];
+
+    const segments = num.toLocaleString().split(',');
+    const last = segments.length - 1;
+
+    return segments
+        .map((n, i) => {
+            const unit = units[last - i];
+            const [first, second, third] = n.padStart(3, '0');
+            let str = '';
+            if (first !== '0') {
+                str += `${singleDigits[first]} Hundred `;
+            }
+
+            if (second === '1' && third >= '1' && third <= '9') {
+                str += `${twoDigits[third]} `;
+            } else {
+                if (second !== '0') {
+                    str += `${tenDigits[second]} `;
+                }
+                if (third !== '0') {
+                    str += `${singleDigits[third]} `;
+                }
+            }
+
+            if (str && unit) {
+                str += unit;
+            }
+
+            return str.trim();
+        })
+        .filter((s) => s !== '')
+        .join(' ');
+}
