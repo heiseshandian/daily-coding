@@ -1009,3 +1009,50 @@ export function minOperations(logs: string[]): number {
 
     return sum;
 }
+
+/*
+https://leetcode.com/problems/maximum-distance-in-arrays/description/
+624. Maximum Distance in Arrays
+You are given m arrays, where each array is sorted in ascending order.
+
+You can pick up two integers from two different arrays (each array picks one) and calculate the distance. We define the distance between two integers a and b to be their absolute difference |a - b|.
+
+Return the maximum distance.
+
+Example 1:
+
+Input: arrays = [[1,2,3],[4,5],[1,2,3]]
+Output: 4
+Explanation: One way to reach the maximum distance 4 is to pick 1 in the first or third array and pick 5 in the second array.
+
+Example 2:
+
+Input: arrays = [[1],[1]]
+Output: 0
+
+Constraints:
+
+    m == arrays.length
+    2 <= m <= 10^5
+    1 <= arrays[i].length <= 500
+    -10^4 <= arrays[i][j] <= 10^4
+    arrays[i] is sorted in ascending order.
+    There will be at most 105 integers in all the arrays.
+*/
+export function maxDistance(arrays: number[][]): number {
+    let min = arrays[0][0];
+    let max = arrays[0].at(-1)!;
+    let maxDistance = 0;
+    for (let i = 1; i < arrays.length; i++) {
+        maxDistance = Math.max(
+            maxDistance,
+            Math.abs(arrays[i].at(-1)! - min),
+            Math.abs(max - arrays[i][0])
+        );
+
+        min = Math.min(min, arrays[i][0]);
+        max = Math.max(max, arrays[i].at(-1)!);
+    }
+
+    return maxDistance;
+}
