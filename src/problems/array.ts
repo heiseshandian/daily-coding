@@ -7172,3 +7172,69 @@ export function lemonadeChange(bills: number[]): boolean {
 
     return true;
 }
+
+/*
+https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii/description/?envType=daily-question&envId=2024-08-02
+2134. Minimum Swaps to Group All 1's Together II
+A swap is defined as taking two distinct positions in an array and swapping the values in them.
+
+A circular array is defined as an array where we consider the first element and the last element to be adjacent.
+
+Given a binary circular array nums, return the minimum number of swaps required to group all 1's present in the array together at any location.
+
+Example 1:
+
+Input: nums = [0,1,0,1,1,0,0]
+Output: 1
+Explanation: Here are a few of the ways to group all the 1's together:
+[0,0,1,1,1,0,0] using 1 swap.
+[0,1,1,1,0,0,0] using 1 swap.
+[1,1,0,0,0,0,1] using 2 swaps (using the circular property of the array).
+There is no way to group all 1's together with 0 swaps.
+Thus, the minimum number of swaps required is 1.
+
+Example 2:
+
+Input: nums = [0,1,1,1,0,0,1,1,0]
+Output: 2
+Explanation: Here are a few of the ways to group all the 1's together:
+[1,1,1,0,0,0,0,1,1] using 2 swaps (using the circular property of the array).
+[1,1,1,1,1,0,0,0,0] using 2 swaps.
+There is no way to group all 1's together with 0 or 1 swaps.
+Thus, the minimum number of swaps required is 2.
+
+Example 3:
+
+Input: nums = [1,1,0,0,1]
+Output: 0
+Explanation: All the 1's are already grouped together due to the circular property of the array.
+Thus, the minimum number of swaps required is 0.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	nums[i] is either 0 or 1.
+
+Hints:
+
+Our end solution is to create a group of n contiguous ones, where n is the number of ones in the entire array. 
+This means we wish to find a slice of the array of size n that has the most ones already contained within it.
+
+Calculate the window size, which is the number of ones in the array. Calculate the number of ones in the first window, 
+from 0 to the window size. Then simulate rotating the window through the circular array by removing the previous element 
+and adding the next element. We then get the number of ones by subtracting the best window size found from the total number of ones.
+*/
+export function minSwaps(nums: number[]): number {
+    const windowSize = nums.filter((n) => n === 1).length;
+    let onesInWindow = nums
+        .slice(0, windowSize)
+        .reduce((acc, cur) => acc + cur, 0);
+    let max = onesInWindow;
+    for (let i = 1; i < nums.length; i++) {
+        onesInWindow -= nums[i - 1];
+        onesInWindow += nums[(i + windowSize - 1) % nums.length];
+        max = Math.max(max, onesInWindow);
+    }
+
+    return windowSize - max;
+}
