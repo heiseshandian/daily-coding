@@ -1,3 +1,4 @@
+import { cache } from '../design-pattern/proxy';
 /* 
 https://leetcode.com/problems/numbers-at-most-n-given-digit-set/
 
@@ -901,4 +902,70 @@ export function numberToWords(num: number): string {
         })
         .filter((s) => s !== '')
         .join(' ');
+}
+
+/*
+https://leetcode.com/problems/2-keys-keyboard/description/
+650. 2 Keys Keyboard
+There is only one character 'A' on the screen of a notepad. You can perform one of two operations on this notepad for each step:
+
+	Copy All: You can copy all the characters present on the screen (a partial copy is not allowed).
+	Paste: You can paste the characters which are copied last time.
+
+Given an integer n, return the minimum number of operations to get the character 'A' exactly n times on the screen.
+
+Example 1:
+
+Input: n = 3
+Output: 3
+Explanation: Initially, we have one character 'A'.
+In step 1, we use Copy All operation.
+In step 2, we use Paste operation to get 'AA'.
+In step 3, we use Paste operation to get 'AAA'.
+
+Example 2:
+
+Input: n = 1
+Output: 0
+
+Constraints:
+
+	1 <= n <= 1000
+*/
+export const minSteps = cache((n: number): number => {
+    if (n < 2) {
+        return 0;
+    }
+
+    const factors = getFactors(n);
+    if (factors.length === 1) {
+        return n;
+    }
+
+    let min = Infinity;
+    let groupSize: number;
+    for (const f of factors) {
+        groupSize = n / f;
+        min = Math.min(
+            min,
+            minSteps(f) + (groupSize > 1 ? groupSize : groupSize - 1)
+        );
+    }
+
+    return min;
+});
+
+function getFactors(n: number): number[] {
+    let i = Math.floor(Math.sqrt(n));
+    const res: number[] = [1];
+    while (i > 1) {
+        if (n % i === 0) {
+            res.push(i);
+            res.push(n / i);
+        }
+
+        i--;
+    }
+
+    return res;
 }
