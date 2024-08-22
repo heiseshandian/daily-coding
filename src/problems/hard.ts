@@ -2444,3 +2444,55 @@ export function strangePrinter(s: string): number {
 
     return dp[0][n - 1];
 }
+
+/*
+https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/description/
+1312. Minimum Insertion Steps to Make a String Palindrome
+Given a string s. In one step you can insert any character at any index of the string.
+
+Return the minimum number of steps to make s palindrome.
+
+A Palindrome String is one that reads the same backward as well as forward.
+
+Example 1:
+
+Input: s = "zzazz"
+Output: 0
+Explanation: The string "zzazz" is already palindrome we do not need any insertions.
+
+Example 2:
+
+Input: s = "mbadm"
+Output: 2
+Explanation: String can be "mbdadbm" or "mdbabdm".
+
+Example 3:
+
+Input: s = "leetcode"
+Output: 5
+Explanation: Inserting 5 characters the string becomes "leetcodocteel".
+
+Constraints:
+
+	1 <= s.length <= 500
+	s consists of lowercase English letters.
+*/
+export function minInsertions(s: string): number {
+    const n = s.length;
+    const dp: number[] = Array(n).fill(0);
+    for (let i = n - 2; i >= 0; i--) {
+        let leftDown = 0;
+        let backup = 0;
+        for (let j = i + 1; j < n; j++) {
+            backup = dp[j];
+            if (s[i] === s[j]) {
+                dp[j] = leftDown;
+            } else {
+                dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1);
+            }
+            leftDown = backup;
+        }
+    }
+
+    return dp[n - 1];
+}
