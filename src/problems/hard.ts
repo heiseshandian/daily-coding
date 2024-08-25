@@ -2496,3 +2496,78 @@ export function minInsertions(s: string): number {
 
     return dp[n - 1];
 }
+
+/*
+https://leetcode.com/problems/find-the-closest-palindrome/description/
+564. Find the Closest Palindrome
+Given a string n representing an integer, return the closest integer (not including itself), which is a palindrome. If there is a tie, return the smaller one.
+
+The closest is defined as the absolute difference minimized between two integers.
+
+Example 1:
+
+Input: n = "123"
+Output: "121"
+
+Example 2:
+
+Input: n = "1"
+Output: "0"
+Explanation: 0 and 2 are the closest palindromes but we return the smallest which is 0.
+
+Constraints:
+
+	1 <= n.length <= 18
+	n consists of only digits.
+	n does not have leading zeros.
+	n is representing an integer in the range [1, 1018 - 1].
+*/
+export function nearestPalindromic(n: string): string {
+    const length = n.length;
+    const candidates = new Set<string>();
+
+    // Edge case for '1'
+    if (n === '1') {
+        return '0';
+    }
+
+    // 1. Consider the mirrored palindrome
+    const prefix = n.substring(0, Math.floor((length + 1) / 2));
+    const prefixNum = parseInt(prefix);
+
+    // Generate palindromes by decrementing, mirroring, and incrementing the prefix
+    for (let i of [prefixNum - 1, prefixNum, prefixNum + 1]) {
+        const iStr = i.toString();
+        if (length % 2 === 0) {
+            candidates.add(iStr + iStr.split('').reverse().join(''));
+        } else {
+            candidates.add(
+                iStr + iStr.slice(0, -1).split('').reverse().join('')
+            );
+        }
+    }
+
+    // 2. Consider palindromes with different lengths
+    candidates.add('9'.repeat(length - 1)); // Example: "999" for "1000"
+    candidates.add('1' + '0'.repeat(length - 1) + '1'); // Example: "1001" for "999"
+
+    // 3. Remove the original number from candidates if present
+    candidates.delete(n);
+
+    // 4. Find the closest palindrome by comparing differences
+    let closest: string | null = null;
+    for (let candidate of candidates) {
+        if (
+            closest === null ||
+            Math.abs(parseInt(candidate) - parseInt(n)) <
+                Math.abs(parseInt(closest) - parseInt(n)) ||
+            (Math.abs(parseInt(candidate) - parseInt(n)) ===
+                Math.abs(parseInt(closest) - parseInt(n)) &&
+                parseInt(candidate) < parseInt(closest))
+        ) {
+            closest = candidate;
+        }
+    }
+
+    return closest!;
+}
