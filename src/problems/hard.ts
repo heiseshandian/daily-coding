@@ -2571,3 +2571,56 @@ export function nearestPalindromic(n: string): string {
 
     return closest!;
 }
+
+/*
+https://leetcode.com/problems/largest-palindrome-product/description/
+479. Largest Palindrome Product
+Given an integer n, return the largest palindromic integer that can be represented as the product of two n-digits integers. 
+Since the answer can be very large, return it modulo 1337.
+
+Example 1:
+
+Input: n = 2
+Output: 987
+Explanation: 99 x 91 = 9009, 9009 % 1337 = 987
+
+Example 2:
+
+Input: n = 1
+Output: 9
+
+Constraints:
+
+	1 <= n <= 8
+*/
+export function largestPalindrome(n: number): number {
+    const start = BigInt('9'.padEnd(n, '9'));
+    const end = BigInt('1'.padEnd(n, '0'));
+
+    const isValid = (palindrome: bigint): boolean => {
+        for (let i = start; i >= end; i--) {
+            if (palindrome / i > i) {
+                return false;
+            }
+
+            if (palindrome % i === 0n) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    let i = BigInt((start * start).toString().slice(0, n));
+    let p = 1n;
+    while (i >= end) {
+        p = BigInt(i.toString() + i.toString().split('').reverse().join(''));
+        if (isValid(p)) {
+            return Number(p % 1337n);
+        }
+        i--;
+    }
+
+    // when n === 1
+    return 9;
+}
