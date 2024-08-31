@@ -2174,3 +2174,77 @@ export function maxPoints(points: number[][]): number {
 
     return Math.max(...dp);
 }
+
+/**
+ *   王强决定把年终奖用于购物，他把想买的物品分为两类：主件与附件，附件是从属于某个主件的，下表就是一些主件与附件的例子：
+ * 主件             附件
+ * 电脑             打印机，扫描仪
+ * 书柜             图书
+ * 书桌             台灯，文具
+ * 工作椅             无
+ *
+ * 如果要买归类为附件的物品，必须先买该附件所属的主件，且每件物品只能购买一次。
+ * 每个主件可以有 0 个、 1 个或 2 个附件。附件不再有从属于自己的附件。
+ * 王强查到了每件物品的价格（都是 10 元的整数倍），而他只有 N 元的预算。除此之外，
+ * 他给每件物品规定了一个重要度，用整数 1 ~ 5 表示。他希望在花费不超过 N 元的前提下，使自己的满意度达到最大。
+ *
+ * 满意度是指所购买的每件物品的价格与重要度的乘积的总和，假设设第iii件物品的价格为v[i]v[i]v[i]，
+ * 重要度为w[i]w[i]w[i]，共选中了kkk件物品，编号依次为j1,j2,...,jkj_1,j_2,...,j_kj1​,j2​,...,jk​，
+ * 则满意度为：v[j1]∗w[j1]+v[j2]∗w[j2]+…+v[jk]∗w[jk]v[j_1]*w[j_1]+v[j_2]*w[j_2]+ …
+ * +v[j_k]*w[j_k]v[j1​]∗w[j1​]+v[j2​]∗w[j2​]+…+v[jk​]∗w[jk​]。（其中 * 为乘号）
+ *
+ * 请你帮助王强计算可获得的最大的满意度。
+ */
+type Goods = Array<[price: number, w: number, belong: number]>;
+
+export function getMaxSatisfaction(money: number, goods: Goods) {
+    const follows: number[][] = Array.from({ length: goods.length }, () => []);
+    goods.forEach(([, , belong], i) => {
+        if (belong !== 0) {
+            follows[belong - 1].push(i);
+        }
+    });
+
+    const dp: number[] = Array(money + 1).fill(0);
+    for (let i = 0; i < goods.length; i++) {
+        const [price, w, belong] = goods[i];
+        if (belong === 0) {
+            for (let j = money; j >= price; j--) {
+                // 只要当前主件
+                dp[j] = Math.max(dp[j], dp[j - price] + price * w);
+
+                const f1 = follows[i].length > 0 ? goods[follows[i][0]] : null;
+                const f2 = follows[i].length > 1 ? goods[follows[i][1]] : null;
+
+                // 主件+附件1
+                if (f1 !== null && j >= price + f1[0]) {
+                    dp[j] = Math.max(
+                        dp[j],
+                        dp[j - price - f1[0]] + price * w + f1[0] * f1[1]
+                    );
+                }
+
+                // 主件+附件2
+                if (f2 !== null && j >= price + f2[0]) {
+                    dp[j] = Math.max(
+                        dp[j],
+                        dp[j - price - f2[0]] + price * w + f2[0] * f2[1]
+                    );
+                }
+
+                // 主件+所有附件
+                if (f1 !== null && f2 !== null && j >= price + f1[0] + f2[0]) {
+                    dp[j] = Math.max(
+                        dp[j],
+                        dp[j - price - f1[0] - f2[0]] +
+                            price * w +
+                            f1[0] * f1[1] +
+                            f2[0] * f2[1]
+                    );
+                }
+            }
+        }
+    }
+
+    return dp[money];
+}
