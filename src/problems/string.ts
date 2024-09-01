@@ -2917,3 +2917,55 @@ function toMap(strs: string[]) {
         return acc;
     }, {});
 }
+
+/*
+https://www.nowcoder.com/practice/03ba8aeeef73400ca7a37a5f3370fe68?tpId=37&tags=&title=&difficulty=3&judgeStatus=0&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D37
+HJ27 查找兄弟单词
+
+描述：
+  定义一个单词的“兄弟单词”为：交换该单词字母顺序（注：可以交换任意次），而不添加、删除、修改原有的字母就能生成的单词。
+  兄弟单词要求和原来的单词不同。例如： ab 和 ba 是兄弟单词。 ab 和 ab 则不是兄弟单词。
+  现在给定你 n 个单词，另外再给你一个单词 x ，让你寻找 x 的兄弟单词里，按字典序排列后的第 k 个单词是什么？
+  注意：字典中可能有重复单词。
+  数据范围：1≤n≤1000 1≤n≤1000 ，输入的字符串长度满足 1≤len(str)≤10 1 \le len(str) \le 10 \ 1≤len(str)≤10  ， 1≤k<n 1 \le k < n \ 1≤k<n
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  3 abc bca cab abc 1
+输出：
+  2
+  bca
+*/
+export function getKthSiblings(words: string[], x: string) {
+    const sortedX = x.split('').sort().join('');
+    const siblings: string[] = [];
+    words.forEach((w) => {
+        if (w !== x && isSibling(w.split('').sort().join(''), sortedX)) {
+            siblings.push(w);
+        }
+    });
+    siblings.sort();
+
+    return siblings;
+}
+
+function isSibling(a: string, b: string) {
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    let i = 0;
+    while (i < a.length) {
+        if (a[i] !== b[i++]) {
+            return false;
+        }
+    }
+
+    return true;
+}
