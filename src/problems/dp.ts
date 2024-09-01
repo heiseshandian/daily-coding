@@ -2248,3 +2248,62 @@ export function getMaxSatisfaction(money: number, goods: Goods) {
 
     return dp[money];
 }
+
+/*
+https://www.nowcoder.com/practice/6d9d69e3898f45169a441632b325c7b4?tpId=37&tags=&title=&difficulty=3&judgeStatus=0&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D37
+HJ24 合唱队
+
+描述：
+  N 位同学站成一排，音乐老师要请最少的同学出列，使得剩下的 K 位同学排成合唱队形。
+  设KK位同学从左到右依次编号为 1，2…，K ，他们的身高分别为T1,T2,…,TKT_1,T_2,…,T_KT1​,T2​,…,TK​ ，若存在i(1≤i≤K)i(1\leq i\leq K)i(1≤i≤K) 使得T1<T2<......<Ti−1<TiT_1<T_2<......<T_{i-1}<T_iT1​<T2​<......<Ti−1​<Ti​ 且 Ti>Ti+1>......>TKT_i>T_{i+1}>......>T_KTi​>Ti+1​>......>TK​，则称这KKK名同学排成了合唱队形。
+  通俗来说，能找到一个同学，他的两边的同学身高都依次严格降低的队形就是合唱队形。
+  例子：
+  123 124 125 123 121 是一个合唱队形
+  123 123 124 122不是合唱队形，因为前两名同学身高相等，不符合要求
+  123 122 121 122不是合唱队形，因为找不到一个同学，他的两侧同学身高递减。
+  你的任务是，已知所有N位同学的身高，计算最少需要几位同学出列，可以使得剩下的同学排成合唱队形。
+  注意：不允许改变队列元素的先后顺序 且 不要求最高同学左右人数必须相等
+  数据范围： 1≤n≤3000 1≤n≤3000
+    
+输入描述：
+  用例两行数据，第一行是同学的总数 N ，第二行是 N 位同学的身高，以空格隔开
+
+输出描述：
+  最少需要几位同学出列
+
+示例：
+输入：
+  8
+  186 186 150 200 160 130 197 200
+输出：
+  4
+*/
+export function getMinRemoved(heights: number[]) {
+    const n = heights.length;
+    // 以 i 结尾的最长递增子序列长度
+    const leftDp: number[] = Array(n).fill(1);
+    for (let i = 0; i < n; i++) {
+        for (let j = i - 1; j >= 0; j--) {
+            if (heights[j] < heights[i]) {
+                leftDp[i] = Math.max(leftDp[i], leftDp[j] + 1);
+            }
+        }
+    }
+
+    // 以 i 开头的最长递减子序列长度
+    const rightDp: number[] = Array(n).fill(1);
+    for (let i = n - 1; i >= 0; i--) {
+        for (let j = i + 1; j < n; j++) {
+            if (heights[j] < heights[i]) {
+                rightDp[i] = Math.max(rightDp[i], rightDp[j] + 1);
+            }
+        }
+    }
+
+    let max = 1;
+    for (let i = 0; i < n; i++) {
+        max = Math.max(max, leftDp[i] + rightDp[i] - 1);
+    }
+
+    return n - max;
+}
