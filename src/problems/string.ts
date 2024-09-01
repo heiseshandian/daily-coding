@@ -2969,3 +2969,81 @@ function isSibling(a: string, b: string) {
 
     return true;
 }
+
+/*
+https://www.nowcoder.com/practice/2aa32b378a024755a3f251e75cbf233a?tpId=37&tags=&title=&difficulty=3&judgeStatus=&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D37&gioEnter=menu
+HJ29 字符串加解密
+
+描述：
+  对输入的字符串进行加解密，并输出。
+  加密方法为：
+  当内容是英文字母时则用该英文字母的后一个字母替换，同时字母变换大小写,如字母a时则替换为B；字母Z时则替换为a；
+  当内容是数字时则把该数字加1，如0替换1，1替换2，9替换0；
+  其他字符不做变化。
+  解密方法为加密的逆过程。
+  数据范围：输入的两个字符串长度满足 1≤n≤1000 1≤n≤1000  ，保证输入的字符串都是只由大小写字母或者数字组成
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  abcdefg
+  BCDEFGH
+输出：
+  BCDEFGH
+  abcdefg
+*/
+const bigReg = /[A-Z]/;
+const big = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const bigMap = toMap(big);
+const smallReg = /[a-z]/;
+const small = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const smallMap = toMap(small);
+
+const numberReg = /\d/;
+
+export function encode(original: string): string {
+    let encoded = '';
+    for (let i = 0; i < original.length; i++) {
+        const char = original[i];
+
+        if (numberReg.test(char)) {
+            encoded += (+char + 1) % 10;
+        } else if (bigReg.test(char)) {
+            const next = (bigMap[char] + 1) % 26;
+            encoded += big[next].toLowerCase();
+        } else if (smallReg.test(char)) {
+            const next = (smallMap[char] + 1) % 26;
+            encoded += small[next].toUpperCase();
+        } else {
+            encoded += char;
+        }
+    }
+
+    return encoded;
+}
+
+export function decode(encoded: string): string {
+    let original = '';
+    for (let i = 0; i < encoded.length; i++) {
+        const char = encoded[i];
+
+        if (numberReg.test(char)) {
+            original += (+char + 9) % 10;
+        } else if (bigReg.test(char)) {
+            const prev = (bigMap[char] + 25) % 26;
+            original += big[prev].toLowerCase();
+        } else if (smallReg.test(char)) {
+            const prev = (smallMap[char] + 25) % 26;
+            original += small[prev].toUpperCase();
+        } else {
+            original += char;
+        }
+    }
+
+    return original;
+}
