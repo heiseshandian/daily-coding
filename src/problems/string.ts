@@ -2867,3 +2867,53 @@ function hasRepeatedSubString(password: string): boolean {
 
     return false;
 }
+
+/*
+https://www.nowcoder.com/practice/5190a1db6f4f4ddb92fd9c365c944584?tpId=37&tags=&title=&difficulty=3&judgeStatus=0&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D37
+HJ26 字符串排序
+
+描述：
+  编写一个程序，将输入字符串中的字符按如下规则排序。  规则 1 ：英文字母从 A 到 Z 排列，不区分大小写。  如，输入： Type 输出： epTy  规则 2 ：同一个英文字母的大小写同时存在时，按照输入顺序排列。  如，输入： BabA 输出： aABb  规则 3 ：非英文字母的其它字符保持原来的位置。
+  如，输入： By?e 输出： Be?y
+  数据范围：输入的字符串长度满足 1≤n≤1000 1≤n≤1000
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  A Famous Saying: Much Ado About Nothing (2012/8).
+输出：
+  A aaAAbc dFgghh: iimM nNn oooos Sttuuuy (2012/8).
+*/
+const alphaReg = /[a-zA-Z]/;
+
+export function specialSort(original: string) {
+    const big = toMap('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''));
+    const small = toMap('abcdefghijklmnopqrstuvwxyz'.split(''));
+    const map = Object.assign(big, small);
+
+    const alphas = original.replace(/[^a-zA-Z]/g, '').split('');
+    alphas.sort((a, b) => map[a] - map[b]);
+    let ret = '';
+    let i = 0;
+    for (let j = 0; j < original.length; j++) {
+        if (alphaReg.test(original[j])) {
+            ret += alphas[i++];
+        } else {
+            ret += original[j];
+        }
+    }
+
+    return ret;
+}
+
+function toMap(strs: string[]) {
+    return strs.reduce((acc, cur, i) => {
+        acc[cur] = i;
+        return acc;
+    }, {});
+}

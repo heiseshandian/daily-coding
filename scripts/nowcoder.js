@@ -78,12 +78,12 @@ function handleClickCopyBtn() {
 
     // Extract Input Description
     const inputDescription = document
-        .querySelector('.section-sub-title + .section-content p')
+        .querySelector('.section-sub-title')
         .textContent.trim();
 
     // Extract Output Description
     const outputDescription = document
-        .querySelector('.section-sub-title:nth-of-type(2) + .section-content p')
+        .querySelector('.section-sub-title:nth-of-type(2)')
         .textContent.trim();
 
     // Extract Example Inputs and Outputs
