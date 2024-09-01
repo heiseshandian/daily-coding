@@ -2796,3 +2796,74 @@ export function longestCommonPrefix(strs: string[]): string {
 
     return candidate;
 }
+
+/*
+https://www.nowcoder.com/practice/184edec193864f0985ad2684fbc86841?tpId=37&tags=&title=&difficulty=3&judgeStatus=0&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3Fpage%3D1%26tpId%3D37%26type%3D37
+HJ20 密码验证合格程序
+
+描述：
+  密码要求:
+  1.长度超过8位
+  2.包括大小写字母.数字.其它符号,以上四种至少三种
+  3.不能有长度大于2的包含公共元素的子串重复 （注：其他符号不含空格或换行）
+  数据范围：输入的字符串长度满足 1≤n≤100 1≤n≤100
+    
+输入描述：
+  一组字符串。
+
+输出描述：
+  如果符合要求输出：OK，否则输出NG
+
+示例：
+输入：
+  021Abc9000
+  021Abc9Abc1
+  021ABC9000
+  021$bc9000
+输出：
+  OK
+  NG
+  NG
+  OK
+*/
+export function isValidPassword(password: string) {
+    if (password.length < 8) {
+        return 'NG';
+    }
+
+    let count = 0;
+    if (/[A-Z]/.test(password)) {
+        count++;
+    }
+    if (/[a-z]/.test(password)) {
+        count++;
+    }
+    if (/[0-9]/.test(password)) {
+        count++;
+    }
+    if (/[^a-zA-z0-9]/.test(password)) {
+        count++;
+    }
+    if (count < 3) {
+        return 'NG';
+    }
+
+    if (hasRepeatedSubString(password)) {
+        return 'NG';
+    }
+
+    return 'OK';
+}
+
+function hasRepeatedSubString(password: string): boolean {
+    const visited = new Set<string>();
+    for (let i = 0; i < password.length - 3; i++) {
+        const char = password.slice(i, i + 3);
+        if (visited.has(char)) {
+            return true;
+        }
+        visited.add(char);
+    }
+
+    return false;
+}
