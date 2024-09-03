@@ -111,3 +111,34 @@ export function gcd(a: number, b: number) {
 export function lcm(a: number, b: number) {
     return (a * b) / gcd(a, b);
 }
+
+export function sqrtBigInt(n: bigint) {
+    if (n < 0n) {
+        throw new Error(
+            'Square root of negative numbers is not supported for BigInt.'
+        );
+    }
+    if (n < 2n) {
+        return n;
+    }
+
+    let left = 1n;
+    let right = n;
+    let result = 1n;
+
+    while (left <= right) {
+        const mid = (left + right) / 2n;
+        const midSquared = mid * mid;
+
+        if (midSquared === n) {
+            return mid;
+        } else if (midSquared < n) {
+            left = mid + 1n;
+            result = mid;
+        } else {
+            right = mid - 1n;
+        }
+    }
+
+    return result;
+}

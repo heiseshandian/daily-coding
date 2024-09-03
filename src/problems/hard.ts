@@ -1,5 +1,5 @@
 import { cache } from '../design-pattern/proxy';
-import { getCharIndex, lcm, swap } from '../common/index';
+import { getCharIndex, lcm, sqrtBigInt, swap } from '../common/index';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { GenericHeap } from '../algorithm/generic-heap';
 import { UnionFind } from '../algorithm/union-find';
@@ -2623,4 +2623,93 @@ export function largestPalindrome(n: number): number {
 
     // when n === 1
     return 9;
+}
+
+/*
+https://leetcode.com/problems/super-palindromes/description/
+906. Super Palindromes
+Let's say a positive integer is a super-palindrome if it is a palindrome, and it is also the square of a palindrome.
+
+Given two positive integers left and right represented as strings, return the number of super-palindromes integers in the inclusive range [left, right].
+
+Example 1:
+
+Input: left = "4", right = "1000"
+Output: 4
+Explanation: 4, 9, 121, and 484 are superpalindromes.
+Note that 676 is not a superpalindrome: 26 * 26 = 676, but 26 is not a palindrome.
+
+Example 2:
+
+Input: left = "1", right = "2"
+Output: 1
+
+Constraints:
+
+	1 <= left.length, right.length <= 18
+	left and right consist of only digits.
+	left and right cannot have leading zeros.
+	left and right represent integers in the range [1, 10^18 - 1].
+	left is less than or equal to right.
+*/
+export function superpalindromesInRange(left: string, right: string): number {
+    const down = BigInt(left);
+    const upper = BigInt(right);
+
+    const isValid = (n: string) => {
+        const square = BigInt(n) * BigInt(n);
+        if (square < down || square > upper) {
+            return false;
+        }
+
+        const target = square.toString();
+        let l = 0;
+        let r = target.length - 1;
+        while (l < r) {
+            if (target[l] !== target[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    };
+
+    const reverse = (part: string) => {
+        if (!part) {
+            return part;
+        }
+
+        return part.split('').reverse().join('');
+    };
+
+    const sqrtLeft = sqrtBigInt(down);
+    // sqrtBigInt 默认会向下取整，这里加个 1 确保我们不会漏掉一些接近 right 的超级回文数
+    const sqrtRight = sqrtBigInt(upper) + 1n;
+    const sqrtLeftStr = sqrtLeft.toString();
+    const sqrtRightStr = sqrtRight.toString();
+    let l = Number(sqrtLeftStr.slice(0, sqrtLeftStr.length >> 1));
+    let r = Number(sqrtRightStr.slice(0, (sqrtRightStr.length >> 1) + 1));
+
+    let count = 0;
+    while (l <= r) {
+        // odd
+        const char = String(l);
+        let leftPart = char.slice(0, char.length - 1);
+        const centerPart = char[char.length - 1];
+        if (isValid(`${leftPart}${centerPart}${reverse(leftPart)}`)) {
+            count++;
+        }
+
+        // even
+        leftPart = char;
+        if (isValid(`${leftPart}${reverse(leftPart)}`)) {
+            count++;
+        }
+
+        l++;
+    }
+
+    return count;
 }
