@@ -149,7 +149,7 @@ export function sqrtBigInt(n: bigint) {
  * @param n 待分解的整数
  * @returns
  */
-export function primeFactors(n: number): number[] {
+export function getPrimeFactors(n: number): number[] {
     const factors: number[] = [];
 
     for (let i = 2; i * i <= n; i++) {

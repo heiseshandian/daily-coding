@@ -1,8 +1,15 @@
 import { cache } from '../design-pattern/proxy';
-import { getCharIndex, lcm, sqrtBigInt, swap } from '../common/index';
+import {
+    getCharIndex,
+    getPrimeFactors,
+    lcm,
+    sqrtBigInt,
+    swap,
+} from '../common/index';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { GenericHeap } from '../algorithm/generic-heap';
 import { UnionFind } from '../algorithm/union-find';
+import { UnionFindWithSize } from '../algorithm/union-find-with-size';
 
 /*
 https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/description/
@@ -2712,4 +2719,54 @@ export function superpalindromesInRange(left: string, right: string): number {
     }
 
     return count;
+}
+
+/*
+https://leetcode.com/problems/largest-component-size-by-common-factor/description/
+952. Largest Component Size by Common Factor
+You are given an integer array of unique positive integers nums. Consider the following graph:
+
+	There are nums.length nodes, labeled nums[0] to nums[nums.length - 1],
+	There is an undirected edge between nums[i] and nums[j] if nums[i] and nums[j] share a common factor greater than 1.
+
+Return the size of the largest connected component in the graph.
+
+Example 1:
+
+Input: nums = [4,6,15,35]
+Output: 4
+
+Example 2:
+
+Input: nums = [20,50,9,63]
+Output: 2
+
+Example 3:
+
+Input: nums = [2,3,6,7,4,12,21,39]
+Output: 8
+
+Constraints:
+
+	1 <= nums.length <= 10^4
+	1 <= nums[i] <= 10^5
+	All the values of nums are unique.
+*/
+export function largestComponentSize(nums: number[]): number {
+    const unionFind = new UnionFindWithSize(nums.length);
+    const map: Record<number, number> = {};
+
+    nums.forEach((v, i) => {
+        const factors = getPrimeFactors(v);
+
+        factors.forEach((f) => {
+            if (map[f] === undefined) {
+                map[f] = i;
+            } else if (!unionFind.isSameSet(map[f], i)) {
+                unionFind.union(map[f], i);
+            }
+        });
+    });
+
+    return Math.max(...unionFind.size);
 }
