@@ -3047,3 +3047,43 @@ export function decode(encoded: string): string {
 
     return original;
 }
+
+/*
+https://www.nowcoder.com/practice/181a1a71c7574266ad07f9739f791506?tpId=37&tags=&title=&difficulty=3&judgeStatus=3&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3FtpId%3D37&gioEnter=menu
+HJ65 查找两个字符串a,b中的最长公共子串
+
+描述：
+  查找两个字符串a,b中的最长公共子串。若有多个，输出在较短串中最先出现的那个。
+  注：子串的定义：将一个字符串删去前缀和后缀（也可以不删）形成的字符串。请和“子序列”的概念分开！
+  数据范围：字符串长度1≤length≤300 1≤length≤300
+  进阶：时间复杂度：O(n3) O(n3) ，空间复杂度：O(n) O(n)\ O(n)
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  abcdefghijklmnop
+  abcsafjklmnopqrstuvw
+输出：
+  jklmnop
+*/
+export function longestCommonSubString(a: string, b: string): string {
+    const short = a.length > b.length ? b : a;
+    const long = short === a ? b : a;
+    let len = short.length;
+    while (len > 0) {
+        for (let i = 0; i < short.length - len + 1; i++) {
+            const toSearch = short.slice(i, i + len);
+            if (long.indexOf(toSearch) !== -1) {
+                return toSearch;
+            }
+        }
+        len--;
+    }
+
+    return '';
+}
