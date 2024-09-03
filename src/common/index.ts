@@ -142,3 +142,27 @@ export function sqrtBigInt(n: bigint) {
 
     return result;
 }
+
+/**
+ * 找到某个数的所有质因子
+ *
+ * @param n 待分解的整数
+ * @returns
+ */
+export function primeFactors(n: number): number[] {
+    const factors: number[] = [];
+
+    for (let i = 2; i * i <= n; i++) {
+        if (n % i === 0) {
+            factors.push(i);
+            while (n % i === 0) {
+                n /= i;
+            }
+        }
+    }
+    if (n > 1) {
+        factors.push(n);
+    }
+
+    return factors;
+}
