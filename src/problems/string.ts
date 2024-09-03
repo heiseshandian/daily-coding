@@ -3087,3 +3087,64 @@ export function longestCommonSubString(a: string, b: string): string {
 
     return '';
 }
+
+/*
+https://www.nowcoder.com/practice/fbc417f314f745b1978fc751a54ac8cb?tpId=37&tags=&title=&difficulty=3&judgeStatus=3&rp=1&sourceUrl=%2Fexam%2Foj%2Fta%3FtpId%3D37
+HJ67 24点游戏算法
+
+描述：
+  给出4个1-10的数字，通过加减乘除运算，得到数字为24就算胜利,除法指实数除法运算,运算符仅允许出现在两个数字之间,本题对数字选取顺序无要求，但每个数字仅允许使用一次，且需考虑括号运算
+  此题允许数字重复，如3 3 4 4为合法输入，此输入一共有两个3，但是每个数字只允许使用一次，则运算过程中两个3都被选取并进行对应的计算操作。
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  7 2 1 10
+输出：
+  true
+*/
+export function canReach24(nums: number[]): boolean {
+    const dfs = (rest: number[]): boolean => {
+        if (rest.length === 1) {
+            return Math.abs(rest[0] - 24) <= 10 ** -6;
+        }
+
+        // 尝试两个数的所有组合
+        for (let i = 0; i < rest.length; i++) {
+            for (let j = 0; j < rest.length; j++) {
+                if (i === j) {
+                    continue;
+                }
+
+                const next = rest.filter(
+                    (_, index) => index !== i && index !== j
+                );
+                const possibleResults: number[] = [
+                    rest[i] + rest[j],
+                    rest[i] - rest[j],
+                    rest[i] * rest[j],
+                ];
+                if (rest[j] !== 0) {
+                    possibleResults.push(rest[i] / rest[j]);
+                }
+
+                for (const v of possibleResults) {
+                    next.push(v);
+                    if (dfs(next)) {
+                        return true;
+                    }
+                    next.pop();
+                }
+            }
+        }
+
+        return false;
+    };
+
+    return dfs(nums);
+}
