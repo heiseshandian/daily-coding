@@ -1272,3 +1272,50 @@ export function splitListToParts(
 
     return ret;
 }
+
+/*
+https://leetcode.com/problems/binary-tree-paths/description/
+257. Binary Tree Paths
+Given the root of a binary tree, return all root-to-leaf paths in any order.
+
+A leaf is a node with no children.
+
+Example 1:
+
+Input: root = [1,2,3,null,5]
+Output: ["1->2->5","1->3"]
+
+Example 2:
+
+Input: root = [1]
+Output: ["1"]
+
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 100].
+	-100 <= Node.val <= 100
+*/
+export function binaryTreePaths(root: TreeNode | null): string[] {
+    const ret: string[] = [];
+
+    const dfs = (node: TreeNode | null, path: number[]) => {
+        if (!node) {
+            return;
+        }
+        path.push(node.val);
+        if (isLeaf(node)) {
+            ret.push(path.join('->'));
+            return;
+        }
+
+        dfs(node.left, path.slice());
+        dfs(node.right, path.slice());
+    };
+    dfs(root, []);
+
+    return ret;
+}
+
+function isLeaf(node: TreeNode): boolean {
+    return Boolean(node) && !node.left && !node.right;
+}
