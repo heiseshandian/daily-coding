@@ -43,7 +43,7 @@ export function maxDistance(grid: number[][]): number {
             }
         }
     }
-    if (seas === 0 || seas === grid.length * grid[0].length) {
+    if (seas === 0 || seas === m * n) {
         return -1;
     }
 
