@@ -1,4 +1,5 @@
 import { UnionFind } from '../algorithm/union-find';
+import { GenericHeap } from '../algorithm/generic-heap';
 /*
 https://leetcode.com/problems/cut-off-trees-for-golf-event/description/
 675. Cut Off Trees for Golf Event
@@ -973,4 +974,41 @@ export function minimumSpanningTree(n: number, edges: number[][]) {
     });
 
     return count === n - 1 ? w : 'orz';
+}
+
+// https://www.bilibili.com/list/8888480?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=873823296&bvid=BV1sK4y1F7LH
+// Prim 算法求最小生成树
+export function minimumSpanningTreeP(n: number, edges: number[][]) {
+    const tables: number[][][] = Array.from({ length: n + 1 }, () => []);
+    edges.forEach(([from, to, weight]) => {
+        tables[from].push([to, weight]);
+        tables[to].push([from, weight]);
+    });
+
+    const visited = Array(n + 1).fill(false);
+    visited[1] = true;
+    const heap = new GenericHeap<number[]>((a, b) => a[1] - b[1]);
+    tables[1].forEach((v) => {
+        heap.push(v);
+    });
+
+    let w = 0;
+    let count = 1;
+    while (!heap.isEmpty()) {
+        const [to, weight] = heap.pop();
+
+        if (!visited[to]) {
+            visited[to] = true;
+            w += weight;
+            count++;
+
+            tables[to].forEach(([next, weight]) => {
+                if (!visited[next]) {
+                    heap.push([next, weight]);
+                }
+            });
+        }
+    }
+
+    return count === n ? w : 'orz';
 }

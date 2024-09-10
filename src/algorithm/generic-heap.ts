@@ -1,4 +1,4 @@
-import { swap } from '../common';
+import { swap } from '../common/index';
 
 type Comparator<T = number> = (a: T, b: T) => number;
 
@@ -11,7 +11,9 @@ export class GenericHeap<T = number> {
     3. 如果大于0则排在后面 */
     comparator: Comparator<T>;
 
-    constructor(comparator: Comparator<T> = (a, b) => (a as number) - (b as number)) {
+    constructor(
+        comparator: Comparator<T> = (a, b) => (a as number) - (b as number)
+    ) {
         this.comparator = comparator;
     }
 
@@ -20,7 +22,7 @@ export class GenericHeap<T = number> {
         this.container = arr.slice();
 
         for (let i = this.container.length - 1; i >= 0; i--) {
-            this.#heapify(i);
+            this.heapify(i);
         }
     }
 
@@ -35,14 +37,14 @@ export class GenericHeap<T = number> {
     public push(val: T) {
         this.container.push(val);
 
-        this.#insertHeap(this.container.length - 1);
+        this.insertHeap(this.container.length - 1);
     }
 
     public pop() {
         const result = this.container[0];
-        this.#swap(0, this.container.length - 1);
+        swap(this.container, 0, this.container.length - 1);
         this.container.length--;
-        this.#heapify(0);
+        this.heapify(0);
 
         return result;
     }
@@ -51,39 +53,44 @@ export class GenericHeap<T = number> {
         return this.container[0];
     }
 
-    #insertHeap(i: number) {
+    private insertHeap(i: number) {
         while (i) {
             let parent = (i - 1) >> 1;
-            if (this.comparator(this.container[i], this.container[parent]) >= 0) {
+            if (
+                this.comparator(this.container[i], this.container[parent]) >= 0
+            ) {
                 break;
             }
 
-            this.#swap(i, parent);
+            swap(this.container, i, parent);
             i = parent;
         }
     }
 
-    #heapify(i: number) {
+    private heapify(i: number) {
         let left = 2 * i + 1;
         while (left < this.container.length) {
             const right = left + 1;
             let minimumIndex =
-                right < this.container.length && this.comparator(this.container[right], this.container[left]) < 0
+                right < this.container.length &&
+                this.comparator(this.container[right], this.container[left]) < 0
                     ? right
                     : left;
-            minimumIndex = this.comparator(this.container[minimumIndex], this.container[i]) < 0 ? minimumIndex : i;
+            minimumIndex =
+                this.comparator(
+                    this.container[minimumIndex],
+                    this.container[i]
+                ) < 0
+                    ? minimumIndex
+                    : i;
 
             if (minimumIndex === i) {
                 break;
             }
 
-            this.#swap(i, minimumIndex);
+            swap(this.container, i, minimumIndex);
             i = minimumIndex;
             left = 2 * i + 1;
         }
-    }
-
-    #swap(i: number, j: number) {
-        swap(this.container, i, j);
     }
 }
