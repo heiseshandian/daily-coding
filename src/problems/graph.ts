@@ -1,3 +1,4 @@
+import { UnionFind } from '../algorithm/union-find';
 /*
 https://leetcode.com/problems/cut-off-trees-for-golf-event/description/
 675. Cut Off Trees for Golf Event
@@ -894,4 +895,82 @@ export function minimumTime(
     }
 
     return Math.max(...minTimes);
+}
+
+/**
+ * - https://www.luogu.com.cn/problem/P3366
+ * - https://www.bilibili.com/list/8888480?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=873823296&bvid=BV1sK4y1F7LH
+ * - k 算法求最小生成树
+ * 
+ * # 【模板】最小生成树
+
+## 题目描述
+
+如题，给出一个无向图，求出最小生成树，如果该图不连通，则输出 `orz`。
+
+## 输入格式
+
+第一行包含两个整数 $N,M$，表示该图共有 $N$ 个结点和 $M$ 条无向边。
+
+接下来 $M$ 行每行包含三个整数 $X_i,Y_i,Z_i$，表示有一条长度为 $Z_i$ 的无向边连接结点 $X_i,Y_i$。
+
+## 输出格式
+
+如果该图连通，则输出一个整数表示最小生成树的各边的长度之和。如果该图不连通则输出 `orz`。
+
+## 样例 #1
+
+### 样例输入 #1
+
+```
+4 5
+1 2 2
+1 3 2
+1 4 3
+2 3 4
+3 4 3
+```
+
+### 样例输出 #1
+
+```
+7
+```
+
+## 提示
+
+数据规模：
+
+对于 $20\%$ 的数据，$N\le 5$，$M\le 20$。
+
+对于 $40\%$ 的数据，$N\le 50$，$M\le 2500$。
+
+对于 $70\%$ 的数据，$N\le 500$，$M\le 10^4$。
+
+对于 $100\%$ 的数据：$1\le N\le 5000$，$1\le M\le 2\times 10^5$，$1\le Z_i \le 10^4$。
+
+
+样例解释：
+
+ ![](https://cdn.luogu.com.cn/upload/pic/2259.png) 
+
+所以最小生成树的总边权为 $2+2+3=7$。
+ */
+export function minimumSpanningTree(n: number, edges: number[][]) {
+    const sorted = edges.sort(
+        ([, , weightA], [, , weightB]) => weightA - weightB
+    );
+
+    const unionFind = new UnionFind(n + 1);
+    let w = 0;
+    let count = 0;
+    sorted.forEach(([from, to, weight]) => {
+        if (!unionFind.isSameSet(from, to)) {
+            unionFind.union(from, to);
+            w += weight;
+            count++;
+        }
+    });
+
+    return count === n - 1 ? w : 'orz';
 }
