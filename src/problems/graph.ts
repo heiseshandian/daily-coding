@@ -1,6 +1,5 @@
 import { UnionFind } from '../algorithm/union-find';
 import { GenericHeap } from '../algorithm/generic-heap';
-import { GenericHeapWithReassign } from '../algorithm/generic-heap-reassign';
 /*
 https://leetcode.com/problems/cut-off-trees-for-golf-event/description/
 675. Cut Off Trees for Golf Event
@@ -1088,4 +1087,89 @@ export function networkDelayTime(
     }
 
     return max;
+}
+
+/*
+https://leetcode.com/problems/swim-in-rising-water/description/
+778. Swim in Rising Water
+You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).
+
+The rain starts to fall. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.
+
+Return the least time until you can reach the bottom right square (n - 1, n - 1) if you start at the top left square (0, 0).
+
+Example 1:
+
+Input: grid = [[0,2],[1,3]]
+Output: 3
+Explanation:
+At time 0, you are in grid location (0, 0).
+You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0.
+You cannot reach point (1, 1) until time 3.
+When the depth of water is 3, we can swim anywhere inside the grid.
+
+Example 2:
+
+Input: grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
+Output: 16
+Explanation: The final route is shown.
+We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
+
+Constraints:
+
+	n == grid.length
+	n == grid[i].length
+	1 <= n <= 50
+	0 <= grid[i][j] < n2
+	Each value grid[i][j] is unique.
+*/
+export function swimInWater(grid: number[][]): number {
+    const n = grid.length;
+    const distance: number[][] = Array.from({ length: n }, () =>
+        Array(n).fill(Infinity)
+    );
+    const visited: boolean[][] = Array.from({ length: n }, () =>
+        Array(n).fill(false)
+    );
+    const heap = new GenericHeap<[x: number, y: number, dis: number]>(
+        (a, b) => a[2] - b[2]
+    );
+
+    distance[0][0] = grid[0][0];
+    heap.push([0, 0, grid[0][0]]);
+
+    const moves: number[] = [-1, 0, 1, 0, -1];
+
+    while (heap.size() > 0) {
+        const [x, y, dis] = heap.pop();
+        if (!visited[x][y]) {
+            visited[x][y] = true;
+
+            if (x === n - 1 && y === n - 1) {
+                return dis;
+            }
+
+            for (let i = 0; i < moves.length - 1; i++) {
+                const nX = x + moves[i];
+                const nY = y + moves[i + 1];
+
+                if (
+                    nX >= 0 &&
+                    nX < n &&
+                    nY >= 0 &&
+                    nY < n &&
+                    !visited[nX][nY]
+                ) {
+                    const newDis = Math.max(dis, grid[nX][nY]);
+
+                    if (distance[nX][nY] > newDis) {
+                        distance[nX][nY] = newDis;
+                        heap.push([nX, nY, newDis]);
+                    }
+                }
+            }
+        }
+    }
+
+    return -1;
 }
