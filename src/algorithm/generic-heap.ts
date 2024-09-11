@@ -1,5 +1,3 @@
-import { swap } from '../common/index';
-
 type Comparator<T = number> = (a: T, b: T) => number;
 
 export class GenericHeap<T = number> {
@@ -42,7 +40,7 @@ export class GenericHeap<T = number> {
 
     public pop() {
         const result = this.container[0];
-        swap(this.container, 0, this.container.length - 1);
+        this.swap(0, this.container.length - 1);
         this.container.length--;
         this.heapify(0);
 
@@ -62,7 +60,7 @@ export class GenericHeap<T = number> {
                 break;
             }
 
-            swap(this.container, i, parent);
+            this.swap(i, parent);
             i = parent;
         }
     }
@@ -88,9 +86,15 @@ export class GenericHeap<T = number> {
                 break;
             }
 
-            swap(this.container, i, minimumIndex);
+            this.swap(i, minimumIndex);
             i = minimumIndex;
             left = 2 * i + 1;
         }
+    }
+
+    private swap(i: number, j: number) {
+        const tmp = this.container[i];
+        this.container[i] = this.container[j];
+        this.container[j] = tmp;
     }
 }
