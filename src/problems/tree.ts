@@ -3241,3 +3241,52 @@ export function postorder(root: _Node | null): number[] {
 
     return result;
 }
+
+/*
+https://www.nowcoder.com/practice/aaefe5896cce4204b276e213e725f3ea
+二叉树
+
+描述：
+小强现在有n个节点,他想请你帮他计算出有多少种不同的二叉树满足节点个数为n且树的高度不超过m的方案.
+因为答案很大,所以答案需要模上1e9+7后输出.
+树的高度: 定义为所有叶子到根路径上节点个数的最大值.
+  例如: 当n=3,m=3时,有如下5种方案:
+  数据范围：1≤n,m≤50 1≤n,m≤50
+  进阶：时间复杂度O(mn2) O(mn2) ，空间复杂度O(nm) O(nm)\ O(nm)
+    
+输入描述：
+  输入描述：
+
+输出描述：
+  输出描述：
+
+示例：
+输入：
+  3 3
+输出：
+  5
+*/
+const MOD = 1e9 + 7;
+
+export const methodsOfConstructTrees = cache((n: number, m: number): number => {
+    if (n === 0) {
+        return 1;
+    }
+    if (m === 0) {
+        return 0;
+    }
+
+    let left = 0;
+    let methods = 0;
+    while (left < n) {
+        const right = n - left - 1;
+        // 避免相乘的时候溢出导致出错
+        const count =
+            BigInt(methodsOfConstructTrees(left, m - 1)) *
+            BigInt(methodsOfConstructTrees(right, m - 1));
+        methods = (methods + Number(count % BigInt(MOD))) % MOD;
+        left++;
+    }
+
+    return methods;
+});
