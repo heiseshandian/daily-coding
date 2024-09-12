@@ -723,3 +723,66 @@ export function makesquare(matchsticks: number[]): boolean {
 
     return dfs((1 << (n + 1)) - 1, 0, edgeLen);
 }
+
+/**
+ * https://www.luogu.com.cn/problem/P1171
+ * # 售货员的难题
+
+## 题目描述
+
+某乡有 $n\ (2\le n\le 20)$ 个村庄，有一个售货员，他要到各个村庄去售货，各村庄之间的路程 $s\ (0<s<1000)$ 是已知的，且 $A$ 村到 $B$ 村与 $B$ 村到 $A$ 村的路大多不同。为了提高效率，他从商店出发到每个村庄一次，然后返回商店所在的村，假设商店所在的村庄为 $1$，他不知道选择什么样的路线才能使所走的路程最短。请你帮他选择一条最短的路。
+
+## 输入格式
+
+村庄数 $n$ 和各村之间的路程（均是整数）。
+
+第一行，第 $i+1$ 行第 $j$ 个数代表村庄 $i$ 到 $j$ 的单向路径的路程。
+
+## 输出格式
+
+最短的路程。
+
+## 样例 #1
+
+### 样例输入 #1
+
+```
+3
+0 2 1
+1 0 2
+2 1 0
+```
+
+### 样例输出 #1
+
+```
+3
+```
+ */
+export function shortestTravelingPath(grid: number[][]) {
+    const n = grid.length;
+    const dp: number[][] = Array.from({ length: 1 << n }, () => Array(n));
+    const target = (1 << n) - 1;
+
+    const dfs = (status: number, index: number): number => {
+        if (dp[status][index] !== undefined) {
+            return dp[status][index];
+        }
+        if (status === target) {
+            dp[status][index] = grid[index][0];
+            return grid[index][0];
+        }
+
+        let min = Infinity;
+        for (let i = 0; i < n; i++) {
+            if ((status & (1 << i)) === 0) {
+                min = Math.min(min, grid[index][i] + dfs(status | (1 << i), i));
+            }
+        }
+
+        dp[status][index] = min;
+        return min;
+    };
+
+    return dfs(1, 0);
+}
