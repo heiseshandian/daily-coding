@@ -660,3 +660,66 @@ export function minBitFlips(start: number, goal: number): number {
 
     return min;
 }
+
+/*
+https://leetcode.com/problems/matchsticks-to-square/description/
+473. Matchsticks to Square
+You are given an integer array matchsticks where matchsticks[i] is the length of the ith matchstick. You want to use all the matchsticks to make one square. You should not break any stick, but you can link them up, and each matchstick must be used exactly one time.
+
+Return true if you can make this square and false otherwise.
+
+Example 1:
+
+Input: matchsticks = [1,1,2,2,2]
+Output: true
+Explanation: You can form a square with length 2, one side of the square came two sticks with length 1.
+
+Example 2:
+
+Input: matchsticks = [3,3,3,3,4]
+Output: false
+Explanation: You cannot find a way to form a square with all the matchsticks.
+
+Constraints:
+
+	1 <= matchsticks.length <= 15
+	1 <= matchsticks[i] <= 10^8
+*/
+export function makesquare(matchsticks: number[]): boolean {
+    const sum = matchsticks.reduce((s, c) => s + c, 0);
+    if (sum % 4 !== 0) {
+        return false;
+    }
+
+    const edgeLen = sum / 4;
+    const n = matchsticks.length;
+    const dp: boolean[] = Array(1 << (n + 1));
+
+    const dfs = (status: number, edge: number, rest: number): boolean => {
+        if (dp[status] !== undefined) {
+            return dp[status];
+        }
+        if (edge === 3) {
+            dp[status] = true;
+            return true;
+        }
+        if (rest === 0) {
+            return dfs(status, edge + 1, edgeLen);
+        }
+
+        for (let i = 0; i < n; i++) {
+            if (status & (1 << i) && matchsticks[i] <= rest) {
+                const ret = dfs(status ^ (1 << i), edge, rest - matchsticks[i]);
+                if (ret) {
+                    dp[status] = true;
+                    return true;
+                }
+            }
+        }
+
+        dp[status] = false;
+        return false;
+    };
+
+    return dfs((1 << (n + 1)) - 1, 0, edgeLen);
+}
