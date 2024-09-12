@@ -202,6 +202,32 @@ export function findCheapestPrice(
     return dp[k + 1][dst] === Number.MAX_SAFE_INTEGER ? -1 : dp[k + 1][dst];
 }
 
+// https://www.bilibili.com/list/8888480?sort_field=pubtime&spm_id_from=333.999.0.0&oid=364544124&bvid=BV1t94y187zW
+export function findCheapestPrice2(
+    n: number,
+    flights: number[][],
+    src: number,
+    dst: number,
+    k: number
+): number {
+    let cur: number[] = Array(n).fill(Infinity);
+    cur[src] = 0;
+
+    while (k >= 0) {
+        k--;
+
+        const next = cur.slice();
+        for (const [from, to, price] of flights) {
+            if (cur[from] !== Infinity) {
+                next[to] = Math.min(next[to], cur[from] + price);
+            }
+        }
+        cur = next;
+    }
+
+    return cur[dst] === Infinity ? -1 : cur[dst];
+}
+
 /*
 https://leetcode.com/problems/find-if-path-exists-in-graph/description/?envType=daily-question&envId=2024-04-21
 1971. Find if Path Exists in Graph
