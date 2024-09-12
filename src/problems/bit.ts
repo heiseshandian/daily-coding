@@ -693,7 +693,7 @@ export function makesquare(matchsticks: number[]): boolean {
 
     const edgeLen = sum / 4;
     const n = matchsticks.length;
-    const dp: boolean[] = Array(1 << (n + 1));
+    const dp: boolean[] = Array(1 << n);
 
     const dfs = (status: number, edge: number, rest: number): boolean => {
         if (dp[status] !== undefined) {
