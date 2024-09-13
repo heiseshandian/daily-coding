@@ -2538,6 +2538,61 @@ export function findMinHeightTrees(n: number, edges: number[][]): number[] {
     return leafs;
 }
 
+export function findMinHeightTrees2(n: number, edges: number[][]): number[] {
+    if (n <= 1) {
+        return [0];
+    }
+
+    const tables = Array.from({ length: n }, () => Array());
+    edges.forEach(([from, to]) => {
+        tables[from].push(to);
+        tables[to].push(from);
+    });
+
+    const bfs = (start: number): [end: number, distance: number[]] => {
+        const distance: number[] = Array(n).fill(-1);
+        distance[start] = 0;
+
+        const queue = [start];
+        let level = 0;
+        let end = -1;
+        while (queue.length) {
+            end = queue[0];
+            const q = queue.slice();
+            queue.length = 0;
+            level++;
+
+            q.forEach((p) => {
+                tables[p].forEach((next) => {
+                    if (distance[next] === -1) {
+                        distance[next] = level;
+                        queue.push(next);
+                    }
+                });
+            });
+        }
+
+        return [end, distance];
+    };
+
+    const [endA] = bfs(0);
+    const [endB, distance] = bfs(endA);
+
+    const path: number[] = [];
+    let cur = endB;
+    while (cur !== undefined) {
+        path.push(cur);
+        cur = tables[cur].find((next) => distance[next] === distance[cur] - 1);
+    }
+
+    const c = path.length >> 1;
+    if (path.length & 1) {
+        return [path[c]];
+    } else {
+        return [path[c - 1], path[c]];
+    }
+}
+
 /*
 https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/description/
 1038. Binary Search Tree to Greater Sum Tree
