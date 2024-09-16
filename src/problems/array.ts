@@ -7735,3 +7735,42 @@ export function missingRolls(
 
     return ret;
 }
+
+/*
+https://leetcode.com/problems/minimum-time-difference/description/
+539. Minimum Time Difference
+Given a list of 24-hour clock time points in "HH:MM" format, return the minimum minutes difference between any two time-points in the list.
+
+Example 1:
+Input: timePoints = ["23:59","00:00"]
+Output: 1
+Example 2:
+Input: timePoints = ["00:00","23:59","00:00"]
+Output: 0
+
+Constraints:
+
+	2 <= timePoints.length <= 10^4
+	timePoints[i] is in the format "HH:MM".
+*/
+export function findMinDifference(timePoints: string[]): number {
+    const max = 24 * 60;
+    const minutes = timePoints.map((t) => getMinutes(t)).sort((a, b) => a - b);
+    let i = 0;
+    let min = Infinity;
+    while (i < minutes.length) {
+        const next = (i + 1) % minutes.length;
+        const small = Math.min(minutes[i], minutes[next]);
+        const big = minutes[i] === small ? minutes[next] : minutes[i];
+        min = Math.min(min, Math.abs(big - small), Math.abs(small + max - big));
+        i++;
+    }
+
+    return min;
+}
+
+function getMinutes(time: string) {
+    return time.split(':').reduce((s, c, i) => {
+        return s + Number(c) * Math.pow(60, 1 - i);
+    }, 0);
+}
