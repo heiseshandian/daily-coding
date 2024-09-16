@@ -1794,12 +1794,7 @@ export function largestIsland(grid: number[][]): number {
     const n = grid[0].length;
     const islandCount: number[] = [];
 
-    const dirs = [
-        [1, 0],
-        [-1, 0],
-        [0, -1],
-        [0, 1],
-    ];
+    const moves: number[] = [-1, 0, 1, 0, -1];
     const infect = (i: number, j: number) => {
         if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] !== 1) {
             return;
@@ -1807,9 +1802,9 @@ export function largestIsland(grid: number[][]): number {
 
         grid[i][j] = id;
         islandCount[id] = (islandCount[id] || 0) + 1;
-        dirs.forEach(([x, y]) => {
-            infect(i + x, j + y);
-        });
+        for (let k = 0; k < moves.length - 1; k++) {
+            infect(i + moves[k], j + moves[k + 1]);
+        }
     };
 
     let max = 0;
@@ -1826,9 +1821,9 @@ export function largestIsland(grid: number[][]): number {
         for (let j = 0; j < n; j++) {
             if (grid[i][j] === 0) {
                 const set = new Set<number>();
-                dirs.forEach(([x, y]) => {
-                    const nextI = i + x;
-                    const nextJ = j + y;
+                for (let k = 0; k < moves.length - 1; k++) {
+                    const nextI = i + moves[k];
+                    const nextJ = j + moves[k + 1];
 
                     if (
                         nextI >= 0 &&
@@ -1839,7 +1834,7 @@ export function largestIsland(grid: number[][]): number {
                     ) {
                         set.add(grid[nextI][nextJ]);
                     }
-                });
+                }
 
                 max = Math.max(
                     max,
