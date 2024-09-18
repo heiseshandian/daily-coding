@@ -7,7 +7,7 @@ export class BitSet {
 
     public add(x: number) {
         if (x < 0 || !Number.isInteger(x)) {
-            throw new Error(`${x} should be non-negtive intergers`);
+            throw new Error(`${x} should be non-negative integers`);
         }
         const index = x >> 5;
         if (index >= this.bits.length) {
