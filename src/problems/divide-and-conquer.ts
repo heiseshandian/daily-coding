@@ -20,7 +20,7 @@ all the different possible ways to group numbers and operators. You may return t
 The test cases are generated such that the output values fit in a 32-bit 
 integer and the number of different results does not exceed 104.
 */
-export const diffWaysToCompute = cache((expression: string) => {
+export function diffWaysToCompute(expression: string) {
     if (/^\d+$/.test(expression)) {
         return [+expression];
     }
@@ -51,7 +51,7 @@ export const diffWaysToCompute = cache((expression: string) => {
     }
 
     return result;
-});
+}
 
 /* 
 https://leetcode.com/problems/unique-binary-search-trees-ii/
@@ -226,7 +226,11 @@ export function minAbsDifference(nums: number[], goal: number): number {
             }
         }
 
-        minDiff = Math.min(minDiff, Math.abs(target - sums2[closestMin]), Math.abs(target - sums2[closestMax]));
+        minDiff = Math.min(
+            minDiff,
+            Math.abs(target - sums2[closestMin]),
+            Math.abs(target - sums2[closestMax])
+        );
     }
 
     return minDiff;
