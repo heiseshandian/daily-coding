@@ -2857,3 +2857,62 @@ export function maxProfit(k: number, prices: number[]): number {
 
     return dp[k][prices.length - 1];
 }
+
+/*
+https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/description/
+440. K-th Smallest in Lexicographical Order
+Given two integers n and k, return the kth lexicographically smallest integer in the range [1, n].
+
+Example 1:
+
+Input: n = 13, k = 2
+Output: 10
+Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.
+
+Example 2:
+
+Input: n = 1, k = 1
+Output: 1
+
+Constraints:
+
+	1 <= k <= n <= 10^9
+*/
+export function findKthNumber(n: number, k: number): number {
+    // Helper function to calculate how many numbers are lexicographically between current and current + 1
+    const countSteps = () => {
+        let first = current;
+        let last = current;
+        let steps = 0;
+
+        // Count numbers in ranges [current, current+1), [current*10, (current+1)*10), etc.
+        while (first <= n) {
+            steps += Math.min(last, n) - first + 1;
+            // first number in the range that ending with 0
+            first *= 10;
+            // last number in the range that ending with 9
+            last = last * 10 + 9;
+        }
+
+        return steps;
+    };
+
+    let current = 1;
+    // Since we already start at 1, we decrement k
+    k--;
+
+    while (k > 0) {
+        const steps = countSteps();
+        if (steps <= k) {
+            // Not enough steps, move to the next sibling prefix
+            k -= steps;
+            current++;
+        } else {
+            // Enough steps, go down to the next level in the current subtree
+            k--;
+            current *= 10;
+        }
+    }
+
+    return current;
+}
