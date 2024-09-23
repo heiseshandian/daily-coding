@@ -3373,24 +3373,22 @@ Constraints:
 	1 <= numRows <= 1000
 */
 export function convert(s: string, numRows: number): string {
-    const m = numRows;
-    const grouns = Math.ceil(s.length / (m + Math.max(0, m - 2)));
-    const n = grouns + Math.max(0, m - 2);
-    const matrix: string[][] = Array.from({ length: m }, () => Array(n));
-
-    let x = 0;
-    let y = 0;
-    let i = 0;
-    while (i < s.length) {
-        for (x = 0; x < m; x++) {
-            matrix[x][y] = s[i++];
-        }
-
-        for (x = m - 2; x > 0; x--) {
-            matrix[x][++y] = s[i++];
-        }
-        y++;
+    if (numRows === 1 || numRows >= s.length) {
+        return s;
     }
 
-    return matrix.reduce((acc, row) => acc + row.filter((v) => v).join(''), '');
+    const rows: string[] = Array(numRows).fill('');
+    let down = false;
+    let currentRow = 0;
+    for (const c of s) {
+        rows[currentRow] += c;
+
+        if (currentRow === 0 || currentRow === numRows - 1) {
+            down = !down;
+        }
+
+        currentRow += down ? 1 : -1;
+    }
+
+    return rows.join('');
 }
