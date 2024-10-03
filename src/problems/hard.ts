@@ -3004,3 +3004,72 @@ function countPrefix(root: AlphaTrieNode, prefix: string): number {
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/minimum-deletions-to-make-array-divisible/description/
+2344. Minimum Deletions to Make Array Divisible
+You are given two positive integer arrays nums and numsDivide. You can delete any number of elements from nums.
+
+Return the minimum number of deletions such that the smallest element in nums divides all the elements of numsDivide. If this is not possible, return -1.
+
+Note that an integer x divides y if y % x == 0.
+
+Example 1:
+
+Input: nums = [2,3,2,4,3], numsDivide = [9,6,9,3,15]
+Output: 2
+Explanation: 
+The smallest element in [2,3,2,4,3] is 2, which does not divide all the elements of numsDivide.
+We use 2 deletions to delete the elements in nums that are equal to 2 which makes nums = [3,4,3].
+The smallest element in [3,4,3] is 3, which divides all the elements of numsDivide.
+It can be shown that 2 is the minimum number of deletions needed.
+
+Example 2:
+
+Input: nums = [4,3,6], numsDivide = [8,2,6,10]
+Output: -1
+Explanation: 
+We want the smallest element in nums to divide all the elements of numsDivide.
+There is no way to delete elements from nums to allow this.
+
+Constraints:
+
+	1 <= nums.length, numsDivide.length <= 10^5
+	1 <= nums[i], numsDivide[i] <= 10^9
+*/
+export function minOperations(nums: number[], numsDivide: number[]): number {
+    const factors = new Set(getFactors(numsDivide[0]));
+
+    for (let i = 1; i < numsDivide.length; i++) {
+        factors.forEach((f) => {
+            if (numsDivide[i] % f !== 0) {
+                factors.delete(f);
+            }
+        });
+    }
+
+    factors.add(1);
+
+    nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length; i++) {
+        if (factors.has(nums[i])) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function getFactors(num: number): number[] {
+    const factors: number[] = [];
+    for (let i = 1; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) {
+            factors.push(i);
+            if (i !== num / i) {
+                factors.push(num / i);
+            }
+        }
+    }
+
+    return factors;
+}
