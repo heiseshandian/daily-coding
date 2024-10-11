@@ -582,3 +582,58 @@ export function simplifyPath(path: string): string {
 
     return p.length ? p : '/';
 }
+
+/*
+https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/description/
+1081. Smallest Subsequence of Distinct Characters
+Given a string s, return the lexicographically smallest subsequence of s that contains all the distinct characters of s exactly once.
+
+Example 1:
+
+Input: s = "bcabc"
+Output: "abc"
+
+Example 2:
+
+Input: s = "cbacdcbc"
+Output: "acdb"
+
+Constraints:
+
+	1 <= s.length <= 1000
+	s consists of lowercase English letters.
+
+Note: This question is the same as 316: https://leetcode.com/problems/remove-duplicate-letters/
+*/
+export function smallestSubsequence(s: string): string {
+    const countMap: Record<string, number> = {};
+    // 严格递增（a,b,c...）
+    const stack: string[] = [];
+    const exist: Record<string, boolean> = {};
+
+    for (const c of s) {
+        countMap[c] = (countMap[c] ?? 0) + 1;
+    }
+
+    for (const c of s) {
+        countMap[c]--;
+        if (exist[c]) {
+            continue;
+        }
+
+        while (
+            stack.length > 0 &&
+            stack.at(-1)! > c &&
+            countMap[stack.at(-1)!] > 0
+        ) {
+            exist[stack.pop()!] = false;
+        }
+
+        if (!exist[c]) {
+            stack.push(c);
+            exist[c] = true;
+        }
+    }
+
+    return stack.join('');
+}
