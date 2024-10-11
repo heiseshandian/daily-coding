@@ -13,3 +13,18 @@ export function randomArray(n: number, v: number): number[] {
 
     return ret;
 }
+
+export function benchmark(fn: () => void, iterations: number = 1000): void {
+    const start = performance.now();
+
+    for (let i = 0; i < iterations; i++) {
+        fn();
+    }
+
+    const end = performance.now();
+    const totalTime = end - start;
+    const averageTime = totalTime / iterations;
+
+    console.log(`Total time: ${totalTime.toFixed(4)} ms`);
+    console.log(`Average time per iteration: ${averageTime.toFixed(4)} ms`);
+}
