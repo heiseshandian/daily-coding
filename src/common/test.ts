@@ -1,6 +1,5 @@
 /**
  * 生成指定长度的随机数组
- *
  * @param n 数组长度
  * @param v 数组最大值
  * @returns
@@ -14,6 +13,11 @@ export function randomArray(n: number, v: number): number[] {
     return ret;
 }
 
+/**
+ * 测试函数的执行性能
+ * @param fn 待测试的函数
+ * @param iterations 测试次数
+ */
 export function benchmark(fn: () => void, iterations: number = 1000): void {
     const start = performance.now();
 
