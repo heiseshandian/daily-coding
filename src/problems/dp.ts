@@ -2582,16 +2582,23 @@ export function maxEnergyBoost(
     energyDrinkA: number[],
     energyDrinkB: number[]
 ): number {
-    const n = energyDrinkA.length;
-    const dp: number[][] = Array.from({ length: n + 1 }, () =>
-        Array(3).fill(0)
-    );
+    let prevZero = 0;
+    let prevA = 0;
+    let prevB = 0;
 
-    for (let i = 1; i <= n; i++) {
-        dp[i][0] = Math.max(dp[i - 1][1], dp[i - 1][2]);
-        dp[i][1] = Math.max(dp[i - 1][0], dp[i - 1][1]) + energyDrinkA[i - 1];
-        dp[i][2] = Math.max(dp[i - 1][0], dp[i - 1][2]) + energyDrinkB[i - 1];
+    let nextZero = 0;
+    let nextA = 0;
+    let nextB = 0;
+
+    for (let i = 1; i <= energyDrinkA.length; i++) {
+        nextZero = Math.max(prevA, prevB);
+        nextA = Math.max(prevZero, prevA) + energyDrinkA[i - 1];
+        nextB = Math.max(prevZero, prevB) + energyDrinkB[i - 1];
+
+        prevZero = nextZero;
+        prevA = nextA;
+        prevB = nextB;
     }
 
-    return Math.max(...dp[n]);
+    return Math.max(nextZero, nextA, nextB);
 }
