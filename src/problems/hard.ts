@@ -3073,3 +3073,62 @@ function getFactors(num: number): number[] {
 
     return factors;
 }
+
+/*
+https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/
+632. Smallest Range Covering Elements from K Lists
+You have k lists of sorted integers in non-decreasing order. Find the smallest range that includes at least one number from each of the k lists.
+
+We define the range [a, b] is smaller than range [c, d] if b - a < d - c or a < c if b - a == d - c.
+
+Example 1:
+
+Input: nums = [[4,10,15,24,26],[0,9,12,20],[5,18,22,30]]
+Output: [20,24]
+Explanation: 
+List 1: [4, 10, 15, 24,26], 24 is in range [20,24].
+List 2: [0, 9, 12, 20], 20 is in range [20,24].
+List 3: [5, 18, 22, 30], 22 is in range [20,24].
+
+Example 2:
+
+Input: nums = [[1,2,3],[1,2,3],[1,2,3]]
+Output: [1,1]
+
+Constraints:
+
+	nums.length == k
+	1 <= k <= 3500
+	1 <= nums[i].length <= 50
+	-10^5 <= nums[i][j] <= 10^5
+	nums[i] is sorted in non-decreasing order.
+*/
+export function smallestRange(nums: number[][]): number[] {
+    const minHeap = new GenericHeap<[v: number, i: number, j: number]>(
+        (a, b) => a[0] - b[0]
+    );
+
+    let max = -Infinity;
+    nums.forEach((row, i) => {
+        minHeap.push([row[0], i, 0]);
+        max = Math.max(max, row[0]);
+    });
+
+    let left = minHeap.peek()[0];
+    let right = max;
+    while (true) {
+        const [, i, j] = minHeap.pop();
+        if (j === nums[i].length - 1) {
+            break;
+        }
+
+        minHeap.push([nums[i][j + 1], i, j + 1]);
+        max = Math.max(max, nums[i][j + 1]);
+        if (max - minHeap.peek()[0] < right - left) {
+            left = minHeap.peek()[0];
+            right = max;
+        }
+    }
+
+    return [left, right];
+}
