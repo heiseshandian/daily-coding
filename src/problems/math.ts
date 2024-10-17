@@ -1,5 +1,5 @@
 import { cache } from '../design-pattern/proxy';
-import { gcd } from '../common/index';
+import { gcd, swap } from '../common/index';
 /* 
 https://leetcode.com/problems/numbers-at-most-n-given-digit-set/
 
@@ -1162,4 +1162,52 @@ export function separateDigits(nums: number[]): number[] {
 
         return ret;
     }, []);
+}
+
+/*
+https://leetcode.com/problems/maximum-swap/description/
+670. Maximum Swap
+You are given an integer num. You can swap two digits at most once to get the maximum valued number.
+
+Return the maximum valued number you can get.
+
+Example 1:
+
+Input: num = 2736
+Output: 7236
+Explanation: Swap the number 2 and the number 7.
+
+Example 2:
+
+Input: num = 9973
+Output: 9973
+Explanation: No swap.
+
+Constraints:
+
+	0 <= num <= 10^8
+*/
+export function maximumSwap(num: number): number {
+    const digits: number[] = Array(8);
+    let i = digits.length - 1;
+    while (num > 0) {
+        digits[i--] = num % 10;
+        num /= 10;
+        num |= 0;
+    }
+
+    const rightMax: number[] = Array(8);
+    rightMax[rightMax.length - 1] = digits.length - 1;
+    for (let j = rightMax.length - 2; j > i; j--) {
+        rightMax[j] = digits[j] > digits[rightMax[j + 1]] ? j : rightMax[j + 1];
+    }
+
+    for (let j = i + 1; j < digits.length; j++) {
+        if (digits[j] < digits[rightMax[j]]) {
+            swap(digits, j, rightMax[j]);
+            break;
+        }
+    }
+
+    return digits.reduce((s, d) => s * 10 + d, 0);
 }
