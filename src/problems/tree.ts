@@ -2802,20 +2802,25 @@ Constraints:
 */
 export function replaceValueInTree(root: TreeNode): TreeNode {
     const parent = new Map<TreeNode, TreeNode>();
-    const queue: TreeNode[] = [root];
+
+    const queue: TreeNode[] = Array((1e5 >> 1) + 1);
+    let left = -1;
+    let right = -1;
+    queue[++right] = root;
+
     let curEnd = root;
     let nextEnd = root;
     let level: TreeNode[] = [];
-    while (queue.length) {
-        const node = queue.shift()!;
+    while (left < right) {
+        const node = queue[++left];
         level.push(node);
         if (node.left) {
-            queue.push(node.left);
+            queue[++right] = node.left;
             parent.set(node.left, node);
             nextEnd = node.left;
         }
         if (node.right) {
-            queue.push(node.right);
+            queue[++right] = node.right;
             parent.set(node.right, node);
             nextEnd = node.right;
         }
