@@ -1,6 +1,6 @@
 import { cache } from '../design-pattern/proxy';
 import { UnionFind } from '../algorithm/union-find';
-import { ListNode, SingleLinkedList } from '../algorithm/linked-list';
+import { ListNode } from '../algorithm/linked-list';
 // 锯齿形打印矩阵
 export function zigzagMatrix(matrix: number[][]) {
     if (!matrix || matrix.length === 0) {
@@ -2086,4 +2086,71 @@ export function spiralMatrix(
     }
 
     return ret;
+}
+
+/*
+https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/
+1277. Count Square Submatrices with All Ones
+Given a m * n matrix of ones and zeros, return how many square submatrices have all ones.
+
+Example 1:
+
+Input: matrix =
+[
+  [0,1,1,1],
+  [1,1,1,1],
+  [0,1,1,1]
+]
+Output: 15
+Explanation: 
+There are 10 squares of side 1.
+There are 4 squares of side 2.
+There is  1 square of side 3.
+Total number of squares = 10 + 4 + 1 = 15.
+
+Example 2:
+
+Input: matrix = 
+[
+  [1,0,1],
+  [1,1,0],
+  [1,1,0]
+]
+Output: 7
+Explanation: 
+There are 6 squares of side 1.  
+There is 1 square of side 2. 
+Total number of squares = 6 + 1 = 7.
+
+Constraints:
+
+	1 <= arr.length <= 300
+	1 <= arr[0].length <= 300
+	0 <= arr[i][j] <= 1
+*/
+export function countSquares(matrix: number[][]): number {
+    const numMatrix = new NumMatrix(matrix);
+    let count = 0;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] === 0) {
+                continue;
+            }
+
+            count++;
+            const max = Math.min(matrix.length - i, matrix[0].length - j);
+            for (let len = 2; len <= max; len++) {
+                if (
+                    numMatrix.sumRegion(i, j, i + len - 1, j + len - 1) ===
+                    len * len
+                ) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    return count;
 }
