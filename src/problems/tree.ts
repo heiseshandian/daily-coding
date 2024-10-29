@@ -3,6 +3,7 @@ import { TreeNode, getMaxDistance } from '../algorithm/tree';
 import { cache } from '../design-pattern/proxy';
 import { UnionFind } from '../algorithm/union-find';
 import { GenericHeap } from '../algorithm/generic-heap';
+import { ListNode } from '../algorithm/linked-list';
 /* 
 https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
 
@@ -3516,4 +3517,57 @@ export function flipEquiv(
             (flipEquiv(root1.left, root2.right) &&
                 flipEquiv(root1.right, root2.left)))
     );
+}
+
+/*
+https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/description/
+109. Convert Sorted List to Binary Search Tree
+Given the head of a singly linked list where elements are sorted in ascending order, convert it to a height-balanced binary search tree.
+
+Example 1:
+
+Input: head = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: One possible answer is [0,-3,9,-10,null,5], which represents the shown height balanced BST.
+
+Example 2:
+
+Input: head = []
+Output: []
+
+Constraints:
+
+	The number of nodes in head is in the range [0, 2 * 10^4].
+	-10^5 <= Node.val <= 10^5
+*/
+export function sortedListToBST(head: ListNode | null): TreeNode | null {
+    if (!head) {
+        return null;
+    }
+    if (!head.next) {
+        return new TreeNode(head.val);
+    }
+
+    let slow = head;
+    let fast = head;
+    let prev: ListNode | null = null;
+    while (fast && fast.next) {
+        prev = slow;
+        slow = slow.next!;
+        fast = fast.next.next!;
+    }
+
+    const root = new TreeNode(slow.val);
+
+    // Disconnect the left part of the list
+    if (prev !== null) {
+        prev.next = null;
+    }
+
+    const left = sortedListToBST(head);
+    const right = sortedListToBST(slow.next);
+    root.left = left;
+    root.right = right;
+
+    return root;
 }
