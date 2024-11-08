@@ -1070,26 +1070,11 @@ Constraints:
 */
 export function getMaximumXor(nums: number[], maximumBit: number): number[] {
     let xor = nums.reduce((s, v) => s ^ v, 0);
-
-    const getK = (xor: number): number => {
-        let offset = 1;
-        let k = 0;
-        let bit = 1;
-        while (bit <= maximumBit) {
-            bit++;
-
-            if ((offset & xor) === 0) {
-                k |= offset;
-            }
-            offset <<= 1;
-        }
-
-        return k;
-    };
+    const k = (1 << maximumBit) - 1;
 
     const ret: number[] = Array(nums.length);
     for (let i = 0; i < nums.length; i++) {
-        ret[i] = getK(xor);
+        ret[i] = xor ^ k;
         xor ^= nums[nums.length - 1 - i];
     }
 
