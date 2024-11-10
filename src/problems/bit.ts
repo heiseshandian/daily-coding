@@ -1131,3 +1131,84 @@ export function minEnd(n: number, x: number): number {
 
     return Number(xBigInt);
 }
+
+/*
+https://leetcode.com/problems/shortest-subarray-with-or-at-least-k-ii/description/
+3097. Shortest Subarray With OR at Least K II
+You are given an array nums of non-negative integers and an integer k.
+
+An array is called special if the bitwise OR of all of its elements is at least k.
+
+Return the length of the shortest special non-empty subarray of nums, or return -1 if no special subarray exists.
+
+Example 1:
+
+Input: nums = [1,2,3], k = 2
+
+Output: 1
+
+Explanation:
+
+The subarray [3] has OR value of 3. Hence, we return 1.
+
+Example 2:
+
+Input: nums = [2,1,8], k = 10
+
+Output: 3
+
+Explanation:
+
+The subarray [2,1,8] has OR value of 11. Hence, we return 3.
+
+Example 3:
+
+Input: nums = [1,2], k = 0
+
+Output: 1
+
+Explanation:
+
+The subarray [1] has OR value of 1. Hence, we return 1.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	0 <= nums[i] <= 10^9
+	0 <= k <= 10^9
+*/
+export function minimumSubarrayLength(nums: number[], k: number): number {
+    const n = nums.length;
+    const bits: number[] = new Array(32).fill(0);
+    let min = n + 1;
+    let s = 0;
+    let left = 0;
+
+    for (let right = 0; right < n; right++) {
+        const x = nums[right];
+        s |= x;
+
+        for (let h = 0; h < 32; h++) {
+            if ((x >> h) & 1) {
+                bits[h] += 1;
+            }
+        }
+
+        while (s >= k && left <= right) {
+            min = Math.min(min, right - left + 1);
+            const y = nums[left];
+
+            for (let h = 0; h < 32; h++) {
+                if ((y >> h) & 1) {
+                    bits[h] -= 1;
+                    if (bits[h] === 0) {
+                        s ^= 1 << h;
+                    }
+                }
+            }
+            left += 1;
+        }
+    }
+
+    return min > n ? -1 : min;
+}
