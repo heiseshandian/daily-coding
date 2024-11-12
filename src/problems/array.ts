@@ -8403,16 +8403,16 @@ Constraints:
 export function maximumBeauty(items: number[][], queries: number[]): number[] {
     items.sort((a, b) => a[0] - b[0]);
     let i = 0;
-    const heap = new GenericHeap<number>((a, b) => b - a);
+    let max = 0;
 
     const ret: number[] = Array(queries.length);
     const sorted = queries.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
     sorted.forEach(([v, index]) => {
         while (i < items.length && items[i][0] <= v) {
-            heap.push(items[i++][1]);
+            max = Math.max(max, items[i++][1]);
         }
 
-        ret[index] = heap.peek() ?? 0;
+        ret[index] = max;
     });
 
     return ret;
