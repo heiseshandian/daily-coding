@@ -788,7 +788,7 @@ export function findLengthOfShortestSubarray(arr: number[]): number {
     let prefixEnd = 1;
     let suffixStart = arr.length - 1;
 
-    // 找到左侧最长增长子序列的末尾
+    // 找到左侧最长增长子串的末尾
     while (prefixEnd < arr.length && arr[prefixEnd] >= arr[prefixEnd - 1]) {
         prefixEnd++;
     }
@@ -797,28 +797,30 @@ export function findLengthOfShortestSubarray(arr: number[]): number {
     }
     prefixEnd--;
 
-    // 找到右侧最长增长子序列的开头
+    // 找到右侧最长增长子串的开头
     while (suffixStart >= 1 && arr[suffixStart - 1] <= arr[suffixStart]) {
         suffixStart--;
     }
 
-    let sortestSubarrayLen = suffixStart - prefixEnd - 1;
-    const findSortestSubarrayLen = cache(
+    let shortestSubArrayLen = suffixStart - prefixEnd - 1;
+    const findShortestSubArrayLen = cache(
         (end: number, start: number): number => {
             if (end === -1 || start === arr.length || arr[end] <= arr[start]) {
                 return 0;
             }
 
             // 删除 prefix 的最右边元素
-            const left = findSortestSubarrayLen(end - 1, start);
+            const left = findShortestSubArrayLen(end - 1, start);
             // 删除 suffix 的最左边元素
-            const right = findSortestSubarrayLen(end, start + 1);
+            const right = findShortestSubArrayLen(end, start + 1);
 
             return Math.min(left + 1, right + 1);
         }
     );
 
-    return sortestSubarrayLen + findSortestSubarrayLen(prefixEnd, suffixStart);
+    return (
+        shortestSubArrayLen + findShortestSubArrayLen(prefixEnd, suffixStart)
+    );
 }
 
 /*
