@@ -8595,28 +8595,38 @@ export function decrypt(code: number[], k: number): number[] {
     if (k === 0) {
         return code.map((_) => 0);
     }
-    if (k > 0) {
-        return code.map((_, i) => {
-            let sum = 0;
-            let count = 1;
-            while (count <= k) {
-                sum += code[(i + count) % code.length];
-                count++;
-            }
 
-            return sum;
-        });
+    const ret: number[] = Array(code.length);
+    let sum = 0;
+    let count = 1;
+    let i = 0;
+
+    if (k > 0) {
+        while (count <= k) {
+            sum += code[(i + count) % code.length];
+            count++;
+        }
+        ret[0] = sum;
+
+        for (let i = 1; i < code.length; i++) {
+            sum += -code[i] + code[(i + k) % code.length];
+            ret[i] = sum;
+        }
+
+        return ret;
     }
 
     k = -k;
-    return code.map((_, i) => {
-        let sum = 0;
-        let count = 1;
-        while (count <= k) {
-            sum += code[(i - count + code.length) % code.length];
-            count++;
-        }
+    while (count <= k) {
+        sum += code[(i - count + code.length) % code.length];
+        count++;
+    }
+    ret[0] = sum;
 
-        return sum;
-    });
+    for (let i = 1; i < code.length; i++) {
+        sum += code[i - 1] - code[(i - k - 1 + code.length) % code.length];
+        ret[i] = sum;
+    }
+
+    return ret;
 }
