@@ -8736,40 +8736,31 @@ Constraints:
 	1 <= nums[i] <= 10^5
 */
 export function maximumSubarraySum(nums: number[], k: number): number {
-    const map = new Map<number, number>();
+    const set = new Set<number>();
     let sum = 0;
-    let sumLen = 0;
-    let max = 0;
+    let maxSum = 0;
 
     let start = 0;
     let end = 0;
-    while (start <= nums.length - k) {
-        while (sumLen < k) {
-            if (!map.has(nums[end])) {
-                map.set(nums[end], end);
-                sum += nums[end];
-                sumLen++;
-                end++;
-            } else {
-                const nextStart = map.get(nums[end])! + 1;
-                for (let k = start; k < nextStart; k++) {
-                    map.delete(nums[k]);
-                    sum -= nums[k];
-                    sumLen--;
-                }
-                start = nextStart;
-                break;
-            }
-        }
 
-        if (sumLen === k) {
-            max = Math.max(max, sum);
+    while (end < nums.length) {
+        if (!set.has(nums[end])) {
+            set.add(nums[end]);
+            sum += nums[end];
+            end++;
+
+            if (end - start === k) {
+                maxSum = Math.max(maxSum, sum);
+                set.delete(nums[start]);
+                sum -= nums[start];
+                start++;
+            }
+        } else {
+            set.delete(nums[start]);
             sum -= nums[start];
-            sumLen--;
-            map.delete(nums[start]);
             start++;
         }
     }
 
-    return max;
+    return maxSum;
 }
