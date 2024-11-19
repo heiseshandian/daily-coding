@@ -2403,3 +2403,157 @@ export class Bitset {
         return this.bits.map((bit) => (this.flipped ? 1 - bit : bit)).join('');
     }
 }
+
+/*
+https://leetcode.com/problems/all-oone-data-structure/description/?envType=daily-question&envId=2024-09-29
+432. All O`one Data Structure
+Design a data structure to store the strings' count with the ability to return the strings with minimum and maximum counts.
+
+Implement the AllOne class:
+
+	AllOne() Initializes the object of the data structure.
+	inc(String key) Increments the count of the string key by 1. If key does not exist in the data structure, insert it with count 1.
+	dec(String key) Decrements the count of the string key by 1. If the count of key is 0 after the decrement, remove it from the data structure. It is guaranteed that key exists in the data structure before the decrement.
+	getMaxKey() Returns one of the keys with the maximal count. If no element exists, return an empty string "".
+	getMinKey() Returns one of the keys with the minimum count. If no element exists, return an empty string "".
+
+Note that each function must run in O(1) average time complexity.
+
+Example 1:
+
+Input
+["AllOne", "inc", "inc", "getMaxKey", "getMinKey", "inc", "getMaxKey", "getMinKey"]
+[[], ["hello"], ["hello"], [], [], ["leet"], [], []]
+Output
+[null, null, null, "hello", "hello", null, "hello", "leet"]
+
+Explanation
+AllOne allOne = new AllOne();
+allOne.inc("hello");
+allOne.inc("hello");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "hello"
+allOne.inc("leet");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "leet"
+
+Constraints:
+
+	1 <= key.length <= 10
+	key consists of lowercase English letters.
+	It is guaranteed that for each call to dec, key is existing in the data structure.
+	At most 5 * 104 calls will be made to inc, dec, getMaxKey, and getMinKey.
+*/
+class OneNode {
+    prev: OneNode | null = null;
+    next: OneNode | null = null;
+    val: number;
+    set: Set<string> = new Set();
+
+    constructor(val: number, key?: string) {
+        this.val = val;
+
+        if (key) {
+            this.set.add(key);
+        }
+    }
+}
+
+export class AllOne {
+    head: OneNode;
+    tail: OneNode;
+    keyNodeMap: Map<string, OneNode>;
+
+    constructor() {
+        this.head = new OneNode(0);
+        this.tail = new OneNode(Infinity);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+
+        this.keyNodeMap = new Map();
+    }
+
+    inc(key: string): void {
+        if (!this.keyNodeMap.has(key)) {
+            let next = this.head.next!;
+
+            if (next.val !== 1) {
+                const newNext = new OneNode(1, key);
+                newNext.prev = this.head;
+                newNext.next = next;
+
+                this.head.next = newNext;
+                next.prev = newNext;
+
+                this.keyNodeMap.set(key, newNext);
+            } else {
+                next.set.add(key);
+
+                this.keyNodeMap.set(key, next);
+            }
+        } else {
+            const node = this.keyNodeMap.get(key)!;
+            let next = node.next!;
+
+            if (next.val === node.val + 1) {
+                next.set.add(key);
+
+                this.keyNodeMap.set(key, next);
+            } else {
+                const newNext = new OneNode(node.val + 1, key);
+                newNext.next = next;
+                newNext.prev = node;
+
+                node.next = newNext;
+                next.prev = newNext;
+
+                this.keyNodeMap.set(key, newNext);
+            }
+
+            node.set.delete(key);
+            if (node.set.size === 0) {
+                node.prev!.next = node.next;
+                node.next!.prev = node.prev;
+            }
+        }
+    }
+
+    dec(key: string): void {
+        const node = this.keyNodeMap.get(key);
+        if (!node) {
+            return;
+        }
+
+        const prev = node.prev!;
+
+        if (node.val === 1) {
+            this.keyNodeMap.delete(key);
+        } else if (prev.val === node.val - 1) {
+            prev.set.add(key);
+            this.keyNodeMap.set(key, prev);
+        } else {
+            const newNode = new OneNode(node.val - 1, key);
+            newNode.next = node;
+            newNode.prev = prev;
+
+            prev.next = newNode;
+            node.prev = newNode;
+
+            this.keyNodeMap.set(key, newNode);
+        }
+
+        node.set.delete(key);
+        if (node.set.size === 0) {
+            node.prev!.next = node.next;
+            node.next!.prev = node.prev;
+        }
+    }
+
+    getMaxKey(): string {
+        return this.tail.prev?.set.values().next().value ?? '';
+    }
+
+    getMinKey(): string {
+        return this.head.next?.set.values().next().value ?? '';
+    }
+}
