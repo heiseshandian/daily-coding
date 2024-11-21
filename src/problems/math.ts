@@ -1305,3 +1305,65 @@ export function isUgly(n: number): boolean {
 
     return n === 1;
 }
+
+/*
+https://leetcode.com/problems/nth-digit/description/
+400. Nth Digit
+Given an integer n, return the nth digit of the infinite integer sequence [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...].
+
+Example 1:
+
+Input: n = 3
+Output: 3
+
+Example 2:
+
+Input: n = 11
+Output: 0
+Explanation: The 11th digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+
+Constraints:
+
+	1 <= n <= 2^31 - 1
+*/
+export function findNthDigit(n: number): number {
+    const countDigits = (n: number): number => {
+        let end = n;
+        let digit = 0;
+        let offset = 1;
+        while (end > 0) {
+            digit++;
+            end = Math.floor(end / 10);
+            offset *= 10;
+        }
+        offset /= 10;
+
+        end = n;
+        let count = 0;
+        while (digit > 0) {
+            count += (end - offset + 1) * digit;
+            end = offset - 1;
+            digit--;
+            offset /= 10;
+        }
+
+        return count;
+    };
+
+    let left = 1;
+    let right = n;
+    let closest = n;
+    while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        if (countDigits(mid) >= n) {
+            closest = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    n -= countDigits(closest - 1);
+
+    return n === 0 ? closest : +closest.toString().split('')[n - 1];
+}
