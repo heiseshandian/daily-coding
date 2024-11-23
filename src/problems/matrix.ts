@@ -2403,9 +2403,3 @@ export function rotateTheBox(box: string[][]): string[][] {
 
     return rotated;
 }
-
-rotateTheBox([
-    ['#', '#', '*', '.', '*', '.'],
-    ['#', '#', '#', '*', '.', '.'],
-    ['#', '#', '#', '.', '#', '.'],
-]);
