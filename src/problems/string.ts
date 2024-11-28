@@ -4026,11 +4026,11 @@ export function findTheDifference(s: string, t: string): string {
     }
 
     for (const char of t) {
-        if (freq[char] <= 0) {
+        if (freq[char] > 0) {
+            freq[char]--;
+        } else {
             return char;
         }
-
-        freq[char]--;
     }
     return '';
 }
