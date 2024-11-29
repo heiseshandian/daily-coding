@@ -3790,9 +3790,6 @@ export function minimumTime(grid: number[][]): number {
     const m = grid.length;
     const n = grid[0].length;
     const distances: number[][] = Array.from({ length: m }, () => Array(n));
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
     const minHeap = new GenericHeap<[number, number, number]>(
         (a, b) => a[2] - b[2]
     );
@@ -3807,22 +3804,11 @@ export function minimumTime(grid: number[][]): number {
             return distance;
         }
 
-        if (visited[i][j]) {
-            continue;
-        }
-        visited[i][j] = true;
-
         for (let k = 0; k < moves.length - 1; k++) {
             const nextI = i + moves[k];
             const nextJ = j + moves[k + 1];
 
-            if (
-                nextI >= 0 &&
-                nextI < m &&
-                nextJ >= 0 &&
-                nextJ < n &&
-                !visited[nextI][nextJ]
-            ) {
+            if (nextI >= 0 && nextI < m && nextJ >= 0 && nextJ < n) {
                 let nextDistance = distance + 1;
                 if (nextDistance < grid[nextI][nextJ]) {
                     nextDistance =
