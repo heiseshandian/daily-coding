@@ -8916,12 +8916,13 @@ Constraints:
 	-10^3 <= arr[i] <= 10^3
 */
 export function checkIfExist(arr: number[]): boolean {
-    const set = new Set(arr);
-    return arr.some((v, i) => {
-        if (v === 0) {
-            return arr.lastIndexOf(0) !== i;
-        }
+    const set = new Set();
 
-        return set.has(v / 2) || set.has(v * 2);
+    return arr.some((v) => {
+        if (set.has(v / 2) || set.has(v * 2)) {
+            return true;
+        }
+        set.add(v);
+        return false;
     });
 }
