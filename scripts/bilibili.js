@@ -8,6 +8,14 @@ observer.observe(document, { childList: true, subtree: true });
 function init() {
     setVideoPlaybackRate();
     bindEvents();
+    hideAds();
+}
+
+function hideAds() {
+    const ads = document.getElementById('slide_ad');
+    if (ads) {
+        ads.nextElementSibling?.remove();
+    }
 }
 
 function getElement(
