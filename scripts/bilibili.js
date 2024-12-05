@@ -13,9 +13,13 @@ function init() {
 
 function hideAds() {
     const ads = document.getElementById('slide_ad');
-    if (ads) {
+    if (ads && isAds(ads.nextElementSibling)) {
         ads.nextElementSibling?.remove();
     }
+}
+
+function isAds(element) {
+    return element?.tagName === 'A';
 }
 
 function getElement(
