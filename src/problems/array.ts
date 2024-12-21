@@ -9393,3 +9393,42 @@ export function matchPlayersAndTrainers(
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/element-appearing-more-than-25-in-sorted-array/description/
+1287. Element Appearing More Than 25% In Sorted Array
+Given an integer array sorted in non-decreasing order, there is exactly one integer in the array that occurs more than 25% of the time, return that integer.
+
+Example 1:
+
+Input: arr = [1,2,2,6,6,6,6,7,10]
+Output: 6
+
+Example 2:
+
+Input: arr = [1,1]
+Output: 1
+
+Constraints:
+
+	1 <= arr.length <= 10^4
+	0 <= arr[i] <= 10^5
+*/
+export function findSpecialInteger(arr: number[]): number {
+    const target = arr.length / 4;
+    let count = 1;
+    let prev = arr[0];
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] === prev) {
+            count++;
+            if (count > target) {
+                return arr[i];
+            }
+        } else {
+            prev = arr[i];
+            count = 1;
+        }
+    }
+
+    return arr[0];
+}
