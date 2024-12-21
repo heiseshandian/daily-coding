@@ -30,6 +30,14 @@ function autoJumpBackToEnglishVersion() {
 function addBtns() {
     addCopyBtn();
     addCopyGptPrompt();
+    hideDifficulty();
+}
+
+function hideDifficulty() {
+    const difficulty = document.querySelector('.flexlayout__tab .gap-1 div');
+    if (difficulty) {
+        difficulty.style.display = 'none';
+    }
 }
 
 const COPY_BTN_CONTENT = 'copy content';
