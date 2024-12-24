@@ -1,14 +1,9 @@
 import { Queue } from '../algorithm/queue';
-import {
-    TreeNode,
-    deserializeByLevel,
-    getMaxDistance,
-} from '../algorithm/tree';
+import { TreeNode, getMaxDistance } from '../algorithm/tree';
 import { cache } from '../design-pattern/proxy';
 import { UnionFind } from '../algorithm/union-find';
 import { GenericHeap } from '../algorithm/generic-heap';
 import { ListNode } from '../algorithm/linked-list';
-import { swap } from '../common';
 /* 
 https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
 
@@ -3669,4 +3664,107 @@ export function minimumOperations(root: TreeNode): number {
     }
 
     return minOp;
+}
+
+/*
+https://leetcode.com/problems/find-minimum-diameter-after-merging-two-trees/description/
+3203. Find Minimum Diameter After Merging Two Trees
+There exist two undirected trees with n and m nodes, numbered from 0 to n - 1 and from 0 to m - 1, respectively. You are given two 2D integer arrays edges1 and edges2 of lengths n - 1 and m - 1, respectively, where edges1[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the first tree and edges2[i] = [ui, vi] indicates that there is an edge between nodes ui and vi in the second tree.
+
+You must connect one node from the first tree with another node from the second tree with an edge.
+
+Return the minimum possible diameter of the resulting tree.
+
+The diameter of a tree is the length of the longest path between any two nodes in the tree.
+
+Example 1:
+
+Input: edges1 = [[0,1],[0,2],[0,3]], edges2 = [[0,1]]
+
+Output: 3
+
+Explanation:
+
+We can obtain a tree of diameter 3 by connecting node 0 from the first tree with any node from the second tree.
+
+Example 2:
+
+Input: edges1 = [[0,1],[0,2],[0,3],[2,4],[2,5],[3,6],[2,7]], edges2 = [[0,1],[0,2],[0,3],[2,4],[2,5],[3,6],[2,7]]
+
+Output: 5
+
+Explanation:
+
+We can obtain a tree of diameter 5 by connecting node 0 from the first tree with node 0 from the second tree.
+
+Constraints:
+
+	1 <= n, m <= 10^5
+	edges1.length == n - 1
+	edges2.length == m - 1
+	edges1[i].length == edges2[i].length == 2
+	edges1[i] = [ai, bi]
+	0 <= ai, bi < n
+	edges2[i] = [ui, vi]
+	0 <= ui, vi < m
+	The input is generated such that edges1 and edges2 represent valid trees.
+*/
+export function minimumDiameterAfterMerge(
+    edges1: number[][],
+    edges2: number[][]
+): number {
+    const [[tables1, inDegrees1], [tables2, inDegrees2]] = [edges1, edges2].map(
+        (edges) => {
+            const tables: number[][] = Array.from(
+                { length: edges.length + 1 },
+                () => []
+            );
+            const inDegrees: number[] = Array(edges.length + 1).fill(0);
+            edges.forEach(([from, to]) => {
+                inDegrees[from]++;
+                inDegrees[to]++;
+                tables[from].push(to);
+                tables[to].push(from);
+            });
+
+            return [tables, inDegrees];
+        }
+    );
+
+    const bfs = (tables: number[][], inDegrees: number[]) => {
+        let leafs: number[] = [];
+        inDegrees.forEach((v, i) => {
+            if (v === 1) {
+                leafs.push(i);
+            }
+        });
+
+        let leftNodes = tables.length;
+        let diameter = 0;
+        while (leftNodes > 2) {
+            const newLeafs: number[] = [];
+            diameter += 2;
+            leafs.forEach((i) => {
+                tables[i].forEach((n) => {
+                    if (--inDegrees[n] === 1) {
+                        newLeafs.push(n);
+                    }
+                });
+            });
+
+            leftNodes -= leafs.length;
+            leafs = newLeafs;
+        }
+
+        return leafs.length > 1 ? diameter + 1 : diameter;
+    };
+
+    const diameter1 = bfs(tables1, inDegrees1);
+    const diameter2 = bfs(tables2, inDegrees2);
+
+    return Math.max(
+        diameter1,
+        diameter2,
+        Math.floor((diameter1 + 1) / 2) + Math.floor((diameter2 + 1) / 2) + 1
+    );
 }
