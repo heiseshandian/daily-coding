@@ -9554,11 +9554,9 @@ Constraints:
 */
 export function maxScoreSightseeingPair(values: number[]): number {
     let maxI = values[0] + 0;
-    let maxJ = -Infinity;
     let max = -Infinity;
     for (let i = 1; i < values.length; i++) {
-        maxJ = Math.max(values[i] - i);
-        max = Math.max(max, maxI + maxJ);
+        max = Math.max(max, maxI + values[i] - i);
         maxI = Math.max(maxI, values[i] + i);
     }
 
