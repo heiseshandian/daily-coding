@@ -4,6 +4,7 @@ import { getClosestMaxOrEqual, isEven, swap } from '../common';
 import { UnionSet } from '../algorithm/union-set';
 import { countBits } from '../common/bit';
 import { UnionFind } from '../algorithm/union-find';
+import { removeZeroSumSublists } from './linked-list';
 /* 
 https://leetcode.com/problems/find-the-maximum-number-of-marked-indices/description/
 
@@ -9561,4 +9562,77 @@ export function maxScoreSightseeingPair(values: number[]): number {
     }
 
     return max;
+}
+
+/*
+https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/description/
+689. Maximum Sum of 3 Non-Overlapping Subarrays
+Given an integer array nums and an integer k, find three non-overlapping subarrays of length k with maximum sum and return them.
+
+Return the result as a list of indices representing the starting position of each interval (0-indexed). If there are multiple answers, return the lexicographically smallest one.
+
+Example 1:
+
+Input: nums = [1,2,1,2,6,7,5,1], k = 2
+Output: [0,3,5]
+Explanation: Subarrays [1, 2], [2, 6], [7, 5] correspond to the starting indices [0, 3, 5].
+We could have also taken [2, 1], but an answer of [1, 3, 5] would be lexicographically larger.
+
+Example 2:
+
+Input: nums = [1,2,1,2,1,2,1,2,1], k = 2
+Output: [0,2,4]
+
+Constraints:
+
+	1 <= nums.length <= 10^4
+	1 <= nums[i] < 2^16
+	1 <= k <= floor(nums.length / 3)
+*/
+export function maxSumOfThreeSubarrays(nums: number[], k: number): number[] {
+    const n = nums.length;
+    const sumK: number[] = new Array(n - k + 1).fill(0);
+    let currentSum = nums.slice(0, k).reduce((a, b) => a + b, 0);
+
+    // Step 1: Calculate all k-sums
+    sumK[0] = currentSum;
+    for (let i = 1; i < sumK.length; i++) {
+        currentSum += nums[i + k - 1] - nums[i - 1];
+        sumK[i] = currentSum;
+    }
+
+    // Step 2: Find the best left and right indices
+    const left: number[] = new Array(sumK.length).fill(0);
+    let bestLeft = 0;
+    for (let i = 0; i < sumK.length; i++) {
+        if (sumK[i] > sumK[bestLeft]) {
+            bestLeft = i;
+        }
+        left[i] = bestLeft;
+    }
+
+    const right: number[] = new Array(sumK.length).fill(0);
+    let bestRight = sumK.length - 1;
+    for (let i = sumK.length - 1; i >= 0; i--) {
+        // Tie-breaking for lexicographical order
+        if (sumK[i] >= sumK[bestRight]) {
+            bestRight = i;
+        }
+        right[i] = bestRight;
+    }
+
+    // Step 3: Find the best middle index and the answer
+    let maxSum = 0;
+    let result: number[] = [];
+    for (let mid = k; mid < sumK.length - k; mid++) {
+        const l = left[mid - k];
+        const r = right[mid + k];
+        const total = sumK[l] + sumK[mid] + sumK[r];
+        if (total > maxSum) {
+            maxSum = total;
+            result = [l, mid, r];
+        }
+    }
+
+    return result;
 }
