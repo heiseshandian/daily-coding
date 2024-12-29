@@ -2654,24 +2654,22 @@ export function numWays(words: string[], target: string): number {
     const m = target.length;
     const mod = 1e9 + 7;
 
-    const freqs = Array.from({ length: n }, () => ({}));
-    for (let i = 0; i < n; i++) {
-        const freq = freqs[i];
-        words.forEach((word) => {
-            freq[word[i]] = (freq[word[i]] ?? 0) + 1;
-        });
-    }
-
     const dp: number[] = Array(m + 1).fill(0);
     dp[m] = 1;
 
+    const freq = Array(26).fill(0);
+    const aCode = 'a'.charCodeAt(0);
+
     for (let i = n - 1; i >= 0; i--) {
+        freq.fill(0);
+        words.forEach((word) => {
+            freq[word.charCodeAt(i) - aCode]++;
+        });
+
         for (let j = 0; j < m; j++) {
-            if (freqs[i][target[j]]) {
-                dp[j] =
-                    (((freqs[i][target[j]] * dp[j + 1]) % mod) +
-                        (dp[j] % mod)) %
-                    mod;
+            const times = freq[target.charCodeAt(j) - aCode];
+            if (times) {
+                dp[j] = (times * dp[j + 1] + dp[j]) % mod;
             }
         }
     }
