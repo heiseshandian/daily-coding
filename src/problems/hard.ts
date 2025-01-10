@@ -2562,11 +2562,11 @@ export function nearestPalindromic(n: string): string {
     for (let candidate of candidates) {
         if (
             closest === null ||
-            Math.abs(parseInt(candidate) - parseInt(n)) <
-                Math.abs(parseInt(closest) - parseInt(n)) ||
-            (Math.abs(parseInt(candidate) - parseInt(n)) ===
-                Math.abs(parseInt(closest) - parseInt(n)) &&
-                parseInt(candidate) < parseInt(closest))
+            Math.abs(Number(BigInt(candidate) - BigInt(n))) <
+                Math.abs(Number(BigInt(closest) - BigInt(n))) ||
+            (Math.abs(Number(BigInt(candidate) - BigInt(n))) ===
+                Math.abs(Number(BigInt(closest) - BigInt(n))) &&
+                BigInt(candidate) < BigInt(closest))
         ) {
             closest = candidate;
         }
