@@ -4696,3 +4696,70 @@ export function countPrefixSuffixPairs(words: string[]): number {
 
     return count;
 }
+
+/*
+https://leetcode.com/problems/word-subsets/description/
+916. Word Subsets
+You are given two string arrays words1 and words2.
+
+A string b is a subset of string a if every letter in b occurs in a including multiplicity.
+
+	For example, "wrr" is a subset of "warrior" but is not a subset of "world".
+
+A string a from words1 is universal if for every string b in words2, b is a subset of a.
+
+Return an array of all the universal strings in words1. You may return the answer in any order.
+
+Example 1:
+
+Input: words1 = ["amazon","apple","facebook","google","leetcode"], words2 = ["e","o"]
+Output: ["facebook","google","leetcode"]
+
+Example 2:
+
+Input: words1 = ["amazon","apple","facebook","google","leetcode"], words2 = ["l","e"]
+Output: ["apple","google","leetcode"]
+
+Constraints:
+
+	1 <= words1.length, words2.length <= 10^4
+	1 <= words1[i].length, words2[i].length <= 10
+	words1[i] and words2[i] consist only of lowercase English letters.
+	All the strings of words1 are unique.
+*/
+export function wordSubsets(words1: string[], words2: string[]): string[] {
+    const times = Array(26).fill(0);
+    const aCode = 'a'.charCodeAt(0);
+    words2.forEach((w) => {
+        const freq = Array(26).fill(0);
+        for (const c of w) {
+            freq[c.charCodeAt(0) - aCode]++;
+        }
+
+        for (let i = 0; i < 26; i++) {
+            times[i] = Math.max(times[i], freq[i]);
+        }
+    });
+
+    const ret: string[] = [];
+    for (const word of words1) {
+        const freq = Array(26).fill(0);
+        for (const c of word) {
+            freq[c.charCodeAt(0) - aCode]++;
+        }
+
+        let isSubset = true;
+        for (let i = 0; i < 26; i++) {
+            if (freq[i] < times[i]) {
+                isSubset = false;
+                break;
+            }
+        }
+
+        if (isSubset) {
+            ret.push(word);
+        }
+    }
+
+    return ret;
+}
