@@ -3922,3 +3922,62 @@ export function validArrangement(pairs: number[][]): number[][] {
     // Reverse the result to get the correct order
     return result.reverse();
 }
+
+/*
+https://leetcode.com/problems/palindrome-partitioning-ii/description/
+132. Palindrome Partitioning II
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+Example 1:
+
+Input: s = "aab"
+Output: 1
+Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+Example 2:
+
+Input: s = "a"
+Output: 0
+
+Example 3:
+
+Input: s = "ab"
+Output: 1
+
+Constraints:
+
+	1 <= s.length <= 2000
+	s consists of lowercase English letters only.
+*/
+export function minCut(s: string): number {
+    const n = s.length;
+    const isPalindrome: boolean[][] = Array.from({ length: n }, () =>
+        Array(n).fill(false)
+    );
+    for (let i = n - 1; i >= 0; i--) {
+        for (let j = i; j < n; j++) {
+            if (s[i] === s[j] && (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
+                isPalindrome[i][j] = true;
+            }
+        }
+    }
+
+    const dfs = cache((i: number) => {
+        if (i === s.length) {
+            return 0;
+        }
+
+        let min = Infinity;
+        for (let j = i; j < s.length; j++) {
+            if (isPalindrome[i][j]) {
+                min = Math.min(min, 1 + dfs(j + 1));
+            }
+        }
+
+        return min;
+    });
+
+    return dfs(0) - 1;
+}
