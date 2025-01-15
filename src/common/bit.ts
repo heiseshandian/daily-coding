@@ -90,3 +90,11 @@ export function findKOr(nums: number[], k: number): number {
 
     return result;
 }
+
+export function unsetRightMostBit(x: number) {
+    return x & (x - 1);
+}
+
+export function setRightMostBit(x: number) {
+    return x | (x + 1);
+}
