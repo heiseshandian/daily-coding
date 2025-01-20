@@ -9920,19 +9920,20 @@ export function firstCompleteIndex(arr: number[], mat: number[][]): number {
     const n = mat[0].length;
     const rows = Array(m).fill(0);
     const cols = Array(n).fill(0);
-    const positions: [number, number][] = Array(m * n + 1);
+    const rowP: number[] = Array(m * n + 1);
+    const colP: number[] = Array(m * n + 1);
 
     for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
-            positions[mat[i][j]] = [i, j];
+            rowP[mat[i][j]] = i;
+            colP[mat[i][j]] = j;
         }
     }
 
     for (let i = 0; i < arr.length; i++) {
-        const [r, c] = positions[arr[i]];
-        rows[r]++;
-        cols[c]++;
-        if (rows[r] === n || cols[c] === m) {
+        rows[rowP[arr[i]]]++;
+        cols[colP[arr[i]]]++;
+        if (rows[rowP[arr[i]]] === n || cols[colP[arr[i]]] === m) {
             return i;
         }
     }
