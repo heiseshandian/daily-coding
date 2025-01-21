@@ -2504,16 +2504,14 @@ Constraints:
 */
 export function gridGame(grid: number[][]): number {
     const n = grid[0].length;
-    const suffixSum = Array(n + 1).fill(0);
-    for (let i = n - 1; i >= 0; i--) {
-        suffixSum[i] = suffixSum[i + 1] + grid[0][i];
-    }
+    const sum = grid[0].reduce((acc, val) => acc + val, 0);
 
     let min = Infinity;
     let bottom = 0;
+    let top = sum;
     for (let i = 0; i < n; i++) {
-        const topRight = suffixSum[i + 1];
-        const m = Math.max(topRight, bottom);
+        top -= grid[0][i];
+        const m = Math.max(top, bottom);
         min = Math.min(min, m);
         bottom += grid[1][i];
     }
