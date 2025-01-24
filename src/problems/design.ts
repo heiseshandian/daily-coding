@@ -2618,3 +2618,51 @@ export class MyCalendarTwo {
         return true;
     }
 }
+
+/*
+https://leetcode.com/problems/prefix-and-suffix-search/description/
+745. Prefix and Suffix Search
+Design a special dictionary that searches the words in it by a prefix and a suffix.
+
+Implement the WordFilter class:
+
+	WordFilter(string[] words) Initializes the object with the words in the dictionary.
+	f(string pref, string suff) Returns the index of the word in the dictionary, which has the prefix pref and the suffix suff. If there is more than one valid index, return the largest of them. If there is no such word in the dictionary, return -1.
+
+Example 1:
+
+Input
+["WordFilter", "f"]
+[[["apple"]], ["a", "e"]]
+Output
+[null, 0]
+Explanation
+WordFilter wordFilter = new WordFilter(["apple"]);
+wordFilter.f("a", "e"); // return 0, because the word at index 0 has prefix = "a" and suffix = "e".
+
+Constraints:
+
+	1 <= words.length <= 10^4
+	1 <= words[i].length <= 7
+	1 <= pref.length, suff.length <= 7
+	words[i], pref and suff consist of lowercase English letters only.
+	At most 104 calls will be made to the function f.
+*/
+export class WordFilter {
+    private dic: Map<string, number>;
+
+    constructor(words: string[]) {
+        this.dic = new Map();
+        words.forEach((w, index) => {
+            for (let i = 0; i <= w.length; i++) {
+                for (let j = 0; j <= w.length; j++) {
+                    this.dic.set(w.slice(0, i) + '#' + w.slice(j), index);
+                }
+            }
+        });
+    }
+
+    f(pref: string, suff: string): number {
+        return this.dic.get(pref + '#' + suff) ?? -1;
+    }
+}
