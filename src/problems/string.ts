@@ -4936,13 +4936,9 @@ Constraints:
 	s​​​​​​ and part consists of lowercase English letters.
 */
 export function removeOccurrences(s: string, part: string): string {
-    let ret = '';
-    for (const c of s) {
-        ret += c;
-        if (ret.endsWith(part)) {
-            ret = ret.slice(0, ret.length - part.length);
-        }
+    while (s.includes(part)) {
+        s = s.replace(part, '');
     }
 
-    return ret;
+    return s;
 }
