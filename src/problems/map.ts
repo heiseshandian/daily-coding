@@ -49,3 +49,69 @@ export function checkInclusion(s1: string, s2: string): boolean {
 
     return false;
 }
+
+/*
+https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits/description/
+2342. Max Sum of a Pair With Equal Sum of Digits
+You are given a 0-indexed array nums consisting of positive integers. You can choose two indices i and j, such that i != j, and the sum of digits of the number nums[i] is equal to that of nums[j].
+
+Return the maximum value of nums[i] + nums[j] that you can obtain over all possible indices i and j that satisfy the conditions.
+
+Example 1:
+
+Input: nums = [18,43,36,13,7]
+Output: 54
+Explanation: The pairs (i, j) that satisfy the conditions are:
+- (0, 2), both numbers have a sum of digits equal to 9, and their sum is 18 + 36 = 54.
+- (1, 4), both numbers have a sum of digits equal to 7, and their sum is 43 + 7 = 50.
+So the maximum sum that we can obtain is 54.
+
+Example 2:
+
+Input: nums = [10,12,19,14]
+Output: -1
+Explanation: There are no two numbers that satisfy the conditions, so we return -1.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^9
+*/
+export function maximumSum(nums: number[]): number {
+    const digits: Record<number, [first: number, second: number]> = {};
+    nums.forEach((v) => {
+        const sum = getDigitSum(v);
+
+        if (digits[sum]) {
+            const [first, second] = digits[sum];
+            if (v >= first) {
+                digits[sum] = [v, first];
+            } else {
+                digits[sum] = [first, Math.max(v, second)];
+            }
+        } else {
+            digits[sum] = [v, 0];
+        }
+    });
+
+    let max = -1;
+    const values = Object.values(digits);
+    for (const [first, second] of values) {
+        if (second) {
+            max = Math.max(max, first + second);
+        }
+    }
+
+    return max;
+}
+
+function getDigitSum(v: number) {
+    let sum = 0;
+    while (v) {
+        sum += v % 10;
+        v /= 10;
+        v |= 0;
+    }
+
+    return sum;
+}
