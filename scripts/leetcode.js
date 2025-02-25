@@ -85,22 +85,64 @@ async function addCopyGptPrompt() {
  * @param {string} selectors
  * @returns {Promise<HTMLDivElement>} btnContainer
  */
-function getBtnContainer(selectors = '.flexlayout__tab .text-title-large') {
-    let btnContainer;
-    let resolveFn = () => {};
+/**
+ * 获取按钮容器元素
+ * @param {string} selectors - CSS选择器
+ * @param {Object} options - 配置选项
+ * @param {number} options.timeout - 超时时间（毫秒），默认 5000ms
+ * @returns {Promise<HTMLElement>} 按钮容器元素
+ */
+function getBtnContainer(
+    selectors = '.flexlayout__tab .text-title-large.font-semibold',
+    options = {}
+) {
+    const { timeout = 5000 } = options;
 
-    const updateBtnContainer = () => {
-        btnContainer = document.querySelector(selectors);
-        if (!btnContainer) {
-            requestAnimationFrame(updateBtnContainer);
-        } else {
-            resolveFn(btnContainer);
-        }
-    };
-    updateBtnContainer();
+    // 参数验证
+    if (typeof selectors !== 'string') {
+        return Promise.reject(new Error('selectors must be a string'));
+    }
 
-    return new Promise((resolve) => {
-        resolveFn = resolve;
+    return new Promise((resolve, reject) => {
+        let timeoutId;
+        let rafId;
+        let startTime = Date.now();
+
+        const updateBtnContainer = () => {
+            const btnContainer = document.querySelector(selectors);
+
+            // 找到元素
+            if (btnContainer) {
+                clearTimeout(timeoutId);
+                cancelAnimationFrame(rafId);
+                resolve(btnContainer);
+                return;
+            }
+
+            // 超时检查
+            if (Date.now() - startTime > timeout) {
+                clearTimeout(timeoutId);
+                cancelAnimationFrame(rafId);
+                reject(
+                    new Error(
+                        `Failed to find element with selector: ${selectors}`
+                    )
+                );
+                return;
+            }
+
+            // 继续查找
+            rafId = requestAnimationFrame(updateBtnContainer);
+        };
+
+        // 启动查找
+        updateBtnContainer();
+
+        // 设置超时
+        timeoutId = setTimeout(() => {
+            cancelAnimationFrame(rafId);
+            reject(new Error('getBtnContainer timeout'));
+        }, timeout);
     });
 }
 
