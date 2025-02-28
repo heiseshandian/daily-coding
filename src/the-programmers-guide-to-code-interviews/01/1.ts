@@ -6,34 +6,34 @@
 import { Stack } from '../../algorithm/stack';
 
 export class StackWithGetMin {
-    #dataStack: Stack;
+  #dataStack: Stack;
 
-    #minStack: Stack;
+  #minStack: Stack;
 
-    constructor() {
-        this.#dataStack = new Stack();
-        this.#minStack = new Stack();
+  constructor() {
+    this.#dataStack = new Stack();
+    this.#minStack = new Stack();
+  }
+
+  public push(val: any) {
+    this.#dataStack.push(val);
+
+    if (this.#minStack.isEmpty()) {
+      this.#minStack.push(val);
+      return;
     }
 
-    public push(val: any) {
-        this.#dataStack.push(val);
+    const previousMin = this.getMin();
+    const nextMin = val < previousMin ? val : previousMin;
+    this.#minStack.push(nextMin);
+  }
 
-        if (this.#minStack.isEmpty()) {
-            this.#minStack.push(val);
-            return;
-        }
+  public pop() {
+    this.#minStack.pop();
+    return this.#dataStack.pop();
+  }
 
-        const previousMin = this.getMin();
-        const nextMin = val < previousMin ? val : previousMin;
-        this.#minStack.push(nextMin);
-    }
-
-    public pop() {
-        this.#minStack.pop();
-        return this.#dataStack.pop();
-    }
-
-    public getMin() {
-        return this.#minStack.peek();
-    }
+  public getMin() {
+    return this.#minStack.peek();
+  }
 }

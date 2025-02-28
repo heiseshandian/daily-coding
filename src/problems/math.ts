@@ -9,75 +9,74 @@ as many times as we want. For example, if digits = ['1','3','5'], we may write n
 Return the number of positive integers that can be generated that are less than or equal to a given integer n.
 */
 export function atMostNGivenDigitSet(digits: string[], n: number): number {
-    if (n === 0) {
-        return 0;
-    }
+  if (n === 0) {
+    return 0;
+  }
 
-    const digitsOfN: number[] = [];
-    while (n) {
-        digitsOfN.unshift(n % 10);
-        n = parseInt(`${n / 10}`);
-    }
+  const digitsOfN: number[] = [];
+  while (n) {
+    digitsOfN.unshift(n % 10);
+    n = parseInt(`${n / 10}`);
+  }
 
-    // 假设n是个三位数，则两位数和一位数里面数字可以自由选择
-    // 两位数和一位数的总和就是 len^2 + len;
-    let count = 0;
-    let i = digitsOfN.length - 1;
-    while (i) {
-        count += Math.pow(digits.length, i--);
-    }
+  // 假设n是个三位数，则两位数和一位数里面数字可以自由选择
+  // 两位数和一位数的总和就是 len^2 + len;
+  let count = 0;
+  let i = digitsOfN.length - 1;
+  while (i) {
+    count += Math.pow(digits.length, i--);
+  }
 
-    count += atNGivenDigitSet(digits, digitsOfN);
+  count += atNGivenDigitSet(digits, digitsOfN);
 
-    return count;
+  return count;
 }
 
 function atNGivenDigitSet(digits: string[], digitsOfN: number[]): number {
-    let count = 0;
-    const [closestMin, found] = getClosestMinAndFoundFlag(digits, digitsOfN[0]);
+  let count = 0;
+  const [closestMin, found] = getClosestMinAndFoundFlag(digits, digitsOfN[0]);
 
-    // 首位在digits中，比如说 [1,3,5] 199
-    // 那么我们只需要固定第一位，然后看 1xx 有多少种选择即可
-    // 交给递归来处理
-    if (found) {
-        if (digitsOfN.length > 1) {
-            count += atNGivenDigitSet(digits, digitsOfN.slice(1));
-        } else {
-            count += 1;
-        }
+  // 首位在digits中，比如说 [1,3,5] 199
+  // 那么我们只需要固定第一位，然后看 1xx 有多少种选择即可
+  // 交给递归来处理
+  if (found) {
+    if (digitsOfN.length > 1) {
+      count += atNGivenDigitSet(digits, digitsOfN.slice(1));
+    } else {
+      count += 1;
     }
+  }
 
-    // 首位不在digits中，比如说 [1,3,5] 299
-    if (closestMin !== null) {
-        count +=
-            (closestMin + 1) * Math.pow(digits.length, digitsOfN.length - 1);
-    }
+  // 首位不在digits中，比如说 [1,3,5] 299
+  if (closestMin !== null) {
+    count += (closestMin + 1) * Math.pow(digits.length, digitsOfN.length - 1);
+  }
 
-    return count;
+  return count;
 }
 
 function getClosestMinAndFoundFlag(
-    digits: string[],
-    target: number
+  digits: string[],
+  target: number
 ): [closestMin: number | null, found: boolean] {
-    let left = 0;
-    let right = digits.length - 1;
-    let closestMin: number | null = null;
-    let found = false;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (+digits[mid] === target) {
-            found = true;
-            right = mid - 1;
-        } else if (+digits[mid] > target) {
-            right = mid - 1;
-        } else {
-            closestMin = mid;
-            left = mid + 1;
-        }
+  let left = 0;
+  let right = digits.length - 1;
+  let closestMin: number | null = null;
+  let found = false;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (+digits[mid] === target) {
+      found = true;
+      right = mid - 1;
+    } else if (+digits[mid] > target) {
+      right = mid - 1;
+    } else {
+      closestMin = mid;
+      left = mid + 1;
     }
+  }
 
-    return [closestMin, found];
+  return [closestMin, found];
 }
 
 /*
@@ -120,22 +119,19 @@ Constraints:
 	a, b, and c have different values.
 */
 export function numMovesStones(a: number, b: number, c: number): number[] {
-    let min = Math.min(a, b, c);
-    let max = Math.max(a, b, c);
-    let mid = a + b + c - min - max;
+  let min = Math.min(a, b, c);
+  let max = Math.max(a, b, c);
+  let mid = a + b + c - min - max;
 
-    const minMoves =
-        max - min === 2
-            ? 0
-            : mid - min === 2 ||
-              max - mid === 2 ||
-              mid - min === 1 ||
-              max - mid === 1
-            ? 1
-            : 2;
-    const maxMoves = max - min - 2;
+  const minMoves =
+    max - min === 2
+      ? 0
+      : mid - min === 2 || max - mid === 2 || mid - min === 1 || max - mid === 1
+      ? 1
+      : 2;
+  const maxMoves = max - min - 2;
 
-    return [minMoves, maxMoves];
+  return [minMoves, maxMoves];
 }
 
 /*
@@ -186,34 +182,34 @@ Constraints:
 	1 <= nums[i] <= 10^9
 */
 export function minGroupsForValidAssignment(balls: number[]): number {
-    const repeatTimes: Record<number, number> = {};
-    balls.forEach((v) => {
-        repeatTimes[v] = (repeatTimes[v] || 0) + 1;
-    });
+  const repeatTimes: Record<number, number> = {};
+  balls.forEach((v) => {
+    repeatTimes[v] = (repeatTimes[v] || 0) + 1;
+  });
 
-    const times = Object.values(repeatTimes).sort((a, b) => a - b);
-    const len = times.length;
-    let min = times[0];
-    let i = 0;
-    let count = 0;
-    while (i < len) {
-        const cur = times[i];
-        const t = Math.ceil(cur / (min + 1));
-        const rest = t * (min + 1) - cur;
+  const times = Object.values(repeatTimes).sort((a, b) => a - b);
+  const len = times.length;
+  let min = times[0];
+  let i = 0;
+  let count = 0;
+  while (i < len) {
+    const cur = times[i];
+    const t = Math.ceil(cur / (min + 1));
+    const rest = t * (min + 1) - cur;
 
-        if (rest > t) {
-            const half = cur >> 1;
-            min = cur - half < min ? cur - half : min - 1;
-            i = 0;
-            count = 0;
-            continue;
-        }
-
-        count += t;
-        i++;
+    if (rest > t) {
+      const half = cur >> 1;
+      min = cur - half < min ? cur - half : min - 1;
+      i = 0;
+      count = 0;
+      continue;
     }
 
-    return count;
+    count += t;
+    i++;
+  }
+
+  return count;
 }
 
 /*
@@ -241,23 +237,23 @@ Constraints:
 	1 <= limit <= 50
 */
 export function distributeCandies(n: number, limit: number): number {
-    let count = 0;
-    let first = 0;
-    let second = 0;
-    while (first <= limit) {
-        second = 0;
-        while (second <= limit && second <= n - first) {
-            if (n - first - second <= limit) {
-                count++;
-            }
+  let count = 0;
+  let first = 0;
+  let second = 0;
+  while (first <= limit) {
+    second = 0;
+    while (second <= limit && second <= n - first) {
+      if (n - first - second <= limit) {
+        count++;
+      }
 
-            second++;
-        }
-
-        first++;
+      second++;
     }
 
-    return count;
+    first++;
+  }
+
+  return count;
 }
 
 /*
@@ -300,60 +296,60 @@ Constraints:
 	nums.length == n
 */
 export function primeSubOperation(nums: number[]): boolean {
-    const primes = getPrimes(Math.max(...nums));
-    nums[0] -= getBiggestPrime(primes, nums[0]) || 0;
+  const primes = getPrimes(Math.max(...nums));
+  nums[0] -= getBiggestPrime(primes, nums[0]) || 0;
 
-    let i = 1;
-    while (i < nums.length) {
-        let p = getBiggestPrime(primes, nums[i]);
-        while (p && nums[i] - p <= nums[i - 1]) {
-            p = getBiggestPrime(primes, p);
-        }
-        nums[i] -= p || 0;
-
-        if (nums[i] <= nums[i - 1]) {
-            return false;
-        }
-        i++;
+  let i = 1;
+  while (i < nums.length) {
+    let p = getBiggestPrime(primes, nums[i]);
+    while (p && nums[i] - p <= nums[i - 1]) {
+      p = getBiggestPrime(primes, p);
     }
+    nums[i] -= p || 0;
 
-    return true;
+    if (nums[i] <= nums[i - 1]) {
+      return false;
+    }
+    i++;
+  }
+
+  return true;
 }
 
 export function getBiggestPrime(primes: number[], limit: number) {
-    let l = 0;
-    let r = primes.length - 1;
-    let biggest: number | null = null;
-    while (l <= r) {
-        const mid = l + ((r - l) >> 1);
-        if (primes[mid] < limit) {
-            biggest = primes[mid];
-            l = mid + 1;
-        } else {
-            r = mid - 1;
-        }
+  let l = 0;
+  let r = primes.length - 1;
+  let biggest: number | null = null;
+  while (l <= r) {
+    const mid = l + ((r - l) >> 1);
+    if (primes[mid] < limit) {
+      biggest = primes[mid];
+      l = mid + 1;
+    } else {
+      r = mid - 1;
     }
+  }
 
-    return biggest;
+  return biggest;
 }
 
 export function getPrimes(limit: number): number[] {
-    const primes: boolean[] = Array(limit + 1).fill(true);
-    primes[0] = false;
-    primes[1] = false;
+  const primes: boolean[] = Array(limit + 1).fill(true);
+  primes[0] = false;
+  primes[1] = false;
 
-    for (let n = 2; n * n <= limit; n++) {
-        if (primes[n]) {
-            for (let m = n * n; m <= limit; m += n) {
-                primes[m] = false;
-            }
-        }
+  for (let n = 2; n * n <= limit; n++) {
+    if (primes[n]) {
+      for (let m = n * n; m <= limit; m += n) {
+        primes[m] = false;
+      }
     }
+  }
 
-    return primes.reduce((acc, val, index) => {
-        if (val) acc.push(index);
-        return acc;
-    }, [] as number[]);
+  return primes.reduce((acc, val, index) => {
+    if (val) acc.push(index);
+    return acc;
+  }, [] as number[]);
 }
 
 /*
@@ -399,15 +395,15 @@ Constraints:
 	1 <= k <= 10^5
 */
 export function minOperations(k: number): number {
-    const x = Math.floor(Math.sqrt(k));
-    if (x * x === k) {
-        return (x << 1) - 2;
-    }
+  const x = Math.floor(Math.sqrt(k));
+  if (x * x === k) {
+    return (x << 1) - 2;
+  }
 
-    if (x * (x + 1) >= k) {
-        return (x << 1) - 1;
-    }
-    return x << 1;
+  if (x * (x + 1) >= k) {
+    return (x << 1) - 1;
+  }
+  return x << 1;
 }
 
 /*
@@ -443,23 +439,23 @@ Constraints:
 	1 <= mainTank, additionalTank <= 100
 */
 export function distanceTraveled(
-    mainTank: number,
-    additionalTank: number
+  mainTank: number,
+  additionalTank: number
 ): number {
-    let count = mainTank * 10;
-    let total = mainTank;
-    let next = Math.min(Math.floor(total / 5), additionalTank);
-    let delta = total - next * 5;
+  let count = mainTank * 10;
+  let total = mainTank;
+  let next = Math.min(Math.floor(total / 5), additionalTank);
+  let delta = total - next * 5;
+  additionalTank -= next;
+  while (next > 0 && additionalTank >= 0) {
+    count += next * 10;
+    total = next + delta;
+    next = Math.min(Math.floor(total / 5), additionalTank);
+    delta = total - next * 5;
     additionalTank -= next;
-    while (next > 0 && additionalTank >= 0) {
-        count += next * 10;
-        total = next + delta;
-        next = Math.min(Math.floor(total / 5), additionalTank);
-        delta = total - next * 5;
-        additionalTank -= next;
-    }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -511,45 +507,45 @@ Constraints:
 	1 <= num <= 3999
 */
 export function intToRoman(num: number): string {
-    const getRoman = (
-        v: number,
-        first: string,
-        second: string,
-        third: string
-    ): string => {
-        if (v >= 1 && v <= 3) {
-            return Array(v).fill(first).join('');
-        }
-        if (v === 4) {
-            return `${first}${second}`;
-        }
-        if (v === 5) {
-            return second;
-        }
-        if (v >= 6 && v <= 8) {
-            return `${second}${Array(v - 5)
-                .fill(first)
-                .join('')}`;
-        }
-        if (v === 9) {
-            return `${first}${third}`;
-        }
-        return '';
-    };
-    const map = {
-        0: (v: number) => getRoman(v, 'I', 'V', 'X'),
-        1: (v: number) => getRoman(v, 'X', 'L', 'C'),
-        2: (v: number) => getRoman(v, 'C', 'D', 'M'),
-        3: (v: number) => Array(v).fill('M').join(''),
-    };
+  const getRoman = (
+    v: number,
+    first: string,
+    second: string,
+    third: string
+  ): string => {
+    if (v >= 1 && v <= 3) {
+      return Array(v).fill(first).join('');
+    }
+    if (v === 4) {
+      return `${first}${second}`;
+    }
+    if (v === 5) {
+      return second;
+    }
+    if (v >= 6 && v <= 8) {
+      return `${second}${Array(v - 5)
+        .fill(first)
+        .join('')}`;
+    }
+    if (v === 9) {
+      return `${first}${third}`;
+    }
+    return '';
+  };
+  const map = {
+    0: (v: number) => getRoman(v, 'I', 'V', 'X'),
+    1: (v: number) => getRoman(v, 'X', 'L', 'C'),
+    2: (v: number) => getRoman(v, 'C', 'D', 'M'),
+    3: (v: number) => Array(v).fill('M').join(''),
+  };
 
-    const digits = num
-        .toString()
-        .split('')
-        .map((v) => +v);
-    const end = digits.length - 1;
+  const digits = num
+    .toString()
+    .split('')
+    .map((v) => +v);
+  const end = digits.length - 1;
 
-    return digits.map((v, i) => map[end - i](v)).join('');
+  return digits.map((v, i) => map[end - i](v)).join('');
 }
 
 /*
@@ -576,22 +572,22 @@ Constraints:
 	2 <= n <= 58
 */
 export function integerBreak(n: number): number {
-    if (n < 4) {
-        return n - 1;
-    }
+  if (n < 4) {
+    return n - 1;
+  }
 
-    let threeCount = Math.floor(n / 3);
-    let rest = n % 3;
-    if (rest === 1) {
-        threeCount--;
-        rest = 4;
-    }
+  let threeCount = Math.floor(n / 3);
+  let rest = n % 3;
+  if (rest === 1) {
+    threeCount--;
+    rest = 4;
+  }
 
-    const threeProduct = Array(threeCount)
-        .fill(3)
-        .reduce((acc, cur) => acc * cur, 1);
+  const threeProduct = Array(threeCount)
+    .fill(3)
+    .reduce((acc, cur) => acc * cur, 1);
 
-    return rest === 0 ? threeProduct : threeProduct * rest;
+  return rest === 0 ? threeProduct : threeProduct * rest;
 }
 
 /*
@@ -630,15 +626,15 @@ Constraints:
 	1 <= columnNumber <= 2^31 - 1
 */
 export function convertToTitle(columnNumber: number): string {
-    let str: string = '';
-    let num: number;
+  let str: string = '';
+  let num: number;
 
-    while (columnNumber > 0) {
-        num = (columnNumber - 1) % 26;
-        str = String.fromCharCode(num + 65) + str;
-        columnNumber = Math.floor((columnNumber - num) / 26);
-    }
-    return str;
+  while (columnNumber > 0) {
+    num = (columnNumber - 1) % 26;
+    str = String.fromCharCode(num + 65) + str;
+    columnNumber = Math.floor((columnNumber - num) / 26);
+  }
+  return str;
 }
 
 /*
@@ -665,24 +661,24 @@ Constraints:
 Follow up: Could you optimize your algorithm to use only O(rowIndex) extra space?
 */
 export function getRow(rowIndex: number): number[] {
-    if (rowIndex < 2) {
-        return Array(rowIndex + 1).fill(1);
+  if (rowIndex < 2) {
+    return Array(rowIndex + 1).fill(1);
+  }
+
+  let i = 1;
+  let result = [1, 1];
+  while (i < rowIndex) {
+    const next = Array(result.length + 1).fill(1);
+    let j = 1;
+    while (j < next.length - 1) {
+      next[j] = result[j - 1] + result[j++];
     }
 
-    let i = 1;
-    let result = [1, 1];
-    while (i < rowIndex) {
-        const next = Array(result.length + 1).fill(1);
-        let j = 1;
-        while (j < next.length - 1) {
-            next[j] = result[j - 1] + result[j++];
-        }
+    result = next;
+    i++;
+  }
 
-        result = next;
-        i++;
-    }
-
-    return result;
+  return result;
 }
 
 /*
@@ -706,13 +702,13 @@ Constraints:
 	0 <= n <= 8
 */
 export function countNumbersWithUniqueDigits(n: number): number {
-    let prev = 1;
-    const tmp: number[] = [9, 9, 8, 7, 6, 5, 4, 3];
-    for (let i = 1; i <= n; i++) {
-        prev = tmp.slice(0, i).reduce((acc, cur) => acc * cur, 1) + prev;
-    }
+  let prev = 1;
+  const tmp: number[] = [9, 9, 8, 7, 6, 5, 4, 3];
+  for (let i = 1; i <= n; i++) {
+    prev = tmp.slice(0, i).reduce((acc, cur) => acc * cur, 1) + prev;
+  }
 
-    return prev;
+  return prev;
 }
 
 /*
@@ -744,9 +740,9 @@ Constraints:
 	1 <= time <= 1000
 */
 export function passThePillow(n: number, time: number): number {
-    const rest = time % (n - 1);
-    const f = Math.floor(time / (n - 1));
-    return f & 1 ? n - rest : rest + 1;
+  const rest = time % (n - 1);
+  const f = Math.floor(time / (n - 1));
+  return f & 1 ? n - rest : rest + 1;
 }
 
 /*
@@ -794,15 +790,15 @@ Follow up:
 Could you solve this problem in linear time with constant space?
 */
 export function findTheWinner(n: number, k: number): number {
-    const list = Array.from({ length: n }, (_, i) => i + 1);
-    let next = 0;
-    while (list.length > 1) {
-        next = (next + k - 1) % list.length;
-        list.splice(next, 1);
-        next = next % list.length;
-    }
+  const list = Array.from({ length: n }, (_, i) => i + 1);
+  let next = 0;
+  while (list.length > 1) {
+    next = (next + k - 1) % list.length;
+    list.splice(next, 1);
+    next = next % list.length;
+  }
 
-    return list[0];
+  return list[0];
 }
 
 /*
@@ -830,79 +826,79 @@ Constraints:
 	0 <= num <= 2^31 - 1
 */
 export function numberToWords(num: number): string {
-    if (num === 0) {
-        return 'Zero';
-    }
+  if (num === 0) {
+    return 'Zero';
+  }
 
-    const singleDigits: string[] = [
-        '',
-        'One',
-        'Two',
-        'Three',
-        'Four',
-        'Five',
-        'Six',
-        'Seven',
-        'Eight',
-        'Nine',
-    ];
-    const twoDigits: string[] = [
-        '',
-        'Eleven',
-        'Twelve',
-        'Thirteen',
-        'Fourteen',
-        'Fifteen',
-        'Sixteen',
-        'Seventeen',
-        'Eighteen',
-        'Nineteen',
-    ];
-    const tenDigits: string[] = [
-        '',
-        'Ten',
-        'Twenty',
-        'Thirty',
-        'Forty',
-        'Fifty',
-        'Sixty',
-        'Seventy',
-        'Eighty',
-        'Ninety',
-    ];
-    const units: string[] = ['', 'Thousand', 'Million', 'Billion'];
+  const singleDigits: string[] = [
+    '',
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five',
+    'Six',
+    'Seven',
+    'Eight',
+    'Nine',
+  ];
+  const twoDigits: string[] = [
+    '',
+    'Eleven',
+    'Twelve',
+    'Thirteen',
+    'Fourteen',
+    'Fifteen',
+    'Sixteen',
+    'Seventeen',
+    'Eighteen',
+    'Nineteen',
+  ];
+  const tenDigits: string[] = [
+    '',
+    'Ten',
+    'Twenty',
+    'Thirty',
+    'Forty',
+    'Fifty',
+    'Sixty',
+    'Seventy',
+    'Eighty',
+    'Ninety',
+  ];
+  const units: string[] = ['', 'Thousand', 'Million', 'Billion'];
 
-    const segments = num.toLocaleString().split(',');
-    const last = segments.length - 1;
+  const segments = num.toLocaleString().split(',');
+  const last = segments.length - 1;
 
-    return segments
-        .map((n, i) => {
-            const unit = units[last - i];
-            const [first, second, third] = n.padStart(3, '0');
-            let str = '';
-            if (first !== '0') {
-                str += `${singleDigits[first]} Hundred `;
-            }
+  return segments
+    .map((n, i) => {
+      const unit = units[last - i];
+      const [first, second, third] = n.padStart(3, '0');
+      let str = '';
+      if (first !== '0') {
+        str += `${singleDigits[first]} Hundred `;
+      }
 
-            if (second === '1' && third >= '1' && third <= '9') {
-                str += `${twoDigits[third]} `;
-            } else {
-                if (second !== '0') {
-                    str += `${tenDigits[second]} `;
-                }
-                if (third !== '0') {
-                    str += `${singleDigits[third]} `;
-                }
-            }
+      if (second === '1' && third >= '1' && third <= '9') {
+        str += `${twoDigits[third]} `;
+      } else {
+        if (second !== '0') {
+          str += `${tenDigits[second]} `;
+        }
+        if (third !== '0') {
+          str += `${singleDigits[third]} `;
+        }
+      }
 
-            if (str && unit) {
-                str += unit;
-            }
+      if (str && unit) {
+        str += unit;
+      }
 
-            return str.trim();
-        })
-        .filter((s) => s !== '')
-        .join(' ');
+      return str.trim();
+    })
+    .filter((s) => s !== '')
+    .join(' ');
 }
 
 /*
@@ -934,41 +930,41 @@ Constraints:
 	1 <= n <= 1000
 */
 export const minSteps = cache((n: number): number => {
-    if (n < 2) {
-        return 0;
-    }
+  if (n < 2) {
+    return 0;
+  }
 
-    const factors = getFactors(n);
-    if (factors.length === 1) {
-        return n;
-    }
+  const factors = getFactors(n);
+  if (factors.length === 1) {
+    return n;
+  }
 
-    let min = Infinity;
-    let groupSize: number;
-    for (const f of factors) {
-        groupSize = n / f;
-        min = Math.min(
-            min,
-            minSteps(f) + (groupSize > 1 ? groupSize : groupSize - 1)
-        );
-    }
+  let min = Infinity;
+  let groupSize: number;
+  for (const f of factors) {
+    groupSize = n / f;
+    min = Math.min(
+      min,
+      minSteps(f) + (groupSize > 1 ? groupSize : groupSize - 1)
+    );
+  }
 
-    return min;
+  return min;
 });
 
 function getFactors(n: number): number[] {
-    let i = Math.floor(Math.sqrt(n));
-    const res: number[] = [1];
-    while (i > 1) {
-        if (n % i === 0) {
-            res.push(i);
-            res.push(n / i);
-        }
-
-        i--;
+  let i = Math.floor(Math.sqrt(n));
+  const res: number[] = [1];
+  while (i > 1) {
+    if (n % i === 0) {
+      res.push(i);
+      res.push(n / i);
     }
 
-    return res;
+    i--;
+  }
+
+  return res;
 }
 
 /*
@@ -1002,17 +998,17 @@ Constraints:
 	The numerator and denominator of the final result are guaranteed to be valid and in the range of 32-bit int.
 */
 export function fractionAddition(expression: string): string {
-    const segments = expression.match(/^\d+\/\d+|[+-]\d+\/\d+/gm)!;
-    let sum = 0;
-    let denominator = 1;
-    for (const exp of segments) {
-        const [num, d] = exp.split('/').map((a) => +a);
-        sum = sum * d + num * denominator;
-        denominator *= d;
-    }
+  const segments = expression.match(/^\d+\/\d+|[+-]\d+\/\d+/gm)!;
+  let sum = 0;
+  let denominator = 1;
+  for (const exp of segments) {
+    const [num, d] = exp.split('/').map((a) => +a);
+    sum = sum * d + num * denominator;
+    denominator *= d;
+  }
 
-    const g = Math.abs(gcd(sum, denominator));
-    return `${sum / g}/${denominator / g}`;
+  const g = Math.abs(gcd(sum, denominator));
+  return `${sum / g}/${denominator / g}`;
 }
 
 /*
@@ -1061,28 +1057,26 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function getLucky(s: string, k: number): number {
-    const alphaMap = 'abcdefghijklmnopqrstuvwxyz'
-        .split('')
-        .reduce((s, v, i) => {
-            s[v] = i + 1;
-            return s;
-        }, {});
-    let num = '';
-    s.split('').forEach((alpha) => {
-        num += alphaMap[alpha];
-    });
+  const alphaMap = 'abcdefghijklmnopqrstuvwxyz'.split('').reduce((s, v, i) => {
+    s[v] = i + 1;
+    return s;
+  }, {});
+  let num = '';
+  s.split('').forEach((alpha) => {
+    num += alphaMap[alpha];
+  });
 
-    while (k > 0) {
-        let s = 0;
-        for (const n of num) {
-            s += +n;
-        }
-
-        num = s + '';
-        k--;
+  while (k > 0) {
+    let s = 0;
+    for (const n of num) {
+      s += +n;
     }
 
-    return +num;
+    num = s + '';
+    k--;
+  }
+
+  return +num;
 }
 
 /*
@@ -1108,10 +1102,10 @@ Constraints:
 	0 <= nums[i] <= 10^9
 */
 export function largestNumber(nums: number[]): string {
-    return nums
-        .sort((a, b) => Number(BigInt(`${b}${a}`) - BigInt(`${a}${b}`)))
-        .join('')
-        .replace(/^0+/, '0');
+  return nums
+    .sort((a, b) => Number(BigInt(`${b}${a}`) - BigInt(`${a}${b}`)))
+    .join('')
+    .replace(/^0+/, '0');
 }
 
 /*
@@ -1147,21 +1141,21 @@ Constraints:
 	1 <= nums[i] <= 10^5
 */
 export function separateDigits(nums: number[]): number[] {
-    const digits = Array(5);
-    let i = digits.length - 1;
+  const digits = Array(5);
+  let i = digits.length - 1;
 
-    return nums.reduce<number[]>((ret, n) => {
-        while (n > 0) {
-            digits[i--] = n % 10;
-            n /= 10;
-            n |= 0;
-        }
-        while (i < digits.length - 1) {
-            ret.push(digits[++i]);
-        }
+  return nums.reduce<number[]>((ret, n) => {
+    while (n > 0) {
+      digits[i--] = n % 10;
+      n /= 10;
+      n |= 0;
+    }
+    while (i < digits.length - 1) {
+      ret.push(digits[++i]);
+    }
 
-        return ret;
-    }, []);
+    return ret;
+  }, []);
 }
 
 /*
@@ -1188,28 +1182,28 @@ Constraints:
 	0 <= num <= 10^8
 */
 export function maximumSwap(num: number): number {
-    const digits: number[] = Array(8);
-    let i = digits.length - 1;
-    while (num > 0) {
-        digits[i--] = num % 10;
-        num /= 10;
-        num |= 0;
-    }
+  const digits: number[] = Array(8);
+  let i = digits.length - 1;
+  while (num > 0) {
+    digits[i--] = num % 10;
+    num /= 10;
+    num |= 0;
+  }
 
-    const rightMax: number[] = Array(8);
-    rightMax[rightMax.length - 1] = digits.length - 1;
-    for (let j = rightMax.length - 2; j > i; j--) {
-        rightMax[j] = digits[j] > digits[rightMax[j + 1]] ? j : rightMax[j + 1];
-    }
+  const rightMax: number[] = Array(8);
+  rightMax[rightMax.length - 1] = digits.length - 1;
+  for (let j = rightMax.length - 2; j > i; j--) {
+    rightMax[j] = digits[j] > digits[rightMax[j + 1]] ? j : rightMax[j + 1];
+  }
 
-    for (let j = i + 1; j < digits.length; j++) {
-        if (digits[j] < digits[rightMax[j]]) {
-            swap(digits, j, rightMax[j]);
-            break;
-        }
+  for (let j = i + 1; j < digits.length; j++) {
+    if (digits[j] < digits[rightMax[j]]) {
+      swap(digits, j, rightMax[j]);
+      break;
     }
+  }
 
-    return digits.reduce((s, d) => s * 10 + d, 0);
+  return digits.reduce((s, d) => s * 10 + d, 0);
 }
 
 /*
@@ -1253,17 +1247,17 @@ Constraints:
 	1 <= nums[i] <= 10^5
 */
 export function countMaxOrSubsets(nums: number[]): number {
-    const max = nums.reduce((s, n) => s | n);
+  const max = nums.reduce((s, n) => s | n);
 
-    const dfs = (i: number, sum: number) => {
-        if (i === nums.length) {
-            return sum === max ? 1 : 0;
-        }
+  const dfs = (i: number, sum: number) => {
+    if (i === nums.length) {
+      return sum === max ? 1 : 0;
+    }
 
-        return dfs(i + 1, sum | nums[i]) + dfs(i + 1, sum);
-    };
+    return dfs(i + 1, sum | nums[i]) + dfs(i + 1, sum);
+  };
 
-    return dfs(0, 0);
+  return dfs(0, 0);
 }
 
 /*
@@ -1296,14 +1290,14 @@ Constraints:
 	2^31 <= n <= 2^31 - 1
 */
 export function isUgly(n: number): boolean {
-    if (n <= 0) return false;
-    if (n <= 6) return true;
+  if (n <= 0) return false;
+  if (n <= 6) return true;
 
-    while (n % 2 === 0) n /= 2;
-    while (n % 3 === 0) n /= 3;
-    while (n % 5 === 0) n /= 5;
+  while (n % 2 === 0) n /= 2;
+  while (n % 3 === 0) n /= 3;
+  while (n % 5 === 0) n /= 5;
 
-    return n === 1;
+  return n === 1;
 }
 
 /*
@@ -1327,45 +1321,45 @@ Constraints:
 	1 <= n <= 2^31 - 1
 */
 export function findNthDigit(n: number): number {
-    const countDigits = (n: number): number => {
-        let end = n;
-        let digit = 0;
-        let offset = 1;
-        while (end > 0) {
-            digit++;
-            end = Math.floor(end / 10);
-            offset *= 10;
-        }
-        offset /= 10;
+  const countDigits = (n: number): number => {
+    let end = n;
+    let digit = 0;
+    let offset = 1;
+    while (end > 0) {
+      digit++;
+      end = Math.floor(end / 10);
+      offset *= 10;
+    }
+    offset /= 10;
 
-        end = n;
-        let count = 0;
-        while (digit > 0) {
-            count += (end - offset + 1) * digit;
-            end = offset - 1;
-            digit--;
-            offset /= 10;
-        }
-
-        return count;
-    };
-
-    let left = 1;
-    let right = n;
-    let closest = n;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (countDigits(mid) >= n) {
-            closest = mid;
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
+    end = n;
+    let count = 0;
+    while (digit > 0) {
+      count += (end - offset + 1) * digit;
+      end = offset - 1;
+      digit--;
+      offset /= 10;
     }
 
-    n -= countDigits(closest - 1);
+    return count;
+  };
 
-    return n === 0 ? closest : +closest.toString().split('')[n - 1];
+  let left = 1;
+  let right = n;
+  let closest = n;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (countDigits(mid) >= n) {
+      closest = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  n -= countDigits(closest - 1);
+
+  return n === 0 ? closest : +closest.toString().split('')[n - 1];
 }
 
 /*
@@ -1404,31 +1398,31 @@ Constraints:
 	1 <= n <= 1000
 */
 export function punishmentNumber(n: number): number {
-    let sum = 0;
+  let sum = 0;
 
-    const split = (num: string, target: number): boolean => {
-        if (Number(num) === target) {
-            return true;
-        }
-
-        for (let i = 1; i < num.length; i++) {
-            const left = num.slice(0, i);
-            const right = num.slice(i);
-            const nextTarget = target - Number(left);
-            if (nextTarget >= 0 && split(right, nextTarget)) {
-                return true;
-            }
-        }
-
-        return false;
-    };
-
-    for (let i = 1; i <= n; i++) {
-        const num = i * i;
-        if (split(num.toString(), i)) {
-            sum += num;
-        }
+  const split = (num: string, target: number): boolean => {
+    if (Number(num) === target) {
+      return true;
     }
 
-    return sum;
+    for (let i = 1; i < num.length; i++) {
+      const left = num.slice(0, i);
+      const right = num.slice(i);
+      const nextTarget = target - Number(left);
+      if (nextTarget >= 0 && split(right, nextTarget)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  for (let i = 1; i <= n; i++) {
+    const num = i * i;
+    if (split(num.toString(), i)) {
+      sum += num;
+    }
+  }
+
+  return sum;
 }

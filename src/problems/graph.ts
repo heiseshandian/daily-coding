@@ -45,92 +45,92 @@ Constraints:
 	Heights of all trees are distinct.
 */
 export function cutOffTree(forest: number[][]): number {
-    const trees: Array<[height: number, i: number, j: number]> = [];
-    for (let i = 0; i < forest.length; i++) {
-        for (let j = 0; j < forest[0].length; j++) {
-            if (forest[i][j] > 1) {
-                trees.push([forest[i][j], i, j]);
-            }
-        }
+  const trees: Array<[height: number, i: number, j: number]> = [];
+  for (let i = 0; i < forest.length; i++) {
+    for (let j = 0; j < forest[0].length; j++) {
+      if (forest[i][j] > 1) {
+        trees.push([forest[i][j], i, j]);
+      }
     }
-    trees.sort(([heightA], [heightB]) => heightA - heightB);
+  }
+  trees.sort(([heightA], [heightB]) => heightA - heightB);
 
-    let i1 = 0;
-    let j1 = 0;
-    let steps = 0;
-    for (let i = 0; i < trees.length; i++) {
-        const [, i2, j2] = trees[i];
-        const distance = getMinDistance(forest, i1, j1, i2, j2);
-        if (distance === Infinity) {
-            return -1;
-        }
-        steps += distance;
-
-        i1 = i2;
-        j1 = j2;
+  let i1 = 0;
+  let j1 = 0;
+  let steps = 0;
+  for (let i = 0; i < trees.length; i++) {
+    const [, i2, j2] = trees[i];
+    const distance = getMinDistance(forest, i1, j1, i2, j2);
+    if (distance === Infinity) {
+      return -1;
     }
+    steps += distance;
 
-    return steps;
+    i1 = i2;
+    j1 = j2;
+  }
+
+  return steps;
 }
 
 function getMinDistance(
-    forest: number[][],
-    i1: number,
-    j1: number,
-    i2: number,
-    j2: number
+  forest: number[][],
+  i1: number,
+  j1: number,
+  i2: number,
+  j2: number
 ): number {
-    if (i1 === i2 && j1 === j2) {
-        return 0;
-    }
+  if (i1 === i2 && j1 === j2) {
+    return 0;
+  }
 
-    const nodes: Array<[i1: number, j1: number]> = [[i1, j1]];
-    const visited: boolean[][] = [];
-    for (let x = 0; x < forest.length; x++) {
-        visited[x] = [];
-    }
-    visited[i1][j1] = true;
+  const nodes: Array<[i1: number, j1: number]> = [[i1, j1]];
+  const visited: boolean[][] = [];
+  for (let x = 0; x < forest.length; x++) {
+    visited[x] = [];
+  }
+  visited[i1][j1] = true;
 
-    let distance = 0;
-    const directions = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
+  let distance = 0;
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
 
-    while (nodes.length) {
-        const len = nodes.length;
-        // 一次访问一层节点比访问一个节点的效率会高一点（常数项时间，量级没差别），
-        // 因为倘若某一层中末尾已经到达目标节点则无需将下层节点加入 nodes
-        for (let i = 0; i < len; i++) {
-            const [i1, j1] = nodes.shift()!;
+  while (nodes.length) {
+    const len = nodes.length;
+    // 一次访问一层节点比访问一个节点的效率会高一点（常数项时间，量级没差别），
+    // 因为倘若某一层中末尾已经到达目标节点则无需将下层节点加入 nodes
+    for (let i = 0; i < len; i++) {
+      const [i1, j1] = nodes.shift()!;
 
-            if (i1 === i2 && j1 === j2) {
-                return distance;
-            }
+      if (i1 === i2 && j1 === j2) {
+        return distance;
+      }
 
-            directions.forEach(([iDelta, jDelta]) => {
-                const nextI1 = i1 + iDelta;
-                const nextJ1 = j1 + jDelta;
-                if (
-                    nextI1 >= 0 &&
-                    nextI1 < forest.length &&
-                    nextJ1 >= 0 &&
-                    nextJ1 < forest[0].length &&
-                    forest[nextI1][nextJ1] &&
-                    !visited[nextI1][nextJ1]
-                ) {
-                    visited[nextI1][nextJ1] = true;
-                    nodes.push([nextI1, nextJ1]);
-                }
-            });
+      directions.forEach(([iDelta, jDelta]) => {
+        const nextI1 = i1 + iDelta;
+        const nextJ1 = j1 + jDelta;
+        if (
+          nextI1 >= 0 &&
+          nextI1 < forest.length &&
+          nextJ1 >= 0 &&
+          nextJ1 < forest[0].length &&
+          forest[nextI1][nextJ1] &&
+          !visited[nextI1][nextJ1]
+        ) {
+          visited[nextI1][nextJ1] = true;
+          nodes.push([nextI1, nextJ1]);
         }
-
-        distance++;
+      });
     }
 
-    return Infinity;
+    distance++;
+  }
+
+  return Infinity;
 }
 
 /*
@@ -178,54 +178,54 @@ Constraints:
 	src != dst
 */
 export function findCheapestPrice(
-    n: number,
-    flights: number[][],
-    src: number,
-    dst: number,
-    k: number
+  n: number,
+  flights: number[][],
+  src: number,
+  dst: number,
+  k: number
 ): number {
-    // 初始化dp数组，用于保存到达每个节点的当前最低价格
-    const dp: number[][] = Array.from({ length: k + 2 }, () =>
-        Array(n).fill(Number.MAX_SAFE_INTEGER)
-    );
-    dp[0][src] = 0;
+  // 初始化dp数组，用于保存到达每个节点的当前最低价格
+  const dp: number[][] = Array.from({ length: k + 2 }, () =>
+    Array(n).fill(Number.MAX_SAFE_INTEGER)
+  );
+  dp[0][src] = 0;
 
-    // 开始动态规划过程
-    for (let i = 1; i <= k + 1; i++) {
-        dp[i][src] = 0; // 出发点的成本始终为0
-        for (let [from, to, price] of flights) {
-            dp[i][to] = Math.min(dp[i][to], dp[i - 1][from] + price);
-        }
+  // 开始动态规划过程
+  for (let i = 1; i <= k + 1; i++) {
+    dp[i][src] = 0; // 出发点的成本始终为0
+    for (let [from, to, price] of flights) {
+      dp[i][to] = Math.min(dp[i][to], dp[i - 1][from] + price);
     }
+  }
 
-    // 如果最终目的地的价格没有被更新，返回-1，否则返回最小价格
-    return dp[k + 1][dst] === Number.MAX_SAFE_INTEGER ? -1 : dp[k + 1][dst];
+  // 如果最终目的地的价格没有被更新，返回-1，否则返回最小价格
+  return dp[k + 1][dst] === Number.MAX_SAFE_INTEGER ? -1 : dp[k + 1][dst];
 }
 
 // https://www.bilibili.com/list/8888480?sort_field=pubtime&spm_id_from=333.999.0.0&oid=364544124&bvid=BV1t94y187zW
 export function findCheapestPrice2(
-    n: number,
-    flights: number[][],
-    src: number,
-    dst: number,
-    k: number
+  n: number,
+  flights: number[][],
+  src: number,
+  dst: number,
+  k: number
 ): number {
-    let cur: number[] = Array(n).fill(Infinity);
-    cur[src] = 0;
+  let cur: number[] = Array(n).fill(Infinity);
+  cur[src] = 0;
 
-    while (k >= 0) {
-        k--;
+  while (k >= 0) {
+    k--;
 
-        const next = cur.slice();
-        for (const [from, to, price] of flights) {
-            if (cur[from] !== Infinity) {
-                next[to] = Math.min(next[to], cur[from] + price);
-            }
-        }
-        cur = next;
+    const next = cur.slice();
+    for (const [from, to, price] of flights) {
+      if (cur[from] !== Infinity) {
+        next[to] = Math.min(next[to], cur[from] + price);
+      }
     }
+    cur = next;
+  }
 
-    return cur[dst] === Infinity ? -1 : cur[dst];
+  return cur[dst] === Infinity ? -1 : cur[dst];
 }
 
 /*
@@ -265,34 +265,34 @@ Constraints:
 	There are no self edges.
 */
 export function validPath(
-    n: number,
-    edges: number[][],
-    source: number,
-    destination: number
+  n: number,
+  edges: number[][],
+  source: number,
+  destination: number
 ): boolean {
-    const edgeMap = new Map<number, number[]>();
-    edges.forEach(([from, to]) => {
-        edgeMap.set(from, (edgeMap.get(from) ?? []).concat(to));
-        edgeMap.set(to, (edgeMap.get(to) ?? []).concat(from));
-    });
+  const edgeMap = new Map<number, number[]>();
+  edges.forEach(([from, to]) => {
+    edgeMap.set(from, (edgeMap.get(from) ?? []).concat(to));
+    edgeMap.set(to, (edgeMap.get(to) ?? []).concat(from));
+  });
 
-    const visited = Array(n).fill(false);
-    const queue = [source];
-    while (queue.length > 0) {
-        const p = queue.shift()!;
-        if (p === destination) {
-            return true;
-        }
-
-        (edgeMap.get(p) ?? []).forEach((to) => {
-            if (!visited[to]) {
-                visited[to] = true;
-                queue.push(to);
-            }
-        });
+  const visited = Array(n).fill(false);
+  const queue = [source];
+  while (queue.length > 0) {
+    const p = queue.shift()!;
+    if (p === destination) {
+      return true;
     }
 
-    return false;
+    (edgeMap.get(p) ?? []).forEach((to) => {
+      if (!visited[to]) {
+        visited[to] = true;
+        queue.push(to);
+      }
+    });
+  }
+
+  return false;
 }
 
 /*
@@ -338,59 +338,59 @@ Constraints:
 	target and deadends[i] consist of digits only.
 */
 export function openLock(deadends: string[], target: string): number {
-    const deadendSet = new Set(deadends);
-    if (deadendSet.has('0000')) {
-        return -1;
-    }
-
-    let queue: string[] = ['0000'];
-    const visited = new Set<string>();
-    let minStep = 0;
-    while (queue.length) {
-        const curLevel = queue.slice();
-        const nexts: string[] = [];
-
-        for (let i = 0; i < curLevel.length; i++) {
-            if (curLevel[i] === target) {
-                return minStep;
-            }
-
-            getNextNums(curLevel[i], deadendSet).forEach((v) => {
-                if (!visited.has(v)) {
-                    visited.add(v);
-                    nexts.push(v);
-                }
-            });
-        }
-
-        if (nexts.length === 0) {
-            return -1;
-        }
-        queue = nexts;
-
-        minStep++;
-    }
-
+  const deadendSet = new Set(deadends);
+  if (deadendSet.has('0000')) {
     return -1;
+  }
+
+  let queue: string[] = ['0000'];
+  const visited = new Set<string>();
+  let minStep = 0;
+  while (queue.length) {
+    const curLevel = queue.slice();
+    const nexts: string[] = [];
+
+    for (let i = 0; i < curLevel.length; i++) {
+      if (curLevel[i] === target) {
+        return minStep;
+      }
+
+      getNextNums(curLevel[i], deadendSet).forEach((v) => {
+        if (!visited.has(v)) {
+          visited.add(v);
+          nexts.push(v);
+        }
+      });
+    }
+
+    if (nexts.length === 0) {
+      return -1;
+    }
+    queue = nexts;
+
+    minStep++;
+  }
+
+  return -1;
 }
 
 function getNextNums(char: string, deadendSet: Set<string>): string[] {
-    const nexts: string[] = [];
+  const nexts: string[] = [];
 
-    const len = char.length;
-    for (let i = 0; i < len; i++) {
-        const before = char[i] === '0' ? '9' : `${Number(char[i]) - 1}`;
-        const after = char[i] === '9' ? '0' : `${Number(char[i]) + 1}`;
+  const len = char.length;
+  for (let i = 0; i < len; i++) {
+    const before = char[i] === '0' ? '9' : `${Number(char[i]) - 1}`;
+    const after = char[i] === '9' ? '0' : `${Number(char[i]) + 1}`;
 
-        [before, after].forEach((v) => {
-            const n = char.slice(0, i) + v + char.slice(i + 1);
-            if (!deadendSet.has(n)) {
-                nexts.push(n);
-            }
-        });
-    }
+    [before, after].forEach((v) => {
+      const n = char.slice(0, i) + v + char.slice(i + 1);
+      if (!deadendSet.has(n)) {
+        nexts.push(n);
+      }
+    });
+  }
 
-    return nexts;
+  return nexts;
 }
 
 /*
@@ -421,20 +421,20 @@ Constraints:
 	The given edges represent a valid star graph.
 */
 export function findCenter(edges: number[][]): number {
-    const visited = new Set<number>();
-    for (const [from, to] of edges) {
-        if (visited.has(from)) {
-            return from;
-        }
-        if (visited.has(to)) {
-            return to;
-        }
-
-        visited.add(from);
-        visited.add(to);
+  const visited = new Set<number>();
+  for (const [from, to] of edges) {
+    if (visited.has(from)) {
+      return from;
+    }
+    if (visited.has(to)) {
+      return to;
     }
 
-    return -1;
+    visited.add(from);
+    visited.add(to);
+  }
+
+  return -1;
 }
 
 /*
@@ -483,16 +483,16 @@ Constraints:
 	There are no duplicate roads.
 */
 export function maximumImportance(n: number, roads: number[][]): number {
-    const degrees = Array(n).fill(0);
-    roads.forEach(([from, to]) => {
-        degrees[from]++;
-        degrees[to]++;
-    });
+  const degrees = Array(n).fill(0);
+  roads.forEach(([from, to]) => {
+    degrees[from]++;
+    degrees[to]++;
+  });
 
-    return degrees
-        .sort((a, b) => a - b)
-        .map((v, i) => v * (i + 1))
-        .reduce((s, c) => s + c, 0);
+  return degrees
+    .sort((a, b) => a - b)
+    .map((v, i) => v * (i + 1))
+    .reduce((s, c) => s + c, 0);
 }
 
 /*
@@ -542,44 +542,42 @@ Constraints:
 	The graph is directed and acyclic.
 */
 export function getAncestors(n: number, edges: number[][]): number[][] {
-    const degrees: number[] = Array(n).fill(0);
-    const parents: number[][] = Array.from({ length: n }, () => []);
-    const tables: number[][] = Array.from({ length: n }, () => []);
-    edges.forEach(([from, to]) => {
-        degrees[to]++;
-        parents[to].push(from);
-        tables[from].push(to);
-    });
+  const degrees: number[] = Array(n).fill(0);
+  const parents: number[][] = Array.from({ length: n }, () => []);
+  const tables: number[][] = Array.from({ length: n }, () => []);
+  edges.forEach(([from, to]) => {
+    degrees[to]++;
+    parents[to].push(from);
+    tables[from].push(to);
+  });
 
-    const results: number[][] = Array.from({ length: n }, () => []);
-    let leafs: number[] = [];
-    degrees.forEach((v, i) => {
-        if (v === 0) {
-            leafs.push(i);
-        }
-    });
-
-    while (leafs.length) {
-        const current: number[] = [];
-        leafs.forEach((i) => {
-            tables[i].forEach((v) => {
-                if (--degrees[v] === 0) {
-                    current.push(v);
-                    results[v] = Array.from(
-                        new Set(
-                            parents[v].concat(
-                                ...parents[v].map((index) => results[index])
-                            )
-                        )
-                    ).sort((a, b) => a - b);
-                }
-            });
-
-            leafs = current;
-        });
+  const results: number[][] = Array.from({ length: n }, () => []);
+  let leafs: number[] = [];
+  degrees.forEach((v, i) => {
+    if (v === 0) {
+      leafs.push(i);
     }
+  });
 
-    return results;
+  while (leafs.length) {
+    const current: number[] = [];
+    leafs.forEach((i) => {
+      tables[i].forEach((v) => {
+        if (--degrees[v] === 0) {
+          current.push(v);
+          results[v] = Array.from(
+            new Set(
+              parents[v].concat(...parents[v].map((index) => results[index]))
+            )
+          ).sort((a, b) => a - b);
+        }
+      });
+
+      leafs = current;
+    });
+  }
+
+  return results;
 }
 
 /*
@@ -628,47 +626,47 @@ Constraints:
 Floyd-Warshall algorithm
 */
 export function findTheCity(
-    n: number,
-    edges: number[][],
-    distanceThreshold: number
+  n: number,
+  edges: number[][],
+  distanceThreshold: number
 ): number {
-    const distance = Array.from({ length: n }, () => Array(n).fill(10001));
+  const distance = Array.from({ length: n }, () => Array(n).fill(10001));
+  for (let i = 0; i < n; i++) {
+    distance[i][i] = 0;
+  }
+  edges.forEach(([f, t, w]) => {
+    distance[f][t] = w;
+    distance[t][f] = w;
+  });
+
+  for (let mid = 0; mid < n; mid++) {
     for (let i = 0; i < n; i++) {
-        distance[i][i] = 0;
+      for (let j = 0; j < n; j++) {
+        distance[i][j] = Math.min(
+          distance[i][j],
+          distance[i][mid] + distance[mid][j]
+        );
+      }
     }
-    edges.forEach(([f, t, w]) => {
-        distance[f][t] = w;
-        distance[t][f] = w;
-    });
+  }
 
-    for (let mid = 0; mid < n; mid++) {
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < n; j++) {
-                distance[i][j] = Math.min(
-                    distance[i][j],
-                    distance[i][mid] + distance[mid][j]
-                );
-            }
-        }
-    }
-
-    let min = Infinity;
-    let res = -1;
-    for (let i = 0; i < n; i++) {
-        let count = 0;
-        for (let j = 0; j < n; j++) {
-            if (distance[i][j] <= distanceThreshold) {
-                count++;
-            }
-        }
-
-        if (min >= count) {
-            min = count;
-            res = i;
-        }
+  let min = Infinity;
+  let res = -1;
+  for (let i = 0; i < n; i++) {
+    let count = 0;
+    for (let j = 0; j < n; j++) {
+      if (distance[i][j] <= distanceThreshold) {
+        count++;
+      }
     }
 
-    return res;
+    if (min >= count) {
+      min = count;
+      res = i;
+    }
+  }
+
+  return res;
 }
 
 /**
@@ -731,41 +729,41 @@ Delia 非常急，所以你只有 $1$ 秒的时间。
 数据中不会出现环，满足生物学的要求。（感谢 @AKEE ）
  */
 export function countLinesOfFoodChain(n: number, edges: number[][]): number {
-    const tables: number[][] = Array.from({ length: n + 1 }, () => []);
-    const inCount: number[] = Array(n + 1).fill(0);
-    edges.forEach(([from, to]) => {
-        tables[from].push(to);
-        inCount[to]++;
-    });
+  const tables: number[][] = Array.from({ length: n + 1 }, () => []);
+  const inCount: number[] = Array(n + 1).fill(0);
+  edges.forEach(([from, to]) => {
+    tables[from].push(to);
+    inCount[to]++;
+  });
 
-    const queue: number[] = [];
-    const lines: number[] = Array(n + 1).fill(0);
-    for (let i = 1; i <= n; i++) {
-        if (inCount[i] === 0) {
-            queue.push(i);
-            lines[i] = 1;
-        }
+  const queue: number[] = [];
+  const lines: number[] = Array(n + 1).fill(0);
+  for (let i = 1; i <= n; i++) {
+    if (inCount[i] === 0) {
+      queue.push(i);
+      lines[i] = 1;
+    }
+  }
+
+  while (queue.length) {
+    const first = queue.shift()!;
+    tables[first].forEach((to) => {
+      inCount[to]--;
+      if (inCount[to] === 0) {
+        queue.push(to);
+      }
+
+      lines[to] = (lines[to] + lines[first]) % 80112002;
+    });
+  }
+
+  return lines.reduce((s, c, i) => {
+    if (tables[i].length === 0) {
+      s = (s + c) % 80112002;
     }
 
-    while (queue.length) {
-        const first = queue.shift()!;
-        tables[first].forEach((to) => {
-            inCount[to]--;
-            if (inCount[to] === 0) {
-                queue.push(to);
-            }
-
-            lines[to] = (lines[to] + lines[first]) % 80112002;
-        });
-    }
-
-    return lines.reduce((s, c, i) => {
-        if (tables[i].length === 0) {
-            s = (s + c) % 80112002;
-        }
-
-        return s;
-    });
+    return s;
+  });
 }
 
 /*
@@ -807,37 +805,37 @@ Constraints:
 	The observations in richer are all logically consistent.
 */
 export function loudAndRich(richer: number[][], quiet: number[]): number[] {
-    const n = quiet.length;
-    const tables: number[][] = Array.from({ length: n }, () => []);
-    const inCount: number[] = Array(n).fill(0);
-    richer.forEach(([from, to]) => {
-        tables[from].push(to);
-        inCount[to]++;
-    });
+  const n = quiet.length;
+  const tables: number[][] = Array.from({ length: n }, () => []);
+  const inCount: number[] = Array(n).fill(0);
+  richer.forEach(([from, to]) => {
+    tables[from].push(to);
+    inCount[to]++;
+  });
 
-    const queue: number[] = [];
-    inCount.forEach((v, i) => {
-        if (v === 0) {
-            queue.push(i);
-        }
-    });
-
-    const ret: number[] = Array.from({ length: n }, (_, i) => i);
-    while (queue.length) {
-        const first = queue.shift()!;
-        tables[first].forEach((to) => {
-            inCount[to]--;
-            if (inCount[to] === 0) {
-                queue.push(to);
-            }
-
-            if (quiet[ret[to]] > quiet[ret[first]]) {
-                ret[to] = ret[first];
-            }
-        });
+  const queue: number[] = [];
+  inCount.forEach((v, i) => {
+    if (v === 0) {
+      queue.push(i);
     }
+  });
 
-    return ret;
+  const ret: number[] = Array.from({ length: n }, (_, i) => i);
+  while (queue.length) {
+    const first = queue.shift()!;
+    tables[first].forEach((to) => {
+      inCount[to]--;
+      if (inCount[to] === 0) {
+        queue.push(to);
+      }
+
+      if (quiet[ret[to]] > quiet[ret[first]]) {
+        ret[to] = ret[first];
+      }
+    });
+  }
+
+  return ret;
 }
 
 /*
@@ -887,41 +885,41 @@ Constraints:
 	The given graph is a directed acyclic graph.
 */
 export function minimumTime(
-    n: number,
-    relations: number[][],
-    time: number[]
+  n: number,
+  relations: number[][],
+  time: number[]
 ): number {
-    const tables: number[][] = Array.from({ length: n + 1 }, () => []);
-    const inCount: number[] = Array(n + 1).fill(0);
-    relations.forEach(([prev, next]) => {
-        tables[prev].push(next);
-        inCount[next]++;
+  const tables: number[][] = Array.from({ length: n + 1 }, () => []);
+  const inCount: number[] = Array(n + 1).fill(0);
+  relations.forEach(([prev, next]) => {
+    tables[prev].push(next);
+    inCount[next]++;
+  });
+
+  const queue: number[] = [];
+  for (let i = 1; i <= n; i++) {
+    if (inCount[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  const minTimes = time.slice();
+  while (queue.length) {
+    const first = queue.shift()!;
+    tables[first].forEach((next) => {
+      inCount[next]--;
+      if (inCount[next] === 0) {
+        queue.push(next);
+      }
+
+      minTimes[next - 1] = Math.max(
+        minTimes[next - 1],
+        minTimes[first - 1] + time[next - 1]
+      );
     });
+  }
 
-    const queue: number[] = [];
-    for (let i = 1; i <= n; i++) {
-        if (inCount[i] === 0) {
-            queue.push(i);
-        }
-    }
-
-    const minTimes = time.slice();
-    while (queue.length) {
-        const first = queue.shift()!;
-        tables[first].forEach((next) => {
-            inCount[next]--;
-            if (inCount[next] === 0) {
-                queue.push(next);
-            }
-
-            minTimes[next - 1] = Math.max(
-                minTimes[next - 1],
-                minTimes[first - 1] + time[next - 1]
-            );
-        });
-    }
-
-    return Math.max(...minTimes);
+  return Math.max(...minTimes);
 }
 
 /**
@@ -984,59 +982,59 @@ export function minimumTime(
 所以最小生成树的总边权为 $2+2+3=7$。
  */
 export function minimumSpanningTree(n: number, edges: number[][]) {
-    const sorted = edges.sort(
-        ([, , weightA], [, , weightB]) => weightA - weightB
-    );
+  const sorted = edges.sort(
+    ([, , weightA], [, , weightB]) => weightA - weightB
+  );
 
-    const unionFind = new UnionFind(n + 1);
-    let w = 0;
-    let count = 0;
-    sorted.forEach(([from, to, weight]) => {
-        if (!unionFind.isSameSet(from, to)) {
-            unionFind.union(from, to);
-            w += weight;
-            count++;
-        }
-    });
+  const unionFind = new UnionFind(n + 1);
+  let w = 0;
+  let count = 0;
+  sorted.forEach(([from, to, weight]) => {
+    if (!unionFind.isSameSet(from, to)) {
+      unionFind.union(from, to);
+      w += weight;
+      count++;
+    }
+  });
 
-    return count === n - 1 ? w : 'orz';
+  return count === n - 1 ? w : 'orz';
 }
 
 // https://www.bilibili.com/list/8888480?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=873823296&bvid=BV1sK4y1F7LH
 // Prim 算法求最小生成树
 export function minimumSpanningTreeP(n: number, edges: number[][]) {
-    const tables: number[][][] = Array.from({ length: n + 1 }, () => []);
-    edges.forEach(([from, to, weight]) => {
-        tables[from].push([to, weight]);
-        tables[to].push([from, weight]);
-    });
+  const tables: number[][][] = Array.from({ length: n + 1 }, () => []);
+  edges.forEach(([from, to, weight]) => {
+    tables[from].push([to, weight]);
+    tables[to].push([from, weight]);
+  });
 
-    const visited = Array(n + 1).fill(false);
-    visited[1] = true;
-    const heap = new GenericHeap<number[]>((a, b) => a[1] - b[1]);
-    tables[1].forEach((v) => {
-        heap.push(v);
-    });
+  const visited = Array(n + 1).fill(false);
+  visited[1] = true;
+  const heap = new GenericHeap<number[]>((a, b) => a[1] - b[1]);
+  tables[1].forEach((v) => {
+    heap.push(v);
+  });
 
-    let w = 0;
-    let count = 1;
-    while (!heap.isEmpty()) {
-        const [to, weight] = heap.pop();
+  let w = 0;
+  let count = 1;
+  while (!heap.isEmpty()) {
+    const [to, weight] = heap.pop();
 
-        if (!visited[to]) {
-            visited[to] = true;
-            w += weight;
-            count++;
+    if (!visited[to]) {
+      visited[to] = true;
+      w += weight;
+      count++;
 
-            tables[to].forEach(([next, weight]) => {
-                if (!visited[next]) {
-                    heap.push([next, weight]);
-                }
-            });
+      tables[to].forEach(([next, weight]) => {
+        if (!visited[next]) {
+          heap.push([next, weight]);
         }
+      });
     }
+  }
 
-    return count === n ? w : 'orz';
+  return count === n ? w : 'orz';
 }
 
 /*
@@ -1072,47 +1070,45 @@ Constraints:
 	All the pairs (ui, vi) are unique. (i.e., no multiple edges.)
 */
 export function networkDelayTime(
-    times: number[][],
-    n: number,
-    k: number
+  times: number[][],
+  n: number,
+  k: number
 ): number {
-    const tables: number[][][] = Array.from({ length: n + 1 }, () => []);
-    times.forEach(([from, to, weight]) => {
-        tables[from].push([to, weight]);
-    });
+  const tables: number[][][] = Array.from({ length: n + 1 }, () => []);
+  times.forEach(([from, to, weight]) => {
+    tables[from].push([to, weight]);
+  });
 
-    const distance: number[] = Array(n + 1).fill(Infinity);
-    const visited: boolean[] = Array(n + 1).fill(false);
-    const heap = new GenericHeap<[p: number, dis: number]>(
-        (a, b) => a[1] - b[1]
-    );
+  const distance: number[] = Array(n + 1).fill(Infinity);
+  const visited: boolean[] = Array(n + 1).fill(false);
+  const heap = new GenericHeap<[p: number, dis: number]>((a, b) => a[1] - b[1]);
 
-    distance[k] = 0;
-    heap.push([k, 0]);
+  distance[k] = 0;
+  heap.push([k, 0]);
 
-    while (heap.size() > 0) {
-        const [p, dis] = heap.pop();
-        if (!visited[p]) {
-            visited[p] = true;
+  while (heap.size() > 0) {
+    const [p, dis] = heap.pop();
+    if (!visited[p]) {
+      visited[p] = true;
 
-            tables[p].forEach(([next, weight]) => {
-                if (!visited[next] && dis + weight < distance[next]) {
-                    distance[next] = dis + weight;
-                    heap.push([next, distance[next]]);
-                }
-            });
+      tables[p].forEach(([next, weight]) => {
+        if (!visited[next] && dis + weight < distance[next]) {
+          distance[next] = dis + weight;
+          heap.push([next, distance[next]]);
         }
+      });
     }
+  }
 
-    let max = -Infinity;
-    for (let i = 1; i <= n; i++) {
-        if (distance[i] === Infinity) {
-            return -1;
-        }
-        max = Math.max(max, distance[i]);
+  let max = -Infinity;
+  for (let i = 1; i <= n; i++) {
+    if (distance[i] === Infinity) {
+      return -1;
     }
+    max = Math.max(max, distance[i]);
+  }
 
-    return max;
+  return max;
 }
 
 /*
@@ -1150,54 +1146,48 @@ Constraints:
 	Each value grid[i][j] is unique.
 */
 export function swimInWater(grid: number[][]): number {
-    const n = grid.length;
-    const distance: number[][] = Array.from({ length: n }, () =>
-        Array(n).fill(Infinity)
-    );
-    const visited: boolean[][] = Array.from({ length: n }, () =>
-        Array(n).fill(false)
-    );
-    const heap = new GenericHeap<[x: number, y: number, dis: number]>(
-        (a, b) => a[2] - b[2]
-    );
+  const n = grid.length;
+  const distance: number[][] = Array.from({ length: n }, () =>
+    Array(n).fill(Infinity)
+  );
+  const visited: boolean[][] = Array.from({ length: n }, () =>
+    Array(n).fill(false)
+  );
+  const heap = new GenericHeap<[x: number, y: number, dis: number]>(
+    (a, b) => a[2] - b[2]
+  );
 
-    distance[0][0] = grid[0][0];
-    heap.push([0, 0, grid[0][0]]);
+  distance[0][0] = grid[0][0];
+  heap.push([0, 0, grid[0][0]]);
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
+  const moves: number[] = [-1, 0, 1, 0, -1];
 
-    while (heap.size() > 0) {
-        const [x, y, dis] = heap.pop();
-        if (!visited[x][y]) {
-            visited[x][y] = true;
+  while (heap.size() > 0) {
+    const [x, y, dis] = heap.pop();
+    if (!visited[x][y]) {
+      visited[x][y] = true;
 
-            if (x === n - 1 && y === n - 1) {
-                return dis;
-            }
+      if (x === n - 1 && y === n - 1) {
+        return dis;
+      }
 
-            for (let i = 0; i < moves.length - 1; i++) {
-                const nX = x + moves[i];
-                const nY = y + moves[i + 1];
+      for (let i = 0; i < moves.length - 1; i++) {
+        const nX = x + moves[i];
+        const nY = y + moves[i + 1];
 
-                if (
-                    nX >= 0 &&
-                    nX < n &&
-                    nY >= 0 &&
-                    nY < n &&
-                    !visited[nX][nY]
-                ) {
-                    const newDis = Math.max(dis, grid[nX][nY]);
+        if (nX >= 0 && nX < n && nY >= 0 && nY < n && !visited[nX][nY]) {
+          const newDis = Math.max(dis, grid[nX][nY]);
 
-                    if (distance[nX][nY] > newDis) {
-                        distance[nX][nY] = newDis;
-                        heap.push([nX, nY, newDis]);
-                    }
-                }
-            }
+          if (distance[nX][nY] > newDis) {
+            distance[nX][nY] = newDis;
+            heap.push([nX, nY, newDis]);
+          }
         }
+      }
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 /*
@@ -1254,50 +1244,48 @@ Constraints:
 */
 
 class _Node {
-    val: number;
-    neighbors: _Node[];
+  val: number;
+  neighbors: _Node[];
 
-    constructor(val?: number, neighbors?: _Node[]) {
-        this.val = val === undefined ? 0 : val;
-        this.neighbors = neighbors === undefined ? [] : neighbors;
-    }
+  constructor(val?: number, neighbors?: _Node[]) {
+    this.val = val === undefined ? 0 : val;
+    this.neighbors = neighbors === undefined ? [] : neighbors;
+  }
 }
 
 export function cloneGraph(node: _Node | null): _Node | null {
-    if (!node) {
-        return null;
+  if (!node) {
+    return null;
+  }
+
+  const nodes = new Map<number, _Node>();
+  const dfs = (n: _Node) => {
+    if (nodes.has(n.val)) {
+      return;
     }
 
-    const nodes = new Map<number, _Node>();
-    const dfs = (n: _Node) => {
-        if (nodes.has(n.val)) {
-            return;
-        }
+    const newNode = new _Node(n.val);
+    nodes.set(n.val, newNode);
 
-        const newNode = new _Node(n.val);
-        nodes.set(n.val, newNode);
+    n.neighbors.forEach((neighbor) => dfs(neighbor));
+  };
+  dfs(node);
 
-        n.neighbors.forEach((neighbor) => dfs(neighbor));
-    };
-    dfs(node);
+  const visited = new Set<number>();
+  const buildConnections = (n: _Node) => {
+    if (visited.has(n.val)) {
+      return;
+    }
 
-    const visited = new Set<number>();
-    const buildConnections = (n: _Node) => {
-        if (visited.has(n.val)) {
-            return;
-        }
+    visited.add(n.val);
+    const newNode = nodes.get(n.val)!;
+    newNode.neighbors = n.neighbors.map((neighbor) => nodes.get(neighbor.val)!);
 
-        visited.add(n.val);
-        const newNode = nodes.get(n.val)!;
-        newNode.neighbors = n.neighbors.map(
-            (neighbor) => nodes.get(neighbor.val)!
-        );
+    n.neighbors.forEach((neighbor) => buildConnections(neighbor));
+  };
+  buildConnections(node);
 
-        n.neighbors.forEach((neighbor) => buildConnections(neighbor));
-    };
-    buildConnections(node);
-
-    return nodes.get(node.val)!;
+  return nodes.get(node.val)!;
 }
 
 /*
@@ -1342,21 +1330,21 @@ Constraints:
 	The input is generated such that if team a is stronger than team b and team b is stronger than team c, then team a is stronger than team c.
 */
 export function findChampion(n: number, edges: number[][]): number {
-    const degrees: number[] = Array(n).fill(0);
-    edges.forEach(([, t]) => {
-        degrees[t]++;
-    });
+  const degrees: number[] = Array(n).fill(0);
+  edges.forEach(([, t]) => {
+    degrees[t]++;
+  });
 
-    if (degrees.filter((v) => v === 0).length > 1) {
-        return -1;
-    }
-
-    for (let i = 0; i < degrees.length; i++) {
-        if (degrees[i] === 0) {
-            return i;
-        }
-    }
+  if (degrees.filter((v) => v === 0).length > 1) {
     return -1;
+  }
+
+  for (let i = 0; i < degrees.length; i++) {
+    if (degrees[i] === 0) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 /*
@@ -1406,48 +1394,48 @@ Constraints:
 	There are no repeated roads among the queries.
 */
 export function shortestDistanceAfterQueries(
-    n: number,
-    queries: number[][]
+  n: number,
+  queries: number[][]
 ): number[] {
-    const tables: number[][] = Array.from({ length: n }, () => []);
-    for (let i = 0; i < n - 1; i++) {
-        tables[i].push(i + 1);
-    }
+  const tables: number[][] = Array.from({ length: n }, () => []);
+  for (let i = 0; i < n - 1; i++) {
+    tables[i].push(i + 1);
+  }
 
-    const queue: number[] = Array(n);
-    const getMinDistance = (): number => {
-        let left = 0;
-        let right = 0;
-        queue[right++] = 0;
-        let level = 0;
-        const visited: boolean[] = Array(n).fill(false);
+  const queue: number[] = Array(n);
+  const getMinDistance = (): number => {
+    let left = 0;
+    let right = 0;
+    queue[right++] = 0;
+    let level = 0;
+    const visited: boolean[] = Array(n).fill(false);
 
-        while (left < right) {
-            const prevRight = right;
-            while (left < prevRight) {
-                const from = queue[left++];
-                if (from === n - 1) {
-                    return level;
-                }
-
-                tables[from].forEach((to) => {
-                    if (!visited[to]) {
-                        visited[to] = true;
-                        queue[right++] = to;
-                    }
-                });
-            }
-
-            level++;
+    while (left < right) {
+      const prevRight = right;
+      while (left < prevRight) {
+        const from = queue[left++];
+        if (from === n - 1) {
+          return level;
         }
 
-        return level;
-    };
+        tables[from].forEach((to) => {
+          if (!visited[to]) {
+            visited[to] = true;
+            queue[right++] = to;
+          }
+        });
+      }
 
-    return queries.map(([f, t]) => {
-        tables[f].push(t);
-        return getMinDistance();
-    });
+      level++;
+    }
+
+    return level;
+  };
+
+  return queries.map(([f, t]) => {
+    tables[f].push(t);
+    return getMinDistance();
+  });
 }
 
 /*
@@ -1486,48 +1474,48 @@ Constraints:
 	grid[0][0] == grid[m - 1][n - 1] == 0
 */
 export function minimumObstacles(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
+  const m = grid.length;
+  const n = grid[0].length;
 
-    const distances: number[][] = Array.from({ length: m }, () => Array(n));
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
-    const minHeap = new GenericHeap<[i: number, j: number, distance: number]>(
-        (a, b) => a[2] - b[2]
-    );
+  const distances: number[][] = Array.from({ length: m }, () => Array(n));
+  const visited: boolean[][] = Array.from({ length: m }, () =>
+    Array(n).fill(false)
+  );
+  const minHeap = new GenericHeap<[i: number, j: number, distance: number]>(
+    (a, b) => a[2] - b[2]
+  );
 
-    distances[0][0] = 0;
-    minHeap.push([0, 0, 0]);
+  distances[0][0] = 0;
+  minHeap.push([0, 0, 0]);
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    while (minHeap.size() > 0) {
-        const [i, j, prevDistance] = minHeap.pop();
-        if (visited[i][j]) {
-            continue;
-        }
-        visited[i][j] = true;
-
-        for (let k = 0; k < moves.length - 1; k++) {
-            const nextI = i + moves[k];
-            const nextJ = j + moves[k + 1];
-
-            if (
-                nextI >= 0 &&
-                nextI < m &&
-                nextJ >= 0 &&
-                nextJ < n &&
-                !visited[nextI][nextJ] &&
-                (distances[nextI][nextJ] === undefined ||
-                    prevDistance + grid[nextI][nextJ] < distances[nextI][nextJ])
-            ) {
-                distances[nextI][nextJ] = prevDistance + grid[nextI][nextJ];
-                minHeap.push([nextI, nextJ, distances[nextI][nextJ]]);
-            }
-        }
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  while (minHeap.size() > 0) {
+    const [i, j, prevDistance] = minHeap.pop();
+    if (visited[i][j]) {
+      continue;
     }
+    visited[i][j] = true;
 
-    return distances[m - 1][n - 1];
+    for (let k = 0; k < moves.length - 1; k++) {
+      const nextI = i + moves[k];
+      const nextJ = j + moves[k + 1];
+
+      if (
+        nextI >= 0 &&
+        nextI < m &&
+        nextJ >= 0 &&
+        nextJ < n &&
+        !visited[nextI][nextJ] &&
+        (distances[nextI][nextJ] === undefined ||
+          prevDistance + grid[nextI][nextJ] < distances[nextI][nextJ])
+      ) {
+        distances[nextI][nextJ] = prevDistance + grid[nextI][nextJ];
+        minHeap.push([nextI, nextJ, distances[nextI][nextJ]]);
+      }
+    }
+  }
+
+  return distances[m - 1][n - 1];
 }
 
 /*
@@ -1573,55 +1561,55 @@ Constraints:
 	The input is generated such that edges represents a valid tree.
 */
 export function maxKDivisibleComponents(
-    n: number,
-    edges: number[][],
-    values: number[],
-    k: number
+  n: number,
+  edges: number[][],
+  values: number[],
+  k: number
 ): number {
-    const tables: number[][] = Array.from({ length: n }, () => []);
-    const inDegree: number[] = Array(n).fill(0);
-    edges.forEach(([from, to]) => {
-        tables[from].push(to);
-        tables[to].push(from);
-        inDegree[to]++;
-        inDegree[from]++;
-    });
+  const tables: number[][] = Array.from({ length: n }, () => []);
+  const inDegree: number[] = Array(n).fill(0);
+  edges.forEach(([from, to]) => {
+    tables[from].push(to);
+    tables[to].push(from);
+    inDegree[to]++;
+    inDegree[from]++;
+  });
 
-    const zeroInDegreeQueue: number[] = Array(n);
-    let left = 0;
-    let right = 0;
-    inDegree.forEach((v, i) => {
-        if (v === 1) {
-            zeroInDegreeQueue[right++] = i;
-        }
-    });
-    if (left === right) {
-        zeroInDegreeQueue[right++] = 0;
+  const zeroInDegreeQueue: number[] = Array(n);
+  let left = 0;
+  let right = 0;
+  inDegree.forEach((v, i) => {
+    if (v === 1) {
+      zeroInDegreeQueue[right++] = i;
+    }
+  });
+  if (left === right) {
+    zeroInDegreeQueue[right++] = 0;
+  }
+
+  let count = 0;
+  while (left < right) {
+    const first = zeroInDegreeQueue[left++];
+
+    let found = false;
+    if (values[first] % k === 0) {
+      count++;
+      found = true;
     }
 
-    let count = 0;
-    while (left < right) {
-        const first = zeroInDegreeQueue[left++];
+    tables[first].forEach((next) => {
+      inDegree[next]--;
+      if (inDegree[next] === 1) {
+        zeroInDegreeQueue[right++] = next;
+      }
 
-        let found = false;
-        if (values[first] % k === 0) {
-            count++;
-            found = true;
-        }
+      if (!found) {
+        values[next] += values[first];
+      }
+    });
+  }
 
-        tables[first].forEach((next) => {
-            inDegree[next]--;
-            if (inDegree[next] === 1) {
-                zeroInDegreeQueue[right++] = next;
-            }
-
-            if (!found) {
-                values[next] += values[first];
-            }
-        });
-    }
-
-    return count;
+  return count;
 }
 
 /*
@@ -1669,56 +1657,55 @@ Constraints:
 	1 <= grid[i][j] <= 4
 */
 export function minCost(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
+  const m = grid.length;
+  const n = grid[0].length;
 
-    const distances: number[][] = Array.from({ length: m }, () => Array(n));
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
-    const minHeap = new GenericHeap<[i: number, j: number, distance: number]>(
-        (a, b) => a[2] - b[2]
-    );
+  const distances: number[][] = Array.from({ length: m }, () => Array(n));
+  const visited: boolean[][] = Array.from({ length: m }, () =>
+    Array(n).fill(false)
+  );
+  const minHeap = new GenericHeap<[i: number, j: number, distance: number]>(
+    (a, b) => a[2] - b[2]
+  );
 
-    distances[0][0] = 0;
-    minHeap.push([0, 0, 0]);
+  distances[0][0] = 0;
+  minHeap.push([0, 0, 0]);
 
-    const moves: number[][] = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
+  const moves: number[][] = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
 
-    while (minHeap.size() > 0) {
-        const [i, j, prevDistance] = minHeap.pop();
-        if (visited[i][j]) {
-            continue;
-        }
-        visited[i][j] = true;
-
-        for (let k = 0; k < moves.length; k++) {
-            const nextI = i + moves[k][0];
-            const nextJ = j + moves[k][1];
-
-            if (
-                nextI >= 0 &&
-                nextI < m &&
-                nextJ >= 0 &&
-                nextJ < n &&
-                !visited[nextI][nextJ] &&
-                (distances[nextI][nextJ] === undefined ||
-                    prevDistance + (grid[i][j] !== k + 1 ? 1 : 0) <
-                        distances[nextI][nextJ])
-            ) {
-                distances[nextI][nextJ] =
-                    prevDistance + (grid[i][j] !== k + 1 ? 1 : 0);
-                minHeap.push([nextI, nextJ, distances[nextI][nextJ]]);
-            }
-        }
+  while (minHeap.size() > 0) {
+    const [i, j, prevDistance] = minHeap.pop();
+    if (visited[i][j]) {
+      continue;
     }
+    visited[i][j] = true;
 
-    return distances[m - 1][n - 1];
+    for (let k = 0; k < moves.length; k++) {
+      const nextI = i + moves[k][0];
+      const nextJ = j + moves[k][1];
+
+      if (
+        nextI >= 0 &&
+        nextI < m &&
+        nextJ >= 0 &&
+        nextJ < n &&
+        !visited[nextI][nextJ] &&
+        (distances[nextI][nextJ] === undefined ||
+          prevDistance + (grid[i][j] !== k + 1 ? 1 : 0) <
+            distances[nextI][nextJ])
+      ) {
+        distances[nextI][nextJ] = prevDistance + (grid[i][j] !== k + 1 ? 1 : 0);
+        minHeap.push([nextI, nextJ, distances[nextI][nextJ]]);
+      }
+    }
+  }
+
+  return distances[m - 1][n - 1];
 }
 
 /*
@@ -1756,41 +1743,41 @@ Constraints:
 	The number of edges in the graph will be in the range [1, 4 * 10^4].
 */
 export function eventualSafeNodes(graph: number[][]): number[] {
-    const n = graph.length;
-    const tables: number[][] = Array.from({ length: n }, () => []);
-    const inDegree: number[] = Array(n).fill(0);
-    graph.forEach((neighbors, i) => {
-        //  built the reverse graph since we want to find safe nodes from the terminal nodes
-        neighbors.forEach((neighbor) => {
-            tables[neighbor].push(i);
-            inDegree[i]++;
-        });
+  const n = graph.length;
+  const tables: number[][] = Array.from({ length: n }, () => []);
+  const inDegree: number[] = Array(n).fill(0);
+  graph.forEach((neighbors, i) => {
+    //  built the reverse graph since we want to find safe nodes from the terminal nodes
+    neighbors.forEach((neighbor) => {
+      tables[neighbor].push(i);
+      inDegree[i]++;
     });
+  });
 
-    const zeroInDegreeQueue: number[] = Array(n);
-    let left = 0;
-    let right = 0;
-    inDegree.forEach((v, i) => {
-        if (v === 0) {
-            zeroInDegreeQueue[right++] = i;
-        }
-    });
-
-    const result: number[] = [];
-    while (left < right) {
-        const first = zeroInDegreeQueue[left++];
-
-        result.push(first);
-
-        tables[first].forEach((next) => {
-            inDegree[next]--;
-            if (inDegree[next] === 0) {
-                zeroInDegreeQueue[right++] = next;
-            }
-        });
+  const zeroInDegreeQueue: number[] = Array(n);
+  let left = 0;
+  let right = 0;
+  inDegree.forEach((v, i) => {
+    if (v === 0) {
+      zeroInDegreeQueue[right++] = i;
     }
+  });
 
-    return result.sort((a, b) => a - b);
+  const result: number[] = [];
+  while (left < right) {
+    const first = zeroInDegreeQueue[left++];
+
+    result.push(first);
+
+    tables[first].forEach((next) => {
+      inDegree[next]--;
+      if (inDegree[next] === 0) {
+        zeroInDegreeQueue[right++] = next;
+      }
+    });
+  }
+
+  return result.sort((a, b) => a - b);
 }
 
 /*
@@ -1838,41 +1825,41 @@ Constraints:
 	ui != vi
 */
 export function checkIfPrerequisite(
-    numCourses: number,
-    prerequisites: number[][],
-    queries: number[][]
+  numCourses: number,
+  prerequisites: number[][],
+  queries: number[][]
 ): boolean[] {
-    const tables: number[][] = Array.from({ length: numCourses }, () => []);
-    prerequisites.forEach(([from, to]) => {
-        tables[from].push(to);
-    });
-    const isReachable = Array.from({ length: numCourses }, () =>
-        Array(numCourses).fill(false)
-    );
+  const tables: number[][] = Array.from({ length: numCourses }, () => []);
+  prerequisites.forEach(([from, to]) => {
+    tables[from].push(to);
+  });
+  const isReachable = Array.from({ length: numCourses }, () =>
+    Array(numCourses).fill(false)
+  );
 
-    const bfs = (i: number) => {
-        const visited: boolean[] = Array(numCourses).fill(false);
-        const queue: number[] = Array(numCourses);
-        let left = 0;
-        let right = 0;
-        queue[right++] = i;
+  const bfs = (i: number) => {
+    const visited: boolean[] = Array(numCourses).fill(false);
+    const queue: number[] = Array(numCourses);
+    let left = 0;
+    let right = 0;
+    queue[right++] = i;
 
-        while (left < right) {
-            const first = queue[left++];
-            visited[first] = true;
+    while (left < right) {
+      const first = queue[left++];
+      visited[first] = true;
 
-            tables[first].forEach((next) => {
-                if (!visited[next]) {
-                    visited[next] = true;
-                    queue[right++] = next;
-                    isReachable[i][next] = true;
-                }
-            });
+      tables[first].forEach((next) => {
+        if (!visited[next]) {
+          visited[next] = true;
+          queue[right++] = next;
+          isReachable[i][next] = true;
         }
-    };
-    for (let i = 0; i < numCourses; i++) {
-        bfs(i);
+      });
     }
+  };
+  for (let i = 0; i < numCourses; i++) {
+    bfs(i);
+  }
 
-    return queries.map(([from, to]) => isReachable[from][to]);
+  return queries.map(([from, to]) => isReachable[from][to]);
 }

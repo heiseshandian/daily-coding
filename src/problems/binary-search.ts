@@ -15,40 +15,30 @@ Each time the sliding window moves right by one position.
 Return the median array for each window in the original array. Answers within 10-5 of the actual value will be accepted.
 */
 export function medianSlidingWindow(nums: number[], k: number): number[] {
-    const window = nums.slice(0, k).sort((a, b) => a - b);
-    const getMedian = () => {
-        return (window[k >> 1] + window[(k - 1) >> 1]) / 2;
-    };
+  const window = nums.slice(0, k).sort((a, b) => a - b);
+  const getMedian = () => {
+    return (window[k >> 1] + window[(k - 1) >> 1]) / 2;
+  };
 
-    const result: number[] = [getMedian()];
+  const result: number[] = [getMedian()];
 
-    for (let i = k; i < nums.length; i++) {
-        const toDelete = nums[i - k];
-        if (toDelete === nums[i]) {
-            result.push(getMedian());
-            continue;
-        }
-
-        const toDeletePosition = getClosestMaxOrEqual(
-            window,
-            toDelete,
-            0,
-            k - 1
-        );
-        window.splice(toDeletePosition, 1);
-
-        const toInsertPosition = getClosestMaxOrEqual(
-            window,
-            nums[i],
-            0,
-            k - 2
-        );
-        window.splice(toInsertPosition, 0, nums[i]);
-
-        result.push(getMedian());
+  for (let i = k; i < nums.length; i++) {
+    const toDelete = nums[i - k];
+    if (toDelete === nums[i]) {
+      result.push(getMedian());
+      continue;
     }
 
-    return result;
+    const toDeletePosition = getClosestMaxOrEqual(window, toDelete, 0, k - 1);
+    window.splice(toDeletePosition, 1);
+
+    const toInsertPosition = getClosestMaxOrEqual(window, nums[i], 0, k - 2);
+    window.splice(toInsertPosition, 0, nums[i]);
+
+    result.push(getMedian());
+  }
+
+  return result;
 }
 
 /* 
@@ -63,66 +53,66 @@ An integer a is closer to x than an integer b if:
 |a - x| == |b - x| and a < b
 */
 export function findClosestElements(
-    arr: number[],
-    k: number,
-    x: number
+  arr: number[],
+  k: number,
+  x: number
 ): number[] {
-    const result: number[] = [];
-    const closestIndex = getClosestIndex(arr, x);
-    result.push(arr[closestIndex]);
-    k--;
+  const result: number[] = [];
+  const closestIndex = getClosestIndex(arr, x);
+  result.push(arr[closestIndex]);
+  k--;
 
-    let left = closestIndex - 1;
-    let right = closestIndex + 1;
-    while (k--) {
-        if (left < 0) {
-            result.push(arr[right++]);
-            continue;
-        }
-        if (right > arr.length - 1) {
-            result.unshift(arr[left--]);
-            continue;
-        }
-
-        if (Math.abs(arr[left] - x) <= Math.abs(arr[right] - x)) {
-            result.unshift(arr[left--]);
-        } else {
-            result.push(arr[right++]);
-        }
+  let left = closestIndex - 1;
+  let right = closestIndex + 1;
+  while (k--) {
+    if (left < 0) {
+      result.push(arr[right++]);
+      continue;
+    }
+    if (right > arr.length - 1) {
+      result.unshift(arr[left--]);
+      continue;
     }
 
-    return result;
+    if (Math.abs(arr[left] - x) <= Math.abs(arr[right] - x)) {
+      result.unshift(arr[left--]);
+    } else {
+      result.push(arr[right++]);
+    }
+  }
+
+  return result;
 }
 
 function getClosestIndex(arr: number[], x: number): number {
-    let left = 0;
-    let right = arr.length - 1;
-    let closestIndex = 0;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (arr[mid] === x) {
-            return mid;
-        }
-
-        if (arr[mid] < x) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-
-        if (Math.abs(arr[closestIndex] - x) > Math.abs(arr[mid] - x)) {
-            closestIndex = mid;
-        }
+  let left = 0;
+  let right = arr.length - 1;
+  let closestIndex = 0;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (arr[mid] === x) {
+      return mid;
     }
 
-    if (
-        closestIndex > 0 &&
-        Math.abs(arr[closestIndex] - x) === Math.abs(arr[closestIndex - 1] - x)
-    ) {
-        closestIndex--;
+    if (arr[mid] < x) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
     }
 
-    return closestIndex;
+    if (Math.abs(arr[closestIndex] - x) > Math.abs(arr[mid] - x)) {
+      closestIndex = mid;
+    }
+  }
+
+  if (
+    closestIndex > 0 &&
+    Math.abs(arr[closestIndex] - x) === Math.abs(arr[closestIndex - 1] - x)
+  ) {
+    closestIndex--;
+  }
+
+  return closestIndex;
 }
 
 /*
@@ -149,21 +139,21 @@ Constraints:
 	1 <= n <= 2^31 - 1
 */
 export function arrangeCoins(n: number): number {
-    let left = 1;
-    let right = n;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        const sum = ((1 + mid) * mid) / 2;
-        if (sum <= n && sum + mid + 1 > n) {
-            return mid;
-        }
-
-        if (sum <= n) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
+  let left = 1;
+  let right = n;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    const sum = ((1 + mid) * mid) / 2;
+    if (sum <= n && sum + mid + 1 > n) {
+      return mid;
     }
 
-    return -1;
+    if (sum <= n) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return -1;
 }

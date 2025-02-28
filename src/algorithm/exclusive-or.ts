@@ -1,3 +1,3 @@
 export function getRightOne(num: number) {
-    return num & (~num + 1);
+  return num & (~num + 1);
 }

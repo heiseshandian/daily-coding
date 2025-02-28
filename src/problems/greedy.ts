@@ -10,20 +10,20 @@ Given an array of intervals intervals where intervals[i] = [starti, endi],
 return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
 */
 export function eraseOverlapIntervals(intervals: number[][]): number {
-    // 按照左边界排序
-    intervals.sort(([a], [b]) => a - b);
+  // 按照左边界排序
+  intervals.sort(([a], [b]) => a - b);
 
-    let overlapCount = 0;
-    for (let i = 1; i < intervals.length; i++) {
-        if (intervals[i][0] < intervals[i - 1][1]) {
-            overlapCount++;
+  let overlapCount = 0;
+  for (let i = 1; i < intervals.length; i++) {
+    if (intervals[i][0] < intervals[i - 1][1]) {
+      overlapCount++;
 
-            // 用于判断intervals[i+1] 与 intervals[i]，intervals[i-1]是否都重叠
-            intervals[i][1] = Math.min(intervals[i - 1][1], intervals[i][1]);
-        }
+      // 用于判断intervals[i+1] 与 intervals[i]，intervals[i-1]是否都重叠
+      intervals[i][1] = Math.min(intervals[i - 1][1], intervals[i][1]);
     }
+  }
 
-    return overlapCount;
+  return overlapCount;
 }
 
 /* 
@@ -35,42 +35,42 @@ return the length of the longest palindrome that can be built with those letters
 Letters are case sensitive, for example, "Aa" is not considered a palindrome here.
 */
 export function longestPalindrome(s: string): number {
-    const countMap: Record<string, number> = {};
-    for (const char of s) {
-        if (!countMap[char]) {
-            countMap[char] = 0;
-        }
-        countMap[char]++;
+  const countMap: Record<string, number> = {};
+  for (const char of s) {
+    if (!countMap[char]) {
+      countMap[char] = 0;
     }
+    countMap[char]++;
+  }
 
-    let max = 0;
-    let hasOdd = false;
-    Object.values(countMap).forEach((count) => {
-        if (isEven(count)) {
-            max += count;
-        } else {
-            hasOdd = true;
-            max += count - 1;
-        }
-    });
+  let max = 0;
+  let hasOdd = false;
+  Object.values(countMap).forEach((count) => {
+    if (isEven(count)) {
+      max += count;
+    } else {
+      hasOdd = true;
+      max += count - 1;
+    }
+  });
 
-    return hasOdd ? max + 1 : max;
+  return hasOdd ? max + 1 : max;
 }
 
 export function longestPalindrome2(s: string): number {
-    const countMap: Record<string, number> = {};
-    for (const char of s) {
-        if (!countMap[char]) {
-            countMap[char] = 0;
-        }
-        countMap[char]++;
+  const countMap: Record<string, number> = {};
+  for (const char of s) {
+    if (!countMap[char]) {
+      countMap[char] = 0;
     }
+    countMap[char]++;
+  }
 
-    const oddCount = Object.values(countMap).filter((count) =>
-        isOdd(count)
-    ).length;
+  const oddCount = Object.values(countMap).filter((count) =>
+    isOdd(count)
+  ).length;
 
-    return oddCount > 0 ? s.length - oddCount + 1 : s.length;
+  return oddCount > 0 ? s.length - oddCount + 1 : s.length;
 }
 
 /*
@@ -111,18 +111,18 @@ Constraints:
 	words[i] consists of lowercase English letters.
 */
 export function getLongestSubsequence(
-    words: string[],
-    groups: number[]
+  words: string[],
+  groups: number[]
 ): string[] {
-    const indexes: number[] = [0];
+  const indexes: number[] = [0];
 
-    for (let i = 1; i < groups.length; i++) {
-        if (groups[i] !== groups[indexes[indexes.length - 1]]) {
-            indexes.push(i);
-        }
+  for (let i = 1; i < groups.length; i++) {
+    if (groups[i] !== groups[indexes[indexes.length - 1]]) {
+      indexes.push(i);
     }
+  }
 
-    return indexes.map((i) => words[i]);
+  return indexes.map((i) => words[i]);
 }
 
 /*
@@ -160,44 +160,44 @@ Constraints:
 	s[i] is either '0' or '1'
 */
 export function minimumCost(s: string): number {
-    let left = s.length >> 1;
-    let right = left + 1;
+  let left = s.length >> 1;
+  let right = left + 1;
 
-    const getLeftCount = (dest: string, flipped: string) => {
-        let flip = false;
-        let count = 0;
-        let l = left;
-        while (l >= 0) {
-            if ((!flip && s[l] === dest) || (flip && s[l] === flipped)) {
-                l--;
-            } else {
-                count += l + 1;
-                flip = !flip;
-            }
-        }
+  const getLeftCount = (dest: string, flipped: string) => {
+    let flip = false;
+    let count = 0;
+    let l = left;
+    while (l >= 0) {
+      if ((!flip && s[l] === dest) || (flip && s[l] === flipped)) {
+        l--;
+      } else {
+        count += l + 1;
+        flip = !flip;
+      }
+    }
 
-        return count;
-    };
-    const getRightCount = (dest: string, flipped: string) => {
-        let flip = false;
-        let count = 0;
-        let r = right;
-        while (r < s.length) {
-            if ((!flip && s[r] === dest) || (flip && s[r] === flipped)) {
-                r++;
-            } else {
-                count += s.length - r;
-                flip = !flip;
-            }
-        }
+    return count;
+  };
+  const getRightCount = (dest: string, flipped: string) => {
+    let flip = false;
+    let count = 0;
+    let r = right;
+    while (r < s.length) {
+      if ((!flip && s[r] === dest) || (flip && s[r] === flipped)) {
+        r++;
+      } else {
+        count += s.length - r;
+        flip = !flip;
+      }
+    }
 
-        return count;
-    };
+    return count;
+  };
 
-    return Math.min(
-        getLeftCount('0', '1') + getRightCount('0', '1'),
-        getLeftCount('1', '0') + getRightCount('1', '0')
-    );
+  return Math.min(
+    getLeftCount('0', '1') + getRightCount('0', '1'),
+    getLeftCount('1', '0') + getRightCount('1', '0')
+  );
 }
 
 /*
@@ -238,46 +238,46 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function maximumGain(s: string, x: number, y: number): number {
-    const biggerChar = x >= y ? 'ab' : 'ba';
-    const smallerChar = biggerChar === 'ab' ? 'ba' : 'ab';
-    const bigger = Math.max(x, y);
-    const smaller = Math.min(x, y);
+  const biggerChar = x >= y ? 'ab' : 'ba';
+  const smallerChar = biggerChar === 'ab' ? 'ba' : 'ab';
+  const bigger = Math.max(x, y);
+  const smaller = Math.min(x, y);
 
-    const getPoints = (
-        str: string | string[],
-        char: string,
-        point: number
-    ): [points: number, s: string[]] => {
-        const stack = [str[0]];
-        let i = 1;
-        let points = 0;
-        while (i < str.length) {
-            if (stack.length === 0) {
-                stack.push(str[i++]);
-                continue;
-            }
+  const getPoints = (
+    str: string | string[],
+    char: string,
+    point: number
+  ): [points: number, s: string[]] => {
+    const stack = [str[0]];
+    let i = 1;
+    let points = 0;
+    while (i < str.length) {
+      if (stack.length === 0) {
+        stack.push(str[i++]);
+        continue;
+      }
 
-            while (stack.length > 0) {
-                const top = stack.pop()!;
+      while (stack.length > 0) {
+        const top = stack.pop()!;
 
-                if (top + str[i] === char) {
-                    points += point;
-                    i++;
-                } else {
-                    stack.push(top);
-                    stack.push(str[i++]);
-                    break;
-                }
-            }
+        if (top + str[i] === char) {
+          points += point;
+          i++;
+        } else {
+          stack.push(top);
+          stack.push(str[i++]);
+          break;
         }
+      }
+    }
 
-        return [points, stack];
-    };
+    return [points, stack];
+  };
 
-    const [biggerPoints, rest] = getPoints(s, biggerChar, bigger);
-    const [smallerPoints] = getPoints(rest, smallerChar, smaller);
+  const [biggerPoints, rest] = getPoints(s, biggerChar, bigger);
+  const [smallerPoints] = getPoints(rest, smallerChar, smaller);
 
-    return biggerPoints + smallerPoints;
+  return biggerPoints + smallerPoints;
 }
 
 /*
@@ -327,23 +327,23 @@ Constraints:
 	1 <= a, b, c <= 10^5
 */
 export function maximumScore(a: number, b: number, c: number): number {
-    let min = Math.min(a, b, c);
-    let max = Math.max(a, b, c);
-    let mid = a + b + c - min - max;
+  let min = Math.min(a, b, c);
+  let max = Math.max(a, b, c);
+  let mid = a + b + c - min - max;
 
-    if (min + mid <= max) {
-        return min + mid;
-    }
+  if (min + mid <= max) {
+    return min + mid;
+  }
 
-    let score = 0;
-    while (min + mid > max && min > 0 && mid > 0) {
-        min--;
-        mid--;
-        score++;
-    }
-    score += mid + min;
+  let score = 0;
+  while (min + mid > max && min > 0 && mid > 0) {
+    min--;
+    mid--;
+    score++;
+  }
+  score += mid + min;
 
-    return score;
+  return score;
 }
 
 /*
@@ -375,9 +375,9 @@ Constraints:
 	-10^9 <= nums[i] <= 10^9
 */
 export function minMoves2(nums: number[]): number {
-    nums.sort((a, b) => a - b);
-    const mid = nums[nums.length >> 1];
-    return nums.reduce((acc, cur) => acc + Math.abs(cur - mid), 0);
+  nums.sort((a, b) => a - b);
+  const mid = nums[nums.length >> 1];
+  return nums.reduce((acc, cur) => acc + Math.abs(cur - mid), 0);
 }
 
 /*
@@ -408,28 +408,28 @@ Constraints:
 	s[i] is '(', ')' or '*'.
 */
 export function checkValidString(s: string): boolean {
-    let leftMin = 0;
-    let leftMax = 0;
-    let i = 0;
-    while (i < s.length) {
-        if (s[i] === '(') {
-            leftMin++;
-            leftMax++;
-        } else if (s[i] === ')') {
-            leftMin = Math.max(leftMin - 1, 0);
-            leftMax--;
-        } else {
-            leftMin = Math.max(leftMin - 1, 0);
-            leftMax++;
-        }
-
-        if (leftMax < 0) {
-            return false;
-        }
-        i++;
+  let leftMin = 0;
+  let leftMax = 0;
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] === '(') {
+      leftMin++;
+      leftMax++;
+    } else if (s[i] === ')') {
+      leftMin = Math.max(leftMin - 1, 0);
+      leftMax--;
+    } else {
+      leftMin = Math.max(leftMin - 1, 0);
+      leftMax++;
     }
 
-    return leftMin === 0;
+    if (leftMax < 0) {
+      return false;
+    }
+    i++;
+  }
+
+  return leftMin === 0;
 }
 
 /*
@@ -455,14 +455,12 @@ Constraints:
 	0 <= nums[i] <= 10^9
 */
 export function largestNumber(nums: number[]): string {
-    const comparator = (a: number, b: number) => {
-        return Number(String(b) + String(a)) - Number(String(a) + String(b));
-    };
-    const num = nums
-        .sort((a, b) => comparator(a, b))
-        .reduce((s, c) => s + c, '');
+  const comparator = (a: number, b: number) => {
+    return Number(String(b) + String(a)) - Number(String(a) + String(b));
+  };
+  const num = nums.sort((a, b) => comparator(a, b)).reduce((s, c) => s + c, '');
 
-    return num[0] === '0' ? '0' : num;
+  return num[0] === '0' ? '0' : num;
 }
 
 /*
@@ -502,19 +500,19 @@ Constraints:
 	1 <= aCosti, bCosti <= 1000
 */
 export function twoCitySchedCost(costs: number[][]): number {
-    const len = costs.length;
-    const n = len >> 1;
+  const len = costs.length;
+  const n = len >> 1;
 
-    const deltas = costs
-        .map(([aCost, bCost]) => bCost - aCost)
-        .sort((a, b) => a - b);
+  const deltas = costs
+    .map(([aCost, bCost]) => bCost - aCost)
+    .sort((a, b) => a - b);
 
-    let sum = costs.reduce((s, [cost]) => s + cost, 0);
-    for (let i = 0; i < n; i++) {
-        sum += deltas[i];
-    }
+  let sum = costs.reduce((s, [cost]) => s + cost, 0);
+  for (let i = 0; i < n; i++) {
+    sum += deltas[i];
+  }
 
-    return sum;
+  return sum;
 }
 
 /*
@@ -556,14 +554,14 @@ Constraints:
 	1 <= n <= 10^9
 */
 export const minDays = cache((n: number) => {
-    if (n <= 1) {
-        return 1;
-    }
+  if (n <= 1) {
+    return 1;
+  }
 
-    return Math.min(
-        (n % 2) + 1 + minDays(Math.floor(n / 2)),
-        (n % 3) + 1 + minDays(Math.floor(n / 3))
-    );
+  return Math.min(
+    (n % 2) + 1 + minDays(Math.floor(n / 2)),
+    (n % 3) + 1 + minDays(Math.floor(n / 3))
+  );
 });
 
 /*
@@ -603,24 +601,24 @@ Constraints:
 	1 <= durationi, lastDayi <= 10^4
 */
 export function scheduleCourse(courses: number[][]): number {
-    courses.sort(([, endA], [, endB]) => endA - endB);
+  courses.sort(([, endA], [, endB]) => endA - endB);
 
-    const heap = new GenericHeap((a, b) => b - a);
-    let time = 0;
-    let count = 0;
-    courses.forEach(([duration, end]) => {
-        if (time + duration <= end) {
-            heap.push(duration);
-            time += duration;
-            count++;
-        } else if (heap.size() > 0 && heap.peek() > duration) {
-            time -= heap.pop();
-            heap.push(duration);
-            time += duration;
-        }
-    });
+  const heap = new GenericHeap((a, b) => b - a);
+  let time = 0;
+  let count = 0;
+  courses.forEach(([duration, end]) => {
+    if (time + duration <= end) {
+      heap.push(duration);
+      time += duration;
+      count++;
+    } else if (heap.size() > 0 && heap.peek() > duration) {
+      time -= heap.pop();
+      heap.push(duration);
+      time += duration;
+    }
+  });
 
-    return count;
+  return count;
 }
 
 /*
@@ -654,33 +652,33 @@ Constraints:
 	1 <= startDayi <= endDayi <= 10^5
 */
 export function maxEvents(events: number[][]): number {
-    const maxEndDay = events.reduce(
-        (m, [, endDay]) => Math.max(m, endDay),
-        -Infinity
-    );
+  const maxEndDay = events.reduce(
+    (m, [, endDay]) => Math.max(m, endDay),
+    -Infinity
+  );
 
-    events.sort(([startA], [startB]) => startA - startB);
-    const heap = new GenericHeap((a, b) => a - b);
-    let day = events[0][0];
-    let i = 0;
-    let max = 0;
-    while (day <= maxEndDay) {
-        while (i < events.length && events[i][0] <= day) {
-            heap.push(events[i++][1]);
-        }
-
-        if (heap.size() > 0 && heap.peek() >= day) {
-            heap.pop();
-            max++;
-        }
-
-        while (heap.size() > 0 && heap.peek() <= day) {
-            heap.pop();
-        }
-        day++;
+  events.sort(([startA], [startB]) => startA - startB);
+  const heap = new GenericHeap((a, b) => a - b);
+  let day = events[0][0];
+  let i = 0;
+  let max = 0;
+  while (day <= maxEndDay) {
+    while (i < events.length && events[i][0] <= day) {
+      heap.push(events[i++][1]);
     }
 
-    return max;
+    if (heap.size() > 0 && heap.peek() >= day) {
+      heap.pop();
+      max++;
+    }
+
+    while (heap.size() > 0 && heap.peek() <= day) {
+      heap.pop();
+    }
+    day++;
+  }
+
+  return max;
 }
 
 /*
@@ -722,31 +720,31 @@ Constraints:
 	0 <= capital[i] <= 10^9
 */
 export function findMaximizedCapital(
-    k: number,
-    w: number,
-    profits: number[],
-    capital: number[]
+  k: number,
+  w: number,
+  profits: number[],
+  capital: number[]
 ): number {
-    const heap = new GenericHeap((a, b) => b - a);
-    const sorted = capital
-        .map((c, i) => [c, profits[i]])
-        .sort(([cA], [cB]) => cA - cB);
+  const heap = new GenericHeap((a, b) => b - a);
+  const sorted = capital
+    .map((c, i) => [c, profits[i]])
+    .sort(([cA], [cB]) => cA - cB);
 
-    let i = 0;
-    while (k) {
-        while (i < sorted.length && w >= sorted[i][0]) {
-            heap.push(sorted[i++][1]);
-        }
-
-        if (heap.size() > 0) {
-            w += heap.pop();
-            k--;
-        } else {
-            break;
-        }
+  let i = 0;
+  while (k) {
+    while (i < sorted.length && w >= sorted[i][0]) {
+      heap.push(sorted[i++][1]);
     }
 
-    return w;
+    if (heap.size() > 0) {
+      w += heap.pop();
+      k--;
+    } else {
+      break;
+    }
+  }
+
+  return w;
 }
 
 /*
@@ -792,29 +790,29 @@ Constraints:
 	1 <= nums[i] <= 10^9
 */
 export function minimumDeviation(nums: number[]): number {
-    const treeSet = new TreeSet((a, b) => a - b);
-    nums.forEach((v) => {
-        if (v & 1) {
-            treeSet.add(v * 2);
-        } else {
-            treeSet.add(v);
-        }
-    });
-
-    let max = treeSet.getMax()!;
-    let min = treeSet.getMin()!;
-    let result = max - min;
-    while (true) {
-        result = Math.min(result, max - min);
-        if (max & 1) {
-            return result;
-        }
-
-        treeSet.remove(max);
-        treeSet.add(max >> 1);
-        max = treeSet.getMax()!;
-        min = treeSet.getMin()!;
+  const treeSet = new TreeSet((a, b) => a - b);
+  nums.forEach((v) => {
+    if (v & 1) {
+      treeSet.add(v * 2);
+    } else {
+      treeSet.add(v);
     }
+  });
+
+  let max = treeSet.getMax()!;
+  let min = treeSet.getMin()!;
+  let result = max - min;
+  while (true) {
+    result = Math.min(result, max - min);
+    if (max & 1) {
+      return result;
+    }
+
+    treeSet.remove(max);
+    treeSet.add(max >> 1);
+    max = treeSet.getMax()!;
+    min = treeSet.getMin()!;
+  }
 }
 
 /*
@@ -845,46 +843,45 @@ Constraints:
 Note: This question is the same as 1296: https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
 */
 export function isNStraightHand(hand: number[], groupSize: number): boolean {
-    const groups = hand.length / groupSize;
-    if (groupSize * groups !== hand.length) {
+  const groups = hand.length / groupSize;
+  if (groupSize * groups !== hand.length) {
+    return false;
+  }
+
+  const freqMap = new Map<number, number>();
+  hand.forEach((v) => {
+    freqMap.set(v, (freqMap.get(v) || 0) + 1);
+  });
+
+  const sorted = Array.from(freqMap.keys()).sort((a, b) => a - b);
+  let group = 0;
+  let nextI = 0;
+  while (group < groups) {
+    const upper = sorted[Math.min(nextI + groupSize - 1, sorted.length - 1)];
+    if (upper - sorted[nextI] !== groupSize - 1) {
+      return false;
+    }
+
+    let backup = nextI;
+    for (let i = nextI; i < nextI + groupSize; i++) {
+      const times = freqMap.get(sorted[i])!;
+      if (!times) {
         return false;
+      }
+
+      if (times > 1) {
+        freqMap.set(sorted[i], times - 1);
+      } else {
+        freqMap.delete(sorted[i]);
+        backup = i + 1;
+      }
     }
 
-    const freqMap = new Map<number, number>();
-    hand.forEach((v) => {
-        freqMap.set(v, (freqMap.get(v) || 0) + 1);
-    });
+    nextI = backup;
+    group++;
+  }
 
-    const sorted = Array.from(freqMap.keys()).sort((a, b) => a - b);
-    let group = 0;
-    let nextI = 0;
-    while (group < groups) {
-        const upper =
-            sorted[Math.min(nextI + groupSize - 1, sorted.length - 1)];
-        if (upper - sorted[nextI] !== groupSize - 1) {
-            return false;
-        }
-
-        let backup = nextI;
-        for (let i = nextI; i < nextI + groupSize; i++) {
-            const times = freqMap.get(sorted[i])!;
-            if (!times) {
-                return false;
-            }
-
-            if (times > 1) {
-                freqMap.set(sorted[i], times - 1);
-            } else {
-                freqMap.delete(sorted[i]);
-                backup = i + 1;
-            }
-        }
-
-        nextI = backup;
-        group++;
-    }
-
-    return true;
+  return true;
 }
 
 /*
@@ -916,42 +913,42 @@ Constraints:
 	0 <= p <= (nums.length)/2
 */
 export function minimizeMax(nums: number[], p: number): number {
-    if (p === 0) {
-        return 0;
+  if (p === 0) {
+    return 0;
+  }
+
+  const n = nums.length;
+  nums.sort((a, b) => a - b);
+
+  const checkDiff = (d: number): boolean => {
+    let i = 0;
+    let count = 0;
+    while (i < n - 1 && count < p) {
+      if (nums[i + 1] - nums[i] <= d) {
+        count++;
+        i += 2;
+      } else {
+        i++;
+      }
     }
 
-    const n = nums.length;
-    nums.sort((a, b) => a - b);
+    return count >= p;
+  };
 
-    const checkDiff = (d: number): boolean => {
-        let i = 0;
-        let count = 0;
-        while (i < n - 1 && count < p) {
-            if (nums[i + 1] - nums[i] <= d) {
-                count++;
-                i += 2;
-            } else {
-                i++;
-            }
-        }
-
-        return count >= p;
-    };
-
-    let l = 0;
-    let r = nums[n - 1] - nums[0];
-    let diff = 0;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (checkDiff(m)) {
-            diff = m;
-            r = m - 1;
-        } else {
-            l = m + 1;
-        }
+  let l = 0;
+  let r = nums[n - 1] - nums[0];
+  let diff = 0;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (checkDiff(m)) {
+      diff = m;
+      r = m - 1;
+    } else {
+      l = m + 1;
     }
+  }
 
-    return diff;
+  return diff;
 }
 
 /*
@@ -996,18 +993,18 @@ Constraints:
 	Folder names consist of lowercase English letters and digits.
 */
 export function minOperations(logs: string[]): number {
-    const map = {
-        './': 0,
-        '../': -1,
-        default: 1,
-    };
+  const map = {
+    './': 0,
+    '../': -1,
+    default: 1,
+  };
 
-    let sum = 0;
-    logs.forEach((v) => {
-        sum = Math.max(0, sum + (map[v] ?? map.default));
-    });
+  let sum = 0;
+  logs.forEach((v) => {
+    sum = Math.max(0, sum + (map[v] ?? map.default));
+  });
 
-    return sum;
+  return sum;
 }
 
 /*
@@ -1040,21 +1037,21 @@ Constraints:
     There will be at most 105 integers in all the arrays.
 */
 export function maxDistance(arrays: number[][]): number {
-    let min = arrays[0][0];
-    let max = arrays[0].at(-1)!;
-    let maxDistance = 0;
-    for (let i = 1; i < arrays.length; i++) {
-        maxDistance = Math.max(
-            maxDistance,
-            Math.abs(arrays[i].at(-1)! - min),
-            Math.abs(max - arrays[i][0])
-        );
+  let min = arrays[0][0];
+  let max = arrays[0].at(-1)!;
+  let maxDistance = 0;
+  for (let i = 1; i < arrays.length; i++) {
+    maxDistance = Math.max(
+      maxDistance,
+      Math.abs(arrays[i].at(-1)! - min),
+      Math.abs(max - arrays[i][0])
+    );
 
-        min = Math.min(min, arrays[i][0]);
-        max = Math.max(max, arrays[i].at(-1)!);
-    }
+    min = Math.min(min, arrays[i][0]);
+    max = Math.max(max, arrays[i].at(-1)!);
+  }
 
-    return maxDistance;
+  return maxDistance;
 }
 
 /*
@@ -1083,20 +1080,20 @@ https://www.nowcoder.com/practice/1ae8d0b6bb4e4bcdbf64ec491f63fc37
   2
 */
 export function getMaxOverlapLines(lines: number[][]): number {
-    const heap = new GenericHeap<number>((a, b) => a - b);
-    lines.sort((a, b) => a[0] - b[0]);
+  const heap = new GenericHeap<number>((a, b) => a - b);
+  lines.sort((a, b) => a[0] - b[0]);
 
-    let max = 1;
-    lines.forEach(([start, end]) => {
-        while (!heap.isEmpty() && heap.peek() <= start) {
-            heap.pop();
-        }
-        heap.push(end);
+  let max = 1;
+  lines.forEach(([start, end]) => {
+    while (!heap.isEmpty() && heap.peek() <= start) {
+      heap.pop();
+    }
+    heap.push(end);
 
-        max = Math.max(max, heap.size());
-    });
+    max = Math.max(max, heap.size());
+  });
 
-    return max;
+  return max;
 }
 
 /**
@@ -1149,17 +1146,17 @@ export function getMaxOverlapLines(lines: number[][]): number {
 对于全部的数据，保证有 $n \le 10000$。
  */
 export function minCost(nums: number[]): number {
-    const heap = new GenericHeap<number>((a, b) => a - b);
-    heap.initHeap(nums);
+  const heap = new GenericHeap<number>((a, b) => a - b);
+  heap.initHeap(nums);
 
-    let cost = 0;
-    while (heap.size() > 1) {
-        const sum = heap.pop() + heap.pop();
-        cost += sum;
-        heap.push(sum);
-    }
+  let cost = 0;
+  while (heap.size() > 1) {
+    const sum = heap.pop() + heap.pop();
+    cost += sum;
+    heap.push(sum);
+  }
 
-    return cost;
+  return cost;
 }
 
 /*
@@ -1208,19 +1205,19 @@ Constraints:
 	The number of opening brackets '[' equals n / 2, and the number of closing brackets ']' equals n / 2.
 */
 export function minSwaps(s: string): number {
-    let left = 0;
-    let right = 0;
-    for (const char of s) {
-        if (char === '[') {
-            left++;
-        } else if (left > 0) {
-            left--;
-        } else {
-            right++;
-        }
+  let left = 0;
+  let right = 0;
+  for (const char of s) {
+    if (char === '[') {
+      left++;
+    } else if (left > 0) {
+      left--;
+    } else {
+      right++;
     }
+  }
 
-    return Math.ceil(right / 2);
+  return Math.ceil(right / 2);
 }
 
 /*
@@ -1254,19 +1251,19 @@ Constraints:
 	s[i] is either '(' or ')'.
 */
 export function minAddToMakeValid(s: string): number {
-    let left = 0;
-    let right = 0;
-    for (const char of s) {
-        if (char === '(') {
-            left++;
-        } else if (left > 0) {
-            left--;
-        } else {
-            right++;
-        }
+  let left = 0;
+  let right = 0;
+  for (const char of s) {
+    if (char === '(') {
+      left++;
+    } else if (left > 0) {
+      left--;
+    } else {
+      right++;
     }
+  }
 
-    return left + right;
+  return left + right;
 }
 
 /*
@@ -1309,15 +1306,15 @@ Constraints:
 	s[i] is either '0' or '1'.
 */
 export function minimumSteps(s: string): number {
-    let steps = 0;
-    let zeroIndex = 0;
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] === '0') {
-            steps += i - zeroIndex++;
-        }
+  let steps = 0;
+  let zeroIndex = 0;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '0') {
+      steps += i - zeroIndex++;
     }
+  }
 
-    return steps;
+  return steps;
 }
 
 /*
@@ -1366,23 +1363,23 @@ Constraints:
 	1 <= quantities[i] <= 10^5
 */
 export function minimizedMaximum(n: number, quantities: number[]): number {
-    const canDistribute = (max: number): boolean =>
-        quantities.reduce((s, v) => s + Math.ceil(v / max), 0) <= n;
+  const canDistribute = (max: number): boolean =>
+    quantities.reduce((s, v) => s + Math.ceil(v / max), 0) <= n;
 
-    let left = 0;
-    let right = 1e5;
-    let closest = right;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (canDistribute(mid)) {
-            closest = mid;
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
+  let left = 0;
+  let right = 1e5;
+  let closest = right;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (canDistribute(mid)) {
+      closest = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
     }
+  }
 
-    return closest;
+  return closest;
 }
 
 /*
@@ -1420,11 +1417,11 @@ Constraints:
 	1 <= nums[i] <= 127
 */
 export function maxGoodNumber(nums: number[]): number {
-    const sorted = nums
-        .map((v) => v.toString(2))
-        .sort((a, b) => parseInt(`${b}${a}`, 2) - parseInt(`${a}${b}`, 2));
+  const sorted = nums
+    .map((v) => v.toString(2))
+    .sort((a, b) => parseInt(`${b}${a}`, 2) - parseInt(`${a}${b}`, 2));
 
-    return parseInt(sorted.join(''), 2);
+  return parseInt(sorted.join(''), 2);
 }
 
 /*
@@ -1466,17 +1463,17 @@ Constraints:
 	1 <= maxSum <= 10^9
 */
 export function maxCount(banned: number[], n: number, maxSum: number): number {
-    let sum = 0;
-    const bannedSet = new Set(banned);
-    let count = 0;
-    for (let i = 1; i <= n; i++) {
-        if (!bannedSet.has(i) && sum + i <= maxSum) {
-            sum += i;
-            count++;
-        }
+  let sum = 0;
+  const bannedSet = new Set(banned);
+  let count = 0;
+  for (let i = 1; i <= n; i++) {
+    if (!bannedSet.has(i) && sum + i <= maxSum) {
+      sum += i;
+      count++;
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -1517,41 +1514,41 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function repeatLimitedString(s: string, repeatLimit: number): string {
-    const alphas = Array(26).fill(0);
-    const aCode = 'a'.charCodeAt(0);
-    for (let i = 0; i < s.length; i++) {
-        alphas[s[i].charCodeAt(0) - aCode]++;
+  const alphas = Array(26).fill(0);
+  const aCode = 'a'.charCodeAt(0);
+  for (let i = 0; i < s.length; i++) {
+    alphas[s[i].charCodeAt(0) - aCode]++;
+  }
+
+  const ret: string[] = [];
+  let first = alphas.length - 1;
+  let second = first - 1;
+  while (first >= 0) {
+    if (alphas[first] === 0) {
+      first--;
+      second = first - 1;
+      continue;
+    }
+    if (second >= 0 && alphas[second] === 0) {
+      second--;
+      continue;
     }
 
-    const ret: string[] = [];
-    let first = alphas.length - 1;
-    let second = first - 1;
-    while (first >= 0) {
-        if (alphas[first] === 0) {
-            first--;
-            second = first - 1;
-            continue;
-        }
-        if (second >= 0 && alphas[second] === 0) {
-            second--;
-            continue;
-        }
+    const char = String.fromCharCode(first + aCode);
+    const limit = ret.at(-1) === char ? repeatLimit - 1 : repeatLimit;
+    const len = Math.min(limit, alphas[first]);
+    ret.push(char.repeat(len));
+    alphas[first] -= len;
 
-        const char = String.fromCharCode(first + aCode);
-        const limit = ret.at(-1) === char ? repeatLimit - 1 : repeatLimit;
-        const len = Math.min(limit, alphas[first]);
-        ret.push(char.repeat(len));
-        alphas[first] -= len;
-
-        if (second < 0) {
-            return ret.join('');
-        }
-
-        ret.push(String.fromCharCode(second + aCode));
-        alphas[second]--;
+    if (second < 0) {
+      return ret.join('');
     }
 
-    return ret.join('');
+    ret.push(String.fromCharCode(second + aCode));
+    alphas[second]--;
+  }
+
+  return ret.join('');
 }
 
 /*
@@ -1594,19 +1591,19 @@ Constraints:
 	s consists only of lowercase English letters.
 */
 export function minimumLength(s: string): number {
-    const freq = new Map<string, number>();
-    for (const c of s) {
-        freq.set(c, (freq.get(c) || 0) + 1);
-    }
+  const freq = new Map<string, number>();
+  for (const c of s) {
+    freq.set(c, (freq.get(c) || 0) + 1);
+  }
 
-    let min = 0;
-    for (const [, v] of freq) {
-        if (v >= 3) {
-            min += v & 1 ? 1 : 2;
-        } else {
-            min += v;
-        }
+  let min = 0;
+  for (const [, v] of freq) {
+    if (v >= 3) {
+      min += v & 1 ? 1 : 2;
+    } else {
+      min += v;
     }
+  }
 
-    return min;
+  return min;
 }

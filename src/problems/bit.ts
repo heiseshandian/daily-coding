@@ -4,21 +4,21 @@ import { countBits, setRightMostBit, unsetRightMostBit } from '../common/bit';
 
 // 求一个数的n次方
 export function pow(a: number, n: number): number {
-    let result = 1;
-    let t = a;
-    while (n !== 0) {
-        if ((n & 1) !== 0) {
-            result *= t;
-        }
-        // a
-        // a^2
-        // a^4
-        // ...
-        t *= t;
-        n = n >>> 1;
+  let result = 1;
+  let t = a;
+  while (n !== 0) {
+    if ((n & 1) !== 0) {
+      result *= t;
     }
+    // a
+    // a^2
+    // a^4
+    // ...
+    t *= t;
+    n = n >>> 1;
+  }
 
-    return result;
+  return result;
 }
 
 /* 
@@ -40,77 +40,77 @@ where births and deaths occur simultaneously. Given the current state of the m x
 技巧，每个位置都是int类型数据，目前就第一位有信息，我们可以用第二位来存储下一个状态的信息，秒啊
 */
 export function gameOfLife(board: number[][]): void {
-    const nextLive = 0b10;
+  const nextLive = 0b10;
 
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
-            const lives = neighbors(board, i, j);
-            const cur = lifeState(board, i, j);
-            if ((cur === 1 && lives == 2) || lives === 3) {
-                board[i][j] |= nextLive;
-            }
-        }
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      const lives = neighbors(board, i, j);
+      const cur = lifeState(board, i, j);
+      if ((cur === 1 && lives == 2) || lives === 3) {
+        board[i][j] |= nextLive;
+      }
     }
+  }
 
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
-            board[i][j] >>= 1;
-        }
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      board[i][j] >>= 1;
     }
+  }
 }
 
 function neighbors(board: number[][], i: number, j: number): number {
-    return (
-        lifeState(board, i + 1, j) +
-        lifeState(board, i + 1, j - 1) +
-        lifeState(board, i + 1, j + 1) +
-        lifeState(board, i - 1, j) +
-        lifeState(board, i - 1, j - 1) +
-        lifeState(board, i - 1, j + 1) +
-        lifeState(board, i, j - 1) +
-        lifeState(board, i, j + 1)
-    );
+  return (
+    lifeState(board, i + 1, j) +
+    lifeState(board, i + 1, j - 1) +
+    lifeState(board, i + 1, j + 1) +
+    lifeState(board, i - 1, j) +
+    lifeState(board, i - 1, j - 1) +
+    lifeState(board, i - 1, j + 1) +
+    lifeState(board, i, j - 1) +
+    lifeState(board, i, j + 1)
+  );
 }
 
 function lifeState(board: number[][], i: number, j: number): 0 | 1 {
-    return i >= 0 &&
-        i < board.length &&
-        j >= 0 &&
-        j < board[0].length &&
-        (board[i][j] & 1) === 1
-        ? 1
-        : 0;
+  return i >= 0 &&
+    i < board.length &&
+    j >= 0 &&
+    j < board[0].length &&
+    (board[i][j] & 1) === 1
+    ? 1
+    : 0;
 }
 
 // 逆序二进制位
 export function reverseBits(n: number): number {
-    // n无符号右移16位之后高16位变成0 原先的高16位移动到低16位
-    // n左移16位之后低16位变成0 原先的低16位移动到高位
-    // 两者或运算之后高16位和低16位就交换过来了
-    n = (n >>> 16) | (n << 16);
-    // 高8位和低8位交换
-    n = ((n & 0xff00ff00) >>> 8) | ((n & 0x00ff00ff) << 8);
-    // 高4位和低4位交换
-    n = ((n & 0xf0f0f0f0) >>> 4) | ((n & 0x0f0f0f0f) << 4);
-    // 高2位和低2位交换
-    n = ((n & 0xcccccccc) >>> 2) | ((n & 0x33333333) << 2);
-    // 高1位和低1位交换
-    n = ((n & 0xaaaaaaaa) >>> 1) | ((n & 0x55555555) << 1);
+  // n无符号右移16位之后高16位变成0 原先的高16位移动到低16位
+  // n左移16位之后低16位变成0 原先的低16位移动到高位
+  // 两者或运算之后高16位和低16位就交换过来了
+  n = (n >>> 16) | (n << 16);
+  // 高8位和低8位交换
+  n = ((n & 0xff00ff00) >>> 8) | ((n & 0x00ff00ff) << 8);
+  // 高4位和低4位交换
+  n = ((n & 0xf0f0f0f0) >>> 4) | ((n & 0x0f0f0f0f) << 4);
+  // 高2位和低2位交换
+  n = ((n & 0xcccccccc) >>> 2) | ((n & 0x33333333) << 2);
+  // 高1位和低1位交换
+  n = ((n & 0xaaaaaaaa) >>> 1) | ((n & 0x55555555) << 1);
 
-    // https://stackoverflow.com/questions/40884030/how-to-declare-an-unsigned-int-variable-in-javascript
-    // js中所有整数字面量会被默认当成有符号整数，通过 >>>0这种神奇的方式可以把n变成无符号整数
-    return n >>> 0;
+  // https://stackoverflow.com/questions/40884030/how-to-declare-an-unsigned-int-variable-in-javascript
+  // js中所有整数字面量会被默认当成有符号整数，通过 >>>0这种神奇的方式可以把n变成无符号整数
+  return n >>> 0;
 }
 
 export function reverseBits2(n: number): number {
-    if (!n) return 0;
-    let result = 0;
-    for (let i = 0; i < 32; i++) {
-        result = result * 2 + (n & 1);
-        n = n >>> 1;
-    }
+  if (!n) return 0;
+  let result = 0;
+  for (let i = 0; i < 32; i++) {
+    result = result * 2 + (n & 1);
+    n = n >>> 1;
+  }
 
-    return result;
+  return result;
 }
 
 /* 
@@ -120,30 +120,30 @@ Given a string array words, return the maximum value of length(word[i]) * length
 where the two words do not share common letters. If no such two words exist, return 0.
 */
 export function maxProduct(words: string[]): number {
-    // 一共有26个英文字母，我们可以用26位二进制位来表示某个字母有没有出现过，然后通过按位或的结果来判断两个字符串有没有公共字母
-    const bits = words.map((word) => convertWordToBit(word));
+  // 一共有26个英文字母，我们可以用26位二进制位来表示某个字母有没有出现过，然后通过按位或的结果来判断两个字符串有没有公共字母
+  const bits = words.map((word) => convertWordToBit(word));
 
-    let max = 0;
-    for (let i = 0; i < words.length; i++) {
-        for (let j = i + 1; j < words.length; j++) {
-            // 按位或等于0说明两个字符串没有公共字母
-            if ((bits[i] & bits[j]) === 0) {
-                max = Math.max(max, words[i].length * words[j].length);
-            }
-        }
+  let max = 0;
+  for (let i = 0; i < words.length; i++) {
+    for (let j = i + 1; j < words.length; j++) {
+      // 按位或等于0说明两个字符串没有公共字母
+      if ((bits[i] & bits[j]) === 0) {
+        max = Math.max(max, words[i].length * words[j].length);
+      }
     }
+  }
 
-    return max;
+  return max;
 }
 
 function convertWordToBit(word: string): number {
-    let bit = 0;
+  let bit = 0;
 
-    for (let i = 0; i < word.length; i++) {
-        bit = bit | (1 << getCharIndex(word[i]));
-    }
+  for (let i = 0; i < word.length; i++) {
+    bit = bit | (1 << getCharIndex(word[i]));
+  }
 
-    return bit;
+  return bit;
 }
 
 /* 
@@ -154,13 +154,13 @@ Given a non-empty array of integers nums, every element appears twice except for
 You must implement a solution with a linear runtime complexity and use only constant extra space.
 */
 export function singleNumber(nums: number[]): number {
-    // 两个相同的数字异或的结果是0，任何数异或0都是本身
-    let xor = 0;
-    for (let i = 0; i < nums.length; i++) {
-        xor ^= nums[i];
-    }
+  // 两个相同的数字异或的结果是0，任何数异或0都是本身
+  let xor = 0;
+  for (let i = 0; i < nums.length; i++) {
+    xor ^= nums[i];
+  }
 
-    return xor;
+  return xor;
 }
 
 /* 
@@ -175,21 +175,21 @@ You must implement a solution with a linear runtime complexity and use only cons
 // 能被3整除则仅出现一次的数字那一位必然是0，否则必然是1
 */
 export function singleNumber2(nums: number[]): number {
-    let result = 0;
-    for (let i = 31; i >= 0; i--) {
-        let count = 0;
-        for (let j = 0; j < nums.length; j++) {
-            if ((nums[j] >> i) & 1) {
-                count++;
-            }
-        }
-
-        if (count % 3 > 0) {
-            result |= 1 << i;
-        }
+  let result = 0;
+  for (let i = 31; i >= 0; i--) {
+    let count = 0;
+    for (let j = 0; j < nums.length; j++) {
+      if ((nums[j] >> i) & 1) {
+        count++;
+      }
     }
 
-    return result;
+    if (count % 3 > 0) {
+      result |= 1 << i;
+    }
+  }
+
+  return result;
 }
 
 /* 
@@ -201,23 +201,23 @@ Find the two elements that appear only once. You can return the answer in any or
 You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
 */
 export function singleNumber3(nums: number[]): number[] {
-    // 假设这两个独立的数是a和b，则xor=a^b
-    // 我们需要通过某种方式将a和b区分开，由于异或可以看成是无进位相加，所以xor最右侧的1必然来自于a或者b
-    // 也就是说在xor最右侧的1这一位a和b必然是一个是0一个是1，我们可以通过这个特性将两者区分开
-    let xor = 0;
-    for (let i = 0; i < nums.length; i++) {
-        xor ^= nums[i];
-    }
+  // 假设这两个独立的数是a和b，则xor=a^b
+  // 我们需要通过某种方式将a和b区分开，由于异或可以看成是无进位相加，所以xor最右侧的1必然来自于a或者b
+  // 也就是说在xor最右侧的1这一位a和b必然是一个是0一个是1，我们可以通过这个特性将两者区分开
+  let xor = 0;
+  for (let i = 0; i < nums.length; i++) {
+    xor ^= nums[i];
+  }
 
-    const rightOne = getRightOne(xor);
-    let a = 0;
-    for (let i = 0; i < nums.length; i++) {
-        if (rightOne & nums[i]) {
-            a ^= nums[i];
-        }
+  const rightOne = getRightOne(xor);
+  let a = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (rightOne & nums[i]) {
+      a ^= nums[i];
     }
+  }
 
-    return [a, xor ^ a];
+  return [a, xor ^ a];
 }
 
 /* 
@@ -237,17 +237,17 @@ right的二进制表示为 1xxx1....
 任何数和0与都是0，所以最终结果就是1xxxx1，也就是left和right的二进制表示的公共前缀部分
 */
 export function rangeBitwiseAnd(left: number, right: number): number {
-    let result = 0;
+  let result = 0;
 
-    for (let i = 0; i <= 31; i++) {
-        if (left >> i === right >> i) {
-            // 先右移，后左移，右边i位会变成0
-            result = (left >> i) << i;
-            break;
-        }
+  for (let i = 0; i <= 31; i++) {
+    if (left >> i === right >> i) {
+      // 先右移，后左移，右边i位会变成0
+      result = (left >> i) << i;
+      break;
     }
+  }
 
-    return result;
+  return result;
 }
 
 /* 
@@ -259,19 +259,19 @@ A string is consistent if all characters in the string appear in the string allo
 Return the number of consistent strings in the array words.
 */
 export function countConsistentStrings(
-    allowed: string,
-    words: string[]
+  allowed: string,
+  words: string[]
 ): number {
-    const allowedBit = convertWordToBit(allowed);
-    let count = 0;
-    for (let i = 0; i < words.length; i++) {
-        // 若出现新的字符则必然按位或的结果大于 allowedBit（因为在其他位置出现了新的1）
-        if ((allowedBit | convertWordToBit(words[i])) <= allowedBit) {
-            count++;
-        }
+  const allowedBit = convertWordToBit(allowed);
+  let count = 0;
+  for (let i = 0; i < words.length; i++) {
+    // 若出现新的字符则必然按位或的结果大于 allowedBit（因为在其他位置出现了新的1）
+    if ((allowedBit | convertWordToBit(words[i])) <= allowedBit) {
+      count++;
     }
+  }
 
-    return count;
+  return count;
 }
 
 /* 
@@ -289,16 +289,16 @@ Given an integer n, return any valid n-bit gray code sequence.
 1 <= n <= 16
 */
 export function grayCode(n: number): number[] {
-    const result: number[] = [0];
+  const result: number[] = [0];
 
-    while (n--) {
-        for (let i = result.length - 1; i >= 0; i--) {
-            result[i] <<= 1;
-            result.push(result[i] | 1);
-        }
+  while (n--) {
+    for (let i = result.length - 1; i >= 0; i--) {
+      result[i] <<= 1;
+      result.push(result[i] | 1);
     }
+  }
 
-    return result;
+  return result;
 }
 
 /*
@@ -332,20 +332,20 @@ Constraints:
 Follow up: Could you solve it without loops/recursion?
 */
 export function isPowerOfTwo(n: number): boolean {
-    if (n < 0) {
-        return false;
-    }
-    let oneCount = 0;
-    while (n) {
-        oneCount += n & 1;
-        n >>= 1;
-    }
+  if (n < 0) {
+    return false;
+  }
+  let oneCount = 0;
+  while (n) {
+    oneCount += n & 1;
+    n >>= 1;
+  }
 
-    return oneCount === 1;
+  return oneCount === 1;
 }
 
 export function isPowerOfTwo2(n: number): boolean {
-    return n === (n & (~n + 1));
+  return n === (n & (~n + 1));
 }
 
 /*
@@ -381,13 +381,13 @@ Constraints:
 Follow up: Could you implement a solution using only O(1) extra space complexity and O(n) runtime complexity?
 */
 export function missingNumber(nums: number[]): number {
-    let xor = 0;
+  let xor = 0;
 
-    for (let i = 0; i < nums.length; i++) {
-        xor ^= nums[i] ^ (i + 1);
-    }
+  for (let i = 0; i < nums.length; i++) {
+    xor ^= nums[i] ^ (i + 1);
+  }
 
-    return xor;
+  return xor;
 }
 
 /*
@@ -426,23 +426,23 @@ Constraints:
 	1 <= n <= 10^5
 */
 export function minOperations(n: number): number {
-    const ones = n.toString(2).split('0');
-    let prev = ones[ones.length - 1].length;
-    let minOp = 0;
-    for (let i = ones.length - 2; i >= 0; i--) {
-        if (ones[i].length >= 1 && prev >= 2) {
-            minOp++;
-            ones.splice(i, 1);
-        } else {
-            prev = ones[i].length;
-        }
+  const ones = n.toString(2).split('0');
+  let prev = ones[ones.length - 1].length;
+  let minOp = 0;
+  for (let i = ones.length - 2; i >= 0; i--) {
+    if (ones[i].length >= 1 && prev >= 2) {
+      minOp++;
+      ones.splice(i, 1);
+    } else {
+      prev = ones[i].length;
     }
+  }
 
-    ones.forEach((v) => {
-        minOp += Math.min(2, v.length);
-    });
+  ones.forEach((v) => {
+    minOp += Math.min(2, v.length);
+  });
 
-    return minOp;
+  return minOp;
 }
 
 /*
@@ -482,26 +482,26 @@ Constraints:
 	0 <= k <= 10^6
 */
 export function minOperations2(nums: number[], k: number): number {
-    let minOp = 0;
-    const max = Math.pow(10, 6).toString(2).length;
-    let i = 0;
-    while (i < max) {
-        const kBit = k & 1;
-        k >>= 1;
+  let minOp = 0;
+  const max = Math.pow(10, 6).toString(2).length;
+  let i = 0;
+  while (i < max) {
+    const kBit = k & 1;
+    k >>= 1;
 
-        const numBit = nums.reduce((acc, cur, i) => {
-            acc ^= cur & 1;
-            nums[i] >>= 1;
-            return acc;
-        }, 0);
+    const numBit = nums.reduce((acc, cur, i) => {
+      acc ^= cur & 1;
+      nums[i] >>= 1;
+      return acc;
+    }, 0);
 
-        if (kBit !== numBit) {
-            minOp++;
-        }
-        i++;
+    if (kBit !== numBit) {
+      minOp++;
     }
+    i++;
+  }
 
-    return minOp;
+  return minOp;
 }
 
 /*
@@ -546,41 +546,41 @@ Constraints:
 	s[0] == '1'
 */
 export function numSteps(s: string): number {
-    const bits = s.split('');
-    let steps = 0;
+  const bits = s.split('');
+  let steps = 0;
 
-    while (bits.length > 1) {
-        const last = bits[bits.length - 1];
+  while (bits.length > 1) {
+    const last = bits[bits.length - 1];
 
-        if (last === '0') {
-            bits.pop();
-        } else {
-            addOneToBinaryArrayInPlace(bits);
-        }
-        steps++;
+    if (last === '0') {
+      bits.pop();
+    } else {
+      addOneToBinaryArrayInPlace(bits);
     }
+    steps++;
+  }
 
-    return steps;
+  return steps;
 }
 
 function addOneToBinaryArrayInPlace(bits: string[]): void {
-    let carry = 1;
+  let carry = 1;
 
-    for (let i = bits.length - 1; i >= 0; i--) {
-        if (bits[i] === '1' && carry === 1) {
-            bits[i] = '0';
-        } else if (bits[i] === '0' && carry === 1) {
-            bits[i] = '1';
-            carry = 0;
-            break;
-        } else {
-            break;
-        }
+  for (let i = bits.length - 1; i >= 0; i--) {
+    if (bits[i] === '1' && carry === 1) {
+      bits[i] = '0';
+    } else if (bits[i] === '0' && carry === 1) {
+      bits[i] = '1';
+      carry = 0;
+      break;
+    } else {
+      break;
     }
+  }
 
-    if (carry === 1) {
-        bits.unshift('1');
-    }
+  if (carry === 1) {
+    bits.unshift('1');
+  }
 }
 
 /*
@@ -611,9 +611,9 @@ Constraints:
 Note: This question is the same as 1009: https://leetcode.com/problems/complement-of-base-10-integer/
 */
 export function findComplement(num: number): number {
-    const len = num.toString(2).length;
-    const mask = (1 << len) - 1;
-    return num ^ mask;
+  const len = num.toString(2).length;
+  const mask = (1 << len) - 1;
+  return num ^ mask;
 }
 
 /*
@@ -650,16 +650,16 @@ Constraints:
 	0 <= start, goal <= 10^9
 */
 export function minBitFlips(start: number, goal: number): number {
-    let min = 0;
-    while (start || goal) {
-        if ((start & 1) !== (goal & 1)) {
-            min++;
-        }
-        start >>= 1;
-        goal >>= 1;
+  let min = 0;
+  while (start || goal) {
+    if ((start & 1) !== (goal & 1)) {
+      min++;
     }
+    start >>= 1;
+    goal >>= 1;
+  }
 
-    return min;
+  return min;
 }
 
 /*
@@ -687,42 +687,42 @@ Constraints:
 	1 <= matchsticks[i] <= 10^8
 */
 export function makesquare(matchsticks: number[]): boolean {
-    const sum = matchsticks.reduce((s, c) => s + c, 0);
-    if (sum % 4 !== 0) {
-        return false;
+  const sum = matchsticks.reduce((s, c) => s + c, 0);
+  if (sum % 4 !== 0) {
+    return false;
+  }
+
+  const edgeLen = sum / 4;
+  const n = matchsticks.length;
+  const dp: boolean[] = Array(1 << n);
+
+  const dfs = (status: number, edge: number, rest: number): boolean => {
+    if (dp[status] !== undefined) {
+      return dp[status];
+    }
+    if (edge === 3) {
+      dp[status] = true;
+      return true;
+    }
+    if (rest === 0) {
+      return dfs(status, edge + 1, edgeLen);
     }
 
-    const edgeLen = sum / 4;
-    const n = matchsticks.length;
-    const dp: boolean[] = Array(1 << n);
-
-    const dfs = (status: number, edge: number, rest: number): boolean => {
-        if (dp[status] !== undefined) {
-            return dp[status];
+    for (let i = 0; i < n; i++) {
+      if (status & (1 << i) && matchsticks[i] <= rest) {
+        const ret = dfs(status ^ (1 << i), edge, rest - matchsticks[i]);
+        if (ret) {
+          dp[status] = true;
+          return true;
         }
-        if (edge === 3) {
-            dp[status] = true;
-            return true;
-        }
-        if (rest === 0) {
-            return dfs(status, edge + 1, edgeLen);
-        }
+      }
+    }
 
-        for (let i = 0; i < n; i++) {
-            if (status & (1 << i) && matchsticks[i] <= rest) {
-                const ret = dfs(status ^ (1 << i), edge, rest - matchsticks[i]);
-                if (ret) {
-                    dp[status] = true;
-                    return true;
-                }
-            }
-        }
+    dp[status] = false;
+    return false;
+  };
 
-        dp[status] = false;
-        return false;
-    };
-
-    return dfs((1 << (n + 1)) - 1, 0, edgeLen);
+  return dfs((1 << (n + 1)) - 1, 0, edgeLen);
 }
 
 /**
@@ -761,31 +761,31 @@ export function makesquare(matchsticks: number[]): boolean {
 ```
  */
 export function shortestTravelingPath(grid: number[][]) {
-    const n = grid.length;
-    const dp: number[][] = Array.from({ length: 1 << n }, () => Array(n));
-    const target = (1 << n) - 1;
+  const n = grid.length;
+  const dp: number[][] = Array.from({ length: 1 << n }, () => Array(n));
+  const target = (1 << n) - 1;
 
-    const dfs = (status: number, index: number): number => {
-        if (dp[status][index] !== undefined) {
-            return dp[status][index];
-        }
-        if (status === target) {
-            dp[status][index] = grid[index][0];
-            return grid[index][0];
-        }
+  const dfs = (status: number, index: number): number => {
+    if (dp[status][index] !== undefined) {
+      return dp[status][index];
+    }
+    if (status === target) {
+      dp[status][index] = grid[index][0];
+      return grid[index][0];
+    }
 
-        let min = Infinity;
-        for (let i = 0; i < n; i++) {
-            if ((status & (1 << i)) === 0) {
-                min = Math.min(min, grid[index][i] + dfs(status | (1 << i), i));
-            }
-        }
+    let min = Infinity;
+    for (let i = 0; i < n; i++) {
+      if ((status & (1 << i)) === 0) {
+        min = Math.min(min, grid[index][i] + dfs(status | (1 << i), i));
+      }
+    }
 
-        dp[status][index] = min;
-        return min;
-    };
+    dp[status][index] = min;
+    return min;
+  };
 
-    return dfs(1, 0);
+  return dfs(1, 0);
 }
 
 /*
@@ -829,45 +829,45 @@ Constraints:
 	hats[i] contains a list of unique integers.
 */
 export function numberWays(hats: number[][]): number {
-    const MOD = 1e9 + 7;
+  const MOD = 1e9 + 7;
 
-    const bits: number[] = Array(41).fill(0);
-    let m = 1;
-    hats.forEach((colors, i) => {
-        colors.forEach((c) => {
-            bits[c] |= 1 << i;
-            m = Math.max(m, c);
-        });
+  const bits: number[] = Array(41).fill(0);
+  let m = 1;
+  hats.forEach((colors, i) => {
+    colors.forEach((c) => {
+      bits[c] |= 1 << i;
+      m = Math.max(m, c);
     });
-    bits.length = m + 1;
+  });
+  bits.length = m + 1;
 
-    const n = hats.length;
-    const dp: number[][] = Array.from({ length: 1 << n }, () => Array(m + 1));
-    const target = (1 << n) - 1;
+  const n = hats.length;
+  const dp: number[][] = Array.from({ length: 1 << n }, () => Array(m + 1));
+  const target = (1 << n) - 1;
 
-    const dfs = (status: number, index: number): number => {
-        if (dp[status][index] !== undefined) {
-            return dp[status][index];
-        }
-        if (status === target) {
-            return 1;
-        }
-        if (index === bits.length) {
-            return 0;
-        }
+  const dfs = (status: number, index: number): number => {
+    if (dp[status][index] !== undefined) {
+      return dp[status][index];
+    }
+    if (status === target) {
+      return 1;
+    }
+    if (index === bits.length) {
+      return 0;
+    }
 
-        let ret = dfs(status, index + 1);
-        for (let j = 0; j < n; j++) {
-            if ((status & (1 << j)) === 0 && bits[index] & (1 << j)) {
-                ret = (ret + dfs(status | (1 << j), index + 1)) % MOD;
-            }
-        }
+    let ret = dfs(status, index + 1);
+    for (let j = 0; j < n; j++) {
+      if ((status & (1 << j)) === 0 && bits[index] & (1 << j)) {
+        ret = (ret + dfs(status | (1 << j), index + 1)) % MOD;
+      }
+    }
 
-        dp[status][index] = ret;
-        return ret;
-    };
+    dp[status][index] = ret;
+    return ret;
+  };
 
-    return dfs(0, 1);
+  return dfs(0, 1);
 }
 
 /*
@@ -908,19 +908,19 @@ Constraints:
 	0 <= lefti <= righti < arr.length
 */
 export function xorQueries(arr: number[], queries: number[][]): number[] {
-    const n = arr.length;
-    const prefix = Array(n);
-    prefix[0] = arr[0];
-    for (let i = 1; i < n; i++) {
-        prefix[i] = prefix[i - 1] ^ arr[i];
-    }
+  const n = arr.length;
+  const prefix = Array(n);
+  prefix[0] = arr[0];
+  for (let i = 1; i < n; i++) {
+    prefix[i] = prefix[i - 1] ^ arr[i];
+  }
 
-    const ret: number[] = Array(queries.length);
-    queries.forEach(([left, right], i) => {
-        ret[i] = prefix[right] ^ prefix[left - 1];
-    });
+  const ret: number[] = Array(queries.length);
+  queries.forEach(([left, right], i) => {
+    ret[i] = prefix[right] ^ prefix[left - 1];
+  });
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -960,20 +960,20 @@ Constraints:
 	1 <= nums[i] <= 10^6
 */
 export function longestSubarray(nums: number[]): number {
-    const max = Math.max(...nums);
-    let m = 1;
-    let count = 0;
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === max) {
-            count++;
+  const max = Math.max(...nums);
+  let m = 1;
+  let count = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] === max) {
+      count++;
 
-            m = Math.max(m, count);
-        } else {
-            count = 0;
-        }
+      m = Math.max(m, count);
+    } else {
+      count = 0;
     }
+  }
 
-    return m;
+  return m;
 }
 
 /*
@@ -1011,19 +1011,19 @@ Constraints:
 	1 <= candidates[i] <= 10^7
 */
 export function largestCombination(candidates: number[]): number {
-    const bits = Array((1e7).toString(2).length).fill(0);
-    candidates.forEach((v) => {
-        let i = 0;
-        while (v > 0) {
-            if (v & 1) {
-                bits[i]++;
-            }
-            v >>= 1;
-            i++;
-        }
-    });
+  const bits = Array((1e7).toString(2).length).fill(0);
+  candidates.forEach((v) => {
+    let i = 0;
+    while (v > 0) {
+      if (v & 1) {
+        bits[i]++;
+      }
+      v >>= 1;
+      i++;
+    }
+  });
 
-    return Math.max(...bits);
+  return Math.max(...bits);
 }
 
 /*
@@ -1070,16 +1070,16 @@ Constraints:
 	nums​​​ is sorted in ascending order.
 */
 export function getMaximumXor(nums: number[], maximumBit: number): number[] {
-    let xor = nums.reduce((s, v) => s ^ v, 0);
-    const k = (1 << maximumBit) - 1;
+  let xor = nums.reduce((s, v) => s ^ v, 0);
+  const k = (1 << maximumBit) - 1;
 
-    const ret: number[] = Array(nums.length);
-    for (let i = 0; i < nums.length; i++) {
-        ret[i] = xor ^ k;
-        xor ^= nums[nums.length - 1 - i];
-    }
+  const ret: number[] = Array(nums.length);
+  for (let i = 0; i < nums.length; i++) {
+    ret[i] = xor ^ k;
+    xor ^= nums[nums.length - 1 - i];
+  }
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -1114,23 +1114,23 @@ Constraints:
 	1 <= n, x <= 10^8
 */
 export function minEnd(n: number, x: number): number {
-    let nBigInt = BigInt(n) - 1n;
-    let xBigInt = BigInt(x);
-    let offset = 1n;
+  let nBigInt = BigInt(n) - 1n;
+  let xBigInt = BigInt(x);
+  let offset = 1n;
 
-    while (nBigInt > 0) {
-        if ((offset & xBigInt) === 0n) {
-            if (nBigInt & 1n) {
-                xBigInt |= offset;
-            }
+  while (nBigInt > 0) {
+    if ((offset & xBigInt) === 0n) {
+      if (nBigInt & 1n) {
+        xBigInt |= offset;
+      }
 
-            nBigInt >>= 1n;
-        }
-
-        offset <<= 1n;
+      nBigInt >>= 1n;
     }
 
-    return Number(xBigInt);
+    offset <<= 1n;
+  }
+
+  return Number(xBigInt);
 }
 
 /*
@@ -1179,39 +1179,39 @@ Constraints:
 	0 <= k <= 10^9
 */
 export function minimumSubarrayLength(nums: number[], k: number): number {
-    const n = nums.length;
-    const bits: number[] = new Array(32).fill(0);
-    let min = n + 1;
-    let s = 0;
-    let left = 0;
+  const n = nums.length;
+  const bits: number[] = new Array(32).fill(0);
+  let min = n + 1;
+  let s = 0;
+  let left = 0;
 
-    for (let right = 0; right < n; right++) {
-        const x = nums[right];
-        s |= x;
+  for (let right = 0; right < n; right++) {
+    const x = nums[right];
+    s |= x;
 
-        for (let h = 0; h < 32; h++) {
-            if ((x >> h) & 1) {
-                bits[h] += 1;
-            }
-        }
-
-        while (s >= k && left <= right) {
-            min = Math.min(min, right - left + 1);
-            const y = nums[left];
-
-            for (let h = 0; h < 32; h++) {
-                if ((y >> h) & 1) {
-                    bits[h] -= 1;
-                    if (bits[h] === 0) {
-                        s ^= 1 << h;
-                    }
-                }
-            }
-            left += 1;
-        }
+    for (let h = 0; h < 32; h++) {
+      if ((x >> h) & 1) {
+        bits[h] += 1;
+      }
     }
 
-    return min > n ? -1 : min;
+    while (s >= k && left <= right) {
+      min = Math.min(min, right - left + 1);
+      const y = nums[left];
+
+      for (let h = 0; h < 32; h++) {
+        if ((y >> h) & 1) {
+          bits[h] -= 1;
+          if (bits[h] === 0) {
+            s ^= 1 << h;
+          }
+        }
+      }
+      left += 1;
+    }
+  }
+
+  return min > n ? -1 : min;
 }
 
 /*
@@ -1257,18 +1257,18 @@ Constraints:
 	nums[i] is a prime number.
 */
 export function minBitwiseArray(nums: number[]): number[] {
-    return nums.map((v) => {
-        if (v === 2) {
-            return -1;
-        }
+  return nums.map((v) => {
+    if (v === 2) {
+      return -1;
+    }
 
-        let offset = 1;
-        while (offset & v) {
-            offset <<= 1;
-        }
+    let offset = 1;
+    while (offset & v) {
+      offset <<= 1;
+    }
 
-        return v - (offset >> 1);
-    });
+    return v - (offset >> 1);
+  });
 }
 
 /*
@@ -1306,16 +1306,16 @@ Constraints:
 	1 <= num1, num2 <= 10^9
 */
 export function minimizeXor(num1: number, num2: number): number {
-    const diff = countBits(num1) - countBits(num2);
-    const setBit = diff > 0 ? unsetRightMostBit : setRightMostBit;
-    let x = num1;
-    let absDiff = Math.abs(diff);
-    while (absDiff) {
-        x = setBit(x);
-        absDiff--;
-    }
+  const diff = countBits(num1) - countBits(num2);
+  const setBit = diff > 0 ? unsetRightMostBit : setRightMostBit;
+  let x = num1;
+  let absDiff = Math.abs(diff);
+  while (absDiff) {
+    x = setBit(x);
+    absDiff--;
+  }
 
-    return x;
+  return x;
 }
 
 /*
@@ -1349,19 +1349,19 @@ Constraints:
 	0 <= nums1[i], nums2[j] <= 10^9
 */
 export function xorAllNums(nums1: number[], nums2: number[]): number {
-    const xor1 = nums1.reduce((s, v) => s ^ v, 0);
-    const xor2 = nums2.reduce((s, v) => s ^ v, 0);
+  const xor1 = nums1.reduce((s, v) => s ^ v, 0);
+  const xor2 = nums2.reduce((s, v) => s ^ v, 0);
 
-    if (nums1.length % 2 === 0 && nums2.length % 2 === 0) {
-        return 0;
-    }
-    if (nums1.length % 2 === 0) {
-        return xor1;
-    }
-    if (nums2.length % 2 === 0) {
-        return xor2;
-    }
-    return xor1 ^ xor2;
+  if (nums1.length % 2 === 0 && nums2.length % 2 === 0) {
+    return 0;
+  }
+  if (nums1.length % 2 === 0) {
+    return xor1;
+  }
+  if (nums2.length % 2 === 0) {
+    return xor2;
+  }
+  return xor1 ^ xor2;
 }
 
 /*
@@ -1410,12 +1410,12 @@ Constraints:
 	The values in derived are either 0's or 1's
 */
 export function doesValidArrayExist(derived: number[]): boolean {
-    let xor = 0;
-    for (const x of derived) {
-        xor ^= x;
-    }
+  let xor = 0;
+  for (const x of derived) {
+    xor ^= x;
+  }
 
-    return xor === 0;
+  return xor === 0;
 }
 
 /*
@@ -1457,35 +1457,35 @@ Constraints:
 	1 <= k <= 60
 */
 export function countExcellentPairs(nums: number[], k: number): number {
-    const deduped = Array.from(new Set(nums));
-    const bits = Array(deduped.length);
-    for (let i = 0; i < deduped.length; i++) {
-        bits[i] = countBits(deduped[i]);
+  const deduped = Array.from(new Set(nums));
+  const bits = Array(deduped.length);
+  for (let i = 0; i < deduped.length; i++) {
+    bits[i] = countBits(deduped[i]);
+  }
+
+  bits.sort((a, b) => a - b);
+  let count = 0;
+  for (let i = 0; i < bits.length; i++) {
+    const target = k - bits[i];
+    let left = i;
+    let right = bits.length - 1;
+    let closest = bits.length;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (bits[mid] >= target) {
+        closest = mid;
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
     }
 
-    bits.sort((a, b) => a - b);
-    let count = 0;
-    for (let i = 0; i < bits.length; i++) {
-        const target = k - bits[i];
-        let left = i;
-        let right = bits.length - 1;
-        let closest = bits.length;
-        while (left <= right) {
-            const mid = left + ((right - left) >> 1);
-            if (bits[mid] >= target) {
-                closest = mid;
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        }
-
-        if (closest === i) {
-            count += ((bits.length - closest - 1) << 1) | 1;
-        } else {
-            count += (bits.length - closest) << 1;
-        }
+    if (closest === i) {
+      count += ((bits.length - closest - 1) << 1) | 1;
+    } else {
+      count += (bits.length - closest) << 1;
     }
+  }
 
-    return count;
+  return count;
 }

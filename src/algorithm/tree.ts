@@ -2,323 +2,332 @@ import { Stack } from './stack';
 import { Queue } from './queue';
 
 export class TreeNode {
-    val: number;
-    left: TreeNode | null;
-    right: TreeNode | null;
+  val: number;
+  left: TreeNode | null;
+  right: TreeNode | null;
 
-    constructor(val: number, left: TreeNode | null = null, right: TreeNode | null = null) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
+  constructor(
+    val: number,
+    left: TreeNode | null = null,
+    right: TreeNode | null = null
+  ) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
 export function preVisitNode(root: TreeNode | null) {
-    if (!root) {
-        return [];
+  if (!root) {
+    return [];
+  }
+
+  const result: TreeNode[] = [];
+  const stack = new Stack<TreeNode>();
+  stack.push(root);
+
+  while (!stack.isEmpty()) {
+    const node = stack.pop()!;
+    result.push(node);
+    if (node.right) {
+      stack.push(node.right);
     }
-
-    const result: TreeNode[] = [];
-    const stack = new Stack<TreeNode>();
-    stack.push(root);
-
-    while (!stack.isEmpty()) {
-        const node = stack.pop()!;
-        result.push(node);
-        if (node.right) {
-            stack.push(node.right);
-        }
-        if (node.left) {
-            stack.push(node.left);
-        }
+    if (node.left) {
+      stack.push(node.left);
     }
+  }
 
-    return result;
+  return result;
 }
 
 export function preVisitNode2(root: TreeNode | null) {
-    if (!root) {
-        return [];
-    }
+  if (!root) {
+    return [];
+  }
 
-    const result: TreeNode[] = [];
-    recursivePreVisitNode2(root, result);
-    return result;
+  const result: TreeNode[] = [];
+  recursivePreVisitNode2(root, result);
+  return result;
 }
 
 function recursivePreVisitNode2(node: TreeNode | null, result: TreeNode[]) {
-    if (!node) {
-        return;
-    }
+  if (!node) {
+    return;
+  }
 
-    result.push(node);
-    recursivePreVisitNode2(node.left, result);
-    recursivePreVisitNode2(node.right, result);
+  result.push(node);
+  recursivePreVisitNode2(node.left, result);
+  recursivePreVisitNode2(node.right, result);
 }
 
 export function postVisitNode(root: TreeNode | null) {
-    if (!root) {
-        return [];
+  if (!root) {
+    return [];
+  }
+
+  const result: TreeNode[] = [];
+  const stack = new Stack<TreeNode>();
+  stack.push(root);
+
+  while (!stack.isEmpty()) {
+    const node = stack.pop()!;
+    result.push(node);
+    if (node.left) {
+      stack.push(node.left);
     }
-
-    const result: TreeNode[] = [];
-    const stack = new Stack<TreeNode>();
-    stack.push(root);
-
-    while (!stack.isEmpty()) {
-        const node = stack.pop()!;
-        result.push(node);
-        if (node.left) {
-            stack.push(node.left);
-        }
-        if (node.right) {
-            stack.push(node.right);
-        }
+    if (node.right) {
+      stack.push(node.right);
     }
+  }
 
-    return result.reverse();
+  return result.reverse();
 }
 
 export function postVisitNode2(root: TreeNode | null) {
-    if (!root) {
-        return [];
-    }
+  if (!root) {
+    return [];
+  }
 
-    const result: TreeNode[] = [];
-    recursivePostVisitNode2(root, result);
-    return result;
+  const result: TreeNode[] = [];
+  recursivePostVisitNode2(root, result);
+  return result;
 }
 
 function recursivePostVisitNode2(node: TreeNode | null, result: TreeNode[]) {
-    if (!node) {
-        return;
-    }
+  if (!node) {
+    return;
+  }
 
-    recursivePostVisitNode2(node.left, result);
-    recursivePostVisitNode2(node.right, result);
-    result.push(node);
+  recursivePostVisitNode2(node.left, result);
+  recursivePostVisitNode2(node.right, result);
+  result.push(node);
 }
 
 export function middleVisitNode(root: TreeNode | null) {
-    if (!root) {
-        return [];
+  if (!root) {
+    return [];
+  }
+
+  const stack = new Stack<TreeNode>();
+  const result: TreeNode[] = [];
+  let node: TreeNode | null = root;
+
+  while (!stack.isEmpty() || node !== null) {
+    if (node !== null) {
+      stack.push(node);
+      node = node.left;
+    } else {
+      node = stack.pop()!;
+      result.push(node);
+      node = node.right;
     }
+  }
 
-    const stack = new Stack<TreeNode>();
-    const result: TreeNode[] = [];
-    let node: TreeNode | null = root;
-
-    while (!stack.isEmpty() || node !== null) {
-        if (node !== null) {
-            stack.push(node);
-            node = node.left;
-        } else {
-            node = stack.pop()!;
-            result.push(node);
-            node = node.right;
-        }
-    }
-
-    return result;
+  return result;
 }
 
 export function middleVisitNode2(root: TreeNode | null) {
-    if (!root) {
-        return [];
-    }
+  if (!root) {
+    return [];
+  }
 
-    const result: TreeNode[] = [];
-    recursiveMiddleVisitNode2(root, result);
-    return result;
+  const result: TreeNode[] = [];
+  recursiveMiddleVisitNode2(root, result);
+  return result;
 }
 
 function recursiveMiddleVisitNode2(node: TreeNode | null, result: TreeNode[]) {
-    if (!node) {
-        return;
-    }
+  if (!node) {
+    return;
+  }
 
-    recursiveMiddleVisitNode2(node.left, result);
-    result.push(node);
-    recursiveMiddleVisitNode2(node.right, result);
+  recursiveMiddleVisitNode2(node.left, result);
+  result.push(node);
+  recursiveMiddleVisitNode2(node.right, result);
 }
 
 export function visitTreeByLevel(root: TreeNode | null) {
-    if (!root) {
-        return [];
+  if (!root) {
+    return [];
+  }
+
+  const result: TreeNode[] = [];
+  const queue = new Queue<TreeNode>();
+  queue.add(root);
+  while (!queue.isEmpty()) {
+    const node = queue.poll() as TreeNode;
+    result.push(node);
+
+    if (node.left) {
+      queue.add(node.left);
     }
-
-    const result: TreeNode[] = [];
-    const queue = new Queue<TreeNode>();
-    queue.add(root);
-    while (!queue.isEmpty()) {
-        const node = queue.poll() as TreeNode;
-        result.push(node);
-
-        if (node.left) {
-            queue.add(node.left);
-        }
-        if (node.right) {
-            queue.add(node.right);
-        }
+    if (node.right) {
+      queue.add(node.right);
     }
+  }
 
-    return result;
+  return result;
 }
 
 export function getMaxWidth(root: TreeNode | null) {
-    if (!root) {
-        return 0;
+  if (!root) {
+    return 0;
+  }
+
+  const levelMap: Map<TreeNode, number> = new Map();
+  levelMap.set(root, 1);
+  let currentLevel = 1;
+  let currentLevelNodes = 0;
+  let max = 0;
+
+  const queue = new Queue<TreeNode>();
+  queue.add(root);
+
+  while (!queue.isEmpty()) {
+    const node = queue.poll() as TreeNode;
+    const currentNodeLevel = levelMap.get(node) as number;
+
+    if (node.left) {
+      levelMap.set(node.left, currentNodeLevel + 1);
+      queue.add(node.left);
+    }
+    if (node.right) {
+      levelMap.set(node.right, currentNodeLevel + 1);
+      queue.add(node.right);
     }
 
-    const levelMap: Map<TreeNode, number> = new Map();
-    levelMap.set(root, 1);
-    let currentLevel = 1;
-    let currentLevelNodes = 0;
-    let max = 0;
-
-    const queue = new Queue<TreeNode>();
-    queue.add(root);
-
-    while (!queue.isEmpty()) {
-        const node = queue.poll() as TreeNode;
-        const currentNodeLevel = levelMap.get(node) as number;
-
-        if (node.left) {
-            levelMap.set(node.left, currentNodeLevel + 1);
-            queue.add(node.left);
-        }
-        if (node.right) {
-            levelMap.set(node.right, currentNodeLevel + 1);
-            queue.add(node.right);
-        }
-
-        if (currentLevel === currentNodeLevel) {
-            currentLevelNodes++;
-        } else {
-            // 另起一层的时候结算上一层的最大节点数
-            max = Math.max(currentLevelNodes, max);
-            currentLevel = currentNodeLevel;
-            currentLevelNodes = 1;
-        }
+    if (currentLevel === currentNodeLevel) {
+      currentLevelNodes++;
+    } else {
+      // 另起一层的时候结算上一层的最大节点数
+      max = Math.max(currentLevelNodes, max);
+      currentLevel = currentNodeLevel;
+      currentLevelNodes = 1;
     }
-    // 最后一层没有下一层来标识结算，所以出循环后单独结算
-    max = Math.max(currentLevelNodes, max);
+  }
+  // 最后一层没有下一层来标识结算，所以出循环后单独结算
+  max = Math.max(currentLevelNodes, max);
 
-    return max;
+  return max;
 }
 
 export function getMaxWidthNoMap(root: TreeNode | null) {
-    if (!root) {
-        return 0;
+  if (!root) {
+    return 0;
+  }
+
+  const queue = new Queue<TreeNode>();
+  queue.add(root);
+
+  let curEnd: TreeNode | null = root;
+  let nextEnd: TreeNode | null = null;
+  let currentLevelNodes = 0;
+  let max = 0;
+
+  while (!queue.isEmpty()) {
+    const node = queue.poll() as TreeNode;
+
+    if (node.left) {
+      queue.add(node.left);
+      nextEnd = node.left;
     }
-
-    const queue = new Queue<TreeNode>();
-    queue.add(root);
-
-    let curEnd: TreeNode | null = root;
-    let nextEnd: TreeNode | null = null;
-    let currentLevelNodes = 0;
-    let max = 0;
-
-    while (!queue.isEmpty()) {
-        const node = queue.poll() as TreeNode;
-
-        if (node.left) {
-            queue.add(node.left);
-            nextEnd = node.left;
-        }
-        if (node.right) {
-            queue.add(node.right);
-            nextEnd = node.right;
-        }
-        currentLevelNodes++;
-
-        if (node === curEnd) {
-            max = Math.max(max, currentLevelNodes);
-
-            curEnd = nextEnd;
-            currentLevelNodes = 0;
-        }
+    if (node.right) {
+      queue.add(node.right);
+      nextEnd = node.right;
     }
+    currentLevelNodes++;
 
-    return max;
+    if (node === curEnd) {
+      max = Math.max(max, currentLevelNodes);
+
+      curEnd = nextEnd;
+      currentLevelNodes = 0;
+    }
+  }
+
+  return max;
 }
 
 export function preSerialize(root: TreeNode | null) {
-    const queue = new Queue<number | null>();
-    recursivePreSerialize(root, queue);
-    return queue;
+  const queue = new Queue<number | null>();
+  recursivePreSerialize(root, queue);
+  return queue;
 }
 
-function recursivePreSerialize(node: TreeNode | null, queue: Queue<number | null>) {
-    if (!node) {
-        queue.add(null);
-        return;
-    }
+function recursivePreSerialize(
+  node: TreeNode | null,
+  queue: Queue<number | null>
+) {
+  if (!node) {
+    queue.add(null);
+    return;
+  }
 
-    queue.add(node.val);
-    recursivePreSerialize(node.left, queue);
-    recursivePreSerialize(node.right, queue);
+  queue.add(node.val);
+  recursivePreSerialize(node.left, queue);
+  recursivePreSerialize(node.right, queue);
 }
 
-export function preBuildNode(queue: Queue<number | null> | Array<number | null>): TreeNode | null {
-    if (Array.isArray(queue)) {
-        queue = new Queue(queue);
-    }
+export function preBuildNode(
+  queue: Queue<number | null> | Array<number | null>
+): TreeNode | null {
+  if (Array.isArray(queue)) {
+    queue = new Queue(queue);
+  }
 
-    if (!queue || queue.isEmpty()) {
-        return null;
-    }
+  if (!queue || queue.isEmpty()) {
+    return null;
+  }
 
-    return recursivePreBuildNode(queue);
+  return recursivePreBuildNode(queue);
 }
 
 function recursivePreBuildNode(queue: Queue<number | null>) {
-    const val = queue.poll() as number;
-    if (val === null || val === undefined) {
-        return null;
-    }
+  const val = queue.poll() as number;
+  if (val === null || val === undefined) {
+    return null;
+  }
 
-    const head: TreeNode = new TreeNode(val);
-    head.left = recursivePreBuildNode(queue);
-    head.right = recursivePreBuildNode(queue);
+  const head: TreeNode = new TreeNode(val);
+  head.left = recursivePreBuildNode(queue);
+  head.right = recursivePreBuildNode(queue);
 
-    return head;
+  return head;
 }
 
 /* 给定节点如下所示，每个节点都有一个指向父节点的parent节点，要求实现函数返回任意给定节点的后继结点
 所谓后继结点指的是中序遍历中处在后面的节点，比如说某棵树中序遍历的结果是 [1,2,3,4]，那么2就是1的后继节点，
 3就是2的后继节点，以此类推 ，整棵树的最后一个节点没有后继节点，可以直接返回null*/
 export class TreeNodeWithParent {
-    val: number;
-    left: TreeNodeWithParent | null = null;
-    right: TreeNodeWithParent | null = null;
-    parent: TreeNodeWithParent | null = null;
+  val: number;
+  left: TreeNodeWithParent | null = null;
+  right: TreeNodeWithParent | null = null;
+  parent: TreeNodeWithParent | null = null;
 
-    constructor(val: number) {
-        this.val = val;
-    }
+  constructor(val: number) {
+    this.val = val;
+  }
 }
 
 export function findNextNode(node: TreeNodeWithParent | null) {
-    // 如果当前节点有右子树，那么右子树上最左的节点就是当前节点的后继节点
-    if (node?.right) {
-        let preLeft = node.right;
-        let left = preLeft.left;
-        while (left) {
-            preLeft = left;
-            left = left.left;
-        }
-        return preLeft;
+  // 如果当前节点有右子树，那么右子树上最左的节点就是当前节点的后继节点
+  if (node?.right) {
+    let preLeft = node.right;
+    let left = preLeft.left;
+    while (left) {
+      preLeft = left;
+      left = left.left;
     }
+    return preLeft;
+  }
 
-    // 如果当前节点无右子树，则向上找，若查找过程中某个节点是父节点的左节点，那么该父节点就是我们要找的后继结点
-    let parent = node?.parent;
-    while (parent && parent.left !== node) {
-        parent = parent.parent;
-    }
+  // 如果当前节点无右子树，则向上找，若查找过程中某个节点是父节点的左节点，那么该父节点就是我们要找的后继结点
+  let parent = node?.parent;
+  while (parent && parent.left !== node) {
+    parent = parent.parent;
+  }
 
-    return parent;
+  return parent;
 }
 
 /* 
@@ -326,54 +335,67 @@ export function findNextNode(node: TreeNodeWithParent | null) {
 平衡二叉树的定义：任何节点的左子树和右子树高度差不超过1
  */
 type BalancedInfo = {
-    isBalanced: boolean;
-    height: number;
+  isBalanced: boolean;
+  height: number;
 };
 
 export function isBalancedTree(root: TreeNode | null): BalancedInfo {
-    if (!root) {
-        return {
-            isBalanced: true,
-            height: 0,
-        };
-    }
-
-    const { isBalanced: isLeftBalanced, height: leftHeight } = isBalancedTree(root.left);
-    const { isBalanced: isRightBalanced, height: rightHeight } = isBalancedTree(root.right);
-
-    const height = Math.max(leftHeight, rightHeight) + 1;
-    const isBalanced = isLeftBalanced && isRightBalanced && Math.abs(leftHeight - rightHeight) < 2;
-
+  if (!root) {
     return {
-        isBalanced,
-        height,
+      isBalanced: true,
+      height: 0,
     };
+  }
+
+  const { isBalanced: isLeftBalanced, height: leftHeight } = isBalancedTree(
+    root.left
+  );
+  const { isBalanced: isRightBalanced, height: rightHeight } = isBalancedTree(
+    root.right
+  );
+
+  const height = Math.max(leftHeight, rightHeight) + 1;
+  const isBalanced =
+    isLeftBalanced && isRightBalanced && Math.abs(leftHeight - rightHeight) < 2;
+
+  return {
+    isBalanced,
+    height,
+  };
 }
 
 type MaxDistanceInfo = {
-    maxDistance: number;
-    height: number;
+  maxDistance: number;
+  height: number;
 };
 
 // 假定一个节点走到另一个节点的最短路线就是这个点到另一个点的距离，求一颗树的最大距离
 export function getMaxDistance(root: TreeNode | null): MaxDistanceInfo {
-    if (!root) {
-        return {
-            maxDistance: 0,
-            height: 0,
-        };
-    }
-
-    const { maxDistance: leftMaxDistance, height: leftHeight } = getMaxDistance(root.left);
-    const { maxDistance: rightMaxDistance, height: rightHeight } = getMaxDistance(root.right);
-
-    const height = Math.max(leftHeight, rightHeight) + 1;
-    const maxDistance = Math.max(leftMaxDistance, rightMaxDistance, leftHeight + rightHeight + 1);
-
+  if (!root) {
     return {
-        maxDistance,
-        height,
+      maxDistance: 0,
+      height: 0,
     };
+  }
+
+  const { maxDistance: leftMaxDistance, height: leftHeight } = getMaxDistance(
+    root.left
+  );
+  const { maxDistance: rightMaxDistance, height: rightHeight } = getMaxDistance(
+    root.right
+  );
+
+  const height = Math.max(leftHeight, rightHeight) + 1;
+  const maxDistance = Math.max(
+    leftMaxDistance,
+    rightMaxDistance,
+    leftHeight + rightHeight + 1
+  );
+
+  return {
+    maxDistance,
+    height,
+  };
 }
 
 /*  
@@ -382,40 +404,42 @@ Employee中的happy表示该员工的快乐值，如果某个员工来则该员�
 问如何选择可以使得party的快乐值最大
 */
 type Employee = {
-    happy: number;
-    subEmployees: Employee[];
+  happy: number;
+  subEmployees: Employee[];
 };
 type EmployeeInfo = {
-    maxHappyWithX: number;
-    maxHappyWithoutX: number;
+  maxHappyWithX: number;
+  maxHappyWithoutX: number;
 };
 
 export function getMaxHappy(node: Employee) {
-    const { maxHappyWithX, maxHappyWithoutX } = getMaxHappyProcess(node);
-    return Math.max(maxHappyWithX, maxHappyWithoutX);
+  const { maxHappyWithX, maxHappyWithoutX } = getMaxHappyProcess(node);
+  return Math.max(maxHappyWithX, maxHappyWithoutX);
 }
 
 export function getMaxHappyProcess(node: Employee): EmployeeInfo {
-    if (node.subEmployees.length === 0) {
-        return {
-            maxHappyWithX: node.happy,
-            maxHappyWithoutX: 0,
-        };
-    }
-
-    let maxHappyWithX = node.happy;
-    let maxHappyWithoutX = 0;
-    for (const employee of node.subEmployees) {
-        const { maxHappyWithoutX: childMaxHappyWithoutX, maxHappyWithX: childMaxHappyWithX } =
-            getMaxHappyProcess(employee);
-        maxHappyWithX += childMaxHappyWithoutX;
-        maxHappyWithoutX += Math.max(childMaxHappyWithoutX, childMaxHappyWithX);
-    }
-
+  if (node.subEmployees.length === 0) {
     return {
-        maxHappyWithoutX,
-        maxHappyWithX,
+      maxHappyWithX: node.happy,
+      maxHappyWithoutX: 0,
     };
+  }
+
+  let maxHappyWithX = node.happy;
+  let maxHappyWithoutX = 0;
+  for (const employee of node.subEmployees) {
+    const {
+      maxHappyWithoutX: childMaxHappyWithoutX,
+      maxHappyWithX: childMaxHappyWithX,
+    } = getMaxHappyProcess(employee);
+    maxHappyWithX += childMaxHappyWithoutX;
+    maxHappyWithoutX += Math.max(childMaxHappyWithoutX, childMaxHappyWithX);
+  }
+
+  return {
+    maxHappyWithoutX,
+    maxHappyWithX,
+  };
 }
 
 /* 
@@ -430,214 +454,214 @@ Morris，利用子树上大量的空节点来优化额外空间复杂度，实�
 3. cur为空时停止
 */
 export function morris(node: TreeNode): TreeNode[] {
-    let cur: TreeNode | null = node;
-    // 当前节点左子树上的最右节点
-    let mostRight: TreeNode | null;
-    const result: TreeNode[] = [];
+  let cur: TreeNode | null = node;
+  // 当前节点左子树上的最右节点
+  let mostRight: TreeNode | null;
+  const result: TreeNode[] = [];
 
-    while (cur) {
-        result.push(cur);
+  while (cur) {
+    result.push(cur);
 
-        // 没有左节点直接向右移动
-        if (!cur.left) {
-            cur = cur.right;
-            continue;
-        }
-
-        // 有左节点找到左节点上的最右非空节点
-        mostRight = cur.left!;
-        while (mostRight.right && mostRight.right !== cur) {
-            mostRight = mostRight.right;
-        }
-
-        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
-        if (!mostRight.right) {
-            mostRight.right = cur;
-            cur = cur.left;
-        } else {
-            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
-            mostRight.right = null;
-            cur = cur.right;
-        }
+    // 没有左节点直接向右移动
+    if (!cur.left) {
+      cur = cur.right;
+      continue;
     }
 
-    return result;
+    // 有左节点找到左节点上的最右非空节点
+    mostRight = cur.left!;
+    while (mostRight.right && mostRight.right !== cur) {
+      mostRight = mostRight.right;
+    }
+
+    // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+    if (!mostRight.right) {
+      mostRight.right = cur;
+      cur = cur.left;
+    } else {
+      // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+      mostRight.right = null;
+      cur = cur.right;
+    }
+  }
+
+  return result;
 }
 
 export function morrisPre(node: TreeNode | null): TreeNode[] {
-    let cur: TreeNode | null = node;
-    // 当前节点左子树上的最右节点
-    let mostRight: TreeNode | null;
-    const result: TreeNode[] = [];
+  let cur: TreeNode | null = node;
+  // 当前节点左子树上的最右节点
+  let mostRight: TreeNode | null;
+  const result: TreeNode[] = [];
 
-    while (cur) {
-        // 没有左节点直接向右移动
-        if (!cur.left) {
-            // 没有左子树的节点只会到达一次，直接访问
-            result.push(cur);
-            cur = cur.right;
-            continue;
-        }
-
-        // 有左节点找到左节点上的最右非空节点
-        mostRight = cur.left!;
-        while (mostRight.right && mostRight.right !== cur) {
-            mostRight = mostRight.right;
-        }
-
-        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
-        if (!mostRight.right) {
-            // 会访问两次的节点第一次到达的时候访问
-            result.push(cur);
-            mostRight.right = cur;
-            cur = cur.left;
-        } else {
-            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
-            mostRight.right = null;
-            cur = cur.right;
-        }
+  while (cur) {
+    // 没有左节点直接向右移动
+    if (!cur.left) {
+      // 没有左子树的节点只会到达一次，直接访问
+      result.push(cur);
+      cur = cur.right;
+      continue;
     }
 
-    return result;
+    // 有左节点找到左节点上的最右非空节点
+    mostRight = cur.left!;
+    while (mostRight.right && mostRight.right !== cur) {
+      mostRight = mostRight.right;
+    }
+
+    // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+    if (!mostRight.right) {
+      // 会访问两次的节点第一次到达的时候访问
+      result.push(cur);
+      mostRight.right = cur;
+      cur = cur.left;
+    } else {
+      // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+      mostRight.right = null;
+      cur = cur.right;
+    }
+  }
+
+  return result;
 }
 
 export function morrisMid(node: TreeNode | null): TreeNode[] {
-    let cur: TreeNode | null = node;
-    // 当前节点左子树上的最右节点
-    let mostRight: TreeNode | null;
-    const result: TreeNode[] = [];
+  let cur: TreeNode | null = node;
+  // 当前节点左子树上的最右节点
+  let mostRight: TreeNode | null;
+  const result: TreeNode[] = [];
 
-    while (cur) {
-        // 没有左节点直接向右移动
-        if (!cur.left) {
-            result.push(cur);
-            cur = cur.right;
-            continue;
-        }
-
-        // 有左节点找到左节点上的最右非空节点
-        mostRight = cur.left!;
-        while (mostRight.right && mostRight.right !== cur) {
-            mostRight = mostRight.right;
-        }
-
-        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
-        if (!mostRight.right) {
-            mostRight.right = cur;
-            cur = cur.left;
-        } else {
-            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
-            result.push(cur);
-            mostRight.right = null;
-            cur = cur.right;
-        }
+  while (cur) {
+    // 没有左节点直接向右移动
+    if (!cur.left) {
+      result.push(cur);
+      cur = cur.right;
+      continue;
     }
 
-    return result;
+    // 有左节点找到左节点上的最右非空节点
+    mostRight = cur.left!;
+    while (mostRight.right && mostRight.right !== cur) {
+      mostRight = mostRight.right;
+    }
+
+    // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+    if (!mostRight.right) {
+      mostRight.right = cur;
+      cur = cur.left;
+    } else {
+      // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+      result.push(cur);
+      mostRight.right = null;
+      cur = cur.right;
+    }
+  }
+
+  return result;
 }
 
 export function morrisPost(head: TreeNode | null): TreeNode[] {
-    let cur: TreeNode | null = head;
-    // 当前节点左子树上的最右节点
-    let mostRight: TreeNode | null;
-    const result: TreeNode[] = [];
+  let cur: TreeNode | null = head;
+  // 当前节点左子树上的最右节点
+  let mostRight: TreeNode | null;
+  const result: TreeNode[] = [];
 
-    while (cur) {
-        // 没有左节点直接向右移动
-        if (!cur.left) {
-            cur = cur.right;
-            continue;
-        }
-
-        // 有左节点找到左节点上的最右非空节点
-        mostRight = cur.left!;
-        while (mostRight.right && mostRight.right !== cur) {
-            mostRight = mostRight.right;
-        }
-
-        // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
-        if (!mostRight.right) {
-            mostRight.right = cur;
-            cur = cur.left;
-        } else {
-            // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
-            // 先设置空再打印，不然会影响打印
-            mostRight.right = null;
-            // 第二次来到一个节点就逆序打印左子树的右边界
-            result.push(...getRightEdge(cur.left));
-            cur = cur.right;
-        }
+  while (cur) {
+    // 没有左节点直接向右移动
+    if (!cur.left) {
+      cur = cur.right;
+      continue;
     }
 
-    // 遍历结束单独打印整棵树的右边界
-    result.push(...getRightEdge(head));
+    // 有左节点找到左节点上的最右非空节点
+    mostRight = cur.left!;
+    while (mostRight.right && mostRight.right !== cur) {
+      mostRight = mostRight.right;
+    }
 
-    return result;
+    // a：若mostRight的右指针为空，则让mostRight的右指针指向cur节点，然后cur向左移动
+    if (!mostRight.right) {
+      mostRight.right = cur;
+      cur = cur.left;
+    } else {
+      // b：若mostRight的右指针指向cur，则让mostRight的右指针指向空，然后cur向右边移动
+      // 先设置空再打印，不然会影响打印
+      mostRight.right = null;
+      // 第二次来到一个节点就逆序打印左子树的右边界
+      result.push(...getRightEdge(cur.left));
+      cur = cur.right;
+    }
+  }
+
+  // 遍历结束单独打印整棵树的右边界
+  result.push(...getRightEdge(head));
+
+  return result;
 }
 
 function getRightEdge(node: TreeNode | null): TreeNode[] {
-    const result: TreeNode[] = [];
+  const result: TreeNode[] = [];
 
-    const tail = reverseRightEdge(node);
-    let cur: TreeNode | null = tail;
-    while (cur) {
-        result.push(cur);
-        cur = cur.right;
-    }
-    reverseRightEdge(tail);
+  const tail = reverseRightEdge(node);
+  let cur: TreeNode | null = tail;
+  while (cur) {
+    result.push(cur);
+    cur = cur.right;
+  }
+  reverseRightEdge(tail);
 
-    return result;
+  return result;
 }
 
 function reverseRightEdge(node: TreeNode | null) {
-    let prev: TreeNode | null = null;
-    let cur: TreeNode | null = node;
-    while (cur) {
-        const next = cur.right;
-        cur.right = prev;
-        prev = cur;
-        cur = next;
-    }
+  let prev: TreeNode | null = null;
+  let cur: TreeNode | null = node;
+  while (cur) {
+    const next = cur.right;
+    cur.right = prev;
+    prev = cur;
+    cur = next;
+  }
 
-    return prev;
+  return prev;
 }
 
 // 搜索二叉树定义，对于任意子树而言，子树上的所有值小于根节点上的值，所有根节点的值小于右子树上的值
 export function isBST(node: TreeNode | null): boolean {
-    let cur: TreeNode | null = node;
-    let mostRight: TreeNode;
-    let previous = -Infinity;
-    while (cur) {
-        if (cur.left) {
-            mostRight = cur.left;
-            while (mostRight.right && mostRight.right !== cur) {
-                mostRight = mostRight.right;
-            }
+  let cur: TreeNode | null = node;
+  let mostRight: TreeNode;
+  let previous = -Infinity;
+  while (cur) {
+    if (cur.left) {
+      mostRight = cur.left;
+      while (mostRight.right && mostRight.right !== cur) {
+        mostRight = mostRight.right;
+      }
 
-            if (!mostRight.right) {
-                if (previous >= cur.val) {
-                    return false;
-                }
-                previous = cur.val;
-
-                mostRight.right = cur;
-                cur = cur.left;
-            } else {
-                // mostRight.right === cur
-                mostRight.right = null;
-                cur = cur.right;
-            }
-        } else {
-            if (previous >= cur.val) {
-                return false;
-            }
-            previous = cur.val;
-
-            cur = cur.right;
+      if (!mostRight.right) {
+        if (previous >= cur.val) {
+          return false;
         }
-    }
+        previous = cur.val;
 
-    return true;
+        mostRight.right = cur;
+        cur = cur.left;
+      } else {
+        // mostRight.right === cur
+        mostRight.right = null;
+        cur = cur.right;
+      }
+    } else {
+      if (previous >= cur.val) {
+        return false;
+      }
+      previous = cur.val;
+
+      cur = cur.right;
+    }
+  }
+
+  return true;
 }
 
 /* 
@@ -645,155 +669,158 @@ export function isBST(node: TreeNode | null): boolean {
 搜索二叉树定义，对于任意子树而言 左 < 头 < 右
 */
 export function isBST2(node: TreeNode): boolean {
-    if (!node) {
-        return true;
-    }
+  if (!node) {
+    return true;
+  }
 
-    // 若节点不为空则processIsBST2的返回值必不为空
-    return processIsBST2(node)!.isBST;
+  // 若节点不为空则processIsBST2的返回值必不为空
+  return processIsBST2(node)!.isBST;
 }
 
 type BSTInfo = {
-    isBST: boolean;
-    min: number;
-    max: number;
+  isBST: boolean;
+  min: number;
+  max: number;
 };
 
 function processIsBST2(node: TreeNode | null): BSTInfo | null {
-    if (node === null) {
-        return null;
-    }
+  if (node === null) {
+    return null;
+  }
 
-    const leftInfo = processIsBST2(node.left);
-    const rightInfo = processIsBST2(node.right);
+  const leftInfo = processIsBST2(node.left);
+  const rightInfo = processIsBST2(node.right);
 
-    let min = node.val;
-    let max = node.val;
-    if (leftInfo) {
-        min = Math.min(min, leftInfo.min);
-        max = Math.max(max, leftInfo.max);
-    }
-    if (rightInfo) {
-        min = Math.min(min, rightInfo.min);
-        max = Math.max(max, rightInfo.max);
-    }
+  let min = node.val;
+  let max = node.val;
+  if (leftInfo) {
+    min = Math.min(min, leftInfo.min);
+    max = Math.max(max, leftInfo.max);
+  }
+  if (rightInfo) {
+    min = Math.min(min, rightInfo.min);
+    max = Math.max(max, rightInfo.max);
+  }
 
-    let isBST = true;
-    if (leftInfo && (!leftInfo.isBST || leftInfo.max >= node.val)) {
-        isBST = false;
-    }
-    if (rightInfo && (!rightInfo.isBST || rightInfo.min <= node.val)) {
-        isBST = false;
-    }
+  let isBST = true;
+  if (leftInfo && (!leftInfo.isBST || leftInfo.max >= node.val)) {
+    isBST = false;
+  }
+  if (rightInfo && (!rightInfo.isBST || rightInfo.min <= node.val)) {
+    isBST = false;
+  }
 
-    return {
-        min,
-        max,
-        isBST,
-    };
+  return {
+    min,
+    max,
+    isBST,
+  };
 }
 
 // 是否满二叉树
 export function isFull(node: TreeNode): boolean {
-    return processIsFull(node).isFull;
+  return processIsFull(node).isFull;
 }
 
 type FullInfo = {
-    isFull: boolean;
-    height: number;
+  isFull: boolean;
+  height: number;
 };
 
 function processIsFull(node: TreeNode | null): FullInfo {
-    if (!node) {
-        return {
-            isFull: true,
-            height: 0,
-        };
-    }
-
-    const leftInfo = processIsFull(node.left);
-    const rightInfo = processIsFull(node.right);
-
-    const height = Math.max(leftInfo.height, rightInfo.height) + 1;
-    const isFull = leftInfo.isFull && rightInfo.isFull && leftInfo.height === rightInfo.height;
-
+  if (!node) {
     return {
-        isFull,
-        height,
+      isFull: true,
+      height: 0,
     };
+  }
+
+  const leftInfo = processIsFull(node.left);
+  const rightInfo = processIsFull(node.right);
+
+  const height = Math.max(leftInfo.height, rightInfo.height) + 1;
+  const isFull =
+    leftInfo.isFull && rightInfo.isFull && leftInfo.height === rightInfo.height;
+
+  return {
+    isFull,
+    height,
+  };
 }
 
 /* 折纸问题，取一张纸条，对折，打开后可以看到一条凹折痕，合起来再对折，可以在第一条折痕的上下分别看到一条凹和一条凸折痕，问对折n次之后从上到下打印所有折痕 */
 export function printCrease(n: number) {
-    printCreaseProcess(n, 0, true);
+  printCreaseProcess(n, 0, true);
 }
 
 // 中序方式打印折痕二叉树
 function printCreaseProcess(n: number, i: number, isDown: boolean) {
-    if (i > n) {
-        return;
-    }
+  if (i > n) {
+    return;
+  }
 
-    printCreaseProcess(n, i + 1, true);
-    console.log(isDown ? '凹' : '凸');
-    printCreaseProcess(n, i + 1, false);
+  printCreaseProcess(n, i + 1, true);
+  console.log(isDown ? '凹' : '凸');
+  printCreaseProcess(n, i + 1, false);
 }
 
 export function serializeByLevel(root: TreeNode | null): Array<number | null> {
-    if (!root) {
-        return [];
-    }
+  if (!root) {
+    return [];
+  }
 
-    const queue: Array<TreeNode | null> = [root];
-    const result: Array<number | null> = [];
-    while (queue.length > 0) {
-        const first = queue.shift()!;
-        if (!first) {
-            result.push(null);
-        } else {
-            result.push(first.val);
-            queue.push(first.left);
-            queue.push(first.right);
-        }
+  const queue: Array<TreeNode | null> = [root];
+  const result: Array<number | null> = [];
+  while (queue.length > 0) {
+    const first = queue.shift()!;
+    if (!first) {
+      result.push(null);
+    } else {
+      result.push(first.val);
+      queue.push(first.left);
+      queue.push(first.right);
     }
+  }
 
-    // 节省空间，将末尾不需要的null去掉
-    let lastNonNull = result.length - 1;
-    while (lastNonNull >= 0 && result[lastNonNull] === null) {
-        lastNonNull--;
-    }
+  // 节省空间，将末尾不需要的null去掉
+  let lastNonNull = result.length - 1;
+  while (lastNonNull >= 0 && result[lastNonNull] === null) {
+    lastNonNull--;
+  }
 
-    return result.slice(0, lastNonNull + 1);
+  return result.slice(0, lastNonNull + 1);
 }
 
-export function deserializeByLevel(list: Array<number | null> | null): TreeNode | null {
-    if (!list || list.length === 0) {
-        return null;
+export function deserializeByLevel(
+  list: Array<number | null> | null
+): TreeNode | null {
+  if (!list || list.length === 0) {
+    return null;
+  }
+
+  const root = new TreeNode(list[0]!);
+  const queue: Array<TreeNode | null> = [root];
+  let curIndex = 1;
+  while (queue.length > 0) {
+    const head = queue.shift();
+    if (!head) {
+      continue;
     }
 
-    const root = new TreeNode(list[0]!);
-    const queue: Array<TreeNode | null> = [root];
-    let curIndex = 1;
-    while (queue.length > 0) {
-        const head = queue.shift();
-        if (!head) {
-            continue;
-        }
-
-        // left
-        if (curIndex < list.length) {
-            let val = list[curIndex++];
-            head.left = val !== null ? new TreeNode(val) : null;
-            queue.push(head.left);
-        }
-
-        // right
-        if (curIndex < list.length) {
-            let val = list[curIndex++];
-            head.right = val !== null ? new TreeNode(val) : null;
-            queue.push(head.right);
-        }
+    // left
+    if (curIndex < list.length) {
+      let val = list[curIndex++];
+      head.left = val !== null ? new TreeNode(val) : null;
+      queue.push(head.left);
     }
 
-    return root;
+    // right
+    if (curIndex < list.length) {
+      let val = list[curIndex++];
+      head.right = val !== null ? new TreeNode(val) : null;
+      queue.push(head.right);
+    }
+  }
+
+  return root;
 }

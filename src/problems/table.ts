@@ -10,42 +10,42 @@ import { cache } from '../design-pattern/proxy';
  * 若无法恰好装满则返回 -1
  */
 export function getMinBags(apples: number): number {
-    const dfs = cache((x: number): number => {
-        if (x === 0) {
-            return 0;
-        }
-        if (x & 1 || x < 6) {
-            return Infinity;
-        }
+  const dfs = cache((x: number): number => {
+    if (x === 0) {
+      return 0;
+    }
+    if (x & 1 || x < 6) {
+      return Infinity;
+    }
 
-        return Math.min(1 + dfs(x - 6), 1 + dfs(x - 8));
-    });
-    const bags = dfs(apples);
+    return Math.min(1 + dfs(x - 6), 1 + dfs(x - 8));
+  });
+  const bags = dfs(apples);
 
-    return bags === Infinity ? -1 : bags;
+  return bags === Infinity ? -1 : bags;
 }
 
 // 打表观察 getMinBags 的输出，找出规律
 function getMinBags2(x: number): number {
-    if (x & 1) {
-        return -1;
-    }
+  if (x & 1) {
+    return -1;
+  }
 
-    if (x < 18) {
-        if (x === 6 || x === 8) {
-            return 1;
-        }
-        if (x === 12 || x === 14 || x === 16) {
-            return 2;
-        }
-        return -1;
+  if (x < 18) {
+    if (x === 6 || x === 8) {
+      return 1;
     }
+    if (x === 12 || x === 14 || x === 16) {
+      return 2;
+    }
+    return -1;
+  }
 
-    return Math.floor((x - 18) / 8) + 3;
+  return Math.floor((x - 18) / 8) + 3;
 }
 
 for (let i = 1; i <= 10000; i++) {
-    if (getMinBags(i) !== getMinBags2(i)) {
-        console.log(i, getMinBags(i), getMinBags2(i));
-    }
+  if (getMinBags(i) !== getMinBags2(i)) {
+    console.log(i, getMinBags(i), getMinBags2(i));
+  }
 }

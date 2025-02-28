@@ -7,13 +7,16 @@
 
 迭代规则提前定义好，外部调用的时候很简单，缺点是不够灵活，比如说我们想同时迭代多个数组就比较困难
 */
-export function each<T>(obj: ArrayLike<T>, callback: (cur: T, i: number, obj: ArrayLike<T>) => boolean) {
-    for (let i = 0; i < obj.length; i++) {
-        // 提前终止迭代器
-        if (callback(obj[i], i, obj) === false) {
-            break;
-        }
+export function each<T>(
+  obj: ArrayLike<T>,
+  callback: (cur: T, i: number, obj: ArrayLike<T>) => boolean
+) {
+  for (let i = 0; i < obj.length; i++) {
+    // 提前终止迭代器
+    if (callback(obj[i], i, obj) === false) {
+      break;
     }
+  }
 }
 
 /* 
@@ -22,38 +25,41 @@ export function each<T>(obj: ArrayLike<T>, callback: (cur: T, i: number, obj: Ar
 提供迭代能力，实际迭代行为由外部自行决定，调用复杂但是使用更灵活
 */
 export function createIterator<T>(obj: ArrayLike<T>) {
-    let current = 0;
+  let current = 0;
 
-    return {
-        next() {
-            current++;
-        },
-        getCurrentItem() {
-            return obj[current];
-        },
-        isDone() {
-            return current >= obj.length;
-        },
-        length: obj.length,
-    };
+  return {
+    next() {
+      current++;
+    },
+    getCurrentItem() {
+      return obj[current];
+    },
+    isDone() {
+      return current >= obj.length;
+    },
+    length: obj.length,
+  };
 }
 
 type CustomizedIterator<T = any> = ReturnType<typeof createIterator<T>>;
 
-export function isEqual(iterator1: CustomizedIterator, iterator2: CustomizedIterator) {
-    if (iterator1.length !== iterator2.length) {
-        return false;
+export function isEqual(
+  iterator1: CustomizedIterator,
+  iterator2: CustomizedIterator
+) {
+  if (iterator1.length !== iterator2.length) {
+    return false;
+  }
+
+  while (!iterator1.isDone() && !iterator2.isDone()) {
+    if (iterator1.getCurrentItem() !== iterator2.getCurrentItem()) {
+      return false;
     }
 
-    while (!iterator1.isDone() && !iterator2.isDone()) {
-        if (iterator1.getCurrentItem() !== iterator2.getCurrentItem()) {
-            return false;
-        }
-
-        iterator1.next();
-        iterator2.next();
-    }
-    return true;
+    iterator1.next();
+    iterator2.next();
+  }
+  return true;
 }
 
 /* 
@@ -68,70 +74,74 @@ catch以及if条件分支。缺点是显而易见的。
 这时候唯一的办法是继续往getUploadObj函数里增加条件分支。
 */
 export const getUploadObj = () => {
-    try {
-        // IE上传控件
-        // @ts-expect-error
-        return new ActiveXObject('TXFTNActiveX.FTNUpload');
-    } catch (e) {
-        if (supportFlash()) {
-            const flash = document.createElement('object');
-            flash.type = 'application/x-shockwave-flash';
-            document.body.appendChild(flash);
+  try {
+    // IE上传控件
+    // @ts-expect-error
+    return new ActiveXObject('TXFTNActiveX.FTNUpload');
+  } catch (e) {
+    if (supportFlash()) {
+      const flash = document.createElement('object');
+      flash.type = 'application/x-shockwave-flash';
+      document.body.appendChild(flash);
 
-            return flash;
-        } else {
-            const input = document.createElement('input');
-            input.name = 'file';
-            input.type = 'file';
-            document.body.appendChild(input);
+      return flash;
+    } else {
+      const input = document.createElement('input');
+      input.name = 'file';
+      input.type = 'file';
+      document.body.appendChild(input);
 
-            return input;
-        }
+      return input;
     }
+  }
 };
 
 function supportFlash(): boolean {
-    return true;
+  return true;
 }
 
 function getActiveUploadObj() {
-    try {
-        // @ts-expect-error
-        return new ActiveXObject('TXFTNActiveX.FTNUpload');
-    } catch (e) {
-        return false;
-    }
+  try {
+    // @ts-expect-error
+    return new ActiveXObject('TXFTNActiveX.FTNUpload');
+  } catch (e) {
+    return false;
+  }
 }
 
 function getFlashUploadObj() {
-    if (supportFlash()) {
-        const flash = document.createElement('object');
-        flash.type = 'application/x-shockwave-flash';
-        document.body.appendChild(flash);
+  if (supportFlash()) {
+    const flash = document.createElement('object');
+    flash.type = 'application/x-shockwave-flash';
+    document.body.appendChild(flash);
 
-        return flash;
-    } else {
-        return false;
-    }
+    return flash;
+  } else {
+    return false;
+  }
 }
 
 function getFileInputUploadObj() {
-    const input = document.createElement('input');
-    input.name = 'file';
-    input.type = 'file';
-    document.body.appendChild(input);
+  const input = document.createElement('input');
+  input.name = 'file';
+  input.type = 'file';
+  document.body.appendChild(input);
 
-    return input;
+  return input;
 }
 
 // 使用迭代器重构 getUploadObj
 export function getUploadObj2() {
-    const methods = [getActiveUploadObj, getFlashUploadObj, getFileInputUploadObj];
+  const methods = [
+    getActiveUploadObj,
+    getFlashUploadObj,
+    getFileInputUploadObj,
+  ];
 
-    for (let i = 0; i < methods.length; i++) {
-        const upload = methods[i]();
-        if (upload !== false) {
-            return upload;
-        }
+  for (let i = 0; i < methods.length; i++) {
+    const upload = methods[i]();
+    if (upload !== false) {
+      return upload;
     }
+  }
 }

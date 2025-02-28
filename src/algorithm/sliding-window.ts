@@ -12,47 +12,50 @@
 type Comparator = (last: number, right: number) => number;
 
 export class SlidingWindow {
-    arr: number[];
+  arr: number[];
 
-    left = -1;
-    right = -1;
+  left = -1;
+  right = -1;
 
-    comparator: Comparator;
+  comparator: Comparator;
 
-    // 双端队列（严格从小到大或者从大到小），默认从大到小，即窗口内最大值
-    doubleQueue: number[] = [];
+  // 双端队列（严格从小到大或者从大到小），默认从大到小，即窗口内最大值
+  doubleQueue: number[] = [];
 
-    constructor(arr: number[], comparator: Comparator = (last, right) => right - last) {
-        this.arr = arr;
-        this.comparator = comparator;
+  constructor(
+    arr: number[],
+    comparator: Comparator = (last, right) => right - last
+  ) {
+    this.arr = arr;
+    this.comparator = comparator;
+  }
+
+  public moveRight() {
+    this.right++;
+
+    while (this.doubleQueue.length !== 0) {
+      const last = this.doubleQueue[this.doubleQueue.length - 1];
+      if (this.comparator(this.arr[last], this.arr[this.right]) < 0) {
+        break;
+      }
+      this.doubleQueue.length--;
     }
+    this.doubleQueue.push(this.right);
+  }
 
-    public moveRight() {
-        this.right++;
-
-        while (this.doubleQueue.length !== 0) {
-            const last = this.doubleQueue[this.doubleQueue.length - 1];
-            if (this.comparator(this.arr[last], this.arr[this.right]) < 0) {
-                break;
-            }
-            this.doubleQueue.length--;
-        }
-        this.doubleQueue.push(this.right);
+  public moveLeft() {
+    // 滑动窗口左边界不可以超过右边界
+    if (this.left + 1 > this.right) {
+      return;
     }
+    this.left++;
 
-    public moveLeft() {
-        // 滑动窗口左边界不可以超过右边界
-        if (this.left + 1 > this.right) {
-            return;
-        }
-        this.left++;
-
-        if (this.left >= this.doubleQueue[0]) {
-            this.doubleQueue.shift();
-        }
+    if (this.left >= this.doubleQueue[0]) {
+      this.doubleQueue.shift();
     }
+  }
 
-    public peek() {
-        return this.arr[this.doubleQueue[0]];
-    }
+  public peek() {
+    return this.arr[this.doubleQueue[0]];
+  }
 }

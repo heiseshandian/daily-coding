@@ -24,22 +24,22 @@ Constraints:
 	0 <= grid[i][j] <= 200
 */
 export function minPathSum(grid: number[][]): number {
-    const n = grid.length;
-    const m = grid[0].length;
-    const dp: number[] = Array(m);
-    dp[0] = grid[0][0];
+  const n = grid.length;
+  const m = grid[0].length;
+  const dp: number[] = Array(m);
+  dp[0] = grid[0][0];
+  for (let j = 1; j < m; j++) {
+    dp[j] = dp[j - 1] + grid[0][j];
+  }
+
+  for (let i = 1; i < n; i++) {
+    dp[0] += grid[i][0];
     for (let j = 1; j < m; j++) {
-        dp[j] = dp[j - 1] + grid[0][j];
+      dp[j] = Math.min(dp[j - 1], dp[j]) + grid[i][j];
     }
+  }
 
-    for (let i = 1; i < n; i++) {
-        dp[0] += grid[i][0];
-        for (let j = 1; j < m; j++) {
-            dp[j] = Math.min(dp[j - 1], dp[j]) + grid[i][j];
-        }
-    }
-
-    return dp[m - 1];
+  return dp[m - 1];
 }
 
 /*
@@ -77,27 +77,27 @@ Constraints:
 	text1 and text2 consist of only lowercase English characters.
 */
 export function longestCommonSubsequence(text1: string, text2: string): number {
-    const short = text1.length < text2.length ? text1 : text2;
-    const long = short === text1 ? text2 : text1;
-    const n = short.length;
-    const m = long.length;
-    const dp: number[] = Array(n + 1).fill(0);
+  const short = text1.length < text2.length ? text1 : text2;
+  const long = short === text1 ? text2 : text1;
+  const n = short.length;
+  const m = long.length;
+  const dp: number[] = Array(n + 1).fill(0);
 
-    for (let i = 1; i <= m; i++) {
-        let leftUp = 0;
-        let backup = 0;
-        for (let j = 1; j <= n; j++) {
-            backup = dp[j];
-            if (short[j - 1] === long[i - 1]) {
-                dp[j] = leftUp + 1;
-            } else {
-                dp[j] = Math.max(dp[j - 1], dp[j]);
-            }
-            leftUp = backup;
-        }
+  for (let i = 1; i <= m; i++) {
+    let leftUp = 0;
+    let backup = 0;
+    for (let j = 1; j <= n; j++) {
+      backup = dp[j];
+      if (short[j - 1] === long[i - 1]) {
+        dp[j] = leftUp + 1;
+      } else {
+        dp[j] = Math.max(dp[j - 1], dp[j]);
+      }
+      leftUp = backup;
     }
+  }
 
-    return dp[n];
+  return dp[n];
 }
 
 /*
@@ -125,24 +125,24 @@ Constraints:
 	s consists only of lowercase English letters.
 */
 export function longestPalindromeSubseq(s: string): number {
-    const n = s.length;
-    const dp: number[] = Array(n).fill(1);
+  const n = s.length;
+  const dp: number[] = Array(n).fill(1);
 
-    for (let i = n - 2; i >= 0; i--) {
-        let leftDown = 0;
-        let backup = 0;
-        for (let j = i + 1; j < n; j++) {
-            backup = dp[j];
-            if (s[j] === s[i]) {
-                dp[j] = 2 + leftDown;
-            } else {
-                dp[j] = Math.max(dp[j - 1], dp[j]);
-            }
-            leftDown = backup;
-        }
+  for (let i = n - 2; i >= 0; i--) {
+    let leftDown = 0;
+    let backup = 0;
+    for (let j = i + 1; j < n; j++) {
+      backup = dp[j];
+      if (s[j] === s[i]) {
+        dp[j] = 2 + leftDown;
+      } else {
+        dp[j] = Math.max(dp[j - 1], dp[j]);
+      }
+      leftDown = backup;
     }
+  }
 
-    return dp[n - 1];
+  return dp[n - 1];
 }
 
 /*
@@ -167,25 +167,25 @@ Constraints:
 	s consist of only digits and English letters.
 */
 export function longestPalindrome(s: string): string {
-    const n = s.length;
-    const dp: boolean[] = Array(n).fill(false);
-    let [l, r] = [0, 0];
-    for (let i = n - 1; i >= 0; i--) {
-        dp[i] = true;
-        for (let j = n - 1; j > i; j--) {
-            if (s[j] === s[i] && (j - i === 1 || dp[j - 1])) {
-                dp[j] = true;
-                if (r - l < j - i) {
-                    l = i;
-                    r = j;
-                }
-            } else {
-                dp[j] = false;
-            }
+  const n = s.length;
+  const dp: boolean[] = Array(n).fill(false);
+  let [l, r] = [0, 0];
+  for (let i = n - 1; i >= 0; i--) {
+    dp[i] = true;
+    for (let j = n - 1; j > i; j--) {
+      if (s[j] === s[i] && (j - i === 1 || dp[j - 1])) {
+        dp[j] = true;
+        if (r - l < j - i) {
+          l = i;
+          r = j;
         }
+      } else {
+        dp[j] = false;
+      }
     }
+  }
 
-    return s.slice(l, r + 1);
+  return s.slice(l, r + 1);
 }
 
 /*
@@ -219,31 +219,31 @@ Constraints:
 	1 <= m, n <= 100
 */
 export function findMaxForm(strs: string[], m: number, n: number): number {
-    const countZeros = (str: string) => {
-        let zeros = 0;
-        for (let i = 0; i < str.length; i++) {
-            if (str[i] === '0') {
-                zeros++;
-            }
-        }
-
-        return zeros;
-    };
-
-    const dp: number[][] = Array.from({ length: m + 1 }, () =>
-        Array(n + 1).fill(0)
-    );
-    for (let i = strs.length - 1; i >= 0; i--) {
-        const zeros = countZeros(strs[i]);
-        const ones = strs[i].length - zeros;
-        for (let j = m; j >= zeros; j--) {
-            for (let k = n; k >= ones; k--) {
-                dp[j][k] = Math.max(dp[j][k], 1 + dp[j - zeros][k - ones]);
-            }
-        }
+  const countZeros = (str: string) => {
+    let zeros = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '0') {
+        zeros++;
+      }
     }
 
-    return dp[m][n];
+    return zeros;
+  };
+
+  const dp: number[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill(0)
+  );
+  for (let i = strs.length - 1; i >= 0; i--) {
+    const zeros = countZeros(strs[i]);
+    const ones = strs[i].length - zeros;
+    for (let j = m; j >= zeros; j--) {
+      for (let k = n; k >= ones; k--) {
+        dp[j][k] = Math.max(dp[j][k], 1 + dp[j - zeros][k - ones]);
+      }
+    }
+  }
+
+  return dp[m][n];
 }
 
 /*
@@ -279,30 +279,30 @@ Constraints:
 	0 <= profit[i] <= 100
 */
 export function profitableSchemes(
-    n: number,
-    minProfit: number,
-    group: number[],
-    profit: number[]
+  n: number,
+  minProfit: number,
+  group: number[],
+  profit: number[]
 ): number {
-    const MOD = Math.pow(10, 9) + 7;
+  const MOD = Math.pow(10, 9) + 7;
 
-    const dp: number[][] = Array.from({ length: minProfit + 1 }, () =>
-        Array(n + 1).fill(0)
-    );
-    for (let k = 0; k <= n; k++) {
-        dp[0][k] = 1;
+  const dp: number[][] = Array.from({ length: minProfit + 1 }, () =>
+    Array(n + 1).fill(0)
+  );
+  for (let k = 0; k <= n; k++) {
+    dp[0][k] = 1;
+  }
+
+  for (let i = group.length - 1; i >= 0; i--) {
+    for (let j = minProfit; j >= 0; j--) {
+      const tmp = Math.max(0, j - profit[i]);
+      for (let k = n; k >= group[i]; k--) {
+        dp[j][k] = (dp[j][k] + dp[tmp][k - group[i]]) % MOD;
+      }
     }
+  }
 
-    for (let i = group.length - 1; i >= 0; i--) {
-        for (let j = minProfit; j >= 0; j--) {
-            const tmp = Math.max(0, j - profit[i]);
-            for (let k = n; k >= group[i]; k--) {
-                dp[j][k] = (dp[j][k] + dp[tmp][k - group[i]]) % MOD;
-            }
-        }
-    }
-
-    return dp[minProfit][n];
+  return dp[minProfit][n];
 }
 
 /*
@@ -338,43 +338,43 @@ Constraints:
 	0 <= row, column <= n - 1
 */
 export function knightProbability(
-    n: number,
-    k: number,
-    row: number,
-    column: number
+  n: number,
+  k: number,
+  row: number,
+  column: number
 ): number {
-    const dirs: number[][] = [
-        [1, 2],
-        [2, 1],
-        [2, -1],
-        [1, -2],
-        [-1, -2],
-        [-2, -1],
-        [-2, 1],
-        [-1, 2],
-    ];
-    const dp: number[][][] = Array.from({ length: k + 1 }, () =>
-        Array.from({ length: n }, () => Array(n).fill(1))
-    );
+  const dirs: number[][] = [
+    [1, 2],
+    [2, 1],
+    [2, -1],
+    [1, -2],
+    [-1, -2],
+    [-2, -1],
+    [-2, 1],
+    [-1, 2],
+  ];
+  const dp: number[][][] = Array.from({ length: k + 1 }, () =>
+    Array.from({ length: n }, () => Array(n).fill(1))
+  );
 
-    for (let i = 1; i <= k; i++) {
-        for (let r = 0; r < n; r++) {
-            for (let c = 0; c < n; c++) {
-                let p = 0;
-                dirs.forEach(([x, y]) => {
-                    const nextR = r + x;
-                    const nextC = c + y;
-                    if (nextR >= 0 && nextR < n && nextC >= 0 && nextC < n) {
-                        p += dp[i][nextR][nextC];
-                    }
-                });
+  for (let i = 1; i <= k; i++) {
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        let p = 0;
+        dirs.forEach(([x, y]) => {
+          const nextR = r + x;
+          const nextC = c + y;
+          if (nextR >= 0 && nextR < n && nextC >= 0 && nextC < n) {
+            p += dp[i][nextR][nextC];
+          }
+        });
 
-                dp[i][r][c] = p / 8;
-            }
-        }
+        dp[i][r][c] = p / 8;
+      }
     }
+  }
 
-    return dp[k][row][column];
+  return dp[k][row][column];
 }
 
 /*
@@ -408,14 +408,14 @@ Constraints:
 Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
 */
 export function maxSubArray(nums: number[]): number {
-    let sum = 0;
-    let max = -Infinity;
-    nums.forEach((v) => {
-        sum = Math.max(v, sum + v);
-        max = Math.max(max, sum);
-    });
+  let sum = 0;
+  let max = -Infinity;
+  nums.forEach((v) => {
+    sum = Math.max(v, sum + v);
+    max = Math.max(max, sum);
+  });
 
-    return max;
+  return max;
 }
 
 /*
@@ -448,16 +448,16 @@ Constraints:
 	0 <= nums[i] <= 400
 */
 export function rob(nums: number[]): number {
-    const n = nums.length;
-    const dp = Array<number>(n);
-    dp[0] = nums[0];
-    dp[1] = Math.max(nums[0], nums[1]);
+  const n = nums.length;
+  const dp = Array<number>(n);
+  dp[0] = nums[0];
+  dp[1] = Math.max(nums[0], nums[1]);
 
-    for (let i = 2; i < n; i++) {
-        dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i], nums[i]);
-    }
+  for (let i = 2; i < n; i++) {
+    dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i], nums[i]);
+  }
 
-    return dp[n - 1];
+  return dp[n - 1];
 }
 
 /*
@@ -496,21 +496,21 @@ Constraints:
 	-3 * 10^4 <= nums[i] <= 10^4
 */
 export function maxSubarraySumCircular(nums: number[]): number {
-    let sum = nums[0];
-    let prevMax = nums[0];
-    let prevMin = Math.min(0, nums[0]);
-    let max = prevMax;
-    let min = prevMin;
-    for (let i = 1; i < nums.length; i++) {
-        sum += nums[i];
+  let sum = nums[0];
+  let prevMax = nums[0];
+  let prevMin = Math.min(0, nums[0]);
+  let max = prevMax;
+  let min = prevMin;
+  for (let i = 1; i < nums.length; i++) {
+    sum += nums[i];
 
-        prevMax = Math.max(prevMax + nums[i], nums[i]);
-        prevMin = Math.min(prevMin + nums[i], nums[i]);
-        max = Math.max(max, prevMax);
-        min = Math.min(min, prevMin);
-    }
+    prevMax = Math.max(prevMax + nums[i], nums[i]);
+    prevMin = Math.min(prevMin + nums[i], nums[i]);
+    max = Math.max(max, prevMax);
+    min = Math.min(min, prevMin);
+  }
 
-    return sum === min ? max : Math.max(max, sum - min);
+  return sum === min ? max : Math.max(max, sum - min);
 }
 
 /*
@@ -552,70 +552,70 @@ Constraints:
 	1 <= k <= (nums.length + 1)/2
 */
 export function minCapability1(nums: number[], k: number): number {
-    const canSteal = (m: number): boolean => {
-        let prePrev = nums[0] <= m ? 1 : 0;
-        let prev = Math.max(nums[1] <= m ? 1 : 0, prePrev);
-        let cur = prev;
-        for (let i = 2; i < nums.length; i++) {
-            if (nums[i] <= m) {
-                cur = Math.max(prev, prePrev + 1);
-            } else {
-                cur = prev;
-            }
+  const canSteal = (m: number): boolean => {
+    let prePrev = nums[0] <= m ? 1 : 0;
+    let prev = Math.max(nums[1] <= m ? 1 : 0, prePrev);
+    let cur = prev;
+    for (let i = 2; i < nums.length; i++) {
+      if (nums[i] <= m) {
+        cur = Math.max(prev, prePrev + 1);
+      } else {
+        cur = prev;
+      }
 
-            prePrev = prev;
-            prev = cur;
-        }
-
-        return cur >= k;
-    };
-
-    let l = 0;
-    let r = Math.max(...nums);
-    let min = r;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (canSteal(m)) {
-            r = m - 1;
-            min = m;
-        } else {
-            l = m + 1;
-        }
+      prePrev = prev;
+      prev = cur;
     }
 
-    return min;
+    return cur >= k;
+  };
+
+  let l = 0;
+  let r = Math.max(...nums);
+  let min = r;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (canSteal(m)) {
+      r = m - 1;
+      min = m;
+    } else {
+      l = m + 1;
+    }
+  }
+
+  return min;
 }
 
 export function minCapability(nums: number[], k: number): number {
-    const canSteal = (m: number): boolean => {
-        let sum = 0;
-        for (let i = 0; i < nums.length; i++) {
-            // 能偷的时候尽早偷即可（因为偷前面的还是偷后面的都是偷了一间房）
-            // 能偷之后直接绕过下一间房
-            if (nums[i] <= m) {
-                sum++;
-                i++;
-            }
-            if (sum >= k) {
-                return true;
-            }
-        }
-
-        return sum >= k;
-    };
-
-    let l = 0;
-    let r = Math.max(...nums);
-    let min = r;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (canSteal(m)) {
-            r = m - 1;
-            min = m;
-        } else {
-            l = m + 1;
-        }
+  const canSteal = (m: number): boolean => {
+    let sum = 0;
+    for (let i = 0; i < nums.length; i++) {
+      // 能偷的时候尽早偷即可（因为偷前面的还是偷后面的都是偷了一间房）
+      // 能偷之后直接绕过下一间房
+      if (nums[i] <= m) {
+        sum++;
+        i++;
+      }
+      if (sum >= k) {
+        return true;
+      }
     }
 
-    return min;
+    return sum >= k;
+  };
+
+  let l = 0;
+  let r = Math.max(...nums);
+  let min = r;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (canSteal(m)) {
+      r = m - 1;
+      min = m;
+    } else {
+      l = m + 1;
+    }
+  }
+
+  return min;
 }

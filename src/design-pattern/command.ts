@@ -6,129 +6,142 @@ import { AnimatePropName, Animate, AnimateEventType } from './strategy';
 使得请求发送者和请求接收者能够消除彼此之间的耦合关系。
 */
 interface Command {
-    execute: () => any;
+  execute: () => any;
 
-    /* 
+  /* 
     撤销是命令模式里一个非常有用的功能，试想一下开发一个围棋程序的时候，
     我们把每一步棋子的变化都封装成命令，则可以轻而易举地实现悔棋功能。
     同样，撤销命令还可以用于实现文本编辑器的Ctrl+Z功能。
     */
-    undo?: () => any;
+  undo?: () => any;
 }
 
 const MenuBar = {
-    refresh() {
-        console.log('刷新菜单');
-    },
+  refresh() {
+    console.log('刷新菜单');
+  },
 };
 
 // 用命令对象来解耦请求的发送方与请求的接收方，命令对象可以在程序中自由传递
 class RefreshMenuBarCommand implements Command {
-    receiver: { refresh: () => void };
+  receiver: { refresh: () => void };
 
-    public execute() {
-        this.receiver.refresh();
-    }
+  public execute() {
+    this.receiver.refresh();
+  }
 
-    constructor(receiver: { refresh: () => void }) {
-        this.receiver = receiver;
-    }
+  constructor(receiver: { refresh: () => void }) {
+    this.receiver = receiver;
+  }
 }
 
 function setCommand(btn: HTMLButtonElement, command: Command) {
-    btn.addEventListener('click', () => {
-        command.execute();
-    });
+  btn.addEventListener('click', () => {
+    command.execute();
+  });
 }
 
 export function bindMenuEvents(menuBtn: HTMLButtonElement) {
-    setCommand(menuBtn, new RefreshMenuBarCommand(MenuBar));
+  setCommand(menuBtn, new RefreshMenuBarCommand(MenuBar));
 }
 
 export class MoveCommand implements Command {
-    receiver: Animate;
+  receiver: Animate;
 
-    propName: AnimatePropName;
-    endPos: number;
-    oldPos: number = 0;
+  propName: AnimatePropName;
+  endPos: number;
+  oldPos: number = 0;
 
-    constructor(receiver: Animate, propName: AnimatePropName, endPos: number) {
-        this.receiver = receiver;
+  constructor(receiver: Animate, propName: AnimatePropName, endPos: number) {
+    this.receiver = receiver;
 
-        this.endPos = endPos;
-        this.propName = propName;
-    }
+    this.endPos = endPos;
+    this.propName = propName;
+  }
 
-    public execute() {
-        this.receiver.start(this.propName, this.endPos);
-        this.oldPos = this.receiver.dom.getBoundingClientRect()[this.receiver.propName!];
-    }
+  public execute() {
+    this.receiver.start(this.propName, this.endPos);
+    this.oldPos =
+      this.receiver.dom.getBoundingClientRect()[this.receiver.propName!];
+  }
 
-    public undo() {
-        this.receiver.start('left', this.oldPos);
-    }
+  public undo() {
+    this.receiver.start('left', this.oldPos);
+  }
 }
 
 export class MoveCommandSchedular {
-    animate: Animate;
-    commandQueue: Command[] = [];
+  animate: Animate;
+  commandQueue: Command[] = [];
 
-    constructor(animate: Animate) {
-        this.animate = animate;
+  constructor(animate: Animate) {
+    this.animate = animate;
+  }
+
+  private running: boolean = false;
+  private runningCommand: Command | null = null;
+
+  public runCommand(command: Command) {
+    if (this.running) {
+      this.commandQueue.push(command);
+    } else {
+      this.bindEvents();
+      command.execute();
+      this.runningCommand = command;
+    }
+  }
+
+  public undoCommand() {
+    if (this.commandQueue.length > 0) {
+      this.commandQueue.pop();
+      return;
     }
 
-    private running: boolean = false;
-    private runningCommand: Command | null = null;
+    if (this.runningCommand) {
+      this.runningCommand.undo!();
+    }
+  }
 
-    public runCommand(command: Command) {
-        if (this.running) {
-            this.commandQueue.push(command);
-        } else {
-            this.bindEvents();
-            command.execute();
-            this.runningCommand = command;
-        }
+  animationEndHandler = () => {
+    // 最后一个命令执行结束后解绑事件
+    if (this.commandQueue.length === 0) {
+      this.unbindEvents();
+      this.runningCommand = null;
+      this.running = false;
     }
 
-    public undoCommand() {
-        if (this.commandQueue.length > 0) {
-            this.commandQueue.pop();
-            return;
-        }
-
-        if (this.runningCommand) {
-            this.runningCommand.undo!();
-        }
+    const first = this.commandQueue.shift();
+    if (first) {
+      first.execute();
+      this.runningCommand = first;
     }
+  };
 
-    animationEndHandler = () => {
-        // 最后一个命令执行结束后解绑事件
-        if (this.commandQueue.length === 0) {
-            this.unbindEvents();
-            this.runningCommand = null;
-            this.running = false;
-        }
+  animationStartHandler = () => {
+    this.running = true;
+  };
 
-        const first = this.commandQueue.shift();
-        if (first) {
-            first.execute();
-            this.runningCommand = first;
-        }
-    };
+  private bindEvents() {
+    this.animate.listen(
+      AnimateEventType.AnimationEnd,
+      this.animationEndHandler
+    );
+    this.animate.listen(
+      AnimateEventType.AnimationStart,
+      this.animationStartHandler
+    );
+  }
 
-    animationStartHandler = () => {
-        this.running = true;
-    };
-
-    private bindEvents() {
-        this.animate.listen(AnimateEventType.AnimationEnd, this.animationEndHandler);
-        this.animate.listen(AnimateEventType.AnimationStart, this.animationStartHandler);
-    }
-
-    private unbindEvents() {
-        this.animate.remove(AnimateEventType.AnimationEnd, this.animationEndHandler);
-        this.animate.remove(AnimateEventType.AnimationStart, this.animationStartHandler);
-    }
+  private unbindEvents() {
+    this.animate.remove(
+      AnimateEventType.AnimationEnd,
+      this.animationEndHandler
+    );
+    this.animate.remove(
+      AnimateEventType.AnimationStart,
+      this.animationStartHandler
+    );
+  }
 }
 
 /* 
@@ -150,76 +163,76 @@ export class MoveCommandSchedular {
 type Action = () => void;
 
 interface Actions {
-    attack: Action;
-    defense: Action;
-    jump: Action;
-    crouch: Action;
+  attack: Action;
+  defense: Action;
+  jump: Action;
+  crouch: Action;
 }
 
 const actions = {
-    attack() {
-        console.log('攻击');
-    },
-    defense() {
-        console.log('防御');
-    },
-    jump() {
-        console.log('跳跃');
-    },
-    crouch() {
-        console.log('蹲下');
-    },
+  attack() {
+    console.log('攻击');
+  },
+  defense() {
+    console.log('防御');
+  },
+  jump() {
+    console.log('跳跃');
+  },
+  crouch() {
+    console.log('蹲下');
+  },
 };
 
 class ActionCommand implements Command {
-    actionName: keyof Actions;
-    receiver: Actions;
+  actionName: keyof Actions;
+  receiver: Actions;
 
-    constructor(receiver: Actions, actionName: keyof Actions) {
-        this.receiver = receiver;
-        this.actionName = actionName;
-    }
+  constructor(receiver: Actions, actionName: keyof Actions) {
+    this.receiver = receiver;
+    this.actionName = actionName;
+  }
 
-    public execute() {
-        this.receiver[this.actionName]();
-    }
+  public execute() {
+    this.receiver[this.actionName]();
+  }
 }
 
 enum ActionKeyCodes {
-    KeyW = 'KeyW',
-    KeyA = 'KeyA',
-    KeyS = 'KeyS',
-    KeyD = 'KeyD',
+  KeyW = 'KeyW',
+  KeyA = 'KeyA',
+  KeyS = 'KeyS',
+  KeyD = 'KeyD',
 }
 
 const keyCodesToActions: Record<string, keyof Actions> = {
-    [ActionKeyCodes.KeyW]: 'jump',
-    [ActionKeyCodes.KeyS]: 'crouch',
-    [ActionKeyCodes.KeyA]: 'attack',
-    [ActionKeyCodes.KeyD]: 'defense',
+  [ActionKeyCodes.KeyW]: 'jump',
+  [ActionKeyCodes.KeyS]: 'crouch',
+  [ActionKeyCodes.KeyA]: 'attack',
+  [ActionKeyCodes.KeyD]: 'defense',
 };
 
 export function bindActionEvents() {
-    const commandStack: ActionCommand[] = [];
+  const commandStack: ActionCommand[] = [];
 
-    document.addEventListener('keydown', (e) => {
-        if (!keyCodesToActions[e.code]) {
-            return;
-        }
+  document.addEventListener('keydown', (e) => {
+    if (!keyCodesToActions[e.code]) {
+      return;
+    }
 
-        const command = new ActionCommand(actions, keyCodesToActions[e.code]);
-        command.execute();
+    const command = new ActionCommand(actions, keyCodesToActions[e.code]);
+    command.execute();
 
-        commandStack.push(command);
-    });
+    commandStack.push(command);
+  });
 
-    // 从命令堆栈中取出所有命令依次执行，从而实现攻击回放功能
-    document.getElementById('replay')?.addEventListener('click', () => {
-        while (commandStack.length > 0) {
-            const first = commandStack.shift();
-            first?.execute();
-        }
-    });
+  // 从命令堆栈中取出所有命令依次执行，从而实现攻击回放功能
+  document.getElementById('replay')?.addEventListener('click', () => {
+    while (commandStack.length > 0) {
+      const first = commandStack.shift();
+      first?.execute();
+    }
+  });
 }
 
 /* 
@@ -230,45 +243,45 @@ export function bindActionEvents() {
 只要按一个特别的按钮，它就会帮我们关上房间门，顺便打开电脑并登录QQ。
 */
 const closeDoorCommand: Command = {
-    execute() {
-        console.log('关门');
-    },
+  execute() {
+    console.log('关门');
+  },
 };
 
 const openAirConditionerCommand: Command = {
-    execute() {
-        console.log('打开空调');
-    },
+  execute() {
+    console.log('打开空调');
+  },
 };
 
 const playMusicCommand: Command = {
-    execute() {
-        console.log('播放音乐');
-    },
+  execute() {
+    console.log('播放音乐');
+  },
 };
 
 export class MacroCommand implements Command {
-    commandList: Command[] = [];
+  commandList: Command[] = [];
 
-    public add(command: Command) {
-        this.commandList.push(command);
+  public add(command: Command) {
+    this.commandList.push(command);
+  }
+
+  public execute() {
+    for (let i = 0; i < this.commandList.length; i++) {
+      this.commandList[i].execute();
     }
+  }
 
-    public execute() {
-        for (let i = 0; i < this.commandList.length; i++) {
-            this.commandList[i].execute();
-        }
+  public undo() {
+    for (let i = 0; i < this.commandList.length; i++) {
+      const { undo } = this.commandList[i];
+
+      if (undo) {
+        undo.call(this.commandList[i]);
+      }
     }
-
-    public undo() {
-        for (let i = 0; i < this.commandList.length; i++) {
-            const { undo } = this.commandList[i];
-
-            if (undo) {
-                undo.call(this.commandList[i]);
-            }
-        }
-    }
+  }
 }
 
 const macroCommand = new MacroCommand();

@@ -42,60 +42,60 @@ Constraints:
 - You can maintain the largest increase or decrease you can make in a binary search tree and each time get the maximum one.
 */
 export function minOperations(nums1: number[], nums2: number[]): number {
-    const minLen = Math.min(nums1.length, nums2.length);
-    const maxLen = Math.max(nums1.length, nums2.length);
-    if (maxLen > minLen * 6) {
-        return -1;
+  const minLen = Math.min(nums1.length, nums2.length);
+  const maxLen = Math.max(nums1.length, nums2.length);
+  if (maxLen > minLen * 6) {
+    return -1;
+  }
+
+  const sum1 = nums1.reduce((acc, cur) => acc + cur);
+  const sum2 = nums2.reduce((acc, cur) => acc + cur);
+  let diff = Math.abs(sum1 - sum2);
+  if (diff === 0) {
+    return 0;
+  }
+
+  const bigger = sum1 > sum2 ? nums1 : nums2;
+  const smaller = bigger === nums1 ? nums2 : nums1;
+  const biggerHeap = new GenericHeap((a, b) => b - a);
+  const smallerHeap = new GenericHeap((a, b) => b - a);
+
+  bigger.forEach((v) => {
+    if (v > 1) {
+      biggerHeap.push(v - 1);
     }
-
-    const sum1 = nums1.reduce((acc, cur) => acc + cur);
-    const sum2 = nums2.reduce((acc, cur) => acc + cur);
-    let diff = Math.abs(sum1 - sum2);
-    if (diff === 0) {
-        return 0;
+  });
+  smaller.forEach((v) => {
+    if (v < 6) {
+      smallerHeap.push(6 - v);
     }
+  });
 
-    const bigger = sum1 > sum2 ? nums1 : nums2;
-    const smaller = bigger === nums1 ? nums2 : nums1;
-    const biggerHeap = new GenericHeap((a, b) => b - a);
-    const smallerHeap = new GenericHeap((a, b) => b - a);
+  let count = 0;
+  while (diff > 0 && biggerHeap.size() > 0 && smallerHeap.size() > 0) {
+    const b = biggerHeap.peek();
+    const s = smallerHeap.peek();
 
-    bigger.forEach((v) => {
-        if (v > 1) {
-            biggerHeap.push(v - 1);
-        }
-    });
-    smaller.forEach((v) => {
-        if (v < 6) {
-            smallerHeap.push(6 - v);
-        }
-    });
-
-    let count = 0;
-    while (diff > 0 && biggerHeap.size() > 0 && smallerHeap.size() > 0) {
-        const b = biggerHeap.peek();
-        const s = smallerHeap.peek();
-
-        if (b > s) {
-            diff -= b;
-            biggerHeap.pop();
-        } else {
-            diff -= s;
-            smallerHeap.pop();
-        }
-        count++;
+    if (b > s) {
+      diff -= b;
+      biggerHeap.pop();
+    } else {
+      diff -= s;
+      smallerHeap.pop();
     }
+    count++;
+  }
 
-    while (diff > 0 && biggerHeap.size() > 0) {
-        diff -= biggerHeap.pop();
-        count++;
-    }
-    while (diff > 0 && smallerHeap.size() > 0) {
-        diff -= smallerHeap.pop();
-        count++;
-    }
+  while (diff > 0 && biggerHeap.size() > 0) {
+    diff -= biggerHeap.pop();
+    count++;
+  }
+  while (diff > 0 && smallerHeap.size() > 0) {
+    diff -= smallerHeap.pop();
+    count++;
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -142,42 +142,42 @@ Constraints:
 	0 <= n <= 100
 */
 export function leastInterval(tasks: string[], n: number): number {
-    const map: Record<number, number> = {};
-    tasks.forEach((v) => {
-        map[v] = (map[v] || 0) + 1;
+  const map: Record<number, number> = {};
+  tasks.forEach((v) => {
+    map[v] = (map[v] || 0) + 1;
+  });
+
+  const heap = new GenericHeap((a, b) => b - a);
+  heap.initHeap(Object.values(map));
+
+  let count = 0;
+  let cycle = n + 1;
+  while (heap.size() > 0) {
+    cycle = n + 1;
+    const remainingTasks: number[] = [];
+    while (cycle && heap.size() > 0) {
+      const peek = heap.pop();
+      if (peek - 1 > 0) {
+        remainingTasks.push(peek - 1);
+      }
+
+      cycle--;
+      count++;
+    }
+
+    remainingTasks.forEach((t) => {
+      heap.push(t);
     });
 
-    const heap = new GenericHeap((a, b) => b - a);
-    heap.initHeap(Object.values(map));
-
-    let count = 0;
-    let cycle = n + 1;
-    while (heap.size() > 0) {
-        cycle = n + 1;
-        const remainingTasks: number[] = [];
-        while (cycle && heap.size() > 0) {
-            const peek = heap.pop();
-            if (peek - 1 > 0) {
-                remainingTasks.push(peek - 1);
-            }
-
-            cycle--;
-            count++;
-        }
-
-        remainingTasks.forEach((t) => {
-            heap.push(t);
-        });
-
-        if (cycle > 0) {
-            count += cycle;
-        }
-    }
     if (cycle > 0) {
-        count -= cycle;
+      count += cycle;
     }
+  }
+  if (cycle > 0) {
+    count -= cycle;
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -220,19 +220,19 @@ Constraints:
 	1 <= k <= 10^5
 */
 export function minStoneSum(piles: number[], k: number): number {
-    const maxHeap = new GenericHeap((a, b) => b - a);
-    maxHeap.initHeap(piles);
+  const maxHeap = new GenericHeap((a, b) => b - a);
+  maxHeap.initHeap(piles);
 
-    while (k > 0 && maxHeap.size() > 0) {
-        const half = Math.ceil(maxHeap.pop() / 2);
-        if (half > 0) {
-            maxHeap.push(half);
-        }
-
-        k--;
+  while (k > 0 && maxHeap.size() > 0) {
+    const half = Math.ceil(maxHeap.pop() / 2);
+    if (half > 0) {
+      maxHeap.push(half);
     }
 
-    return maxHeap.container.reduce((acc, cur) => acc + cur);
+    k--;
+  }
+
+  return maxHeap.container.reduce((acc, cur) => acc + cur);
 }
 
 /*
@@ -257,36 +257,36 @@ Constraints:
 type BarcodePair = [barcode: number, count: number];
 
 export function rearrangeBarcodes(barcodes: number[]): number[] {
-    const map: Record<number, number> = {};
-    barcodes.forEach((v) => {
-        map[v] = (map[v] || 0) + 1;
-    });
+  const map: Record<number, number> = {};
+  barcodes.forEach((v) => {
+    map[v] = (map[v] || 0) + 1;
+  });
 
-    const heap = new GenericHeap<BarcodePair>(([, a], [, b]) => b - a);
-    heap.initHeap(Object.keys(map).map((v) => [+v, map[v]]));
+  const heap = new GenericHeap<BarcodePair>(([, a], [, b]) => b - a);
+  heap.initHeap(Object.keys(map).map((v) => [+v, map[v]]));
 
-    const result: number[] = Array(barcodes.length);
-    let i = 0;
-    let cycle = 2;
-    while (heap.size() > 0) {
-        cycle = 2;
-        const remainingPairs: BarcodePair[] = [];
-        while (cycle && heap.size() > 0) {
-            const [v, count] = heap.pop();
-            if (count - 1 > 0) {
-                remainingPairs.push([v, count - 1]);
-            }
+  const result: number[] = Array(barcodes.length);
+  let i = 0;
+  let cycle = 2;
+  while (heap.size() > 0) {
+    cycle = 2;
+    const remainingPairs: BarcodePair[] = [];
+    while (cycle && heap.size() > 0) {
+      const [v, count] = heap.pop();
+      if (count - 1 > 0) {
+        remainingPairs.push([v, count - 1]);
+      }
 
-            cycle--;
-            result[i++] = v;
-        }
-
-        remainingPairs.forEach((t) => {
-            heap.push(t);
-        });
+      cycle--;
+      result[i++] = v;
     }
 
-    return result;
+    remainingPairs.forEach((t) => {
+      heap.push(t);
+    });
+  }
+
+  return result;
 }
 
 /*
@@ -321,33 +321,31 @@ Constraints:
 	1 <= left <= right <= n * (n + 1) / 2
 */
 export function rangeSum(
-    nums: number[],
-    n: number,
-    left: number,
-    right: number
+  nums: number[],
+  n: number,
+  left: number,
+  right: number
 ): number {
-    const modulo = 10 ** 9 + 7;
-    const heap = new GenericHeap<[val: number, pos: number]>(
-        ([a], [b]) => a - b
-    );
-    let i = 0;
-    while (i < n) {
-        heap.push([nums[i], ++i]);
-    }
+  const modulo = 10 ** 9 + 7;
+  const heap = new GenericHeap<[val: number, pos: number]>(([a], [b]) => a - b);
+  let i = 0;
+  while (i < n) {
+    heap.push([nums[i], ++i]);
+  }
 
-    let ret = 0;
-    for (let i = 1; i <= right; i++) {
-        const p = heap.pop()!;
-        if (i >= left) {
-            ret = (ret + p[0]) % modulo;
-        }
-        if (p[1] < n) {
-            p[0] += nums[p[1]++];
-            heap.push(p);
-        }
+  let ret = 0;
+  for (let i = 1; i <= right; i++) {
+    const p = heap.pop()!;
+    if (i >= left) {
+      ret = (ret + p[0]) % modulo;
     }
+    if (p[1] < n) {
+      p[0] += nums[p[1]++];
+      heap.push(p);
+    }
+  }
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -384,19 +382,19 @@ Constraints:
 	1 <= lefti <= righti <= 10^6
 */
 export function minGroups(intervals: number[][]): number {
-    intervals.sort((a, b) => a[0] - b[0]);
-    const heap = new GenericHeap((a, b) => a - b);
+  intervals.sort((a, b) => a[0] - b[0]);
+  const heap = new GenericHeap((a, b) => a - b);
 
-    let groups = 0;
-    intervals.forEach(([left, right]) => {
-        while (heap.size() > 0 && heap.peek() < left) {
-            heap.pop();
-        }
-        heap.push(right);
-        groups = Math.max(groups, heap.size());
-    });
+  let groups = 0;
+  intervals.forEach(([left, right]) => {
+    while (heap.size() > 0 && heap.peek() < left) {
+      heap.pop();
+    }
+    heap.push(right);
+    groups = Math.max(groups, heap.size());
+  });
 
-    return groups;
+  return groups;
 }
 
 /*
@@ -436,18 +434,18 @@ Constraints:
 	1 <= nums[i] <= 10^9
 */
 export function maxKelements(nums: number[], k: number): number {
-    const maxHeap = new GenericHeap((a, b) => b - a);
-    maxHeap.initHeap(nums);
+  const maxHeap = new GenericHeap((a, b) => b - a);
+  maxHeap.initHeap(nums);
 
-    let ret = 0;
-    while (k > 0) {
-        k--;
-        const max = maxHeap.pop();
-        ret += max;
-        maxHeap.push(Math.ceil(max / 3));
-    }
+  let ret = 0;
+  while (k > 0) {
+    k--;
+    const max = maxHeap.pop();
+    ret += max;
+    maxHeap.push(Math.ceil(max / 3));
+  }
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -480,39 +478,39 @@ Constraints:
 	k <= nums1.length * nums2.length
 */
 export function kSmallestPairs(
-    nums1: number[],
-    nums2: number[],
-    k: number
+  nums1: number[],
+  nums2: number[],
+  k: number
 ): number[][] {
-    const minHeap = new GenericHeap<[sum: number, i: number, j: number]>(
-        (a, b) => a[0] - b[0]
-    );
-    minHeap.push([nums1[0] + nums2[0], 0, 0]);
+  const minHeap = new GenericHeap<[sum: number, i: number, j: number]>(
+    (a, b) => a[0] - b[0]
+  );
+  minHeap.push([nums1[0] + nums2[0], 0, 0]);
 
-    const visited = new Set<string>();
-    const add = (i: number, j: number) => {
-        const id = `${i},${j}`;
-        if (!visited.has(id)) {
-            visited.add(id);
-            minHeap.push([nums1[i] + nums2[j], i, j]);
-        }
-    };
-
-    const ret: number[][] = [];
-    while (k > 0) {
-        k--;
-        const [, i, j] = minHeap.pop();
-        ret.push([nums1[i], nums2[j]]);
-
-        if (i + 1 < nums1.length) {
-            add(i + 1, j);
-        }
-        if (j + 1 < nums2.length) {
-            add(i, j + 1);
-        }
+  const visited = new Set<string>();
+  const add = (i: number, j: number) => {
+    const id = `${i},${j}`;
+    if (!visited.has(id)) {
+      visited.add(id);
+      minHeap.push([nums1[i] + nums2[j], i, j]);
     }
+  };
 
-    return ret;
+  const ret: number[][] = [];
+  while (k > 0) {
+    k--;
+    const [, i, j] = minHeap.pop();
+    ret.push([nums1[i], nums2[j]]);
+
+    if (i + 1 < nums1.length) {
+      add(i + 1, j);
+    }
+    if (j + 1 < nums2.length) {
+      add(i, j + 1);
+    }
+  }
+
+  return ret;
 }
 
 /*
@@ -550,23 +548,23 @@ Constraints:
 	1 <= valuei <= 10^6
 */
 export function maxTwoEvents(events: number[][]): number {
-    events.sort((a, b) => a[1] - b[1]);
-    const maxHeap = new GenericHeap<number[]>((a, b) => b[2] - a[2]);
-    maxHeap.initHeap(events);
+  events.sort((a, b) => a[1] - b[1]);
+  const maxHeap = new GenericHeap<number[]>((a, b) => b[2] - a[2]);
+  maxHeap.initHeap(events);
 
-    let max = -Infinity;
-    for (let i = 0; i < events.length; i++) {
-        while (maxHeap.size() > 0 && maxHeap.peek()[0] <= events[i][1]) {
-            maxHeap.pop();
-        }
-
-        max = Math.max(
-            max,
-            events[i][2] + (maxHeap.peek() ? maxHeap.peek()[2] : 0)
-        );
+  let max = -Infinity;
+  for (let i = 0; i < events.length; i++) {
+    while (maxHeap.size() > 0 && maxHeap.peek()[0] <= events[i][1]) {
+      maxHeap.pop();
     }
 
-    return max;
+    max = Math.max(
+      max,
+      events[i][2] + (maxHeap.peek() ? maxHeap.peek()[2] : 0)
+    );
+  }
+
+  return max;
 }
 
 /*
@@ -609,22 +607,20 @@ Constraints:
 	1 <= multiplier <= 5
 */
 export function getFinalState(
-    nums: number[],
-    k: number,
-    multiplier: number
+  nums: number[],
+  k: number,
+  multiplier: number
 ): number[] {
-    const heap = new GenericHeap<number[]>(
-        (a, b) => a[0] - b[0] || a[1] - b[1]
-    );
-    heap.initHeap(nums.map((v, i) => [v, i]));
+  const heap = new GenericHeap<number[]>((a, b) => a[0] - b[0] || a[1] - b[1]);
+  heap.initHeap(nums.map((v, i) => [v, i]));
 
-    while (k > 0) {
-        k--;
-        const [v, i] = heap.pop();
-        heap.push([v * multiplier, i]);
-    }
+  while (k > 0) {
+    k--;
+    const [v, i] = heap.pop();
+    heap.push([v * multiplier, i]);
+  }
 
-    return heap.container.sort((a, b) => a[1] - b[1]).map(([v]) => v);
+  return heap.container.sort((a, b) => a[1] - b[1]).map(([v]) => v);
 }
 
 /*
@@ -670,19 +666,19 @@ Constraints:
 	The input is generated such that an answer always exists. That is, there exists some sequence of operations after which all elements of the array are greater than or equal to k.
 */
 export function minOperations2(nums: number[], k: number): number {
-    const minHeap = new GenericHeap<number>((a, b) => a - b);
-    minHeap.initHeap(nums);
-    let minOp = 0;
-    while (minHeap.size() >= 2) {
-        const x = minHeap.pop();
-        if (x >= k) {
-            break;
-        }
-        const y = minHeap.pop();
-
-        minHeap.push(Math.min(x, y) * 2 + Math.max(x, y));
-        minOp++;
+  const minHeap = new GenericHeap<number>((a, b) => a - b);
+  minHeap.initHeap(nums);
+  let minOp = 0;
+  while (minHeap.size() >= 2) {
+    const x = minHeap.pop();
+    if (x >= k) {
+      break;
     }
+    const y = minHeap.pop();
 
-    return minOp;
+    minHeap.push(Math.min(x, y) * 2 + Math.max(x, y));
+    minOp++;
+  }
+
+  return minOp;
 }

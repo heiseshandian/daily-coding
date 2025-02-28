@@ -32,19 +32,19 @@ Constraints:
 	1 <= k <= 10^5
 */
 export function canConstruct(s: string, k: number): boolean {
-    if (s.length < k) {
-        return false;
-    }
+  if (s.length < k) {
+    return false;
+  }
 
-    const map: Record<string, number> = {};
-    for (let i = 0; i < s.length; i++) {
-        const prev = map[s[i]] || 0;
-        map[s[i]] = prev + 1;
-    }
+  const map: Record<string, number> = {};
+  for (let i = 0; i < s.length; i++) {
+    const prev = map[s[i]] || 0;
+    map[s[i]] = prev + 1;
+  }
 
-    const oddCount = Object.values(map).filter((times) => times & 1).length;
+  const oddCount = Object.values(map).filter((times) => times & 1).length;
 
-    return oddCount <= k;
+  return oddCount <= k;
 }
 
 /*
@@ -81,37 +81,37 @@ If we use brute force and check whether for every start and end position a subst
 and O(n) palindromic checks. Can we reduce the time for palindromic checks to O(1) by reusing some previous computation?
 */
 export function countSubstrings(s: string): number {
-    let count = 0;
+  let count = 0;
 
-    for (let center = 0; center < s.length; center++) {
-        // odd
-        for (
-            let start = center, end = center;
-            start >= 0 && end < s.length;
-            start--, end++
-        ) {
-            if (s[start] === s[end]) {
-                count++;
-            } else {
-                break;
-            }
-        }
-
-        // even
-        for (
-            let start = center, end = center + 1;
-            start >= 0 && end < s.length;
-            start--, end++
-        ) {
-            if (s[start] === s[end]) {
-                count++;
-            } else {
-                break;
-            }
-        }
+  for (let center = 0; center < s.length; center++) {
+    // odd
+    for (
+      let start = center, end = center;
+      start >= 0 && end < s.length;
+      start--, end++
+    ) {
+      if (s[start] === s[end]) {
+        count++;
+      } else {
+        break;
+      }
     }
 
-    return count;
+    // even
+    for (
+      let start = center, end = center + 1;
+      start >= 0 && end < s.length;
+      start--, end++
+    ) {
+      if (s[start] === s[end]) {
+        count++;
+      } else {
+        break;
+      }
+    }
+  }
+
+  return count;
 }
 
 /*
@@ -175,42 +175,42 @@ Constraints:
 - Alice可移动的次数大于Bob则Alice赢，否则Bob赢
 */
 export function winnerOfGame(colors: string): boolean {
-    const aliceCount = colors
-        .split(/B+/)
-        .filter((s) => s.length >= 3)
-        .reduce((acc, cur) => acc + cur.length - 2, 0);
-    const bobCount = colors
-        .split(/A+/)
-        .filter((s) => s.length >= 3)
-        .reduce((acc, cur) => acc + cur.length - 2, 0);
+  const aliceCount = colors
+    .split(/B+/)
+    .filter((s) => s.length >= 3)
+    .reduce((acc, cur) => acc + cur.length - 2, 0);
+  const bobCount = colors
+    .split(/A+/)
+    .filter((s) => s.length >= 3)
+    .reduce((acc, cur) => acc + cur.length - 2, 0);
 
-    return aliceCount > bobCount;
+  return aliceCount > bobCount;
 }
 
 export function winnerOfGame2(colors: string): boolean {
-    let aliceCount = 0;
-    let bobCount = 0;
+  let aliceCount = 0;
+  let bobCount = 0;
 
-    let continueA = 0;
-    let continueB = 0;
-    for (let i = 0; i < colors.length; i++) {
-        if (colors[i] === 'A') {
-            continueA++;
+  let continueA = 0;
+  let continueB = 0;
+  for (let i = 0; i < colors.length; i++) {
+    if (colors[i] === 'A') {
+      continueA++;
 
-            bobCount += Math.max(0, continueB - 2);
-            continueB = 0;
-        } else {
-            continueB++;
+      bobCount += Math.max(0, continueB - 2);
+      continueB = 0;
+    } else {
+      continueB++;
 
-            aliceCount += Math.max(0, continueA - 2);
-            continueA = 0;
-        }
+      aliceCount += Math.max(0, continueA - 2);
+      continueA = 0;
     }
+  }
 
-    aliceCount += Math.max(0, continueA - 2);
-    bobCount += Math.max(0, continueB - 2);
+  aliceCount += Math.max(0, continueA - 2);
+  bobCount += Math.max(0, continueB - 2);
 
-    return aliceCount > bobCount;
+  return aliceCount > bobCount;
 }
 
 /*
@@ -241,24 +241,24 @@ Constraints:
 - 范围内的尝试模型
 */
 export function longestPalindromeSubseq(s: string): number {
-    const n: number = s.length;
-    // dp[i][j] s[i-j] 范围内最长回文串长度
-    const dp: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
+  const n: number = s.length;
+  // dp[i][j] s[i-j] 范围内最长回文串长度
+  const dp: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
 
-    // 从下到上-从左到右填表
-    for (let i = n - 1; i >= 0; i--) {
-        dp[i][i] = 1;
+  // 从下到上-从左到右填表
+  for (let i = n - 1; i >= 0; i--) {
+    dp[i][i] = 1;
 
-        for (let j = i + 1; j < n; j++) {
-            if (s[i] === s[j]) {
-                dp[i][j] = dp[i + 1][j - 1] + 2;
-            } else {
-                dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
-            }
-        }
+    for (let j = i + 1; j < n; j++) {
+      if (s[i] === s[j]) {
+        dp[i][j] = dp[i + 1][j - 1] + 2;
+      } else {
+        dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+      }
     }
+  }
 
-    return dp[0][n - 1];
+  return dp[0][n - 1];
 }
 
 /*
@@ -283,36 +283,36 @@ Constraints:
 	s consist of only digits and English letters.
 */
 export function longestPalindrome(s: string): string {
-    let max = s[0];
-    for (let center = 0; center < s.length; center++) {
-        // odd
-        let start = center - 1,
-            end = center + 1;
-        for (; start >= 0 && end < s.length; start--, end++) {
-            if (s[start] !== s[end]) {
-                break;
-            }
-        }
-        const odd = s.substring(start + 1, end);
-        if (max.length < odd.length) {
-            max = odd;
-        }
-
-        // even
-        start = center;
-        end = center + 1;
-        for (; start >= 0 && end < s.length; start--, end++) {
-            if (s[start] !== s[end]) {
-                break;
-            }
-        }
-        const even = s.substring(start + 1, end);
-        if (max.length < even.length) {
-            max = even;
-        }
+  let max = s[0];
+  for (let center = 0; center < s.length; center++) {
+    // odd
+    let start = center - 1,
+      end = center + 1;
+    for (; start >= 0 && end < s.length; start--, end++) {
+      if (s[start] !== s[end]) {
+        break;
+      }
+    }
+    const odd = s.substring(start + 1, end);
+    if (max.length < odd.length) {
+      max = odd;
     }
 
-    return max;
+    // even
+    start = center;
+    end = center + 1;
+    for (; start >= 0 && end < s.length; start--, end++) {
+      if (s[start] !== s[end]) {
+        break;
+      }
+    }
+    const even = s.substring(start + 1, end);
+    if (max.length < even.length) {
+      max = even;
+    }
+  }
+
+  return max;
 }
 
 /*
@@ -347,21 +347,21 @@ Constraints:
 	s1 and s2 consist of only lowercase English letters.
 */
 export function areAlmostEqual(s1: string, s2: string): boolean {
-    const diff: number[] = [];
-    for (let i = 0; i < s1.length; i++) {
-        if (s1[i] !== s2[i]) {
-            diff.push(i);
-        }
+  const diff: number[] = [];
+  for (let i = 0; i < s1.length; i++) {
+    if (s1[i] !== s2[i]) {
+      diff.push(i);
     }
+  }
 
-    if (diff.length === 0) {
-        return true;
-    }
-    if (diff.length === 2) {
-        const [first, last] = diff;
-        return s1[first] === s2[last] && s1[last] === s2[first];
-    }
-    return false;
+  if (diff.length === 0) {
+    return true;
+  }
+  if (diff.length === 2) {
+    const [first, last] = diff;
+    return s1[first] === s2[last] && s1[last] === s2[first];
+  }
+  return false;
 }
 
 /*
@@ -408,32 +408,32 @@ Constraints:
 	s consists of only lowercase English letters.
 */
 export function countPalindromicSubsequence(s: string): number {
-    const alphas = 'abcdefghijklmnopqrstuvwxyz';
+  const alphas = 'abcdefghijklmnopqrstuvwxyz';
 
-    const countUniqueAlphas = (l: number, r: number): number => {
-        let uniqueAlphas = 0;
+  const countUniqueAlphas = (l: number, r: number): number => {
+    let uniqueAlphas = 0;
 
-        for (const alpha of alphas) {
-            const index = s.indexOf(alpha, l + 1);
-            if (index !== -1 && index < r) {
-                uniqueAlphas++;
-            }
-        }
-
-        return uniqueAlphas;
-    };
-
-    let count = 0;
     for (const alpha of alphas) {
-        const left = s.indexOf(alpha);
-        const right = s.lastIndexOf(alpha);
-
-        if (left < right) {
-            count += countUniqueAlphas(left, right);
-        }
+      const index = s.indexOf(alpha, l + 1);
+      if (index !== -1 && index < r) {
+        uniqueAlphas++;
+      }
     }
 
-    return count;
+    return uniqueAlphas;
+  };
+
+  let count = 0;
+  for (const alpha of alphas) {
+    const left = s.indexOf(alpha);
+    const right = s.lastIndexOf(alpha);
+
+    if (left < right) {
+      count += countUniqueAlphas(left, right);
+    }
+  }
+
+  return count;
 }
 
 /*
@@ -468,29 +468,29 @@ Constraints:
 	All the words in s are separated by a single space.
 */
 export function wordPattern(pattern: string, s: string): boolean {
-    const segments = s.split(' ');
-    if (pattern.length !== segments.length) {
+  const segments = s.split(' ');
+  if (pattern.length !== segments.length) {
+    return false;
+  }
+
+  const visited: Record<string, string> = {};
+  const set = new Set<string>();
+  for (let i = 0; i < segments.length; i++) {
+    if (visited[pattern[i]] === undefined) {
+      if (set.has(segments[i])) {
         return false;
+      }
+      set.add(segments[i]);
+      visited[pattern[i]] = segments[i];
+      continue;
     }
 
-    const visited: Record<string, string> = {};
-    const set = new Set<string>();
-    for (let i = 0; i < segments.length; i++) {
-        if (visited[pattern[i]] === undefined) {
-            if (set.has(segments[i])) {
-                return false;
-            }
-            set.add(segments[i]);
-            visited[pattern[i]] = segments[i];
-            continue;
-        }
-
-        if (visited[pattern[i]] !== segments[i]) {
-            return false;
-        }
+    if (visited[pattern[i]] !== segments[i]) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 }
 
 /*
@@ -520,114 +520,112 @@ Constraints:
 	str1 and str2 consist of lowercase English letters.
 */
 export function shortestCommonSupersequence(
-    str1: string,
-    str2: string
+  str1: string,
+  str2: string
 ): string {
-    const m = str1.length,
-        n = str2.length;
-    // dp array to store the length of LCS.
-    const dp: number[][] = Array.from({ length: m + 1 }, () =>
-        Array(n + 1).fill(0)
-    );
+  const m = str1.length,
+    n = str2.length;
+  // dp array to store the length of LCS.
+  const dp: number[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill(0)
+  );
 
-    // Populate the dp array with lengths of LCS.
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            if (str1[i - 1] === str2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            } else {
-                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
+  // Populate the dp array with lengths of LCS.
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
     }
+  }
 
-    // Construct the SCS from the dp array.
-    let i = m,
-        j = n;
-    let scs = '';
+  // Construct the SCS from the dp array.
+  let i = m,
+    j = n;
+  let scs = '';
 
-    while (i > 0 && j > 0) {
-        if (str1[i - 1] === str2[j - 1]) {
-            scs = str1[i - 1] + scs;
-            i--;
-            j--;
-        } else if (dp[i - 1][j] > dp[i][j - 1]) {
-            scs = str1[i - 1] + scs;
-            i--;
-        } else {
-            scs = str2[j - 1] + scs;
-            j--;
-        }
+  while (i > 0 && j > 0) {
+    if (str1[i - 1] === str2[j - 1]) {
+      scs = str1[i - 1] + scs;
+      i--;
+      j--;
+    } else if (dp[i - 1][j] > dp[i][j - 1]) {
+      scs = str1[i - 1] + scs;
+      i--;
+    } else {
+      scs = str2[j - 1] + scs;
+      j--;
     }
+  }
 
-    // Add remaining characters from str1 or str2.
-    while (i > 0) {
-        scs = str1[i - 1] + scs;
-        i--;
-    }
-    while (j > 0) {
-        scs = str2[j - 1] + scs;
-        j--;
-    }
+  // Add remaining characters from str1 or str2.
+  while (i > 0) {
+    scs = str1[i - 1] + scs;
+    i--;
+  }
+  while (j > 0) {
+    scs = str2[j - 1] + scs;
+    j--;
+  }
 
-    return scs;
+  return scs;
 }
 
 // 此方法在某些场景下会产生大量数组操作，数组扩容，可能会非常影响性能，
 // leetcode 上会出现 Time Limit Exceeded
 export function shortestCommonSupersequence2(
-    str1: string,
-    str2: string
+  str1: string,
+  str2: string
 ): string {
-    const dp: [i: number, j: number][][][] = new Array(str1.length)
-        .fill(0)
-        .map((_) => new Array(str2.length).fill([]));
+  const dp: [i: number, j: number][][][] = new Array(str1.length)
+    .fill(0)
+    .map((_) => new Array(str2.length).fill([]));
 
-    for (let i = 0; i < str1.length; i++) {
-        for (let j = 0; j < str2.length; j++) {
-            if (str1[i] === str2[j]) {
-                dp[i][j] =
-                    i - 1 >= 0 && j - 1 >= 0
-                        ? dp[i - 1][j - 1].concat([[i, j]])
-                        : [[i, j]];
-                continue;
-            }
+  for (let i = 0; i < str1.length; i++) {
+    for (let j = 0; j < str2.length; j++) {
+      if (str1[i] === str2[j]) {
+        dp[i][j] =
+          i - 1 >= 0 && j - 1 >= 0
+            ? dp[i - 1][j - 1].concat([[i, j]])
+            : [[i, j]];
+        continue;
+      }
 
-            if (
-                i - 1 >= 0 &&
-                (j === 0 ||
-                    (j - 1 >= 0 && dp[i - 1][j].length >= dp[i][j - 1].length))
-            ) {
-                dp[i][j] = dp[i - 1][j];
-                continue;
-            }
+      if (
+        i - 1 >= 0 &&
+        (j === 0 || (j - 1 >= 0 && dp[i - 1][j].length >= dp[i][j - 1].length))
+      ) {
+        dp[i][j] = dp[i - 1][j];
+        continue;
+      }
 
-            if (
-                j - 1 >= 0 &&
-                (i === 0 ||
-                    (i - 1 >= 0 && dp[i][j - 1].length > dp[i - 1][j].length))
-            ) {
-                dp[i][j] = dp[i][j - 1];
-            }
-        }
+      if (
+        j - 1 >= 0 &&
+        (i === 0 || (i - 1 >= 0 && dp[i][j - 1].length > dp[i - 1][j].length))
+      ) {
+        dp[i][j] = dp[i][j - 1];
+      }
     }
+  }
 
-    let result = '';
-    const maxCommonSubsequence = dp[str1.length - 1][str2.length - 1];
-    let prevI = 0;
-    let prevJ = 0;
-    for (let i = 0; i < maxCommonSubsequence.length; i++) {
-        const [endI, endJ] = maxCommonSubsequence[i];
-        result += str1.slice(prevI, endI);
-        result += str2.slice(prevJ, endJ);
-        result += str1[endI];
-        prevI = endI + 1;
-        prevJ = endJ + 1;
-    }
-    result += str1.slice(prevI);
-    result += str2.slice(prevJ);
+  let result = '';
+  const maxCommonSubsequence = dp[str1.length - 1][str2.length - 1];
+  let prevI = 0;
+  let prevJ = 0;
+  for (let i = 0; i < maxCommonSubsequence.length; i++) {
+    const [endI, endJ] = maxCommonSubsequence[i];
+    result += str1.slice(prevI, endI);
+    result += str2.slice(prevJ, endJ);
+    result += str1[endI];
+    prevI = endI + 1;
+    prevJ = endJ + 1;
+  }
+  result += str1.slice(prevI);
+  result += str2.slice(prevJ);
 
-    return result;
+  return result;
 }
 
 /*
@@ -665,23 +663,23 @@ Constraints:
 	text1 and text2 consist of only lowercase English characters.
 */
 export function longestCommonSubsequence(text1: string, text2: string): number {
-    const m = text1.length,
-        n = text2.length;
-    const dp: number[][] = Array.from({ length: m + 1 }, () =>
-        Array(n + 1).fill(0)
-    );
+  const m = text1.length,
+    n = text2.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill(0)
+  );
 
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            if (text1[i - 1] === text2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            } else {
-                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (text1[i - 1] === text2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
     }
+  }
 
-    return dp[m][n];
+  return dp[m][n];
 }
 
 /*
@@ -716,53 +714,53 @@ Constraints:
 	startGene, endGene, and bank[i] consist of only the characters ['A', 'C', 'G', 'T'].
 */
 export function minMutation(
-    startGene: string,
-    endGene: string,
-    bank: string[]
+  startGene: string,
+  endGene: string,
+  bank: string[]
 ): number {
-    const backSet = new Set(bank);
-    if (!backSet.has(endGene)) {
-        return -1;
+  const backSet = new Set(bank);
+  if (!backSet.has(endGene)) {
+    return -1;
+  }
+
+  let steps = 0;
+  const genes = new Set([startGene]);
+  const addNextGenes = (gene: string) => {
+    for (let i = 0; i < gene.length; i++) {
+      if (gene[i] !== endGene[i]) {
+        const next = gene.slice(0, i) + endGene[i] + gene.slice(i + 1);
+        if (backSet.has(next)) {
+          genes.add(next);
+        }
+      }
     }
 
-    let steps = 0;
-    const genes = new Set([startGene]);
-    const addNextGenes = (gene: string) => {
-        for (let i = 0; i < gene.length; i++) {
-            if (gene[i] !== endGene[i]) {
-                const next = gene.slice(0, i) + endGene[i] + gene.slice(i + 1);
-                if (backSet.has(next)) {
-                    genes.add(next);
-                }
-            }
+    bank.forEach((b) => {
+      let count = 0;
+      for (let i = 0; i < gene.length; i++) {
+        if (gene[i] !== b[i]) {
+          count++;
         }
+      }
 
-        bank.forEach((b) => {
-            let count = 0;
-            for (let i = 0; i < gene.length; i++) {
-                if (gene[i] !== b[i]) {
-                    count++;
-                }
-            }
-
-            if (count === 1) {
-                genes.add(b);
-            }
-        });
-    };
-    while (true) {
-        if (genes.has(endGene)) {
-            return steps;
-        }
-
-        steps++;
-        const clone = new Set(genes);
-        clone.forEach((gene) => addNextGenes(gene));
-
-        if (clone.size === genes.size) {
-            return -1;
-        }
+      if (count === 1) {
+        genes.add(b);
+      }
+    });
+  };
+  while (true) {
+    if (genes.has(endGene)) {
+      return steps;
     }
+
+    steps++;
+    const clone = new Set(genes);
+    clone.forEach((gene) => addNextGenes(gene));
+
+    if (clone.size === genes.size) {
+      return -1;
+    }
+  }
 }
 
 /*
@@ -805,21 +803,21 @@ Constraints:
 	s consists of lowercase letters.
 */
 export function countHomogenous(s: string): number {
-    let count = 0;
-    let prevIndex = 0;
-    const updateCount = (n: number) => {
-        count += ((n + 1) * n) / 2;
-    };
+  let count = 0;
+  let prevIndex = 0;
+  const updateCount = (n: number) => {
+    count += ((n + 1) * n) / 2;
+  };
 
-    for (let i = 1; i < s.length; i++) {
-        if (s[prevIndex] !== s[i]) {
-            updateCount(i - prevIndex);
-            prevIndex = i;
-        }
+  for (let i = 1; i < s.length; i++) {
+    if (s[prevIndex] !== s[i]) {
+      updateCount(i - prevIndex);
+      prevIndex = i;
     }
-    updateCount(s.length - prevIndex);
+  }
+  updateCount(s.length - prevIndex);
 
-    return count % (Math.pow(10, 9) + 7);
+  return count % (Math.pow(10, 9) + 7);
 }
 
 /*
@@ -860,24 +858,24 @@ Hints:
 - The order does not matter.
 */
 export function reverseParentheses(s: string): string {
-    const chars = s.split('');
-    const reverse = (l: number, r: number) => {
-        while (l < r) {
-            swap(chars, l++, r--);
-        }
-    };
-
-    const stack: number[] = [0];
-    for (let i = 1; i < s.length; i++) {
-        if (s[i] === '(') {
-            stack.push(i);
-        } else if (s[i] === ')') {
-            const index = stack.pop()!;
-            reverse(index + 1, i - 1);
-        }
+  const chars = s.split('');
+  const reverse = (l: number, r: number) => {
+    while (l < r) {
+      swap(chars, l++, r--);
     }
+  };
 
-    return chars.filter((v) => v !== '(' && v !== ')').join('');
+  const stack: number[] = [0];
+  for (let i = 1; i < s.length; i++) {
+    if (s[i] === '(') {
+      stack.push(i);
+    } else if (s[i] === ')') {
+      const index = stack.pop()!;
+      reverse(index + 1, i - 1);
+    }
+  }
+
+  return chars.filter((v) => v !== '(' && v !== ')').join('');
 }
 
 /*
@@ -909,30 +907,30 @@ Constraints:
 	num1 and num2 don't have any leading zeros except for the zero itself.
 */
 export function addStrings(num1: string, num2: string): string {
-    let result = '';
-    let carry = 0;
-    let end1 = num1.length - 1;
-    let end2 = num2.length - 1;
-    while (end1 >= 0 && end2 >= 0) {
-        const cur = Number(num1[end1--]) + Number(num2[end2--]) + carry;
-        result = (cur % 10) + result;
-        carry = Math.floor(cur / 10);
-    }
-    while (end1 >= 0) {
-        const cur = Number(num1[end1--]) + carry;
-        result = (cur % 10) + result;
-        carry = Math.floor(cur / 10);
-    }
-    while (end2 >= 0) {
-        const cur = Number(num2[end2--]) + carry;
-        result = (cur % 10) + result;
-        carry = Math.floor(cur / 10);
-    }
-    if (carry) {
-        result = carry + result;
-    }
+  let result = '';
+  let carry = 0;
+  let end1 = num1.length - 1;
+  let end2 = num2.length - 1;
+  while (end1 >= 0 && end2 >= 0) {
+    const cur = Number(num1[end1--]) + Number(num2[end2--]) + carry;
+    result = (cur % 10) + result;
+    carry = Math.floor(cur / 10);
+  }
+  while (end1 >= 0) {
+    const cur = Number(num1[end1--]) + carry;
+    result = (cur % 10) + result;
+    carry = Math.floor(cur / 10);
+  }
+  while (end2 >= 0) {
+    const cur = Number(num2[end2--]) + carry;
+    result = (cur % 10) + result;
+    carry = Math.floor(cur / 10);
+  }
+  if (carry) {
+    result = carry + result;
+  }
 
-    return result;
+  return result;
 }
 
 /*
@@ -967,26 +965,26 @@ Constraints:
 	word consists of letters "a", "b" and "c" only.
 */
 export function addMinimum(word: string): number {
-    const next = {
-        a: new Set(['b', 'c']),
-        b: new Set(['c']),
-    };
+  const next = {
+    a: new Set(['b', 'c']),
+    b: new Set(['c']),
+  };
 
-    let min = 0;
-    let i = 0;
-    while (i < word.length) {
-        if (word[i] === 'a' && word[i + 1] === 'b' && word[i + 2] === 'c') {
-            i += 3;
-        } else if (next[word[i]]?.has(word[i + 1])) {
-            min += 1;
-            i += 2;
-        } else {
-            min += 2;
-            i++;
-        }
+  let min = 0;
+  let i = 0;
+  while (i < word.length) {
+    if (word[i] === 'a' && word[i + 1] === 'b' && word[i + 2] === 'c') {
+      i += 3;
+    } else if (next[word[i]]?.has(word[i + 1])) {
+      min += 1;
+      i += 2;
+    } else {
+      min += 2;
+      i++;
     }
+  }
 
-    return min;
+  return min;
 }
 
 /*
@@ -1032,25 +1030,25 @@ Constraints:
 	s only consists of characters 'a', 'b', and 'c'.
 */
 export function minimumLength(s: string): number {
-    let left = 0;
-    let right = s.length - 1;
-    while (left < right) {
-        if (s[left] !== s[right]) {
-            return right - left + 1;
-        }
-
-        while (left + 1 < right && s[left] === s[left + 1]) {
-            left++;
-        }
-        while (right - 1 > left && s[right] === s[right - 1]) {
-            right--;
-        }
-
-        left++;
-        right--;
+  let left = 0;
+  let right = s.length - 1;
+  while (left < right) {
+    if (s[left] !== s[right]) {
+      return right - left + 1;
     }
 
-    return left === right ? 1 : 0;
+    while (left + 1 < right && s[left] === s[left + 1]) {
+      left++;
+    }
+    while (right - 1 > left && s[right] === s[right - 1]) {
+      right--;
+    }
+
+    left++;
+    right--;
+  }
+
+  return left === right ? 1 : 0;
 }
 
 /*
@@ -1079,32 +1077,32 @@ Constraints:
 	It is guaranteed such an s exists for the given a and b.
 */
 export function strWithout3a3b(a: number, b: number): string {
-    let bigger = Math.max(a, b);
-    let smaller = Math.min(a, b);
-    const bigChar = a === bigger ? 'a' : 'b';
-    const smallChar = bigChar === 'a' ? 'b' : 'a';
+  let bigger = Math.max(a, b);
+  let smaller = Math.min(a, b);
+  const bigChar = a === bigger ? 'a' : 'b';
+  const smallChar = bigChar === 'a' ? 'b' : 'a';
 
-    if (bigger - smaller < 3) {
-        return (
-            `${bigChar}${smallChar}`.repeat(smaller) +
-            bigChar.repeat(bigger - smaller)
-        );
-    }
+  if (bigger - smaller < 3) {
+    return (
+      `${bigChar}${smallChar}`.repeat(smaller) +
+      bigChar.repeat(bigger - smaller)
+    );
+  }
 
-    const len = Math.min(bigger >> 1, smaller);
-    const result = new Array(len).fill(`${bigChar}${bigChar}${smallChar}`);
-    if (bigger > len << 1) {
-        result.push(bigChar.repeat(bigger - (len << 1)));
-    }
+  const len = Math.min(bigger >> 1, smaller);
+  const result = new Array(len).fill(`${bigChar}${bigChar}${smallChar}`);
+  if (bigger > len << 1) {
+    result.push(bigChar.repeat(bigger - (len << 1)));
+  }
 
-    let left = smaller - len;
-    let i = 0;
-    while (left > 0) {
-        result[i++] = `${bigChar}${smallChar}${bigChar}${smallChar}`;
-        left--;
-    }
+  let left = smaller - len;
+  let i = 0;
+  while (left > 0) {
+    result[i++] = `${bigChar}${smallChar}${bigChar}${smallChar}`;
+    left--;
+  }
 
-    return result.join('');
+  return result.join('');
 }
 
 /*
@@ -1148,33 +1146,31 @@ Constraints:
 	a and b consist of lowercase English letters
 */
 export function checkPalindromeFormation(a: string, b: string): boolean {
-    return canSplit(a, b) || canSplit(b, a);
+  return canSplit(a, b) || canSplit(b, a);
 }
 
 function isPalindrome(s: string, left: number, right: number) {
-    while (left < right) {
-        if (s[left++] !== s[right--]) {
-            return false;
-        }
+  while (left < right) {
+    if (s[left++] !== s[right--]) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 function canSplit(prefix: string, suffix: string): boolean {
-    let left = 0;
-    let right = suffix.length - 1;
-    while (left < right) {
-        if (prefix[left] !== suffix[right]) {
-            break;
-        }
-
-        left++;
-        right--;
+  let left = 0;
+  let right = suffix.length - 1;
+  while (left < right) {
+    if (prefix[left] !== suffix[right]) {
+      break;
     }
 
-    return (
-        isPalindrome(prefix, left, right) || isPalindrome(suffix, left, right)
-    );
+    left++;
+    right--;
+  }
+
+  return isPalindrome(prefix, left, right) || isPalindrome(suffix, left, right);
 }
 
 /*
@@ -1200,17 +1196,17 @@ Constraints:
 	s[0] is '1'.
 */
 export function checkOnesSegment(s: string): boolean {
-    let hasZero = false;
-    for (let i = 1; i < s.length; i++) {
-        if (s[i] === '0') {
-            hasZero = true;
-        }
-        if (s[i] === '1' && hasZero) {
-            return false;
-        }
+  let hasZero = false;
+  for (let i = 1; i < s.length; i++) {
+    if (s[i] === '0') {
+      hasZero = true;
     }
+    if (s[i] === '1' && hasZero) {
+      return false;
+    }
+  }
 
-    return true;
+  return true;
 }
 
 /*
@@ -1233,12 +1229,12 @@ Constraints:
 	0 <= n <= 2^31 - 1
 */
 export function thousandSeparator(n: number): string {
-    const digits = n.toString().split('');
-    for (let i = digits.length - 3; i > 0; i -= 3) {
-        digits.splice(i, 0, '.');
-    }
+  const digits = n.toString().split('');
+  for (let i = digits.length - 3; i > 0; i -= 3) {
+    digits.splice(i, 0, '.');
+  }
 
-    return digits.join('');
+  return digits.join('');
 }
 
 /*
@@ -1260,54 +1256,53 @@ Constraints:
 	s is guaranteed to be valid.
 */
 type NumberRecord = Record<
-    number,
-    [char: string, times: Record<string, number>]
+  number,
+  [char: string, times: Record<string, number>]
 >;
 export function originalDigits(s: string): string {
-    const repeatTimes = getRepeatTimes(s);
+  const repeatTimes = getRepeatTimes(s);
 
-    const even: NumberRecord = {
-        0: ['z', getRepeatTimes('zero')],
-        2: ['w', getRepeatTimes('two')],
-        4: ['u', getRepeatTimes('four')],
-        6: ['x', getRepeatTimes('six')],
-        8: ['g', getRepeatTimes('eight')],
-    };
-    const odd: NumberRecord = {
-        1: ['o', getRepeatTimes('one')],
-        3: ['t', getRepeatTimes('three')],
-        5: ['f', getRepeatTimes('five')],
-        7: ['s', getRepeatTimes('seven')],
-    };
+  const even: NumberRecord = {
+    0: ['z', getRepeatTimes('zero')],
+    2: ['w', getRepeatTimes('two')],
+    4: ['u', getRepeatTimes('four')],
+    6: ['x', getRepeatTimes('six')],
+    8: ['g', getRepeatTimes('eight')],
+  };
+  const odd: NumberRecord = {
+    1: ['o', getRepeatTimes('one')],
+    3: ['t', getRepeatTimes('three')],
+    5: ['f', getRepeatTimes('five')],
+    7: ['s', getRepeatTimes('seven')],
+  };
 
-    const result: number[] = Array(10).fill(0);
-    [even, odd].forEach((v) => {
-        Object.keys(v).forEach((n) => {
-            const [char, times] = v[n];
+  const result: number[] = Array(10).fill(0);
+  [even, odd].forEach((v) => {
+    Object.keys(v).forEach((n) => {
+      const [char, times] = v[n];
 
-            if (repeatTimes[char]) {
-                result[n] = repeatTimes[char];
+      if (repeatTimes[char]) {
+        result[n] = repeatTimes[char];
 
-                Object.keys(times).forEach((k) => {
-                    repeatTimes[k] -= times[k] * result[n];
-                });
-            }
+        Object.keys(times).forEach((k) => {
+          repeatTimes[k] -= times[k] * result[n];
         });
+      }
     });
-    result[9] =
-        Object.values(repeatTimes).reduce((acc, cur) => acc + cur) /
-        'nine'.length;
+  });
+  result[9] =
+    Object.values(repeatTimes).reduce((acc, cur) => acc + cur) / 'nine'.length;
 
-    return result.map((v, i) => (v === 0 ? '' : `${i}`.repeat(v))).join('');
+  return result.map((v, i) => (v === 0 ? '' : `${i}`.repeat(v))).join('');
 }
 
 function getRepeatTimes(s: string) {
-    const times: Record<string, number> = {};
-    for (let i = 0; i < s.length; i++) {
-        times[s[i]] = (times[s[i]] || 0) + 1;
-    }
+  const times: Record<string, number> = {};
+  for (let i = 0; i < s.length; i++) {
+    times[s[i]] = (times[s[i]] || 0) + 1;
+  }
 
-    return times;
+  return times;
 }
 
 /*
@@ -1351,10 +1346,10 @@ Constraints:
 	All the characters of order are unique.
 */
 export function customSortString(order: string, s: string): string {
-    return s
-        .split('')
-        .sort((a, b) => order.indexOf(a) - order.indexOf(b))
-        .join('');
+  return s
+    .split('')
+    .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+    .join('');
 }
 
 /*
@@ -1397,30 +1392,30 @@ Constraints:
 	s consists of lowercase English letters
 */
 export function smallestString(s: string): string {
-    let i = 0;
-    while (i < s.length) {
-        if (s[i] !== 'a') {
-            break;
-        }
-
-        i++;
-    }
-    if (i === s.length) {
-        return s.slice(0, s.length - 1) + 'z';
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] !== 'a') {
+      break;
     }
 
-    const end = s.indexOf('a', i);
-    const convert = (str: string) => {
-        return str
-            .split('')
-            .map((char) => String.fromCharCode(char.charCodeAt(0) - 1))
-            .join('');
-    };
+    i++;
+  }
+  if (i === s.length) {
+    return s.slice(0, s.length - 1) + 'z';
+  }
 
-    if (end === -1) {
-        return s.slice(0, i) + convert(s.slice(i));
-    }
-    return s.slice(0, i) + convert(s.slice(i, end)) + s.slice(end);
+  const end = s.indexOf('a', i);
+  const convert = (str: string) => {
+    return str
+      .split('')
+      .map((char) => String.fromCharCode(char.charCodeAt(0) - 1))
+      .join('');
+  };
+
+  if (end === -1) {
+    return s.slice(0, i) + convert(s.slice(i));
+  }
+  return s.slice(0, i) + convert(s.slice(i, end)) + s.slice(end);
 }
 
 /*
@@ -1460,18 +1455,18 @@ Constraints:
 	s[i] is either 'X' or 'O'.
 */
 export function minimumMoves(s: string): number {
-    let i = 0;
-    let count = 0;
-    while (i < s.length) {
-        if (s[i] === 'X') {
-            count++;
-            i += 3;
-        } else {
-            i++;
-        }
+  let i = 0;
+  let count = 0;
+  while (i < s.length) {
+    if (s[i] === 'X') {
+      count++;
+      i += 3;
+    } else {
+      i++;
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -1493,7 +1488,7 @@ Constraints:
 	The given address is a valid IPv4 address.
 */
 export function defangIPaddr(address: string): string {
-    return address.replace(/\./g, '[.]');
+  return address.replace(/\./g, '[.]');
 }
 
 /*
@@ -1526,21 +1521,21 @@ Constraints:
 	s1, s2 and s3 consist only of lowercase English letters.
 */
 export function findMinimumOperations(
-    s1: string,
-    s2: string,
-    s3: string
+  s1: string,
+  s2: string,
+  s3: string
 ): number {
-    const minLen = Math.min(s1.length, s2.length, s3.length);
-    let i = 0;
-    while (i < minLen) {
-        if (s1[i] === s2[i] && s1[i] === s3[i]) {
-            i++;
-        } else {
-            break;
-        }
+  const minLen = Math.min(s1.length, s2.length, s3.length);
+  let i = 0;
+  while (i < minLen) {
+    if (s1[i] === s2[i] && s1[i] === s3[i]) {
+      i++;
+    } else {
+      break;
     }
+  }
 
-    return i === 0 ? -1 : s1.length + s2.length + s3.length - i * 3;
+  return i === 0 ? -1 : s1.length + s2.length + s3.length - i * 3;
 }
 
 /*
@@ -1577,24 +1572,24 @@ Constraints:
 	s consists only of uppercase English letters.
 */
 export function minLength(s: string): number {
-    const stack = [s[0]];
-    let i = 1;
-    let min = s.length;
-    while (i < s.length) {
-        if (
-            stack.length &&
-            ((stack[stack.length - 1] === 'A' && s[i] === 'B') ||
-                (stack[stack.length - 1] === 'C' && s[i] === 'D'))
-        ) {
-            min -= 2;
-            stack.pop();
-            i++;
-        } else {
-            stack.push(s[i++]);
-        }
+  const stack = [s[0]];
+  let i = 1;
+  let min = s.length;
+  while (i < s.length) {
+    if (
+      stack.length &&
+      ((stack[stack.length - 1] === 'A' && s[i] === 'B') ||
+        (stack[stack.length - 1] === 'C' && s[i] === 'D'))
+    ) {
+      min -= 2;
+      stack.pop();
+      i++;
+    } else {
+      stack.push(s[i++]);
     }
+  }
 
-    return min;
+  return min;
 }
 
 /*
@@ -1627,8 +1622,8 @@ Constraints:
 	1 <= x, y, z <= 50
 */
 export function longestString(x: number, y: number, z: number): number {
-    const min = Math.min(x, y) << 1;
-    return (min + (x === y ? 0 : 1) + z) << 1;
+  const min = Math.min(x, y) << 1;
+  return (min + (x === y ? 0 : 1) + z) << 1;
 }
 
 /*
@@ -1669,32 +1664,32 @@ Constraints:
 	word consists only of lowercase English letters.
 */
 export function removeAlmostEqualCharacters(word: string): number {
-    const alphas = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    const almostEqualMap: Record<string, string[]> = alphas.reduce(
-        (acc, cur, i) => {
-            acc[cur] = [
-                i === 0 ? undefined : alphas[i - 1],
-                cur,
-                i === 25 ? undefined : alphas[i + 1],
-            ];
-            return acc;
-        },
-        {}
-    );
+  const alphas = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  const almostEqualMap: Record<string, string[]> = alphas.reduce(
+    (acc, cur, i) => {
+      acc[cur] = [
+        i === 0 ? undefined : alphas[i - 1],
+        cur,
+        i === 25 ? undefined : alphas[i + 1],
+      ];
+      return acc;
+    },
+    {}
+  );
 
-    let count = 0;
-    for (let i = 1; i < word.length; ) {
-        const equals = almostEqualMap[word[i]];
+  let count = 0;
+  for (let i = 1; i < word.length; ) {
+    const equals = almostEqualMap[word[i]];
 
-        if (!equals.includes(word[i - 1])) {
-            i++;
-        } else {
-            count++;
-            i += 2;
-        }
+    if (!equals.includes(word[i - 1])) {
+      i++;
+    } else {
+      count++;
+      i += 2;
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -1751,27 +1746,24 @@ Constraints:
 	s consists of only English lowercase letters.
 */
 export function beautifulSubstrings(s: string, k: number): number {
-    const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+  const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
 
-    const prefix: number[] = [vowels.has(s[0]) ? 1 : -1];
-    for (let i = 1; i < s.length; i++) {
-        prefix[i] = prefix[i - 1] + (vowels.has(s[i]) ? 1 : -1);
+  const prefix: number[] = [vowels.has(s[0]) ? 1 : -1];
+  for (let i = 1; i < s.length; i++) {
+    prefix[i] = prefix[i - 1] + (vowels.has(s[i]) ? 1 : -1);
+  }
+
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    for (let j = i + 1; j < s.length; j += 2) {
+      const prev = i === 0 ? 0 : prefix[i - 1];
+      if (prefix[j] - prev === 0 && Math.pow((j - i + 1) >> 1, 2) % k === 0) {
+        count++;
+      }
     }
+  }
 
-    let count = 0;
-    for (let i = 0; i < s.length; i++) {
-        for (let j = i + 1; j < s.length; j += 2) {
-            const prev = i === 0 ? 0 : prefix[i - 1];
-            if (
-                prefix[j] - prev === 0 &&
-                Math.pow((j - i + 1) >> 1, 2) % k === 0
-            ) {
-                count++;
-            }
-        }
-    }
-
-    return count;
+  return count;
 }
 
 /*
@@ -1812,18 +1804,18 @@ Constraints:
 	It is guaranteed that parentheses expression s is a VPS.
 */
 export function maxDepth(s: string): number {
-    const stack: string[] = [];
-    let max = 0;
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] === '(') {
-            stack.push('(');
-            max = Math.max(max, stack.length);
-        } else if (s[i] === ')') {
-            stack.pop();
-        }
+  const stack: string[] = [];
+  let max = 0;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') {
+      stack.push('(');
+      max = Math.max(max, stack.length);
+    } else if (s[i] === ')') {
+      stack.pop();
     }
+  }
 
-    return max;
+  return max;
 }
 
 /*
@@ -1867,24 +1859,24 @@ Constraints:
 	s contains only lower and upper case English letters.
 */
 export function makeGood(s: string): string {
-    const stack: string[] = [s[0]];
+  const stack: string[] = [s[0]];
 
-    const isMatch = (a: string, b: string): boolean => {
-        return a !== b && (a.toUpperCase() === b || b.toUpperCase() === a);
-    };
+  const isMatch = (a: string, b: string): boolean => {
+    return a !== b && (a.toUpperCase() === b || b.toUpperCase() === a);
+  };
 
-    let i = 1;
-    while (i < s.length) {
-        if (stack.length > 0 && isMatch(stack[stack.length - 1], s[i])) {
-            stack.pop();
-        } else {
-            stack.push(s[i]);
-        }
-
-        i++;
+  let i = 1;
+  while (i < s.length) {
+    if (stack.length > 0 && isMatch(stack[stack.length - 1], s[i])) {
+      stack.pop();
+    } else {
+      stack.push(s[i]);
     }
 
-    return stack.join('');
+    i++;
+  }
+
+  return stack.join('');
 }
 
 /*
@@ -1906,27 +1898,27 @@ Constraints:
 	words[i] consists of lowercase English letters.
 */
 export function commonChars(words: string[]): string[] {
-    const nums = Array.from({ length: words.length }, () => Array(26).fill(0));
-    words.forEach((w, i) => {
-        for (let j = 0; j < w.length; j++) {
-            nums[i][getCharIndex(w[j])]++;
-        }
-    });
+  const nums = Array.from({ length: words.length }, () => Array(26).fill(0));
+  words.forEach((w, i) => {
+    for (let j = 0; j < w.length; j++) {
+      nums[i][getCharIndex(w[j])]++;
+    }
+  });
 
-    const result: number[] = [];
-    for (let i = 0; i < 26; i++) {
-        result[i] = Math.min(...nums.map((v) => v[i]));
+  const result: number[] = [];
+  for (let i = 0; i < 26; i++) {
+    result[i] = Math.min(...nums.map((v) => v[i]));
+  }
+
+  return result.reduce<string[]>((acc, cur, i) => {
+    if (cur === 0) {
+      return acc;
     }
 
-    return result.reduce<string[]>((acc, cur, i) => {
-        if (cur === 0) {
-            return acc;
-        }
-
-        return acc.concat(
-            Array(cur).fill(String.fromCharCode(i + 'a'.charCodeAt(0)))
-        );
-    }, []);
+    return acc.concat(
+      Array(cur).fill(String.fromCharCode(i + 'a'.charCodeAt(0)))
+    );
+  }, []);
 }
 
 /*
@@ -1960,20 +1952,20 @@ Constraints:
 	s[i] is either '(' or ')'.
 */
 export function minAddToMakeValid(s: string): number {
-    let left = 0;
-    let count = 0;
-    let i = 0;
-    while (i < s.length) {
-        if (s[i] === '(') {
-            left++;
-        } else {
-            left === 0 ? count++ : left--;
-        }
-
-        i++;
+  let left = 0;
+  let count = 0;
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] === '(') {
+      left++;
+    } else {
+      left === 0 ? count++ : left--;
     }
 
-    return count + left;
+    i++;
+  }
+
+  return count + left;
 }
 
 /*
@@ -2007,18 +1999,18 @@ Constraints:
 	s consists only of letters of the English alphabet in uppercase and lowercase.
 */
 export function sortVowels(s: string): string {
-    const vowelSet = new Set('aeiouAEIOU'.split(''));
-    const chars = s.split('');
-    const vowels = chars
-        .filter((c) => vowelSet.has(c))
-        .sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0));
+  const vowelSet = new Set('aeiouAEIOU'.split(''));
+  const chars = s.split('');
+  const vowels = chars
+    .filter((c) => vowelSet.has(c))
+    .sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0));
 
-    let i = 0;
-    return chars
-        .map((c) => {
-            return vowelSet.has(c) ? vowels[i++] : c;
-        })
-        .join('');
+  let i = 0;
+  return chars
+    .map((c) => {
+      return vowelSet.has(c) ? vowels[i++] : c;
+    })
+    .join('');
 }
 
 /*
@@ -2072,43 +2064,43 @@ Constraints:
 	word consists of lowercase English letters from 'a' to 'j'.
 */
 export function wonderfulSubstrings(word: string): number {
-    const bitMask = {
-        a: 0b0000000001,
-        b: 0b0000000010,
-        c: 0b0000000100,
-        d: 0b0000001000,
-        e: 0b0000010000,
-        f: 0b0000100000,
-        g: 0b0001000000,
-        h: 0b0010000000,
-        i: 0b0100000000,
-        j: 0b1000000000,
-    };
+  const bitMask = {
+    a: 0b0000000001,
+    b: 0b0000000010,
+    c: 0b0000000100,
+    d: 0b0000001000,
+    e: 0b0000010000,
+    f: 0b0000100000,
+    g: 0b0001000000,
+    h: 0b0010000000,
+    i: 0b0100000000,
+    j: 0b1000000000,
+  };
 
-    const prefix: number[] = [bitMask[word[0]]];
-    const freqMap = new Map<number, number>();
-    freqMap.set(prefix[0], 1);
-    for (let i = 1; i < word.length; i++) {
-        prefix[i] = prefix[i - 1] ^ bitMask[word[i]];
-        freqMap.set(prefix[i], (freqMap.get(prefix[i]) ?? 0) + 1);
+  const prefix: number[] = [bitMask[word[0]]];
+  const freqMap = new Map<number, number>();
+  freqMap.set(prefix[0], 1);
+  for (let i = 1; i < word.length; i++) {
+    prefix[i] = prefix[i - 1] ^ bitMask[word[i]];
+    freqMap.set(prefix[i], (freqMap.get(prefix[i]) ?? 0) + 1);
+  }
+
+  const expectedXors = Object.values(bitMask).concat(0);
+  let count = 0;
+  for (let i = 0; i < word.length; i++) {
+    const prev = i === 0 ? 0 : prefix[i - 1];
+    expectedXors.forEach((xor) => {
+      count += freqMap.get(xor ^ prev) ?? 0;
+    });
+
+    if (freqMap.get(prefix[i])! > 1) {
+      freqMap.set(prefix[i], freqMap.get(prefix[i])! - 1);
+    } else {
+      freqMap.delete(prefix[i]);
     }
+  }
 
-    const expectedXors = Object.values(bitMask).concat(0);
-    let count = 0;
-    for (let i = 0; i < word.length; i++) {
-        const prev = i === 0 ? 0 : prefix[i - 1];
-        expectedXors.forEach((xor) => {
-            count += freqMap.get(xor ^ prev) ?? 0;
-        });
-
-        if (freqMap.get(prefix[i])! > 1) {
-            freqMap.set(prefix[i], freqMap.get(prefix[i])! - 1);
-        } else {
-            freqMap.delete(prefix[i]);
-        }
-    }
-
-    return count;
+  return count;
 }
 
 /*
@@ -2139,17 +2131,17 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function removeDuplicates(s: string): string {
-    const stack: string[] = [];
+  const stack: string[] = [];
 
-    for (let i = 0; i < s.length; i++) {
-        if (stack.length > 0 && stack[stack.length - 1] === s[i]) {
-            stack.pop();
-        } else {
-            stack.push(s[i]);
-        }
+  for (let i = 0; i < s.length; i++) {
+    if (stack.length > 0 && stack[stack.length - 1] === s[i]) {
+      stack.pop();
+    } else {
+      stack.push(s[i]);
     }
+  }
 
-    return stack.join('');
+  return stack.join('');
 }
 
 /*
@@ -2181,32 +2173,32 @@ Constraints:
 	s contains only lowercase English letters.
 */
 export function findTheLongestSubstring(s: string): number {
-    // a e i o u
-    // 0 0 0 0 0
-    const vowels = {
-        a: 0,
-        e: 1,
-        i: 2,
-        o: 3,
-        u: 4,
-    };
-    const map = Array(32);
-    map[0] = -1;
-    let max = 0;
-    for (let i = 0, status = 0; i < s.length; i++) {
-        const index = vowels[s[i]];
-        if (index !== undefined) {
-            status ^= 1 << index;
-        }
-
-        if (map[status] !== undefined) {
-            max = Math.max(max, i - map[status]);
-        } else {
-            map[status] = i;
-        }
+  // a e i o u
+  // 0 0 0 0 0
+  const vowels = {
+    a: 0,
+    e: 1,
+    i: 2,
+    o: 3,
+    u: 4,
+  };
+  const map = Array(32);
+  map[0] = -1;
+  let max = 0;
+  for (let i = 0, status = 0; i < s.length; i++) {
+    const index = vowels[s[i]];
+    if (index !== undefined) {
+      status ^= 1 << index;
     }
 
-    return max;
+    if (map[status] !== undefined) {
+      max = Math.max(max, i - map[status]);
+    } else {
+      map[status] = i;
+    }
+  }
+
+  return max;
 }
 
 /*
@@ -2247,41 +2239,41 @@ Constraints:
     s and t consist of only lowercase English letters.
 */
 export function equalSubstring(s: string, t: string, maxCost: number): number {
-    const n = s.length;
-    const prefix: number[] = Array(n + 1).fill(0);
+  const n = s.length;
+  const prefix: number[] = Array(n + 1).fill(0);
 
-    for (let i = 0; i < n; i++) {
-        prefix[i + 1] =
-            prefix[i] + Math.abs(s[i].charCodeAt(0) - t[i].charCodeAt(0));
+  for (let i = 0; i < n; i++) {
+    prefix[i + 1] =
+      prefix[i] + Math.abs(s[i].charCodeAt(0) - t[i].charCodeAt(0));
+  }
+
+  const isValid = (len: number) => {
+    let i = 1;
+    while (i + len - 1 <= n) {
+      if (prefix[i + len - 1] - prefix[i - 1] <= maxCost) {
+        return true;
+      }
+
+      i++;
     }
 
-    const isValid = (len: number) => {
-        let i = 1;
-        while (i + len - 1 <= n) {
-            if (prefix[i + len - 1] - prefix[i - 1] <= maxCost) {
-                return true;
-            }
+    return false;
+  };
 
-            i++;
-        }
-
-        return false;
-    };
-
-    let l = 0;
-    let r = n;
-    let max = 0;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (isValid(m)) {
-            max = m;
-            l = m + 1;
-        } else {
-            r = m - 1;
-        }
+  let l = 0;
+  let r = n;
+  let max = 0;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (isValid(m)) {
+      max = m;
+      l = m + 1;
+    } else {
+      r = m - 1;
     }
+  }
 
-    return max;
+  return max;
 }
 
 /*
@@ -2321,18 +2313,18 @@ Constraints:
 	s and t consist only of lowercase English letters.
 */
 export function appendCharacters(s: string, t: string): number {
-    let i = 0;
-    let j = 0;
-    while (i < s.length && j < t.length) {
-        if (s[i] === t[j]) {
-            i++;
-            j++;
-        } else {
-            i++;
-        }
+  let i = 0;
+  let j = 0;
+  while (i < s.length && j < t.length) {
+    if (s[i] === t[j]) {
+      i++;
+      j++;
+    } else {
+      i++;
     }
+  }
 
-    return t.length - j;
+  return t.length - j;
 }
 
 /*
@@ -2369,26 +2361,26 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function longestIdealString(s: string, k: number): number {
-    const codeA = 'a'.charCodeAt(0);
-    const n = s.length;
-    const dp = Array(26).fill(0);
-    let max = 1;
-    for (let i = 0; i < n; i++) {
-        const code = s[i].charCodeAt(0) - codeA;
-        let best = 0;
-        let diff = Math.max(code - k, 0);
-        let m = Math.min(code + k, 25);
-        for (; diff <= m; diff++) {
-            if (dp[diff] > best) best = dp[diff];
-        }
-
-        if (best >= dp[code]) {
-            dp[code] = best + 1;
-            max = Math.max(max, dp[code]);
-        }
+  const codeA = 'a'.charCodeAt(0);
+  const n = s.length;
+  const dp = Array(26).fill(0);
+  let max = 1;
+  for (let i = 0; i < n; i++) {
+    const code = s[i].charCodeAt(0) - codeA;
+    let best = 0;
+    let diff = Math.max(code - k, 0);
+    let m = Math.min(code + k, 25);
+    for (; diff <= m; diff++) {
+      if (dp[diff] > best) best = dp[diff];
     }
 
-    return max;
+    if (best >= dp[code]) {
+      dp[code] = best + 1;
+      max = Math.max(max, dp[code]);
+    }
+  }
+
+  return max;
 }
 
 /*
@@ -2432,50 +2424,47 @@ Constraints:
 	pressedKeys only consists of digits from '2' - '9'.
 */
 export function countTexts(pressedKeys: string): number {
-    const modulo = 10 ** 9 + 7;
+  const modulo = 10 ** 9 + 7;
 
-    const isAllEqual = (start: number, end: number): boolean => {
-        for (let i = start; i <= end; i++) {
-            if (pressedKeys[i] !== pressedKeys[start]) {
-                return false;
-            }
-        }
+  const isAllEqual = (start: number, end: number): boolean => {
+    for (let i = start; i <= end; i++) {
+      if (pressedKeys[i] !== pressedKeys[start]) {
+        return false;
+      }
+    }
 
-        return true;
-    };
+    return true;
+  };
 
-    const dfs = cache((i: number): number => {
-        if (i === pressedKeys.length) {
-            return 1;
-        }
+  const dfs = cache((i: number): number => {
+    if (i === pressedKeys.length) {
+      return 1;
+    }
 
-        let ret = 0;
+    let ret = 0;
 
-        ret = (ret + dfs(i + 1)) % modulo;
+    ret = (ret + dfs(i + 1)) % modulo;
 
-        if (
-            i + 1 < pressedKeys.length &&
-            pressedKeys[i + 1] === pressedKeys[i]
-        ) {
-            ret = (ret + dfs(i + 2)) % modulo;
-        }
+    if (i + 1 < pressedKeys.length && pressedKeys[i + 1] === pressedKeys[i]) {
+      ret = (ret + dfs(i + 2)) % modulo;
+    }
 
-        if (i + 2 < pressedKeys.length && isAllEqual(i, i + 2)) {
-            ret = (ret + dfs(i + 3)) % modulo;
-        }
+    if (i + 2 < pressedKeys.length && isAllEqual(i, i + 2)) {
+      ret = (ret + dfs(i + 3)) % modulo;
+    }
 
-        if (
-            (pressedKeys[i] === '7' || pressedKeys[i] === '9') &&
-            i + 3 < pressedKeys.length &&
-            isAllEqual(i, i + 3)
-        ) {
-            ret = (ret + dfs(i + 4)) % modulo;
-        }
+    if (
+      (pressedKeys[i] === '7' || pressedKeys[i] === '9') &&
+      i + 3 < pressedKeys.length &&
+      isAllEqual(i, i + 3)
+    ) {
+      ret = (ret + dfs(i + 4)) % modulo;
+    }
 
-        return ret % modulo;
-    });
+    return ret % modulo;
+  });
 
-    return dfs(0);
+  return dfs(0);
 }
 
 /*
@@ -2523,55 +2512,52 @@ Constraints:
 	original[i] != changed[i]
 */
 export function minimumCost(
-    source: string,
-    target: string,
-    original: string[],
-    changed: string[],
-    cost: number[]
+  source: string,
+  target: string,
+  original: string[],
+  changed: string[],
+  cost: number[]
 ): number {
-    const costs = Array.from({ length: 26 }, () => Array(26).fill(Infinity));
+  const costs = Array.from({ length: 26 }, () => Array(26).fill(Infinity));
+  for (let i = 0; i < 26; i++) {
+    costs[i][i] = 0;
+  }
+
+  const aCode = 'a'.charCodeAt(0);
+  for (let i = 0; i < original.length; i++) {
+    const from = original[i].charCodeAt(0) - aCode;
+    const to = changed[i].charCodeAt(0) - aCode;
+    costs[from][to] = Math.min(costs[from][to], cost[i]);
+  }
+
+  for (let mid = 0; mid < 26; mid++) {
     for (let i = 0; i < 26; i++) {
-        costs[i][i] = 0;
+      for (let j = 0; j < 26; j++) {
+        costs[i][j] = Math.min(costs[i][j], costs[i][mid] + costs[mid][j]);
+      }
+    }
+  }
+
+  let minCost = 0;
+  let i = 0;
+  const n = source.length;
+  while (i < n) {
+    if (source[i] === target[i]) {
+      i++;
+      continue;
     }
 
-    const aCode = 'a'.charCodeAt(0);
-    for (let i = 0; i < original.length; i++) {
-        const from = original[i].charCodeAt(0) - aCode;
-        const to = changed[i].charCodeAt(0) - aCode;
-        costs[from][to] = Math.min(costs[from][to], cost[i]);
+    const from = source[i].charCodeAt(0) - aCode;
+    const to = target[i].charCodeAt(0) - aCode;
+    if (costs[from][to] === Infinity) {
+      return -1;
     }
 
-    for (let mid = 0; mid < 26; mid++) {
-        for (let i = 0; i < 26; i++) {
-            for (let j = 0; j < 26; j++) {
-                costs[i][j] = Math.min(
-                    costs[i][j],
-                    costs[i][mid] + costs[mid][j]
-                );
-            }
-        }
-    }
+    minCost += costs[from][to];
+    i++;
+  }
 
-    let minCost = 0;
-    let i = 0;
-    const n = source.length;
-    while (i < n) {
-        if (source[i] === target[i]) {
-            i++;
-            continue;
-        }
-
-        const from = source[i].charCodeAt(0) - aCode;
-        const to = target[i].charCodeAt(0) - aCode;
-        if (costs[from][to] === Infinity) {
-            return -1;
-        }
-
-        minCost += costs[from][to];
-        i++;
-    }
-
-    return minCost;
+  return minCost;
 }
 
 /*
@@ -2603,34 +2589,34 @@ Constraints:
 	pattern and words[i] are lowercase English letters.
 */
 export function findAndReplacePattern(
-    words: string[],
-    pattern: string
+  words: string[],
+  pattern: string
 ): string[] {
-    const n = pattern.length;
-    const res: string[] = [];
-    words.forEach((w) => {
-        const match = {};
-        const matched = new Set<string>();
-        let i = 0;
-        let found = true;
-        while (i < n) {
-            if (!match[pattern[i]] && !matched.has(w[i])) {
-                matched.add(w[i]);
-                match[pattern[i]] = w[i];
-            } else if (match[pattern[i]] !== w[i]) {
-                found = false;
-                break;
-            }
+  const n = pattern.length;
+  const res: string[] = [];
+  words.forEach((w) => {
+    const match = {};
+    const matched = new Set<string>();
+    let i = 0;
+    let found = true;
+    while (i < n) {
+      if (!match[pattern[i]] && !matched.has(w[i])) {
+        matched.add(w[i]);
+        match[pattern[i]] = w[i];
+      } else if (match[pattern[i]] !== w[i]) {
+        found = false;
+        break;
+      }
 
-            i++;
-        }
+      i++;
+    }
 
-        if (found) {
-            res.push(w);
-        }
-    });
+    if (found) {
+      res.push(w);
+    }
+  });
 
-    return res;
+  return res;
 }
 
 /*
@@ -2662,17 +2648,17 @@ Constraints:
 	s[i] is 'a' or 'b'​​.
 */
 export function minimumDeletions(s: string): number {
-    let deletions = 0;
-    let counts = 0;
-    for (const ch of s) {
-        if (ch === 'b') {
-            counts += 1;
-        } else if (counts > 0) {
-            deletions += 1;
-            counts -= 1;
-        }
+  let deletions = 0;
+  let counts = 0;
+  for (const ch of s) {
+    if (ch === 'b') {
+      counts += 1;
+    } else if (counts > 0) {
+      deletions += 1;
+      counts -= 1;
     }
-    return deletions;
+  }
+  return deletions;
 }
 
 /*
@@ -2736,20 +2722,20 @@ Constraints:
 	word consists of lowercase English letters.
 */
 export function minimumPushes(word: string): number {
-    const freqMap: Record<string, number> = {};
-    for (const char of word) {
-        freqMap[char] = (freqMap[char] || 0) + 1;
-    }
+  const freqMap: Record<string, number> = {};
+  for (const char of word) {
+    freqMap[char] = (freqMap[char] || 0) + 1;
+  }
 
-    const sorted = Object.values(freqMap).sort((a, b) => b - a);
-    let i = 1;
-    let count = 0;
-    while (i <= sorted.length) {
-        count += sorted[i - 1] * Math.ceil(i / 8);
-        i++;
-    }
+  const sorted = Object.values(freqMap).sort((a, b) => b - a);
+  let i = 1;
+  let count = 0;
+  while (i <= sorted.length) {
+    count += sorted[i - 1] * Math.ceil(i / 8);
+    i++;
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -2777,25 +2763,22 @@ Constraints:
 	strs[i] consists of only lowercase English letters.
 */
 export function longestCommonPrefix(strs: string[]): string {
-    const minLen = strs.reduce(
-        (min, cur) => Math.min(min, cur.length),
-        Infinity
-    );
-    let candidate = strs[0].slice(0, minLen);
+  const minLen = strs.reduce((min, cur) => Math.min(min, cur.length), Infinity);
+  let candidate = strs[0].slice(0, minLen);
 
-    for (let i = 1; i < strs.length; i++) {
-        const s = strs[i];
-        let j = 0;
-        for (; j < candidate.length; j++) {
-            if (candidate[j] !== s[j]) {
-                break;
-            }
-        }
-
-        candidate = s.slice(0, j);
+  for (let i = 1; i < strs.length; i++) {
+    const s = strs[i];
+    let j = 0;
+    for (; j < candidate.length; j++) {
+      if (candidate[j] !== s[j]) {
+        break;
+      }
     }
 
-    return candidate;
+    candidate = s.slice(0, j);
+  }
+
+  return candidate;
 }
 
 /*
@@ -2828,45 +2811,45 @@ HJ20 密码验证合格程序
   OK
 */
 export function isValidPassword(password: string) {
-    if (password.length < 8) {
-        return 'NG';
-    }
+  if (password.length < 8) {
+    return 'NG';
+  }
 
-    let count = 0;
-    if (/[A-Z]/.test(password)) {
-        count++;
-    }
-    if (/[a-z]/.test(password)) {
-        count++;
-    }
-    if (/[0-9]/.test(password)) {
-        count++;
-    }
-    if (/[^a-zA-z0-9]/.test(password)) {
-        count++;
-    }
-    if (count < 3) {
-        return 'NG';
-    }
+  let count = 0;
+  if (/[A-Z]/.test(password)) {
+    count++;
+  }
+  if (/[a-z]/.test(password)) {
+    count++;
+  }
+  if (/[0-9]/.test(password)) {
+    count++;
+  }
+  if (/[^a-zA-z0-9]/.test(password)) {
+    count++;
+  }
+  if (count < 3) {
+    return 'NG';
+  }
 
-    if (hasRepeatedSubString(password)) {
-        return 'NG';
-    }
+  if (hasRepeatedSubString(password)) {
+    return 'NG';
+  }
 
-    return 'OK';
+  return 'OK';
 }
 
 function hasRepeatedSubString(password: string): boolean {
-    const visited = new Set<string>();
-    for (let i = 0; i < password.length - 3; i++) {
-        const char = password.slice(i, i + 3);
-        if (visited.has(char)) {
-            return true;
-        }
-        visited.add(char);
+  const visited = new Set<string>();
+  for (let i = 0; i < password.length - 3; i++) {
+    const char = password.slice(i, i + 3);
+    if (visited.has(char)) {
+      return true;
     }
+    visited.add(char);
+  }
 
-    return false;
+  return false;
 }
 
 /*
@@ -2893,30 +2876,30 @@ HJ26 字符串排序
 const alphaReg = /[a-zA-Z]/;
 
 export function specialSort(original: string) {
-    const big = toMap('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''));
-    const small = toMap('abcdefghijklmnopqrstuvwxyz'.split(''));
-    const map = Object.assign(big, small);
+  const big = toMap('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''));
+  const small = toMap('abcdefghijklmnopqrstuvwxyz'.split(''));
+  const map = Object.assign(big, small);
 
-    const alphas = original.replace(/[^a-zA-Z]/g, '').split('');
-    alphas.sort((a, b) => map[a] - map[b]);
-    let ret = '';
-    let i = 0;
-    for (let j = 0; j < original.length; j++) {
-        if (alphaReg.test(original[j])) {
-            ret += alphas[i++];
-        } else {
-            ret += original[j];
-        }
+  const alphas = original.replace(/[^a-zA-Z]/g, '').split('');
+  alphas.sort((a, b) => map[a] - map[b]);
+  let ret = '';
+  let i = 0;
+  for (let j = 0; j < original.length; j++) {
+    if (alphaReg.test(original[j])) {
+      ret += alphas[i++];
+    } else {
+      ret += original[j];
     }
+  }
 
-    return ret;
+  return ret;
 }
 
 function toMap(strs: string[]) {
-    return strs.reduce((acc, cur, i) => {
-        acc[cur] = i;
-        return acc;
-    }, {});
+  return strs.reduce((acc, cur, i) => {
+    acc[cur] = i;
+    return acc;
+  }, {});
 }
 
 /*
@@ -2944,31 +2927,31 @@ HJ27 查找兄弟单词
   bca
 */
 export function getKthSiblings(words: string[], x: string) {
-    const sortedX = x.split('').sort().join('');
-    const siblings: string[] = [];
-    words.forEach((w) => {
-        if (w !== x && isSibling(w.split('').sort().join(''), sortedX)) {
-            siblings.push(w);
-        }
-    });
-    siblings.sort();
+  const sortedX = x.split('').sort().join('');
+  const siblings: string[] = [];
+  words.forEach((w) => {
+    if (w !== x && isSibling(w.split('').sort().join(''), sortedX)) {
+      siblings.push(w);
+    }
+  });
+  siblings.sort();
 
-    return siblings;
+  return siblings;
 }
 
 function isSibling(a: string, b: string) {
-    if (a.length !== b.length) {
-        return false;
-    }
+  if (a.length !== b.length) {
+    return false;
+  }
 
-    let i = 0;
-    while (i < a.length) {
-        if (a[i] !== b[i++]) {
-            return false;
-        }
+  let i = 0;
+  while (i < a.length) {
+    if (a[i] !== b[i++]) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 }
 
 /*
@@ -3008,45 +2991,45 @@ const smallMap = toMap(small);
 const numberReg = /\d/;
 
 export function encode(original: string): string {
-    let encoded = '';
-    for (let i = 0; i < original.length; i++) {
-        const char = original[i];
+  let encoded = '';
+  for (let i = 0; i < original.length; i++) {
+    const char = original[i];
 
-        if (numberReg.test(char)) {
-            encoded += (+char + 1) % 10;
-        } else if (bigReg.test(char)) {
-            const next = (bigMap[char] + 1) % 26;
-            encoded += big[next].toLowerCase();
-        } else if (smallReg.test(char)) {
-            const next = (smallMap[char] + 1) % 26;
-            encoded += small[next].toUpperCase();
-        } else {
-            encoded += char;
-        }
+    if (numberReg.test(char)) {
+      encoded += (+char + 1) % 10;
+    } else if (bigReg.test(char)) {
+      const next = (bigMap[char] + 1) % 26;
+      encoded += big[next].toLowerCase();
+    } else if (smallReg.test(char)) {
+      const next = (smallMap[char] + 1) % 26;
+      encoded += small[next].toUpperCase();
+    } else {
+      encoded += char;
     }
+  }
 
-    return encoded;
+  return encoded;
 }
 
 export function decode(encoded: string): string {
-    let original = '';
-    for (let i = 0; i < encoded.length; i++) {
-        const char = encoded[i];
+  let original = '';
+  for (let i = 0; i < encoded.length; i++) {
+    const char = encoded[i];
 
-        if (numberReg.test(char)) {
-            original += (+char + 9) % 10;
-        } else if (bigReg.test(char)) {
-            const prev = (bigMap[char] + 25) % 26;
-            original += big[prev].toLowerCase();
-        } else if (smallReg.test(char)) {
-            const prev = (smallMap[char] + 25) % 26;
-            original += small[prev].toUpperCase();
-        } else {
-            original += char;
-        }
+    if (numberReg.test(char)) {
+      original += (+char + 9) % 10;
+    } else if (bigReg.test(char)) {
+      const prev = (bigMap[char] + 25) % 26;
+      original += big[prev].toLowerCase();
+    } else if (smallReg.test(char)) {
+      const prev = (smallMap[char] + 25) % 26;
+      original += small[prev].toUpperCase();
+    } else {
+      original += char;
     }
+  }
 
-    return original;
+  return original;
 }
 
 /*
@@ -3073,20 +3056,20 @@ HJ65 查找两个字符串a,b中的最长公共子串
   jklmnop
 */
 export function longestCommonSubString(a: string, b: string): string {
-    const short = a.length > b.length ? b : a;
-    const long = short === a ? b : a;
-    let len = short.length;
-    while (len > 0) {
-        for (let i = 0; i < short.length - len + 1; i++) {
-            const toSearch = short.slice(i, i + len);
-            if (long.indexOf(toSearch) !== -1) {
-                return toSearch;
-            }
-        }
-        len--;
+  const short = a.length > b.length ? b : a;
+  const long = short === a ? b : a;
+  let len = short.length;
+  while (len > 0) {
+    for (let i = 0; i < short.length - len + 1; i++) {
+      const toSearch = short.slice(i, i + len);
+      if (long.indexOf(toSearch) !== -1) {
+        return toSearch;
+      }
     }
+    len--;
+  }
 
-    return '';
+  return '';
 }
 
 /*
@@ -3110,44 +3093,42 @@ HJ67 24点游戏算法
   true
 */
 export function canReach24(nums: number[]): boolean {
-    const dfs = (rest: number[]): boolean => {
-        if (rest.length === 1) {
-            return Math.abs(rest[0] - 24) <= 10 ** -6;
+  const dfs = (rest: number[]): boolean => {
+    if (rest.length === 1) {
+      return Math.abs(rest[0] - 24) <= 10 ** -6;
+    }
+
+    // 尝试两个数的所有组合
+    for (let i = 0; i < rest.length; i++) {
+      for (let j = 0; j < rest.length; j++) {
+        if (i === j) {
+          continue;
         }
 
-        // 尝试两个数的所有组合
-        for (let i = 0; i < rest.length; i++) {
-            for (let j = 0; j < rest.length; j++) {
-                if (i === j) {
-                    continue;
-                }
-
-                const next = rest.filter(
-                    (_, index) => index !== i && index !== j
-                );
-                const possibleResults: number[] = [
-                    rest[i] + rest[j],
-                    rest[i] - rest[j],
-                    rest[i] * rest[j],
-                ];
-                if (rest[j] !== 0) {
-                    possibleResults.push(rest[i] / rest[j]);
-                }
-
-                for (const v of possibleResults) {
-                    next.push(v);
-                    if (dfs(next)) {
-                        return true;
-                    }
-                    next.pop();
-                }
-            }
+        const next = rest.filter((_, index) => index !== i && index !== j);
+        const possibleResults: number[] = [
+          rest[i] + rest[j],
+          rest[i] - rest[j],
+          rest[i] * rest[j],
+        ];
+        if (rest[j] !== 0) {
+          possibleResults.push(rest[i] / rest[j]);
         }
 
-        return false;
-    };
+        for (const v of possibleResults) {
+          next.push(v);
+          if (dfs(next)) {
+            return true;
+          }
+          next.pop();
+        }
+      }
+    }
 
-    return dfs(nums);
+    return false;
+  };
+
+  return dfs(nums);
 }
 
 /*
@@ -3181,53 +3162,53 @@ HJ30 字符串合并处理
   5D37BF
 */
 export function handleString(a: string, b: string): string {
-    // 第一步合并字符串
-    const str = a + b;
+  // 第一步合并字符串
+  const str = a + b;
 
-    // 分别排序
-    const odd: string[] = [];
-    const even: string[] = [];
-    let i = 0;
-    while (i < str.length) {
-        if (i % 2 === 0) {
-            even.push(str[i]);
-        } else {
-            odd.push(str[i]);
-        }
-        i++;
+  // 分别排序
+  const odd: string[] = [];
+  const even: string[] = [];
+  let i = 0;
+  while (i < str.length) {
+    if (i % 2 === 0) {
+      even.push(str[i]);
+    } else {
+      odd.push(str[i]);
     }
-    odd.sort();
-    even.sort();
+    i++;
+  }
+  odd.sort();
+  even.sort();
 
-    // 反转二进制位
-    i = 0;
-    let ret = '';
-    while (i < str.length) {
-        if (i % 2 === 0) {
-            ret += reverseBits(even.shift()!);
-        } else {
-            ret += reverseBits(odd.shift()!);
-        }
-        i++;
+  // 反转二进制位
+  i = 0;
+  let ret = '';
+  while (i < str.length) {
+    if (i % 2 === 0) {
+      ret += reverseBits(even.shift()!);
+    } else {
+      ret += reverseBits(odd.shift()!);
     }
+    i++;
+  }
 
-    return ret;
+  return ret;
 }
 
 function reverseBits(char: string) {
-    const val = parseInt(char, 16);
-    if (Number.isNaN(val)) {
-        return char;
-    }
+  const val = parseInt(char, 16);
+  if (Number.isNaN(val)) {
+    return char;
+  }
 
-    const reversed = val
-        .toString(2)
-        .padStart(4, '0')
-        .split('')
-        .reverse()
-        .join('');
+  const reversed = val
+    .toString(2)
+    .padStart(4, '0')
+    .split('')
+    .reverse()
+    .join('');
 
-    return parseInt(reversed, 2).toString(16).toUpperCase();
+  return parseInt(reversed, 2).toString(16).toUpperCase();
 }
 
 /*
@@ -3263,30 +3244,30 @@ Constraints:
 	All the words in s1 and s2 are separated by a single space.
 */
 export function uncommonFromSentences(s1: string, s2: string): string[] {
-    const s1Map = countRepeatTimes(s1.split(' '));
-    const s2Map = countRepeatTimes(s2.split(' '));
+  const s1Map = countRepeatTimes(s1.split(' '));
+  const s2Map = countRepeatTimes(s2.split(' '));
 
-    const ret: string[] = [];
-    Object.keys(s1Map).forEach((k) => {
-        if (s1Map[k] === 1 && s2Map[k] === undefined) {
-            ret.push(k);
-        }
-    });
+  const ret: string[] = [];
+  Object.keys(s1Map).forEach((k) => {
+    if (s1Map[k] === 1 && s2Map[k] === undefined) {
+      ret.push(k);
+    }
+  });
 
-    Object.keys(s2Map).forEach((k) => {
-        if (s2Map[k] === 1 && s1Map[k] === undefined) {
-            ret.push(k);
-        }
-    });
+  Object.keys(s2Map).forEach((k) => {
+    if (s2Map[k] === 1 && s1Map[k] === undefined) {
+      ret.push(k);
+    }
+  });
 
-    return ret;
+  return ret;
 }
 
 function countRepeatTimes(chars: string[]) {
-    return chars.reduce((s, c) => {
-        s[c] = (s[c] ?? 0) + 1;
-        return s;
-    }, {});
+  return chars.reduce((s, c) => {
+    s[c] = (s[c] ?? 0) + 1;
+    return s;
+  }, {});
 }
 
 /*
@@ -3316,20 +3297,20 @@ Constraints:
 	s does not contain '\"' or '\\'.
 */
 export function reverseOnlyLetters(s: string): string {
-    const chars = s.split('');
-    let left = 0;
-    let right = chars.length - 1;
-    while (left < right) {
-        if (!alphaReg.test(chars[left])) {
-            left++;
-        } else if (!alphaReg.test(chars[right])) {
-            right--;
-        } else {
-            swap(chars, left++, right--);
-        }
+  const chars = s.split('');
+  let left = 0;
+  let right = chars.length - 1;
+  while (left < right) {
+    if (!alphaReg.test(chars[left])) {
+      left++;
+    } else if (!alphaReg.test(chars[right])) {
+      right--;
+    } else {
+      swap(chars, left++, right--);
     }
+  }
 
-    return chars.join('');
+  return chars.join('');
 }
 
 /*
@@ -3374,24 +3355,24 @@ Constraints:
 	1 <= numRows <= 1000
 */
 export function convert(s: string, numRows: number): string {
-    if (numRows === 1 || numRows >= s.length) {
-        return s;
+  if (numRows === 1 || numRows >= s.length) {
+    return s;
+  }
+
+  const rows: string[] = Array(numRows).fill('');
+  let down = false;
+  let currentRow = 0;
+  for (const c of s) {
+    rows[currentRow] += c;
+
+    if (currentRow === 0 || currentRow === numRows - 1) {
+      down = !down;
     }
 
-    const rows: string[] = Array(numRows).fill('');
-    let down = false;
-    let currentRow = 0;
-    for (const c of s) {
-        rows[currentRow] += c;
+    currentRow += down ? 1 : -1;
+  }
 
-        if (currentRow === 0 || currentRow === numRows - 1) {
-            down = !down;
-        }
-
-        currentRow += down ? 1 : -1;
-    }
-
-    return rows.join('');
+  return rows.join('');
 }
 
 /*
@@ -3445,39 +3426,39 @@ Constraints:
 	The words in sentence1 and sentence2 are separated by a single space.
 */
 export function areSentencesSimilar(
-    sentence1: string,
-    sentence2: string
+  sentence1: string,
+  sentence2: string
 ): boolean {
-    if (sentence1.length === sentence2.length) {
-        return sentence1 === sentence2;
+  if (sentence1.length === sentence2.length) {
+    return sentence1 === sentence2;
+  }
+
+  const long = sentence1.length > sentence2.length ? sentence1 : sentence2;
+  const short = long === sentence1 ? sentence2 : sentence1;
+  const longWords = long.split(' ');
+  const shortWords = short.split(' ');
+
+  let left = 0;
+  while (left < shortWords.length) {
+    if (shortWords[left] === longWords[left]) {
+      left++;
+    } else {
+      break;
     }
+  }
 
-    const long = sentence1.length > sentence2.length ? sentence1 : sentence2;
-    const short = long === sentence1 ? sentence2 : sentence1;
-    const longWords = long.split(' ');
-    const shortWords = short.split(' ');
-
-    let left = 0;
-    while (left < shortWords.length) {
-        if (shortWords[left] === longWords[left]) {
-            left++;
-        } else {
-            break;
-        }
+  let right = shortWords.length - 1;
+  let longRight = longWords.length - 1;
+  while (right >= left) {
+    if (shortWords[right] === longWords[longRight]) {
+      right--;
+      longRight--;
+    } else {
+      break;
     }
+  }
 
-    let right = shortWords.length - 1;
-    let longRight = longWords.length - 1;
-    while (right >= left) {
-        if (shortWords[right] === longWords[longRight]) {
-            right--;
-            longRight--;
-        } else {
-            break;
-        }
-    }
-
-    return right < left;
+  return right < left;
 }
 
 /*
@@ -3513,50 +3494,50 @@ Constraints:
 	a + b + c > 0
 */
 export function longestDiverseString(a: number, b: number, c: number): string {
-    const maxHeap = new GenericHeap<[count: number, char: string]>(
-        (a, b) => b[0] - a[0]
-    );
-    maxHeap.initHeap(
-        (
-            [
-                [a, 'a'],
-                [b, 'b'],
-                [c, 'c'],
-            ] as [count: number, char: string][]
-        ).filter(([count]) => count > 0)
-    );
+  const maxHeap = new GenericHeap<[count: number, char: string]>(
+    (a, b) => b[0] - a[0]
+  );
+  maxHeap.initHeap(
+    (
+      [
+        [a, 'a'],
+        [b, 'b'],
+        [c, 'c'],
+      ] as [count: number, char: string][]
+    ).filter(([count]) => count > 0)
+  );
 
-    let ret = '';
-    while (!maxHeap.isEmpty()) {
-        const [max, maxChar] = maxHeap.pop();
-        const [mid, midChar] = maxHeap.pop() ?? [];
-        const maxStr = maxChar.repeat(Math.min(2, max));
+  let ret = '';
+  while (!maxHeap.isEmpty()) {
+    const [max, maxChar] = maxHeap.pop();
+    const [mid, midChar] = maxHeap.pop() ?? [];
+    const maxStr = maxChar.repeat(Math.min(2, max));
 
-        if (mid === undefined) {
-            if (ret.at(-1) !== maxChar) {
-                return ret + maxStr;
-            }
-            if (ret.at(-2) !== maxStr) {
-                return ret + maxChar;
-            }
-            return ret;
-        }
-
-        if (ret.at(-1) === maxChar) {
-            ret += midChar + maxStr;
-        } else {
-            ret += maxStr + midChar;
-        }
-
-        if (max - 2 > 0) {
-            maxHeap.push([max - 2, maxChar]);
-        }
-        if (mid - 1 > 0) {
-            maxHeap.push([mid - 1, midChar]);
-        }
+    if (mid === undefined) {
+      if (ret.at(-1) !== maxChar) {
+        return ret + maxStr;
+      }
+      if (ret.at(-2) !== maxStr) {
+        return ret + maxChar;
+      }
+      return ret;
     }
 
-    return ret;
+    if (ret.at(-1) === maxChar) {
+      ret += midChar + maxStr;
+    } else {
+      ret += maxStr + midChar;
+    }
+
+    if (max - 2 > 0) {
+      maxHeap.push([max - 2, maxChar]);
+    }
+    if (mid - 1 > 0) {
+      maxHeap.push([mid - 1, midChar]);
+    }
+  }
+
+  return ret;
 }
 
 /*
@@ -3598,22 +3579,22 @@ Constraints:
 	1 <= k <= 2^n - 1
 */
 export function findKthBit(n: number, k: number): string {
-    const bits: string[] = Array(Math.pow(2, n));
-    bits[0] = '0';
-    let i = 0;
-    while (i < bits.length) {
-        bits[++i] = '1';
-        let len = i;
-        while (len > 0) {
-            bits[++i] = bits[--len] === '1' ? '0' : '1';
-        }
-
-        if (i >= k - 1) {
-            return bits[k - 1];
-        }
+  const bits: string[] = Array(Math.pow(2, n));
+  bits[0] = '0';
+  let i = 0;
+  while (i < bits.length) {
+    bits[++i] = '1';
+    let len = i;
+    while (len > 0) {
+      bits[++i] = bits[--len] === '1' ? '0' : '1';
     }
 
-    return bits[k - 1];
+    if (i >= k - 1) {
+      return bits[k - 1];
+    }
+  }
+
+  return bits[k - 1];
 }
 
 /*
@@ -3650,27 +3631,27 @@ Constraints:
 	s contains only lower case English letters.
 */
 export function maxUniqueSplit(s: string): number {
-    const dfs = (i: number, visited: Set<string>): number => {
-        if (i === s.length) {
-            return visited.size;
-        }
+  const dfs = (i: number, visited: Set<string>): number => {
+    if (i === s.length) {
+      return visited.size;
+    }
 
-        let next = '';
-        let max = 0;
-        for (let j = i; j < s.length; j++) {
-            next += s[j];
+    let next = '';
+    let max = 0;
+    for (let j = i; j < s.length; j++) {
+      next += s[j];
 
-            if (!visited.has(next)) {
-                visited.add(next);
-                max = Math.max(max, dfs(j + 1, visited));
-                visited.delete(next);
-            }
-        }
+      if (!visited.has(next)) {
+        visited.add(next);
+        max = Math.max(max, dfs(j + 1, visited));
+        visited.delete(next);
+      }
+    }
 
-        return max;
-    };
+    return max;
+  };
 
-    return dfs(0, new Set());
+  return dfs(0, new Set());
 }
 
 /*
@@ -3710,36 +3691,36 @@ Constraints:
 	s[i] is either '0' or '1'.
 */
 export function numWays(s: string): number {
-    let sum = 0;
-    for (let i = 0; i < s.length; i++) {
-        sum += +s[i];
-    }
-    if (sum % 3 !== 0) {
-        return 0;
-    }
+  let sum = 0;
+  for (let i = 0; i < s.length; i++) {
+    sum += +s[i];
+  }
+  if (sum % 3 !== 0) {
+    return 0;
+  }
 
-    const MOD = 1e9 + 7;
-    if (sum === 0) {
-        return (((s.length - 1) * (s.length - 2)) / 2) % MOD;
+  const MOD = 1e9 + 7;
+  if (sum === 0) {
+    return (((s.length - 1) * (s.length - 2)) / 2) % MOD;
+  }
+
+  const firstPart = sum / 3;
+  let firstWays = 0;
+  const secondPart = firstPart << 1;
+  let secondWays = 0;
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    count += +s[i];
+
+    if (count === firstPart) {
+      firstWays++;
     }
-
-    const firstPart = sum / 3;
-    let firstWays = 0;
-    const secondPart = firstPart << 1;
-    let secondWays = 0;
-    let count = 0;
-    for (let i = 0; i < s.length; i++) {
-        count += +s[i];
-
-        if (count === firstPart) {
-            firstWays++;
-        }
-        if (count === secondPart) {
-            secondWays++;
-        }
+    if (count === secondPart) {
+      secondWays++;
     }
+  }
 
-    return (firstWays * secondWays) % MOD;
+  return (firstWays * secondWays) % MOD;
 }
 
 /*
@@ -3780,15 +3761,15 @@ Constraints:
 	s consists only of lowercase English letters.
 */
 export function makeFancyString(s: string): string {
-    const original = s.split('');
-    const ret: string[] = [];
-    for (let i = 0; i < original.length; i++) {
-        if (original[i] !== ret.at(-1) || original[i] !== ret.at(-2)) {
-            ret.push(original[i]);
-        }
+  const original = s.split('');
+  const ret: string[] = [];
+  for (let i = 0; i < original.length; i++) {
+    if (original[i] !== ret.at(-1) || original[i] !== ret.at(-2)) {
+      ret.push(original[i]);
     }
+  }
 
-    return ret.join('');
+  return ret.join('');
 }
 
 /*
@@ -3813,7 +3794,7 @@ Constraints:
 	s and goal consist of lowercase English letters.
 */
 export function rotateString(s: string, goal: string): boolean {
-    return s.length === goal.length && (s + s).includes(goal);
+  return s.length === goal.length && (s + s).includes(goal);
 }
 
 /*
@@ -3860,22 +3841,22 @@ Constraints:
 	word consists only of lowercase English letters.
 */
 export function compressedString(word: string): string {
-    let comp = '';
-    let count = 1;
-    let prev = word[0];
+  let comp = '';
+  let count = 1;
+  let prev = word[0];
 
-    for (let i = 1; i < word.length; i++) {
-        if (word[i] === prev && count < 9) {
-            count++;
-        } else {
-            comp += `${count}${prev}`;
-            prev = word[i];
-            count = 1;
-        }
+  for (let i = 1; i < word.length; i++) {
+    if (word[i] === prev && count < 9) {
+      count++;
+    } else {
+      comp += `${count}${prev}`;
+      prev = word[i];
+      count = 1;
     }
-    comp += `${count}${prev}`;
+  }
+  comp += `${count}${prev}`;
 
-    return comp;
+  return comp;
 }
 
 /*
@@ -3921,14 +3902,14 @@ Constraints:
 	s[i] is either '0' or '1'.
 */
 export function minChanges(s: string): number {
-    let min = 0;
-    for (let i = 0; i < s.length; i += 2) {
-        if (s[i] !== s[i + 1]) {
-            min++;
-        }
+  let min = 0;
+  for (let i = 0; i < s.length; i += 2) {
+    if (s[i] !== s[i + 1]) {
+      min++;
     }
+  }
 
-    return min;
+  return min;
 }
 
 /*
@@ -3968,29 +3949,29 @@ we are able to make answer which contains atleast k elements of a,b,c .. (as i e
 and some rightmost elements will be there ) and removing of middle can be done by sliding window technique.
 */
 export function takeCharacters(s: string, k: number): number {
-    // Total counts
-    const count: number[] = [0, 0, 0];
-    for (const c of s) {
-        count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
-    }
+  // Total counts
+  const count: number[] = [0, 0, 0];
+  for (const c of s) {
+    count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+  }
 
-    if (Math.min(...count) < k) {
-        return -1;
-    }
+  if (Math.min(...count) < k) {
+    return -1;
+  }
 
-    // Sliding Window
-    let res = Infinity;
-    let l = 0;
-    for (let r = 0; r < s.length; r++) {
-        count[s.charCodeAt(r) - 'a'.charCodeAt(0)]--;
+  // Sliding Window
+  let res = Infinity;
+  let l = 0;
+  for (let r = 0; r < s.length; r++) {
+    count[s.charCodeAt(r) - 'a'.charCodeAt(0)]--;
 
-        while (Math.min(...count) < k) {
-            count[s.charCodeAt(l) - 'a'.charCodeAt(0)]++;
-            l++;
-        }
-        res = Math.min(res, s.length - (r - l + 1));
+    while (Math.min(...count) < k) {
+      count[s.charCodeAt(l) - 'a'.charCodeAt(0)]++;
+      l++;
     }
-    return res;
+    res = Math.min(res, s.length - (r - l + 1));
+  }
+  return res;
 }
 
 /*
@@ -4020,19 +4001,19 @@ Constraints:
 	s and t consist of lowercase English letters.
 */
 export function findTheDifference(s: string, t: string): string {
-    const freq = {};
-    for (const char of s) {
-        freq[char] = (freq[char] ?? 0) + 1;
-    }
+  const freq = {};
+  for (const char of s) {
+    freq[char] = (freq[char] ?? 0) + 1;
+  }
 
-    for (const char of t) {
-        if (freq[char] > 0) {
-            freq[char]--;
-        } else {
-            return char;
-        }
+  for (const char of t) {
+    if (freq[char] > 0) {
+      freq[char]--;
+    } else {
+      return char;
     }
-    return '';
+  }
+  return '';
 }
 
 /*
@@ -4070,14 +4051,14 @@ Constraints:
 	searchWord consists of lowercase English letters.
 */
 export function isPrefixOfWord(sentence: string, searchWord: string): number {
-    const words = sentence.split(' ');
-    for (let i = 0; i < words.length; i++) {
-        if (words[i].startsWith(searchWord)) {
-            return i + 1;
-        }
+  const words = sentence.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    if (words[i].startsWith(searchWord)) {
+      return i + 1;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 /*
@@ -4121,16 +4102,16 @@ Constraints:
 	All the values of spaces are strictly increasing.
 */
 export function addSpaces(s: string, spaces: number[]): string {
-    const ret: string[] = [];
+  const ret: string[] = [];
 
-    let prev = 0;
-    spaces.forEach((v) => {
-        ret.push(s.slice(prev, v));
-        prev = v;
-    });
-    ret.push(s.slice(prev));
+  let prev = 0;
+  spaces.forEach((v) => {
+    ret.push(s.slice(prev, v));
+    prev = v;
+  });
+  ret.push(s.slice(prev));
 
-    return ret.join(' ');
+  return ret.join(' ');
 }
 
 /*
@@ -4175,24 +4156,24 @@ Constraints:
 	str1 and str2 consist of only lowercase English letters.
 */
 export function canMakeSubsequence(str1: string, str2: string): boolean {
-    const alphas = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  const alphas = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
-    const isMatch = (src: string, dest: string) => {
-        return src === dest || alphas[(alphas.indexOf(src) + 1) % 26] === dest;
-    };
+  const isMatch = (src: string, dest: string) => {
+    return src === dest || alphas[(alphas.indexOf(src) + 1) % 26] === dest;
+  };
 
-    let i = 0;
-    let j = 0;
-    while (i < str1.length && j < str2.length) {
-        if (isMatch(str1[i], str2[j])) {
-            i++;
-            j++;
-        } else {
-            i++;
-        }
+  let i = 0;
+  let j = 0;
+  while (i < str1.length && j < str2.length) {
+    if (isMatch(str1[i], str2[j])) {
+      i++;
+      j++;
+    } else {
+      i++;
     }
+  }
 
-    return j === str2.length;
+  return j === str2.length;
 }
 
 /*
@@ -4235,24 +4216,24 @@ Constraints:
 	start and target consist of the characters 'L', 'R', and '_'.
 */
 export function canChange(start: string, target: string): boolean {
-    const n = start.length;
-    for (let i = 0, j = 0; i < n || j < n; i++, j++) {
-        while (start[i] === '_') {
-            i++;
-        }
-        while (target[j] === '_') {
-            j++;
-        }
-
-        if (start[i] !== target[j]) {
-            return false;
-        }
-        if ((start[i] === 'L' && i < j) || (start[i] === 'R' && i > j)) {
-            return false;
-        }
+  const n = start.length;
+  for (let i = 0, j = 0; i < n || j < n; i++, j++) {
+    while (start[i] === '_') {
+      i++;
+    }
+    while (target[j] === '_') {
+      j++;
     }
 
-    return true;
+    if (start[i] !== target[j]) {
+      return false;
+    }
+    if ((start[i] === 'L' && i < j) || (start[i] === 'R' && i > j)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /*
@@ -4303,40 +4284,40 @@ Constraints:
 	sources[i] and targets[i] consist of only lowercase English letters.
 */
 export function findReplaceString(
-    s: string,
-    indices: number[],
-    sources: string[],
-    targets: string[]
+  s: string,
+  indices: number[],
+  sources: string[],
+  targets: string[]
 ): string {
-    const sorted = indices.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
+  const sorted = indices.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
 
-    const ret: string[] = Array(s.length);
-    let index = 0;
-    let i = 0;
-    while (i < s.length) {
-        if (i !== sorted[index]?.[0]) {
-            ret[i] = s[i++];
-            continue;
-        }
-
-        const mappedIndex = sorted[index][1];
-
-        let isMatch = true;
-        for (let k = 0; k < sources[mappedIndex].length; k++) {
-            if (sources[mappedIndex][k] !== s[i + k]) {
-                isMatch = false;
-                break;
-            }
-        }
-
-        if (isMatch) {
-            ret[i] = targets[mappedIndex];
-            i += sources[mappedIndex].length;
-        }
-        index++;
+  const ret: string[] = Array(s.length);
+  let index = 0;
+  let i = 0;
+  while (i < s.length) {
+    if (i !== sorted[index]?.[0]) {
+      ret[i] = s[i++];
+      continue;
     }
 
-    return ret.join('');
+    const mappedIndex = sorted[index][1];
+
+    let isMatch = true;
+    for (let k = 0; k < sources[mappedIndex].length; k++) {
+      if (sources[mappedIndex][k] !== s[i + k]) {
+        isMatch = false;
+        break;
+      }
+    }
+
+    if (isMatch) {
+      ret[i] = targets[mappedIndex];
+      i += sources[mappedIndex].length;
+    }
+    index++;
+  }
+
+  return ret.join('');
 }
 
 /*
@@ -4376,33 +4357,33 @@ Constraints:
 	s consists of only lowercase English letters.
 */
 export function maximumLength(s: string): number {
-    const nums: number[] = Array(s.length).fill(1);
-    for (let i = 0; i < s.length; i++) {
-        let j = i + 1;
-        while (j < s.length && s[j] === s[i]) {
-            j++;
-        }
-        nums[i] = j - i;
+  const nums: number[] = Array(s.length).fill(1);
+  for (let i = 0; i < s.length; i++) {
+    let j = i + 1;
+    while (j < s.length && s[j] === s[i]) {
+      j++;
     }
+    nums[i] = j - i;
+  }
 
-    let len = -1;
-    for (let i = 0; i < s.length - 2; i++) {
-        for (let j = i + 1; j < s.length - 1; j++) {
-            if (s[j] !== s[i]) {
-                continue;
-            }
+  let len = -1;
+  for (let i = 0; i < s.length - 2; i++) {
+    for (let j = i + 1; j < s.length - 1; j++) {
+      if (s[j] !== s[i]) {
+        continue;
+      }
 
-            for (let k = j + 1; k < s.length; k++) {
-                if (s[k] !== s[i]) {
-                    continue;
-                }
-
-                len = Math.max(len, Math.min(nums[i], nums[j], nums[k]));
-            }
+      for (let k = j + 1; k < s.length; k++) {
+        if (s[k] !== s[i]) {
+          continue;
         }
-    }
 
-    return len;
+        len = Math.max(len, Math.min(nums[i], nums[j], nums[k]));
+      }
+    }
+  }
+
+  return len;
 }
 
 /*
@@ -4440,24 +4421,24 @@ Constraints:
 	1 <= zero, one <= low
 */
 export function countGoodStrings(
-    low: number,
-    high: number,
-    zero: number,
-    one: number
+  low: number,
+  high: number,
+  zero: number,
+  one: number
 ): number {
-    const mod = 1e9 + 7;
+  const mod = 1e9 + 7;
 
-    const dfs = cache((len: number): number => {
-        if (len > high) {
-            return 0;
-        }
-        if (len < low) {
-            return (dfs(len + zero) + dfs(len + one)) % mod;
-        }
-        return (1 + dfs(len + zero) + dfs(len + one)) % mod;
-    });
+  const dfs = cache((len: number): number => {
+    if (len > high) {
+      return 0;
+    }
+    if (len < low) {
+      return (dfs(len + zero) + dfs(len + one)) % mod;
+    }
+    return (1 + dfs(len + zero) + dfs(len + one)) % mod;
+  });
 
-    return dfs(0);
+  return dfs(0);
 }
 
 /*
@@ -4496,26 +4477,26 @@ Constraints:
 	The string s consists of characters '0' and '1' only.
 */
 export function maxScore(s: string): number {
-    let zeros = 0;
-    let ones = 0;
-    for (const c of s) {
-        if (c === '1') {
-            ones++;
-        }
+  let zeros = 0;
+  let ones = 0;
+  for (const c of s) {
+    if (c === '1') {
+      ones++;
+    }
+  }
+
+  let max = 0;
+  for (let i = 0; i < s.length - 1; i++) {
+    if (s[i] === '0') {
+      zeros++;
+    } else {
+      ones--;
     }
 
-    let max = 0;
-    for (let i = 0; i < s.length - 1; i++) {
-        if (s[i] === '0') {
-            zeros++;
-        } else {
-            ones--;
-        }
+    max = Math.max(max, zeros + ones);
+  }
 
-        max = Math.max(max, zeros + ones);
-    }
-
-    return max;
+  return max;
 }
 
 /*
@@ -4552,21 +4533,21 @@ Constraints:
 	All the strings of words are unique.
 */
 export function stringMatching(words: string[]): string[] {
-    const ret: string[] = [];
-    for (let i = 0; i < words.length; i++) {
-        for (let j = 0; j < words.length; j++) {
-            if (i === j) {
-                continue;
-            }
+  const ret: string[] = [];
+  for (let i = 0; i < words.length; i++) {
+    for (let j = 0; j < words.length; j++) {
+      if (i === j) {
+        continue;
+      }
 
-            if (words[j].includes(words[i])) {
-                ret.push(words[i]);
-                break;
-            }
-        }
+      if (words[j].includes(words[i])) {
+        ret.push(words[i]);
+        break;
+      }
     }
+  }
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -4611,27 +4592,27 @@ Constraints:
 	names[i] consists of lowercase English letters, digits, and/or round brackets.
 */
 export function getFolderNames(names: string[]): string[] {
-    const map = new Map<string, number>();
-    const ret: string[] = Array(names.length);
+  const map = new Map<string, number>();
+  const ret: string[] = Array(names.length);
 
-    names.forEach((name, i) => {
-        if (!map.has(name)) {
-            map.set(name, 0);
-            ret[i] = name;
-        } else {
-            let k = map.get(name)! + 1;
-            let newName = `${name}(${k})`;
-            while (map.has(newName)) {
-                k++;
-                newName = `${name}(${k})`;
-            }
-            map.set(name, k);
-            map.set(newName, 0);
-            ret[i] = newName;
-        }
-    });
+  names.forEach((name, i) => {
+    if (!map.has(name)) {
+      map.set(name, 0);
+      ret[i] = name;
+    } else {
+      let k = map.get(name)! + 1;
+      let newName = `${name}(${k})`;
+      while (map.has(newName)) {
+        k++;
+        newName = `${name}(${k})`;
+      }
+      map.set(name, k);
+      map.set(newName, 0);
+      ret[i] = newName;
+    }
+  });
 
-    return ret;
+  return ret;
 }
 
 /*
@@ -4681,20 +4662,20 @@ Constraints:
 	words[i] consists only of lowercase English letters.
 */
 export function countPrefixSuffixPairs(words: string[]): number {
-    const isPrefixAndSuffix = (str1: string, str2: string): boolean => {
-        return str2.startsWith(str1) && str2.endsWith(str1);
-    };
+  const isPrefixAndSuffix = (str1: string, str2: string): boolean => {
+    return str2.startsWith(str1) && str2.endsWith(str1);
+  };
 
-    let count = 0;
-    for (let i = 0; i < words.length - 1; i++) {
-        for (let j = i + 1; j < words.length; j++) {
-            if (isPrefixAndSuffix(words[i], words[j])) {
-                count++;
-            }
-        }
+  let count = 0;
+  for (let i = 0; i < words.length - 1; i++) {
+    for (let j = i + 1; j < words.length; j++) {
+      if (isPrefixAndSuffix(words[i], words[j])) {
+        count++;
+      }
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -4728,40 +4709,40 @@ Constraints:
 	All the strings of words1 are unique.
 */
 export function wordSubsets(words1: string[], words2: string[]): string[] {
-    const times = Array(26).fill(0);
-    const aCode = 'a'.charCodeAt(0);
-    words2.forEach((w) => {
-        const freq = Array(26).fill(0);
-        for (const c of w) {
-            freq[c.charCodeAt(0) - aCode]++;
-        }
-
-        for (let i = 0; i < 26; i++) {
-            times[i] = Math.max(times[i], freq[i]);
-        }
-    });
-
-    const ret: string[] = [];
-    for (const word of words1) {
-        const freq = Array(26).fill(0);
-        for (const c of word) {
-            freq[c.charCodeAt(0) - aCode]++;
-        }
-
-        let isSubset = true;
-        for (let i = 0; i < 26; i++) {
-            if (freq[i] < times[i]) {
-                isSubset = false;
-                break;
-            }
-        }
-
-        if (isSubset) {
-            ret.push(word);
-        }
+  const times = Array(26).fill(0);
+  const aCode = 'a'.charCodeAt(0);
+  words2.forEach((w) => {
+    const freq = Array(26).fill(0);
+    for (const c of w) {
+      freq[c.charCodeAt(0) - aCode]++;
     }
 
-    return ret;
+    for (let i = 0; i < 26; i++) {
+      times[i] = Math.max(times[i], freq[i]);
+    }
+  });
+
+  const ret: string[] = [];
+  for (const word of words1) {
+    const freq = Array(26).fill(0);
+    for (const c of word) {
+      freq[c.charCodeAt(0) - aCode]++;
+    }
+
+    let isSubset = true;
+    for (let i = 0; i < 26; i++) {
+      if (freq[i] < times[i]) {
+        isSubset = false;
+        break;
+      }
+    }
+
+    if (isSubset) {
+      ret.push(word);
+    }
+  }
+
+  return ret;
 }
 
 /*
@@ -4808,41 +4789,41 @@ Constraints:
 	locked[i] is either '0' or '1'.
 */
 export function canBeValid(s: string, locked: string): boolean {
-    const n = s.length;
-    if (n & 1) {
-        // If the length of the string is odd, it can't be valid
-        return false;
-    }
+  const n = s.length;
+  if (n & 1) {
+    // If the length of the string is odd, it can't be valid
+    return false;
+  }
 
-    // Forward pass: Check for enough open brackets
-    let openCount = 0; // Count of '(' + unlocked positions
-    for (let i = 0; i < n; i++) {
-        if (locked[i] === '0' || s[i] === '(') {
-            openCount++;
-        } else {
-            openCount--;
-        }
-        if (openCount < 0) {
-            // Too many ')'
-            return false;
-        }
+  // Forward pass: Check for enough open brackets
+  let openCount = 0; // Count of '(' + unlocked positions
+  for (let i = 0; i < n; i++) {
+    if (locked[i] === '0' || s[i] === '(') {
+      openCount++;
+    } else {
+      openCount--;
     }
-
-    // Backward pass: Check for enough closing brackets
-    let closeCount = 0; // Count of ')' + unlocked positions
-    for (let i = n - 1; i >= 0; i--) {
-        if (locked[i] === '0' || s[i] === ')') {
-            closeCount++;
-        } else {
-            closeCount--;
-        }
-        if (closeCount < 0) {
-            // Too many '('
-            return false;
-        }
+    if (openCount < 0) {
+      // Too many ')'
+      return false;
     }
+  }
 
-    return true;
+  // Backward pass: Check for enough closing brackets
+  let closeCount = 0; // Count of ')' + unlocked positions
+  for (let i = n - 1; i >= 0; i--) {
+    if (locked[i] === '0' || s[i] === ')') {
+      closeCount++;
+    } else {
+      closeCount--;
+    }
+    if (closeCount < 0) {
+      // Too many '('
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /*
@@ -4885,16 +4866,16 @@ Constraints:
 	The input is generated such that it is possible to delete all digits.
 */
 export function clearDigits(s: string): string {
-    const stack: string[] = [];
-    for (const char of s) {
-        if (/\d/.test(char)) {
-            stack.pop();
-        } else {
-            stack.push(char);
-        }
+  const stack: string[] = [];
+  for (const char of s) {
+    if (/\d/.test(char)) {
+      stack.pop();
+    } else {
+      stack.push(char);
     }
+  }
 
-    return stack.join('');
+  return stack.join('');
 }
 
 /*
@@ -4936,9 +4917,9 @@ Constraints:
 	s​​​​​​ and part consists of lowercase English letters.
 */
 export function removeOccurrences(s: string, part: string): string {
-    while (s.includes(part)) {
-        s = s.replace(part, '');
-    }
+  while (s.includes(part)) {
+    s = s.replace(part, '');
+  }
 
-    return s;
+  return s;
 }

@@ -30,26 +30,26 @@ Constraints:
 	boxes[i] is either '0' or '1'.
 */
 export function minOperations(boxes: string): number[] {
-    let leftOnes = 0;
-    let rightOnes = 0;
-    const ret = Array(boxes.length);
-    let distance = 0;
-    for (let i = 0; i < boxes.length; i++) {
-        if (boxes[i] === '1') {
-            rightOnes++;
-            distance += i;
-        }
+  let leftOnes = 0;
+  let rightOnes = 0;
+  const ret = Array(boxes.length);
+  let distance = 0;
+  for (let i = 0; i < boxes.length; i++) {
+    if (boxes[i] === '1') {
+      rightOnes++;
+      distance += i;
     }
-    ret[0] = distance;
+  }
+  ret[0] = distance;
 
-    for (let i = 1; i < boxes.length; i++) {
-        if (boxes[i - 1] === '1') {
-            leftOnes++;
-            rightOnes--;
-        }
-        distance += leftOnes - rightOnes;
-        ret[i] = distance;
+  for (let i = 1; i < boxes.length; i++) {
+    if (boxes[i - 1] === '1') {
+      leftOnes++;
+      rightOnes--;
     }
+    distance += leftOnes - rightOnes;
+    ret[i] = distance;
+  }
 
-    return ret;
+  return ret;
 }

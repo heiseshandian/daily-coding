@@ -1,36 +1,36 @@
 import { Queue } from './queue';
 export class StackByQueue {
-    #pushQueue: Queue;
+  #pushQueue: Queue;
 
-    #popQueue: Queue;
+  #popQueue: Queue;
 
-    constructor() {
-        this.#pushQueue = new Queue();
-        this.#popQueue = new Queue();
+  constructor() {
+    this.#pushQueue = new Queue();
+    this.#popQueue = new Queue();
+  }
+
+  public push(val: any) {
+    this.#pushQueue.add(val);
+  }
+
+  public pop() {
+    while (this.#pushQueue.size() > 1) {
+      this.#popQueue.add(this.#pushQueue.poll());
     }
 
-    public push(val: any) {
-        this.#pushQueue.add(val);
-    }
+    const result = this.#pushQueue.poll();
+    this.#swap();
 
-    public pop() {
-        while (this.#pushQueue.size() > 1) {
-            this.#popQueue.add(this.#pushQueue.poll());
-        }
+    return result;
+  }
 
-        const result = this.#pushQueue.poll();
-        this.#swap();
+  public isEmpty() {
+    return this.#pushQueue.size() === 0;
+  }
 
-        return result;
-    }
-
-    public isEmpty() {
-        return this.#pushQueue.size() === 0;
-    }
-
-    #swap() {
-        const temp = this.#pushQueue;
-        this.#pushQueue = this.#popQueue;
-        this.#popQueue = temp;
-    }
+  #swap() {
+    const temp = this.#pushQueue;
+    this.#pushQueue = this.#popQueue;
+    this.#popQueue = temp;
+  }
 }

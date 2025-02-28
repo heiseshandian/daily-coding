@@ -1,7 +1,7 @@
 import {
-    ListNode,
-    SingleLinkedList,
-    reverseSingleLinkedList,
+  ListNode,
+  SingleLinkedList,
+  reverseSingleLinkedList,
 } from '../algorithm/linked-list';
 import { getClosestMaxArr } from '../algorithm/monotonous-stack';
 import { TreeNode } from '../algorithm/tree';
@@ -9,64 +9,64 @@ import { gcd } from '../common/index';
 //https://leetcode.com/problems/copy-list-with-random-pointer/
 // 深度copy如下带有random指针的节点
 export class NodeWithRandom {
-    val: number;
-    next: NodeWithRandom | null;
-    random: NodeWithRandom | null;
-    constructor(val?: number, next?: NodeWithRandom, random?: NodeWithRandom) {
-        this.val = val === undefined ? 0 : val;
-        this.next = next === undefined ? null : next;
-        this.random = random === undefined ? null : random;
-    }
+  val: number;
+  next: NodeWithRandom | null;
+  random: NodeWithRandom | null;
+  constructor(val?: number, next?: NodeWithRandom, random?: NodeWithRandom) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+    this.random = random === undefined ? null : random;
+  }
 }
 
 export function copyRandomList(
-    head: NodeWithRandom | null
+  head: NodeWithRandom | null
 ): NodeWithRandom | null {
-    if (!head) {
-        return head;
+  if (!head) {
+    return head;
+  }
+
+  // 创建copy节点
+  let cur: NodeWithRandom | null = head;
+  while (cur) {
+    const next: NodeWithRandom | null = cur.next;
+    const copy = new NodeWithRandom(cur.val);
+    copy.next = next;
+
+    cur.next = copy;
+    cur = next;
+  }
+
+  // 连接random指针
+  cur = head;
+  while (cur && cur.next) {
+    const copy = cur.next;
+    if (cur.random) {
+      copy.random = cur.random.next;
     }
 
-    // 创建copy节点
-    let cur: NodeWithRandom | null = head;
-    while (cur) {
-        const next: NodeWithRandom | null = cur.next;
-        const copy = new NodeWithRandom(cur.val);
-        copy.next = next;
+    cur = cur.next.next;
+  }
 
-        cur.next = copy;
-        cur = next;
+  // 把copy节点分离出来
+  cur = head;
+  const copyHead = cur.next;
+  while (cur && cur.next) {
+    const next: NodeWithRandom | null = cur.next.next;
+    if (!next) {
+      cur.next = null;
+      break;
     }
 
-    // 连接random指针
-    cur = head;
-    while (cur && cur.next) {
-        const copy = cur.next;
-        if (cur.random) {
-            copy.random = cur.random.next;
-        }
+    const copy = cur.next;
+    const nextCopy = next.next || null;
+    copy.next = nextCopy;
 
-        cur = cur.next.next;
-    }
+    cur.next = next;
+    cur = next;
+  }
 
-    // 把copy节点分离出来
-    cur = head;
-    const copyHead = cur.next;
-    while (cur && cur.next) {
-        const next: NodeWithRandom | null = cur.next.next;
-        if (!next) {
-            cur.next = null;
-            break;
-        }
-
-        const copy = cur.next;
-        const nextCopy = next.next || null;
-        copy.next = nextCopy;
-
-        cur.next = next;
-        cur = next;
-    }
-
-    return copyHead;
+  return copyHead;
 }
 
 /* 
@@ -74,45 +74,45 @@ Given the head of a singly linked list and two integers left and right where lef
 reverse the nodes of the list from position left to position right, and return the reversed list.
 */
 export function reverseBetween(
-    head: SingleLinkedList | null,
-    left: number,
-    right: number
+  head: SingleLinkedList | null,
+  left: number,
+  right: number
 ): SingleLinkedList | null {
-    if (left === right) {
-        return head;
-    }
+  if (left === right) {
+    return head;
+  }
 
-    let prevLeft: SingleLinkedList | null = null;
-    let afterRight: SingleLinkedList | null = null;
+  let prevLeft: SingleLinkedList | null = null;
+  let afterRight: SingleLinkedList | null = null;
 
-    let count = 1;
-    let cur = head;
-    while (count < left && cur) {
-        prevLeft = cur;
-        cur = cur.next;
-        count++;
-    }
-    const leftNode = cur;
+  let count = 1;
+  let cur = head;
+  while (count < left && cur) {
+    prevLeft = cur;
+    cur = cur.next;
+    count++;
+  }
+  const leftNode = cur;
 
-    let prev: SingleLinkedList | null = null;
-    while (count <= right && cur) {
-        const next = cur.next;
-        cur.next = prev;
-        prev = cur;
-        cur = next;
+  let prev: SingleLinkedList | null = null;
+  while (count <= right && cur) {
+    const next = cur.next;
+    cur.next = prev;
+    prev = cur;
+    cur = next;
 
-        afterRight = next;
-        count++;
-    }
+    afterRight = next;
+    count++;
+  }
 
-    if (prevLeft) {
-        prevLeft.next = prev;
-        leftNode!.next = afterRight;
-        return head;
-    } else {
-        leftNode!.next = afterRight;
-        return prev;
-    }
+  if (prevLeft) {
+    prevLeft.next = prev;
+    leftNode!.next = afterRight;
+    return head;
+  } else {
+    leftNode!.next = afterRight;
+    return prev;
+  }
 }
 
 /* 
@@ -125,47 +125,47 @@ Output: [4,5,1,2,3]
 单链表旋转
 */
 export function rotateRight(
-    head: SingleLinkedList | null,
-    k: number
+  head: SingleLinkedList | null,
+  k: number
 ): SingleLinkedList | null {
-    if (!head) {
-        return head;
-    }
+  if (!head) {
+    return head;
+  }
 
-    let count = 0;
-    let cur: SingleLinkedList | null = head;
-    let tail = cur;
-    while (cur) {
-        count++;
-        tail = cur;
-        cur = cur.next;
-    }
+  let count = 0;
+  let cur: SingleLinkedList | null = head;
+  let tail = cur;
+  while (cur) {
+    count++;
+    tail = cur;
+    cur = cur.next;
+  }
 
-    k = k % count;
+  k = k % count;
 
-    if (k === 0) {
-        return head;
-    }
+  if (k === 0) {
+    return head;
+  }
 
-    // 找到倒数第k个节点，也就是count-k个节点
-    cur = head;
-    // 这里num是从1开始，不是从0开始，因为当前节点已经算一个节点
-    let num = 1;
-    while (cur && num <= count - k) {
-        num++;
-        cur = cur.next;
-    }
+  // 找到倒数第k个节点，也就是count-k个节点
+  cur = head;
+  // 这里num是从1开始，不是从0开始，因为当前节点已经算一个节点
+  let num = 1;
+  while (cur && num <= count - k) {
+    num++;
+    cur = cur.next;
+  }
 
-    const newHead = cur;
-    cur = head;
-    while (cur !== newHead) {
-        tail.next = cur;
-        tail = cur!;
-        cur = cur!.next;
-    }
-    tail.next = null;
+  const newHead = cur;
+  cur = head;
+  while (cur !== newHead) {
+    tail.next = cur;
+    tail = cur!;
+    cur = cur!.next;
+  }
+  tail.next = null;
 
-    return newHead;
+  return newHead;
 }
 
 /* 
@@ -176,83 +176,83 @@ Given the head of a linked list, return the list after sorting it in ascending o
 */
 // 时间复杂度O(nlogn) 空间复杂度O(n)
 export function sortList(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head) {
-        return head;
-    }
+  if (!head) {
+    return head;
+  }
 
-    let cur: SingleLinkedList | null = head;
-    const nodes: SingleLinkedList[] = [];
-    while (cur) {
-        nodes.push(cur);
-        cur = cur.next;
-    }
+  let cur: SingleLinkedList | null = head;
+  const nodes: SingleLinkedList[] = [];
+  while (cur) {
+    nodes.push(cur);
+    cur = cur.next;
+  }
 
-    nodes.sort((a, b) => a.val - b.val);
+  nodes.sort((a, b) => a.val - b.val);
 
-    const newHead = nodes[0];
+  const newHead = nodes[0];
 
-    nodes.reduce((prev, next) => {
-        prev.next = next;
-        return next;
-    });
-    nodes[nodes.length - 1].next = null;
+  nodes.reduce((prev, next) => {
+    prev.next = next;
+    return next;
+  });
+  nodes[nodes.length - 1].next = null;
 
-    return newHead;
+  return newHead;
 }
 
 // 时间复杂度O(nlogn) 空间复杂度O(1)
 export function sortList2(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head || !head.next) {
-        return head;
-    }
+  if (!head || !head.next) {
+    return head;
+  }
 
-    const secondHalf = splitListInHalf(head);
-    const [left, right] = [sortList2(head), sortList2(secondHalf)];
-    return merge(left, right);
+  const secondHalf = splitListInHalf(head);
+  const [left, right] = [sortList2(head), sortList2(secondHalf)];
+  return merge(left, right);
 }
 
 function splitListInHalf(head: SingleLinkedList) {
-    let slow: SingleLinkedList = head;
-    let fast: SingleLinkedList | null = head;
-    let prev: SingleLinkedList | null = null;
-    while (fast && fast.next) {
-        prev = slow;
-        slow = slow.next!;
-        fast = fast.next.next;
-    }
+  let slow: SingleLinkedList = head;
+  let fast: SingleLinkedList | null = head;
+  let prev: SingleLinkedList | null = null;
+  while (fast && fast.next) {
+    prev = slow;
+    slow = slow.next!;
+    fast = fast.next.next;
+  }
 
-    // 将前后两部分断连
-    if (prev) {
-        prev.next = null;
-    }
+  // 将前后两部分断连
+  if (prev) {
+    prev.next = null;
+  }
 
-    return slow;
+  return slow;
 }
 
 function merge(
-    list1: SingleLinkedList | null,
-    list2: SingleLinkedList | null
+  list1: SingleLinkedList | null,
+  list2: SingleLinkedList | null
 ): SingleLinkedList | null {
-    const newHead = new SingleLinkedList(undefined);
+  const newHead = new SingleLinkedList(undefined);
 
-    let cur = newHead;
-    while (list1 && list2) {
-        if (list1.val <= list2.val) {
-            cur.next = list1;
-            list1 = list1.next;
-        } else {
-            cur.next = list2;
-            list2 = list2.next;
-        }
-        cur = cur.next;
+  let cur = newHead;
+  while (list1 && list2) {
+    if (list1.val <= list2.val) {
+      cur.next = list1;
+      list1 = list1.next;
+    } else {
+      cur.next = list2;
+      list2 = list2.next;
     }
-    cur.next = list1 || list2;
+    cur = cur.next;
+  }
+  cur.next = list1 || list2;
 
-    return newHead.next;
+  return newHead.next;
 }
 
 /* 
@@ -267,25 +267,25 @@ Note that the relative order inside both the even and odd groups should remain a
 You must solve the problem in O(1) extra space complexity and O(n) time complexity.
 */
 export function oddEvenList(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head) {
-        return head;
-    }
-
-    const evenHead = head.next;
-    let odd = head;
-    let even = evenHead;
-    while (odd && even?.next) {
-        odd.next = even.next;
-        odd = odd.next;
-
-        even.next = even.next.next;
-        even = even.next;
-    }
-    odd.next = evenHead;
-
+  if (!head) {
     return head;
+  }
+
+  const evenHead = head.next;
+  let odd = head;
+  let even = evenHead;
+  while (odd && even?.next) {
+    odd.next = even.next;
+    odd = odd.next;
+
+    even.next = even.next.next;
+    even = even.next;
+  }
+  odd.next = evenHead;
+
+  return head;
 }
 
 /* 
@@ -300,31 +300,31 @@ is connected to (0-indexed). It is -1 if there is no cycle. Note that pos is not
 Do not modify the linked list.
 */
 export function detectCycle(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head || !head.next) {
-        return null;
-    }
+  if (!head || !head.next) {
+    return null;
+  }
 
-    let slow: SingleLinkedList | null | undefined = head.next;
-    let fast: SingleLinkedList | null | undefined = head.next?.next;
-    while (fast && slow !== fast) {
-        slow = slow?.next;
-        fast = fast.next?.next;
-    }
+  let slow: SingleLinkedList | null | undefined = head.next;
+  let fast: SingleLinkedList | null | undefined = head.next?.next;
+  while (fast && slow !== fast) {
+    slow = slow?.next;
+    fast = fast.next?.next;
+  }
 
-    // 此处不能直接用fast===null，因为经过上面的?.运算符fast的结果有可能是undefined
-    if (!fast) {
-        return null;
-    }
+  // 此处不能直接用fast===null，因为经过上面的?.运算符fast的结果有可能是undefined
+  if (!fast) {
+    return null;
+  }
 
-    fast = head;
-    while (fast !== slow) {
-        slow = slow!.next;
-        fast = fast!.next;
-    }
+  fast = head;
+  while (fast !== slow) {
+    slow = slow!.next;
+    fast = fast!.next;
+  }
 
-    return fast;
+  return fast;
 }
 
 /* 
@@ -334,75 +334,75 @@ Given the head of a sorted linked list, delete all nodes that have duplicate num
 leaving only distinct numbers from the original list. Return the linked list sorted as well.
 */
 export function deleteDuplicates(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head || !head.next) {
-        return head;
-    }
+  if (!head || !head.next) {
+    return head;
+  }
 
-    const newHead = findFirstDistinctNode(head);
-    if (!newHead) {
-        return newHead;
-    }
-
-    let cur = newHead;
-    let next = newHead.next;
-    while (next) {
-        const distinct = findFirstDistinctNode(next);
-        cur.next = distinct;
-        if (!distinct) {
-            break;
-        }
-
-        cur = cur.next!;
-        next = cur?.next;
-    }
-
+  const newHead = findFirstDistinctNode(head);
+  if (!newHead) {
     return newHead;
+  }
+
+  let cur = newHead;
+  let next = newHead.next;
+  while (next) {
+    const distinct = findFirstDistinctNode(next);
+    cur.next = distinct;
+    if (!distinct) {
+      break;
+    }
+
+    cur = cur.next!;
+    next = cur?.next;
+  }
+
+  return newHead;
 }
 
 function findFirstDistinctNode(
-    node: SingleLinkedList | null
+  node: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!node || !node.next) {
-        return node;
-    }
+  if (!node || !node.next) {
+    return node;
+  }
 
-    let distinct = node;
-    let next = distinct.next;
-    // 如果当前节点与下一个节点不同则直接返回
-    if (distinct.val !== next?.val) {
-        return distinct;
-    }
+  let distinct = node;
+  let next = distinct.next;
+  // 如果当前节点与下一个节点不同则直接返回
+  if (distinct.val !== next?.val) {
+    return distinct;
+  }
 
-    while (next) {
-        if (!distinct || distinct.val !== next?.val) {
-            // 此处需要递归调用，因为下一个节点有可能是一堆相同节点的开头，也可能是一个独立的distinct节点
-            return findFirstDistinctNode(next);
-        }
-        next = next.next;
+  while (next) {
+    if (!distinct || distinct.val !== next?.val) {
+      // 此处需要递归调用，因为下一个节点有可能是一堆相同节点的开头，也可能是一个独立的distinct节点
+      return findFirstDistinctNode(next);
     }
-    return null;
+    next = next.next;
+  }
+  return null;
 }
 
 // 更为简洁的代码实现
 export function deleteDuplicates2(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head || !head.next) {
-        return head;
-    }
-
-    if (head.val === head.next?.val) {
-        while (head?.val === head?.next?.val) {
-            head = head?.next!;
-        }
-
-        return deleteDuplicates2(head.next);
-    }
-
-    head.next = deleteDuplicates2(head.next);
+  if (!head || !head.next) {
     return head;
+  }
+
+  if (head.val === head.next?.val) {
+    while (head?.val === head?.next?.val) {
+      head = head?.next!;
+    }
+
+    return deleteDuplicates2(head.next);
+  }
+
+  head.next = deleteDuplicates2(head.next);
+  return head;
 }
 
 /* 
@@ -415,31 +415,31 @@ L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
 You may not modify the values in the list's nodes. Only nodes themselves may be changed.
 */
 export function reorderList(head: SingleLinkedList | null): void {
-    if (!head || !head.next || !head.next.next) {
-        return;
-    }
+  if (!head || !head.next || !head.next.next) {
+    return;
+  }
 
-    // 对于奇数个节点，slow指向中点，对于偶数个节点，slow指向上节点
-    let slow = head;
-    let fast = head;
-    while (fast && fast.next && fast.next.next) {
-        slow = slow.next!;
-        fast = fast.next.next;
-    }
-    let secondHalf = slow.next;
-    // 切断前后半部分
-    slow.next = null;
+  // 对于奇数个节点，slow指向中点，对于偶数个节点，slow指向上节点
+  let slow = head;
+  let fast = head;
+  while (fast && fast.next && fast.next.next) {
+    slow = slow.next!;
+    fast = fast.next.next;
+  }
+  let secondHalf = slow.next;
+  // 切断前后半部分
+  slow.next = null;
 
-    secondHalf = reverseSingleLinkedList(secondHalf);
-    let cur = head;
-    while (secondHalf) {
-        const curNext = cur.next;
-        const secondNext = secondHalf.next;
-        cur.next = secondHalf;
-        secondHalf.next = curNext;
-        cur = curNext!;
-        secondHalf = secondNext;
-    }
+  secondHalf = reverseSingleLinkedList(secondHalf);
+  let cur = head;
+  while (secondHalf) {
+    const curNext = cur.next;
+    const secondNext = secondHalf.next;
+    cur.next = secondHalf;
+    secondHalf.next = curNext;
+    cur = curNext!;
+    secondHalf = secondNext;
+  }
 }
 
 /* 
@@ -449,53 +449,53 @@ Given the head of a linked list and an integer val, remove all the nodes
 of the linked list that has Node.val == val, and return the new head.
 */
 export function removeElements(
-    head: SingleLinkedList | null,
-    val: number
+  head: SingleLinkedList | null,
+  val: number
 ): SingleLinkedList | null {
-    if (!head) {
-        return head;
-    }
+  if (!head) {
+    return head;
+  }
 
-    // 找到新头部
-    let cur: SingleLinkedList | null = head;
-    while (cur && cur.val === val) {
-        cur = cur.next;
-    }
-    const newHead = cur;
-    if (!newHead || !newHead.next) {
-        return newHead;
-    }
-
-    let prev = newHead;
-    cur = newHead.next;
-    while (cur) {
-        if (cur.val === val) {
-            prev.next = cur.next;
-        } else {
-            prev = cur;
-        }
-
-        cur = cur.next;
-    }
-
+  // 找到新头部
+  let cur: SingleLinkedList | null = head;
+  while (cur && cur.val === val) {
+    cur = cur.next;
+  }
+  const newHead = cur;
+  if (!newHead || !newHead.next) {
     return newHead;
+  }
+
+  let prev = newHead;
+  cur = newHead.next;
+  while (cur) {
+    if (cur.val === val) {
+      prev.next = cur.next;
+    } else {
+      prev = cur;
+    }
+
+    cur = cur.next;
+  }
+
+  return newHead;
 }
 
 export function removeElements2(
-    head: SingleLinkedList | null,
-    val: number
+  head: SingleLinkedList | null,
+  val: number
 ): SingleLinkedList | null {
-    const holder = new SingleLinkedList(-1, head);
-    let cur = holder;
-    while (cur && cur.next) {
-        if (cur.next.val === val) {
-            cur.next = cur.next.next;
-        } else {
-            cur = cur.next;
-        }
+  const holder = new SingleLinkedList(-1, head);
+  let cur = holder;
+  while (cur && cur.next) {
+    if (cur.next.val === val) {
+      cur.next = cur.next.next;
+    } else {
+      cur = cur.next;
     }
+  }
 
-    return holder.next;
+  return holder.next;
 }
 
 /* 
@@ -510,39 +510,39 @@ At each iteration, insertion sort removes one element from the input data, finds
 It repeats until no input elements remain.
 */
 export function insertionSortList(
-    head: SingleLinkedList | null
+  head: SingleLinkedList | null
 ): SingleLinkedList | null {
-    if (!head || !head.next) {
-        return head;
+  if (!head || !head.next) {
+    return head;
+  }
+
+  const placeholder = new SingleLinkedList(-Infinity);
+  placeholder.next = head;
+
+  let sortedStart: SingleLinkedList | null = placeholder;
+  let sortedEnd: SingleLinkedList = head;
+  let cur: SingleLinkedList | null = head.next;
+  while (cur) {
+    if (sortedEnd.val <= cur.val) {
+      const next: SingleLinkedList | null = cur.next;
+      sortedEnd.next = cur;
+      sortedEnd = cur;
+      cur = next;
+    } else {
+      sortedEnd.next = cur.next;
+      sortedStart = placeholder;
+
+      while (sortedStart?.next && sortedStart.next.val < cur.val) {
+        sortedStart = sortedStart?.next;
+      }
+      const next = sortedStart.next;
+      sortedStart.next = cur;
+      cur.next = next;
+      cur = sortedEnd.next;
     }
+  }
 
-    const placeholder = new SingleLinkedList(-Infinity);
-    placeholder.next = head;
-
-    let sortedStart: SingleLinkedList | null = placeholder;
-    let sortedEnd: SingleLinkedList = head;
-    let cur: SingleLinkedList | null = head.next;
-    while (cur) {
-        if (sortedEnd.val <= cur.val) {
-            const next: SingleLinkedList | null = cur.next;
-            sortedEnd.next = cur;
-            sortedEnd = cur;
-            cur = next;
-        } else {
-            sortedEnd.next = cur.next;
-            sortedStart = placeholder;
-
-            while (sortedStart?.next && sortedStart.next.val < cur.val) {
-                sortedStart = sortedStart?.next;
-            }
-            const next = sortedStart.next;
-            sortedStart.next = cur;
-            cur.next = next;
-            cur = sortedEnd.next;
-        }
-    }
-
-    return placeholder.next;
+  return placeholder.next;
 }
 
 /*
@@ -576,39 +576,39 @@ Constraints:
 */
 
 export function mergeInBetween(
-    list1: ListNode | null,
-    a: number,
-    b: number,
-    list2: ListNode | null
+  list1: ListNode | null,
+  a: number,
+  b: number,
+  list2: ListNode | null
 ): ListNode | null {
-    let preA: ListNode | null = null;
-    let i = 0;
-    let cur = list1;
-    while (i < a && cur) {
-        preA = cur;
-        cur = cur.next;
-        i++;
-    }
-    i--;
+  let preA: ListNode | null = null;
+  let i = 0;
+  let cur = list1;
+  while (i < a && cur) {
+    preA = cur;
+    cur = cur.next;
+    i++;
+  }
+  i--;
 
-    let nextB: ListNode | null = null;
-    while (i < b && cur) {
-        cur = cur.next;
-        i++;
-        nextB = cur;
-    }
+  let nextB: ListNode | null = null;
+  while (i < b && cur) {
+    cur = cur.next;
+    i++;
+    nextB = cur;
+  }
 
-    let endB: ListNode | null = null;
-    cur = list2;
-    while (cur) {
-        endB = cur;
-        cur = cur.next;
-    }
+  let endB: ListNode | null = null;
+  cur = list2;
+  while (cur) {
+    endB = cur;
+    cur = cur.next;
+  }
 
-    preA!.next = list2;
-    endB!.next = nextB;
+  preA!.next = list2;
+  endB!.next = nextB;
 
-    return list1;
+  return list1;
 }
 
 /*
@@ -648,22 +648,22 @@ Constraints:
 Follow up: Can you solve it using O(1) (i.e. constant) memory?
 */
 export function hasCycle(head: ListNode | null): boolean {
-    if (!head) {
-        return false;
-    }
-
-    let slow: ListNode | null = head;
-    let fast: ListNode | null | undefined = head.next;
-    while (slow && fast) {
-        if (fast === slow) {
-            return true;
-        }
-
-        slow = slow.next;
-        fast = fast.next?.next;
-    }
-
+  if (!head) {
     return false;
+  }
+
+  let slow: ListNode | null = head;
+  let fast: ListNode | null | undefined = head.next;
+  while (slow && fast) {
+    if (fast === slow) {
+      return true;
+    }
+
+    slow = slow.next;
+    fast = fast.next?.next;
+  }
+
+  return false;
 }
 
 /*
@@ -691,14 +691,14 @@ Constraints:
 	1 <= Node.val <= 100
 */
 export function middleNode(head: ListNode | null): ListNode | null {
-    let slow = head;
-    let fast = head?.next;
-    while (slow && fast) {
-        slow = slow.next;
-        fast = fast.next?.next;
-    }
+  let slow = head;
+  let fast = head?.next;
+  while (slow && fast) {
+    slow = slow.next;
+    fast = fast.next?.next;
+  }
 
-    return slow;
+  return slow;
 }
 
 /*
@@ -732,48 +732,48 @@ Constraints:
 	Each node in the linked list has -1000 <= node.val <= 1000.
 */
 export function removeZeroSumSublists(head: ListNode | null): ListNode | null {
-    if (!head) {
-        return head;
+  if (!head) {
+    return head;
+  }
+
+  const nums: number[] = [];
+  let cur: ListNode | null = head;
+  while (cur) {
+    nums.push(cur.val);
+    cur = cur.next;
+  }
+
+  const suffixSum: number[] = new Array(nums.length);
+  suffixSum[nums.length - 1] = nums[nums.length - 1];
+  for (let i = nums.length - 2; i >= 0; i--) {
+    suffixSum[i] = suffixSum[i + 1] + nums[i];
+  }
+
+  for (let i = nums.length - 1; i >= 0; ) {
+    let j = i;
+    let mostLeft: number | null = null;
+    const prev = i === nums.length - 1 ? 0 : suffixSum[i + 1];
+    while (j >= 0) {
+      if (suffixSum[j] - prev === 0) {
+        mostLeft = j;
+      }
+      j--;
     }
 
-    const nums: number[] = [];
-    let cur: ListNode | null = head;
-    while (cur) {
-        nums.push(cur.val);
-        cur = cur.next;
+    if (mostLeft === null) {
+      i--;
+    } else {
+      nums.splice(mostLeft, i - mostLeft + 1);
+      i = mostLeft - 1;
     }
+  }
 
-    const suffixSum: number[] = new Array(nums.length);
-    suffixSum[nums.length - 1] = nums[nums.length - 1];
-    for (let i = nums.length - 2; i >= 0; i--) {
-        suffixSum[i] = suffixSum[i + 1] + nums[i];
-    }
+  const nodes = nums.map((v) => new ListNode(v));
+  nodes.forEach((n, i) => {
+    n.next = nodes[i + 1] || null;
+  });
 
-    for (let i = nums.length - 1; i >= 0; ) {
-        let j = i;
-        let mostLeft: number | null = null;
-        const prev = i === nums.length - 1 ? 0 : suffixSum[i + 1];
-        while (j >= 0) {
-            if (suffixSum[j] - prev === 0) {
-                mostLeft = j;
-            }
-            j--;
-        }
-
-        if (mostLeft === null) {
-            i--;
-        } else {
-            nums.splice(mostLeft, i - mostLeft + 1);
-            i = mostLeft - 1;
-        }
-    }
-
-    const nodes = nums.map((v) => new ListNode(v));
-    nodes.forEach((n, i) => {
-        n.next = nodes[i + 1] || null;
-    });
-
-    return nodes[0] || null;
+  return nodes[0] || null;
 }
 
 /*
@@ -798,19 +798,19 @@ Constraints:
 	The list is guaranteed to be sorted in ascending order.
 */
 export function deleteDuplicates3(head: ListNode | null): ListNode | null {
-    const set = new Set<number>();
-    let cur = head;
-    while (cur) {
-        set.add(cur.val);
-        cur = cur.next;
-    }
+  const set = new Set<number>();
+  let cur = head;
+  while (cur) {
+    set.add(cur.val);
+    cur = cur.next;
+  }
 
-    const nodes = Array.from(set).map((v) => new ListNode(v));
-    nodes.forEach((n, i) => {
-        n.next = nodes[i + 1] ?? null;
-    });
+  const nodes = Array.from(set).map((v) => new ListNode(v));
+  nodes.forEach((n, i) => {
+    n.next = nodes[i + 1] ?? null;
+  });
 
-    return nodes[0] ?? null;
+  return nodes[0] ?? null;
 }
 
 /*
@@ -845,28 +845,28 @@ Constraints:
 TODO:暴力解法，需用其他方式优化下性能
 */
 export function removeNodes(head: ListNode | null): ListNode | null {
-    if (!head) {
-        return head;
-    }
+  if (!head) {
+    return head;
+  }
 
-    const nodeVals: number[] = [];
-    let cur: ListNode | null = head;
-    while (cur) {
-        nodeVals.push(cur.val);
-        cur = cur.next;
-    }
+  const nodeVals: number[] = [];
+  let cur: ListNode | null = head;
+  while (cur) {
+    nodeVals.push(cur.val);
+    cur = cur.next;
+  }
 
-    const closestMax = getClosestMaxArr(nodeVals);
-    const filteredNodeVals = nodeVals
-        .map((val, i) => [closestMax[i][1], val])
-        .filter(([biggerIndex]) => biggerIndex === undefined)
-        .map(([, val]) => val);
+  const closestMax = getClosestMaxArr(nodeVals);
+  const filteredNodeVals = nodeVals
+    .map((val, i) => [closestMax[i][1], val])
+    .filter(([biggerIndex]) => biggerIndex === undefined)
+    .map(([, val]) => val);
 
-    const nodes = filteredNodeVals.map((val) => new ListNode(val));
-    nodes.forEach((n, i) => {
-        n.next = nodes[i + 1] ?? null;
-    });
-    return nodes[0] ?? null;
+  const nodes = filteredNodeVals.map((val) => new ListNode(val));
+  nodes.forEach((n, i) => {
+    n.next = nodes[i + 1] ?? null;
+  });
+  return nodes[0] ?? null;
 }
 
 /*
@@ -895,38 +895,38 @@ Constraints:
 	The input is generated such that the list represents a number that does not have leading zeros, except the number 0 itself.
 */
 export function doubleIt(head: ListNode): ListNode {
-    const tail = reverse(head);
+  const tail = reverse(head);
 
-    let cur: ListNode | null = tail;
-    let carry = 0;
-    let tmp = 0;
-    while (cur) {
-        tmp = cur.val * 2 + carry;
-        cur.val = tmp % 10;
-        carry = Math.floor(tmp / 10);
+  let cur: ListNode | null = tail;
+  let carry = 0;
+  let tmp = 0;
+  while (cur) {
+    tmp = cur.val * 2 + carry;
+    cur.val = tmp % 10;
+    carry = Math.floor(tmp / 10);
 
-        if (!cur.next && carry) {
-            cur.next = new ListNode(carry);
-            break;
-        }
-
-        cur = cur.next;
+    if (!cur.next && carry) {
+      cur.next = new ListNode(carry);
+      break;
     }
 
-    return reverse(tail);
+    cur = cur.next;
+  }
+
+  return reverse(tail);
 }
 
 function reverse(head: ListNode): ListNode {
-    let prev: ListNode | null = null;
-    let cur: ListNode | null = head;
-    while (cur) {
-        const next = cur.next;
-        cur.next = prev;
-        prev = cur;
-        cur = next;
-    }
+  let prev: ListNode | null = null;
+  let cur: ListNode | null = head;
+  while (cur) {
+    const next = cur.next;
+    cur.next = prev;
+    prev = cur;
+    cur = next;
+  }
 
-    return prev!;
+  return prev!;
 }
 
 /*
@@ -965,25 +965,25 @@ Constraints:
 	The beginning and end of the linked list have Node.val == 0.
 */
 export function mergeNodes(head: ListNode): ListNode {
-    const newHead = head.next!;
+  const newHead = head.next!;
 
-    let left: ListNode = head.next!;
-    let sum = 0;
-    let cur: ListNode | null = left;
-    while (cur) {
-        if (cur.val !== 0) {
-            sum += cur.val;
-            cur = cur.next;
-        } else {
-            left.val = sum;
-            left.next = cur.next;
-            sum = 0;
-            cur = cur.next;
-            left = cur!;
-        }
+  let left: ListNode = head.next!;
+  let sum = 0;
+  let cur: ListNode | null = left;
+  while (cur) {
+    if (cur.val !== 0) {
+      sum += cur.val;
+      cur = cur.next;
+    } else {
+      left.val = sum;
+      left.next = cur.next;
+      sum = 0;
+      cur = cur.next;
+      left = cur!;
     }
+  }
 
-    return newHead;
+  return newHead;
 }
 
 /*
@@ -1033,39 +1033,39 @@ Constraints:
 	1 <= Node.val <= 10^5
 */
 export function nodesBetweenCriticalPoints(head: ListNode): number[] {
-    let prev = head;
-    let cur = head.next!;
-    let next = cur.next;
-    if (!next) {
-        return [-1, -1];
+  let prev = head;
+  let cur = head.next!;
+  let next = cur.next;
+  if (!next) {
+    return [-1, -1];
+  }
+
+  const points: number[] = [];
+  let i = 0;
+  while (next) {
+    if (
+      (cur.val > prev.val && cur.val > next.val) ||
+      (cur.val < prev.val && cur.val < next.val)
+    ) {
+      points.push(i);
     }
 
-    const points: number[] = [];
-    let i = 0;
-    while (next) {
-        if (
-            (cur.val > prev.val && cur.val > next.val) ||
-            (cur.val < prev.val && cur.val < next.val)
-        ) {
-            points.push(i);
-        }
+    prev = cur;
+    cur = next;
+    next = next.next;
+    i++;
+  }
 
-        prev = cur;
-        cur = next;
-        next = next.next;
-        i++;
-    }
+  if (points.length < 2) {
+    return [-1, -1];
+  }
 
-    if (points.length < 2) {
-        return [-1, -1];
-    }
-
-    let min = Infinity;
-    const n = points.length;
-    for (let i = 1; i < n; i++) {
-        min = Math.min(min, points[i] - points[i - 1]);
-    }
-    return [min, points[n - 1] - points[0]];
+  let min = Infinity;
+  const n = points.length;
+  for (let i = 1; i < n; i++) {
+    min = Math.min(min, points[i] - points[i - 1]);
+  }
+  return [min, points[n - 1] - points[0]];
 }
 
 /*
@@ -1113,31 +1113,31 @@ Constraints:
 	The input is generated such that there is at least one node in the linked list that has a value not present in nums.
 */
 export function modifiedList(
-    nums: number[],
-    head: ListNode | null
+  nums: number[],
+  head: ListNode | null
 ): ListNode | null {
-    const toDelete = new Set(nums);
-    let cur: ListNode | null | undefined = head;
-    while (toDelete.has(cur?.val)) {
-        cur = cur?.next;
-    }
-    if (!cur) {
-        return null;
-    }
+  const toDelete = new Set(nums);
+  let cur: ListNode | null | undefined = head;
+  while (toDelete.has(cur?.val)) {
+    cur = cur?.next;
+  }
+  if (!cur) {
+    return null;
+  }
 
-    const newHead = cur;
-    let prev = cur;
-    while (cur) {
-        if (toDelete.has(cur.val)) {
-            prev.next = cur.next;
-        } else {
-            prev = cur;
-        }
-
-        cur = cur.next;
+  const newHead = cur;
+  let prev = cur;
+  while (cur) {
+    if (toDelete.has(cur.val)) {
+      prev.next = cur.next;
+    } else {
+      prev = cur;
     }
 
-    return newHead;
+    cur = cur.next;
+  }
+
+  return newHead;
 }
 
 /*
@@ -1173,36 +1173,35 @@ Constraints:
 	1 <= Node.val <= 100 for each node in the linked list and binary tree.
 */
 export function isSubPath(
-    head: ListNode | null,
-    root: TreeNode | null
+  head: ListNode | null,
+  root: TreeNode | null
 ): boolean {
-    if (!root) {
-        return false;
-    }
+  if (!root) {
+    return false;
+  }
 
-    return (
-        isSubPathDfs(root, head) ||
-        isSubPath(head, root.left) ||
-        isSubPath(head, root.right)
-    );
+  return (
+    isSubPathDfs(root, head) ||
+    isSubPath(head, root.left) ||
+    isSubPath(head, root.right)
+  );
 }
 
 function isSubPathDfs(root: TreeNode | null, head: ListNode | null): boolean {
-    if (!head) {
-        return true;
-    }
-    if (!root) {
-        return false;
-    }
-
-    if (root.val === head.val) {
-        return (
-            isSubPathDfs(root.left, head.next) ||
-            isSubPathDfs(root.right, head.next)
-        );
-    }
-
+  if (!head) {
+    return true;
+  }
+  if (!root) {
     return false;
+  }
+
+  if (root.val === head.val) {
+    return (
+      isSubPathDfs(root.left, head.next) || isSubPathDfs(root.right, head.next)
+    );
+  }
+
+  return false;
 }
 
 /*
@@ -1238,40 +1237,40 @@ Constraints:
 	1 <= k <= 50
 */
 export function splitListToParts(
-    head: ListNode | null,
-    k: number
+  head: ListNode | null,
+  k: number
 ): Array<ListNode | null> {
-    let n = 0;
-    let cur = head;
-    while (cur) {
-        n++;
-        cur = cur.next;
+  let n = 0;
+  let cur = head;
+  while (cur) {
+    n++;
+    cur = cur.next;
+  }
+
+  const part = Math.floor(n / k);
+  const remains = n % k;
+  const ret: Array<ListNode | null> = Array(k);
+
+  let i = 0;
+  cur = head;
+  while (k > 0) {
+    let count = part + (i < remains ? 1 : 0);
+    let h = cur;
+    let prev = cur;
+    while (count > 0 && cur) {
+      count--;
+      prev = cur;
+      cur = cur.next;
+    }
+    if (prev) {
+      prev.next = null;
     }
 
-    const part = Math.floor(n / k);
-    const remains = n % k;
-    const ret: Array<ListNode | null> = Array(k);
+    ret[i++] = h;
+    k--;
+  }
 
-    let i = 0;
-    cur = head;
-    while (k > 0) {
-        let count = part + (i < remains ? 1 : 0);
-        let h = cur;
-        let prev = cur;
-        while (count > 0 && cur) {
-            count--;
-            prev = cur;
-            cur = cur.next;
-        }
-        if (prev) {
-            prev.next = null;
-        }
-
-        ret[i++] = h;
-        k--;
-    }
-
-    return ret;
+  return ret;
 }
 
 /*
@@ -1297,28 +1296,28 @@ Constraints:
 	-100 <= Node.val <= 100
 */
 export function binaryTreePaths(root: TreeNode | null): string[] {
-    const ret: string[] = [];
+  const ret: string[] = [];
 
-    const dfs = (node: TreeNode | null, path: number[]) => {
-        if (!node) {
-            return;
-        }
-        path.push(node.val);
-        if (isLeaf(node)) {
-            ret.push(path.join('->'));
-            return;
-        }
+  const dfs = (node: TreeNode | null, path: number[]) => {
+    if (!node) {
+      return;
+    }
+    path.push(node.val);
+    if (isLeaf(node)) {
+      ret.push(path.join('->'));
+      return;
+    }
 
-        dfs(node.left, path.slice());
-        dfs(node.right, path.slice());
-    };
-    dfs(root, []);
+    dfs(node.left, path.slice());
+    dfs(node.right, path.slice());
+  };
+  dfs(root, []);
 
-    return ret;
+  return ret;
 }
 
 function isLeaf(node: TreeNode): boolean {
-    return Boolean(node) && !node.left && !node.right;
+  return Boolean(node) && !node.left && !node.right;
 }
 
 /*
@@ -1355,14 +1354,14 @@ Constraints:
 	1 <= Node.val <= 1000
 */
 export function insertGreatestCommonDivisors(head: ListNode): ListNode {
-    let cur: ListNode | null = head;
+  let cur: ListNode | null = head;
 
-    while (cur && cur.next) {
-        const next = cur.next;
-        cur.next = new ListNode(gcd(cur.val, next.val));
-        cur.next.next = next;
-        cur = next;
-    }
+  while (cur && cur.next) {
+    const next = cur.next;
+    cur.next = new ListNode(gcd(cur.val, next.val));
+    cur.next.next = next;
+    cur = next;
+  }
 
-    return head;
+  return head;
 }

@@ -19,20 +19,20 @@ Constraints:
 	30 <= temperatures[i] <= 100
 */
 export function dailyTemperatures(temperatures: number[]): number[] {
-    const ret = Array(temperatures.length).fill(0);
-    const stack: number[] = [];
-    temperatures.forEach((v, i) => {
-        if (stack.length === 0 || v <= temperatures[stack.at(-1)!]) {
-            stack.push(i);
-            return;
-        }
+  const ret = Array(temperatures.length).fill(0);
+  const stack: number[] = [];
+  temperatures.forEach((v, i) => {
+    if (stack.length === 0 || v <= temperatures[stack.at(-1)!]) {
+      stack.push(i);
+      return;
+    }
 
-        while (stack.length > 0 && v > temperatures[stack.at(-1)!]) {
-            const prev = stack.pop()!;
-            ret[prev] = i - prev;
-        }
-        stack.push(i);
-    });
+    while (stack.length > 0 && v > temperatures[stack.at(-1)!]) {
+      const prev = stack.pop()!;
+      ret[prev] = i - prev;
+    }
+    stack.push(i);
+  });
 
-    return ret;
+  return ret;
 }

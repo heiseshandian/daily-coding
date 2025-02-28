@@ -28,23 +28,23 @@ return typeof result === 'object' ? result : obj;
 
 ```js
 function newFunction() {
-    // 1. 创建一个空对象（obj）
-    const obj = Object.create(null);
+  // 1. 创建一个空对象（obj）
+  const obj = Object.create(null);
 
-    const Con = Array.prototype.shift.call(arguments);
-    // 2. 将这个空对象的原型设置为构造函数的原型对象
-    Object.setPrototypeOf(obj, Con.prototype);
+  const Con = Array.prototype.shift.call(arguments);
+  // 2. 将这个空对象的原型设置为构造函数的原型对象
+  Object.setPrototypeOf(obj, Con.prototype);
 
-    // 3. 将构造函数的 this 指向新创建的对象并执行构造函数
-    const result = Con.apply(obj, arguments);
+  // 3. 将构造函数的 this 指向新创建的对象并执行构造函数
+  const result = Con.apply(obj, arguments);
 
-    // 4. 若构造函数没有人为返回一个对象类型的值则将这个新建的对象返回
-    return typeof result === 'object' && result !== null ? result : obj;
+  // 4. 若构造函数没有人为返回一个对象类型的值则将这个新建的对象返回
+  return typeof result === 'object' && result !== null ? result : obj;
 }
 
 function Person() {}
 Person.prototype.hello = () => {
-    console.log('hello world');
+  console.log('hello world');
 };
 
 const p = newFunction(Person);

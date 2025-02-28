@@ -8,86 +8,86 @@ miniConsole库
 缓存代理：对于一些复杂计算，同样的参数有同样的输出结果，直接使用缓存的方式记录结果，避免重复计算
 */
 const setSrc = (() => {
-    const getImageNode = cache(() => {
-        const imageNode = document.createElement('img');
-        document.body.appendChild(imageNode);
+  const getImageNode = cache(() => {
+    const imageNode = document.createElement('img');
+    document.body.appendChild(imageNode);
 
-        return imageNode;
-    });
+    return imageNode;
+  });
 
-    return (src: string) => {
-        const imageNode = getImageNode();
-        imageNode.src = src;
-    };
+  return (src: string) => {
+    const imageNode = getImageNode();
+    imageNode.src = src;
+  };
 })();
 
 // 代理对象的接口与原始对象的接口完全一致，日后网络情况改善去掉代理的时候也非常方便
 // 任何使用代理对象的地方都能透明的替换成原始对象
 export const setSrcProxy = (() => {
-    const getImg = cache(() => {
-        const toPreloadRealImg = new Image();
-        toPreloadRealImg.onload = () => {
-            // 大图加载完毕后设置到页面上
-            setSrc(toPreloadRealImg.src);
-        };
-
-        return toPreloadRealImg;
-    });
-
-    return (src: string) => {
-        // 利用内存中的img对象来加载实际大图
-        const toPreloadRealImg = getImg();
-        toPreloadRealImg.src = src;
-
-        // 显示一个加载中的菊花图
-        setSrc('loading.gif');
+  const getImg = cache(() => {
+    const toPreloadRealImg = new Image();
+    toPreloadRealImg.onload = () => {
+      // 大图加载完毕后设置到页面上
+      setSrc(toPreloadRealImg.src);
     };
+
+    return toPreloadRealImg;
+  });
+
+  return (src: string) => {
+    // 利用内存中的img对象来加载实际大图
+    const toPreloadRealImg = getImg();
+    toPreloadRealImg.src = src;
+
+    // 显示一个加载中的菊花图
+    setSrc('loading.gif');
+  };
 })();
 
 // 假设我们在做一个文件同步的功能，当我们选中一个checkbox的时候，对应的文件就会被同步到另一台服务器上
 // 但其实我们并不需要点击一次checkbox就同步一次，这时候我们可以用代理来把一段时间的请求合并成一个
 function syncFile(id: string) {
-    console.log(`${id}正在同步中~`);
+  console.log(`${id}正在同步中~`);
 }
 
 export const syncFileProxy = (() => {
-    const ids: string[] = [];
-    let timer: number | null = null;
+  const ids: string[] = [];
+  let timer: number | null = null;
 
-    return (id: string) => {
-        ids.push(id);
-        if (timer) {
-            return;
-        }
+  return (id: string) => {
+    ids.push(id);
+    if (timer) {
+      return;
+    }
 
-        timer = window.setTimeout(() => {
-            syncFile(ids.join(','));
-            ids.length = 0;
-            timer = null;
-        }, 2000);
-    };
+    timer = window.setTimeout(() => {
+      syncFile(ids.join(','));
+      ids.length = 0;
+      timer = null;
+    }, 2000);
+  };
 })();
 
 export function cache<T extends (...args: any[]) => any>(fn: T) {
-    const runCache: Record<string, any> = {};
+  const runCache: Record<string, any> = {};
 
-    return ((...args: any[]) => {
-        const id = args.join(',');
-        if (runCache.hasOwnProperty(id)) {
-            return runCache[id];
-        }
+  return ((...args: any[]) => {
+    const id = args.join(',');
+    if (runCache.hasOwnProperty(id)) {
+      return runCache[id];
+    }
 
-        runCache[id] = fn.apply(this, args);
-        return runCache[id];
-    }) as T;
+    runCache[id] = fn.apply(this, args);
+    return runCache[id];
+  }) as T;
 }
 
 export const loadScript = cache((src: string) => {
-    const script = document.createElement('script');
-    script.src = src;
-    document.getElementsByTagName('head')[0].appendChild(script);
+  const script = document.createElement('script');
+  script.src = src;
+  document.getElementsByTagName('head')[0].appendChild(script);
 
-    return script;
+  return script;
 });
 
 // const miniConsoleProxy = (() => {
@@ -124,5 +124,5 @@ export const loadScript = cache((src: string) => {
 // })();
 
 export const multi = cache((...args: number[]) => {
-    return args.reduce((acc, cur) => acc * cur, 1);
+  return args.reduce((acc, cur) => acc * cur, 1);
 });

@@ -22,56 +22,56 @@ Output
 [null, null, null, 1.5, null, 2.0]
 */
 export interface IMedianFinder {
-    addNum: (num: number) => void;
-    findMedian: () => number;
+  addNum: (num: number) => void;
+  findMedian: () => number;
 }
 
 export class MedianFinder implements IMedianFinder {
-    arr: number[] = [];
+  arr: number[] = [];
 
-    addNum(num: number): void {
-        if (this.arr.length === 0 || num < this.arr[0]) {
-            this.arr.unshift(num);
-            return;
-        }
-
-        let left = 0;
-        let right = this.arr.length - 1;
-        let closestMin = left;
-        while (left <= right) {
-            const mid = left + ((right - left) >> 1);
-            if (this.arr[mid] === num) {
-                closestMin = mid;
-                break;
-            }
-
-            if (this.arr[mid] < num) {
-                closestMin = mid;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-
-        const len = this.arr.length;
-        for (let i = len; i >= closestMin + 1; i--) {
-            this.arr[i] = this.arr[i - 1];
-        }
-
-        this.arr[closestMin + 1] = num;
+  addNum(num: number): void {
+    if (this.arr.length === 0 || num < this.arr[0]) {
+      this.arr.unshift(num);
+      return;
     }
 
-    findMedian(): number {
-        const len = this.arr.length;
-        if (len & 1) {
-            return this.arr[len >> 1];
-        } else {
-            const mid = len >> 1;
-            const left = mid - 1;
+    let left = 0;
+    let right = this.arr.length - 1;
+    let closestMin = left;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (this.arr[mid] === num) {
+        closestMin = mid;
+        break;
+      }
 
-            return (this.arr[mid] + this.arr[left]) / 2;
-        }
+      if (this.arr[mid] < num) {
+        closestMin = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
     }
+
+    const len = this.arr.length;
+    for (let i = len; i >= closestMin + 1; i--) {
+      this.arr[i] = this.arr[i - 1];
+    }
+
+    this.arr[closestMin + 1] = num;
+  }
+
+  findMedian(): number {
+    const len = this.arr.length;
+    if (len & 1) {
+      return this.arr[len >> 1];
+    } else {
+      const mid = len >> 1;
+      const left = mid - 1;
+
+      return (this.arr[mid] + this.arr[left]) / 2;
+    }
+  }
 }
 
 /* 
@@ -79,47 +79,47 @@ export class MedianFinder implements IMedianFinder {
 如果总的数据有奇数个则用右半部分多存储一个
 */
 export class MedianFinder2 implements IMedianFinder {
-    leftMaxHeap: GenericHeap = new GenericHeap((a, b) => b - a);
-    rightMinHeap: GenericHeap = new GenericHeap();
+  leftMaxHeap: GenericHeap = new GenericHeap((a, b) => b - a);
+  rightMinHeap: GenericHeap = new GenericHeap();
 
-    addNum(num: number) {
-        if (this.rightMinHeap.size() === 0) {
-            this.rightMinHeap.push(num);
-            return;
-        }
-
-        const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
-        if (len & 1) {
-            // num 和 rightMin中较小的一个需要放进leftMaxHeap中
-            const rightMin = this.rightMinHeap.peek();
-            if (num <= rightMin) {
-                this.leftMaxHeap.push(num);
-            } else {
-                this.rightMinHeap.pop();
-                this.rightMinHeap.push(num);
-                this.leftMaxHeap.push(rightMin);
-            }
-        } else {
-            // num和leftMax中较大的一个需要放进rightMinHeap中
-            const leftMax = this.leftMaxHeap.peek();
-            if (num >= leftMax) {
-                this.rightMinHeap.push(num);
-            } else {
-                this.leftMaxHeap.pop();
-                this.rightMinHeap.push(leftMax);
-                this.leftMaxHeap.push(num);
-            }
-        }
+  addNum(num: number) {
+    if (this.rightMinHeap.size() === 0) {
+      this.rightMinHeap.push(num);
+      return;
     }
 
-    findMedian(): number {
-        const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
-        if (len & 1) {
-            return this.rightMinHeap.peek();
-        }
-
-        return (this.leftMaxHeap.peek() + this.rightMinHeap.peek()) / 2;
+    const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
+    if (len & 1) {
+      // num 和 rightMin中较小的一个需要放进leftMaxHeap中
+      const rightMin = this.rightMinHeap.peek();
+      if (num <= rightMin) {
+        this.leftMaxHeap.push(num);
+      } else {
+        this.rightMinHeap.pop();
+        this.rightMinHeap.push(num);
+        this.leftMaxHeap.push(rightMin);
+      }
+    } else {
+      // num和leftMax中较大的一个需要放进rightMinHeap中
+      const leftMax = this.leftMaxHeap.peek();
+      if (num >= leftMax) {
+        this.rightMinHeap.push(num);
+      } else {
+        this.leftMaxHeap.pop();
+        this.rightMinHeap.push(leftMax);
+        this.leftMaxHeap.push(num);
+      }
     }
+  }
+
+  findMedian(): number {
+    const len = this.leftMaxHeap.size() + this.rightMinHeap.size();
+    if (len & 1) {
+      return this.rightMinHeap.peek();
+    }
+
+    return (this.leftMaxHeap.peek() + this.rightMinHeap.peek()) / 2;
+  }
 }
 
 /* 
@@ -135,86 +135,84 @@ bool search(word) Returns true if there is any string in the data structure that
 word may contain dots '.' where dots can be matched with any letter.
 */
 export class WordDictionary {
-    root: PrefixTreeNode;
+  root: PrefixTreeNode;
 
-    constructor() {
-        this.root = new PrefixTreeNode();
+  constructor() {
+    this.root = new PrefixTreeNode();
+  }
+
+  addWord(word: string): void {
+    let node = this.root;
+    node.pass++;
+
+    for (let i = 0; i < word.length; i++) {
+      const index = getCharIndex(word[i]);
+      if (!node.nextNodes[index]) {
+        node.nextNodes[index] = new PrefixTreeNode();
+      }
+      node = node.nextNodes[index];
+      node.pass++;
     }
 
-    addWord(word: string): void {
-        let node = this.root;
-        node.pass++;
+    node.end++;
+  }
 
-        for (let i = 0; i < word.length; i++) {
-            const index = getCharIndex(word[i]);
-            if (!node.nextNodes[index]) {
-                node.nextNodes[index] = new PrefixTreeNode();
-            }
-            node = node.nextNodes[index];
-            node.pass++;
+  search(word: string, node = this.root): boolean {
+    for (let i = 0; i < word.length; i++) {
+      if (word[i] !== '.') {
+        const index = getCharIndex(word[i]);
+        if (!node.nextNodes[index]) {
+          return false;
         }
-
-        node.end++;
+        node = node.nextNodes[index];
+      } else {
+        return node.nextNodes.some((n) => this.search(word.slice(i + 1), n));
+      }
     }
 
-    search(word: string, node = this.root): boolean {
-        for (let i = 0; i < word.length; i++) {
-            if (word[i] !== '.') {
-                const index = getCharIndex(word[i]);
-                if (!node.nextNodes[index]) {
-                    return false;
-                }
-                node = node.nextNodes[index];
-            } else {
-                return node.nextNodes.some((n) =>
-                    this.search(word.slice(i + 1), n)
-                );
-            }
-        }
-
-        return node.end !== 0;
-    }
+    return node.end !== 0;
+  }
 }
 
 // 简化信息，不需要记录pass信息
 export class WordDictionary2 {
-    root: Record<string, any>;
+  root: Record<string, any>;
 
-    constructor() {
-        this.root = {};
+  constructor() {
+    this.root = {};
+  }
+
+  addWord(word: string): void {
+    let node = this.root;
+
+    for (let i = 0; i < word.length; i++) {
+      const char = word[i];
+      if (!node[char]) {
+        node[char] = {};
+      }
+      node = node[char];
     }
 
-    addWord(word: string): void {
-        let node = this.root;
+    node['$'] = true;
+  }
 
-        for (let i = 0; i < word.length; i++) {
-            const char = word[i];
-            if (!node[char]) {
-                node[char] = {};
-            }
-            node = node[char];
+  search(word: string, node = this.root): boolean {
+    for (let i = 0; i < word.length; i++) {
+      if (word[i] !== '.') {
+        const char = word[i];
+        if (!node[char]) {
+          return false;
         }
-
-        node['$'] = true;
+        node = node[char];
+      } else {
+        return Object.keys(node)
+          .filter((key) => key !== '$')
+          .some((k) => this.search(word.slice(i + 1), node[k]));
+      }
     }
 
-    search(word: string, node = this.root): boolean {
-        for (let i = 0; i < word.length; i++) {
-            if (word[i] !== '.') {
-                const char = word[i];
-                if (!node[char]) {
-                    return false;
-                }
-                node = node[char];
-            } else {
-                return Object.keys(node)
-                    .filter((key) => key !== '$')
-                    .some((k) => this.search(word.slice(i + 1), node[k]));
-            }
-        }
-
-        return Boolean(node['$']);
-    }
+    return Boolean(node['$']);
+  }
 }
 
 /*
@@ -273,31 +271,31 @@ Constraints:
 type Fn<T> = () => Promise<T>;
 
 export function promiseAll<T>(functions: Fn<T>[]): Promise<T[]> {
-    let resolveFn: (value: T[] | PromiseLike<T[]>) => void;
-    let rejectFn: (reason?: any) => void;
+  let resolveFn: (value: T[] | PromiseLike<T[]>) => void;
+  let rejectFn: (reason?: any) => void;
 
-    const result: T[] = new Array(functions.length);
-    let successCount = 0;
+  const result: T[] = new Array(functions.length);
+  let successCount = 0;
 
-    functions.forEach((fn, i) => {
-        fn()
-            .then((val) => {
-                result[i] = val;
-                successCount++;
+  functions.forEach((fn, i) => {
+    fn()
+      .then((val) => {
+        result[i] = val;
+        successCount++;
 
-                if (successCount === functions.length) {
-                    resolveFn(result);
-                }
-            })
-            .catch((reason) => {
-                rejectFn(reason);
-            });
-    });
+        if (successCount === functions.length) {
+          resolveFn(result);
+        }
+      })
+      .catch((reason) => {
+        rejectFn(reason);
+      });
+  });
 
-    return new Promise((resolve, reject) => {
-        resolveFn = resolve;
-        rejectFn = reject;
-    });
+  return new Promise((resolve, reject) => {
+    resolveFn = resolve;
+    rejectFn = reject;
+  });
 }
 
 /*
@@ -361,49 +359,49 @@ Constraints:
 	At most, 2 * 10^5 calls will be made to add, deleteOne, and hasFrequency in total.
 */
 export class FrequencyTracker {
-    private map: Record<number, number>;
-    private freqMap: Record<number, Set<number>>;
+  private map: Record<number, number>;
+  private freqMap: Record<number, Set<number>>;
 
-    private updateFreqMap(prevFreq: number, nextFreq: number, number: number) {
-        this.freqMap[prevFreq]?.delete(number);
-        if (this.freqMap[prevFreq]?.size === 0) {
-            delete this.freqMap[prevFreq];
-        }
-
-        (this.freqMap[nextFreq] || (this.freqMap[nextFreq] = new Set())).add(
-            number
-        );
+  private updateFreqMap(prevFreq: number, nextFreq: number, number: number) {
+    this.freqMap[prevFreq]?.delete(number);
+    if (this.freqMap[prevFreq]?.size === 0) {
+      delete this.freqMap[prevFreq];
     }
 
-    constructor() {
-        this.map = {};
-        this.freqMap = {};
+    (this.freqMap[nextFreq] || (this.freqMap[nextFreq] = new Set())).add(
+      number
+    );
+  }
+
+  constructor() {
+    this.map = {};
+    this.freqMap = {};
+  }
+
+  add(number: number): void {
+    const prevFreq = this.map[number] || 0;
+    this.map[number] = prevFreq + 1;
+
+    this.updateFreqMap(prevFreq, prevFreq + 1, number);
+  }
+
+  deleteOne(number: number): void {
+    const prevFreq = this.map[number];
+    if (!prevFreq) {
+      return;
     }
 
-    add(number: number): void {
-        const prevFreq = this.map[number] || 0;
-        this.map[number] = prevFreq + 1;
-
-        this.updateFreqMap(prevFreq, prevFreq + 1, number);
+    this.map[number]--;
+    if (this.map[number] === 0) {
+      delete this.map[number];
     }
 
-    deleteOne(number: number): void {
-        const prevFreq = this.map[number];
-        if (!prevFreq) {
-            return;
-        }
+    this.updateFreqMap(prevFreq, prevFreq - 1, number);
+  }
 
-        this.map[number]--;
-        if (this.map[number] === 0) {
-            delete this.map[number];
-        }
-
-        this.updateFreqMap(prevFreq, prevFreq - 1, number);
-    }
-
-    hasFrequency(frequency: number): boolean {
-        return this.freqMap[frequency] !== undefined;
-    }
+  hasFrequency(frequency: number): boolean {
+    return this.freqMap[frequency] !== undefined;
+  }
 }
 
 /*
@@ -500,28 +498,28 @@ Constraints:
 	10 <= cancelTimeMs <= 500
 */
 type JSONValue =
-    | null
-    | boolean
-    | number
-    | string
-    | JSONValue[]
-    | { [key: string]: JSONValue };
+  | null
+  | boolean
+  | number
+  | string
+  | JSONValue[]
+  | { [key: string]: JSONValue };
 type VoidFn = (...args: JSONValue[]) => void;
 
 export function cancellable(
-    fn: VoidFn,
-    args: JSONValue[],
-    t: number
+  fn: VoidFn,
+  args: JSONValue[],
+  t: number
 ): Function {
+  fn.apply(this, args);
+
+  let interval = setInterval(() => {
     fn.apply(this, args);
+  }, t);
 
-    let interval = setInterval(() => {
-        fn.apply(this, args);
-    }, t);
-
-    return () => {
-        clearInterval(interval);
-    };
+  return () => {
+    clearInterval(interval);
+  };
 }
 
 /*
@@ -558,28 +556,28 @@ Constraints:
 	At most 104 calls will be made to pick.
 */
 export class Solution {
-    private numIndexes: Record<number, number[]> = {};
+  private numIndexes: Record<number, number[]> = {};
 
-    constructor(nums: number[]) {
-        nums.forEach((v, i) => {
-            if (!this.numIndexes[v]) {
-                this.numIndexes[v] = [];
-            }
+  constructor(nums: number[]) {
+    nums.forEach((v, i) => {
+      if (!this.numIndexes[v]) {
+        this.numIndexes[v] = [];
+      }
 
-            this.numIndexes[v].push(i);
-        });
+      this.numIndexes[v].push(i);
+    });
+  }
+
+  pick(target: number): number {
+    const indexes = this.numIndexes[target];
+    const len = indexes.length;
+    if (len === 1) {
+      return indexes[0];
     }
 
-    pick(target: number): number {
-        const indexes = this.numIndexes[target];
-        const len = indexes.length;
-        if (len === 1) {
-            return indexes[0];
-        }
-
-        const index = Math.floor(Math.random() * len);
-        return indexes[index];
-    }
+    const index = Math.floor(Math.random() * len);
+    return indexes[index];
+  }
 }
 
 /*
@@ -638,44 +636,44 @@ Constraints:
 	Last action is always "getResult"
 */
 export class Calculator {
-    val: number;
+  val: number;
 
-    constructor(value: number) {
-        this.val = value;
+  constructor(value: number) {
+    this.val = value;
+  }
+
+  add(value: number): Calculator {
+    this.val += value;
+    return this;
+  }
+
+  subtract(value: number): Calculator {
+    this.val -= value;
+    return this;
+  }
+
+  multiply(value: number): Calculator {
+    this.val *= value;
+    return this;
+  }
+
+  divide(value: number): Calculator {
+    if (value === 0) {
+      throw new Error('Division by zero is not allowed');
     }
 
-    add(value: number): Calculator {
-        this.val += value;
-        return this;
-    }
+    this.val /= value;
+    return this;
+  }
 
-    subtract(value: number): Calculator {
-        this.val -= value;
-        return this;
-    }
+  power(value: number): Calculator {
+    this.val = Math.pow(this.val, value);
+    return this;
+  }
 
-    multiply(value: number): Calculator {
-        this.val *= value;
-        return this;
-    }
-
-    divide(value: number): Calculator {
-        if (value === 0) {
-            throw new Error('Division by zero is not allowed');
-        }
-
-        this.val /= value;
-        return this;
-    }
-
-    power(value: number): Calculator {
-        this.val = Math.pow(this.val, value);
-        return this;
-    }
-
-    getResult(): number {
-        return this.val;
-    }
+  getResult(): number {
+    return this.val;
+  }
 }
 
 /*
@@ -718,121 +716,121 @@ Constraints:
 	At most 2000 calls will be made to get, addAtHead, addAtTail, addAtIndex and deleteAtIndex.
 */
 class MyLinkedListNode {
-    val: number;
-    next: MyLinkedListNode | null = null;
+  val: number;
+  next: MyLinkedListNode | null = null;
 
-    constructor(val: number) {
-        this.val = val;
-    }
+  constructor(val: number) {
+    this.val = val;
+  }
 }
 
 export class MyLinkedList {
-    private head: MyLinkedListNode | null;
-    private tail: MyLinkedListNode | null;
-    private size: number;
+  private head: MyLinkedListNode | null;
+  private tail: MyLinkedListNode | null;
+  private size: number;
 
-    constructor() {
-        this.head = null;
-        this.tail = null;
-        this.size = 0;
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+  }
+
+  get(index: number): number {
+    let cur = this.head;
+    let i = 0;
+    while (i < index && cur) {
+      cur = cur.next;
+      i++;
     }
 
-    get(index: number): number {
-        let cur = this.head;
-        let i = 0;
-        while (i < index && cur) {
-            cur = cur.next;
-            i++;
-        }
+    return cur?.val ?? -1;
+  }
 
-        return cur?.val ?? -1;
+  addAtHead(val: number): void {
+    const node = new MyLinkedListNode(val);
+    if (!this.head) {
+      this.head = node;
+      this.tail = node;
+      this.size++;
+      return;
     }
 
-    addAtHead(val: number): void {
-        const node = new MyLinkedListNode(val);
-        if (!this.head) {
-            this.head = node;
-            this.tail = node;
-            this.size++;
-            return;
-        }
+    node.next = this.head;
+    this.head = node;
+    this.size++;
+  }
 
-        node.next = this.head;
-        this.head = node;
-        this.size++;
+  addAtTail(val: number): void {
+    const node = new MyLinkedListNode(val);
+    if (!this.tail) {
+      this.head = node;
+      this.tail = node;
+      this.size++;
+      return;
     }
 
-    addAtTail(val: number): void {
-        const node = new MyLinkedListNode(val);
-        if (!this.tail) {
-            this.head = node;
-            this.tail = node;
-            this.size++;
-            return;
-        }
+    this.tail.next = node;
+    this.tail = node;
+    this.size++;
+  }
 
-        this.tail.next = node;
-        this.tail = node;
-        this.size++;
+  addAtIndex(index: number, val: number): void {
+    if (index > this.size) {
+      return;
+    }
+    if (index === 0) {
+      this.addAtHead(val);
+      return;
+    }
+    if (index === this.size) {
+      this.addAtTail(val);
+      return;
     }
 
-    addAtIndex(index: number, val: number): void {
-        if (index > this.size) {
-            return;
-        }
-        if (index === 0) {
-            this.addAtHead(val);
-            return;
-        }
-        if (index === this.size) {
-            this.addAtTail(val);
-            return;
-        }
+    const node = new MyLinkedListNode(val);
 
-        const node = new MyLinkedListNode(val);
-
-        let cur = this.head;
-        let i = 1;
-        while (i < index && cur) {
-            cur = cur.next;
-            i++;
-        }
-
-        const next = cur!.next;
-        cur!.next = node;
-        node.next = next;
-        this.size++;
+    let cur = this.head;
+    let i = 1;
+    while (i < index && cur) {
+      cur = cur.next;
+      i++;
     }
 
-    deleteAtIndex(index: number): void {
-        if (index < 0 || index >= this.size) {
-            return;
-        }
-        if (this.size === 1) {
-            this.head = null;
-            this.tail = null;
-            this.size = 0;
-            return;
-        }
-        if (index === 0) {
-            this.head = this.head!.next;
-            this.size--;
-            return;
-        }
+    const next = cur!.next;
+    cur!.next = node;
+    node.next = next;
+    this.size++;
+  }
 
-        let i = 1;
-        let cur = this.head;
-        while (i < index && cur) {
-            cur = cur.next;
-            i++;
-        }
-
-        if (index === this.size - 1) {
-            this.tail = cur;
-        }
-        cur!.next = cur!.next!.next;
-        this.size--;
+  deleteAtIndex(index: number): void {
+    if (index < 0 || index >= this.size) {
+      return;
     }
+    if (this.size === 1) {
+      this.head = null;
+      this.tail = null;
+      this.size = 0;
+      return;
+    }
+    if (index === 0) {
+      this.head = this.head!.next;
+      this.size--;
+      return;
+    }
+
+    let i = 1;
+    let cur = this.head;
+    while (i < index && cur) {
+      cur = cur.next;
+      i++;
+    }
+
+    if (index === this.size - 1) {
+      this.tail = cur;
+    }
+    cur!.next = cur!.next!.next;
+    this.size--;
+  }
 }
 
 /*
@@ -914,35 +912,32 @@ Constraints:
 	Answers within 10-5 of the actual value will be accepted.
 */
 export class UndergroundSystem {
-    private checkMap: Map<number, [stationName: string, t: number]>;
-    private durationMap: Map<string, [duration: number, count: number]>;
+  private checkMap: Map<number, [stationName: string, t: number]>;
+  private durationMap: Map<string, [duration: number, count: number]>;
 
-    constructor() {
-        this.checkMap = new Map();
-        this.durationMap = new Map();
-    }
+  constructor() {
+    this.checkMap = new Map();
+    this.durationMap = new Map();
+  }
 
-    checkIn(id: number, stationName: string, t: number): void {
-        this.checkMap.set(id, [stationName, t]);
-    }
+  checkIn(id: number, stationName: string, t: number): void {
+    this.checkMap.set(id, [stationName, t]);
+  }
 
-    checkOut(id: number, stationName: string, t: number): void {
-        const [startStation, startTime] = this.checkMap.get(id)!;
+  checkOut(id: number, stationName: string, t: number): void {
+    const [startStation, startTime] = this.checkMap.get(id)!;
 
-        const durationId = `${startStation},${stationName}`;
-        const [duraation, count] = this.durationMap.get(durationId) ?? [0, 0];
-        this.durationMap.set(durationId, [
-            duraation + t - startTime,
-            count + 1,
-        ]);
-    }
+    const durationId = `${startStation},${stationName}`;
+    const [duraation, count] = this.durationMap.get(durationId) ?? [0, 0];
+    this.durationMap.set(durationId, [duraation + t - startTime, count + 1]);
+  }
 
-    getAverageTime(startStation: string, endStation: string): number {
-        const id = `${startStation},${endStation}`;
-        const [duration, count] = this.durationMap.get(id)!;
+  getAverageTime(startStation: string, endStation: string): number {
+    const id = `${startStation},${endStation}`;
+    const [duration, count] = this.durationMap.get(id)!;
 
-        return duration / count;
-    }
+    return duration / count;
+  }
 }
 
 /*
@@ -992,25 +987,25 @@ Constraints:
 	2 <= JSON.stringify(args[0]).length <= 10^5
 */
 declare global {
-    interface Function {
-        callPolyfill(
-            context: Record<string, JSONValue>,
-            ...args: JSONValue[]
-        ): JSONValue;
-    }
+  interface Function {
+    callPolyfill(
+      context: Record<string, JSONValue>,
+      ...args: JSONValue[]
+    ): JSONValue;
+  }
 }
 
 Function.prototype.callPolyfill = function (context, ...args): JSONValue {
-    const func = this;
-    const name = this.name;
+  const func = this;
+  const name = this.name;
 
-    Object.defineProperty(context, name, {
-        value: func,
-        enumerable: false,
-    });
+  Object.defineProperty(context, name, {
+    value: func,
+    enumerable: false,
+  });
 
-    // @ts-expect-error
-    return context[name](...args);
+  // @ts-expect-error
+  return context[name](...args);
 };
 
 /*
@@ -1050,15 +1045,15 @@ Constraints:
 type OnceFn = (...args: JSONValue[]) => JSONValue | undefined;
 
 export function once(fn: Function): OnceFn {
-    let hasCalled = false;
+  let hasCalled = false;
 
-    return function (...args) {
-        if (!hasCalled) {
-            hasCalled = true;
-            return fn(...args);
-        }
-        return undefined;
-    };
+  return function (...args) {
+    if (!hasCalled) {
+      hasCalled = true;
+      return fn(...args);
+    }
+    return undefined;
+  };
 }
 
 /*
@@ -1102,21 +1097,21 @@ Constraints:
 	Note: nums is the array passed to the constructor
 */
 export class ArrayWrapper {
-    private nums: number[];
-    private sum: number;
+  private nums: number[];
+  private sum: number;
 
-    constructor(nums: number[]) {
-        this.nums = nums;
-        this.sum = nums.reduce((acc, cur) => acc + cur, 0);
-    }
+  constructor(nums: number[]) {
+    this.nums = nums;
+    this.sum = nums.reduce((acc, cur) => acc + cur, 0);
+  }
 
-    valueOf(): number {
-        return this.sum;
-    }
+  valueOf(): number {
+    return this.sum;
+  }
 
-    toString(): string {
-        return JSON.stringify(this.nums);
-    }
+  toString(): string {
+    return JSON.stringify(this.nums);
+  }
 }
 
 /*
@@ -1197,37 +1192,37 @@ Constraints:
 
 type Callback = (...args: any[]) => any;
 type Subscription = {
-    unsubscribe: () => void;
+  unsubscribe: () => void;
 };
 
 export class EventEmitter {
-    map: Map<string, Set<Callback>> = new Map();
+  map: Map<string, Set<Callback>> = new Map();
 
-    subscribe(eventName: string, callback: Callback): Subscription {
-        const callbacks = this.map.get(eventName) ?? new Set();
-        callbacks.add(callback);
-        this.map.set(eventName, callbacks);
+  subscribe(eventName: string, callback: Callback): Subscription {
+    const callbacks = this.map.get(eventName) ?? new Set();
+    callbacks.add(callback);
+    this.map.set(eventName, callbacks);
 
-        return {
-            unsubscribe: () => {
-                const callbacks = this.map.get(eventName);
-                callbacks?.delete(callback);
-            },
-        };
-    }
-
-    emit(eventName: string, args: any[] = []): any[] {
+    return {
+      unsubscribe: () => {
         const callbacks = this.map.get(eventName);
-        if (!callbacks) {
-            return [];
-        }
+        callbacks?.delete(callback);
+      },
+    };
+  }
 
-        const results: any[] = [];
-        callbacks.forEach((callback) => {
-            results.push(callback(...args));
-        });
-        return results;
+  emit(eventName: string, args: any[] = []): any[] {
+    const callbacks = this.map.get(eventName);
+    if (!callbacks) {
+      return [];
     }
+
+    const results: any[] = [];
+    callbacks.forEach((callback) => {
+      results.push(callback(...args));
+    });
+    return results;
+  }
 }
 
 /*
@@ -1266,29 +1261,27 @@ Constraints:
 */
 type Obj = Record<string, JSONValue> | Array<JSONValue>;
 export function compactObject(obj: Obj): Obj {
+  // @ts-expect-error
+  if (obj === true || typeof obj === 'string' || typeof obj === 'number') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
     // @ts-expect-error
-    if (obj === true || typeof obj === 'string' || typeof obj === 'number') {
-        return obj;
+    return obj.filter((v) => Boolean(v)).map((v) => compactObject(v as Obj));
+  }
+  const filteredKeys = Object.keys(obj).filter((k) => Boolean(obj[k]));
+
+  return filteredKeys.reduce((acc, k) => {
+    const val = obj[k];
+    if (Object.keys(val ?? {}).length > 0) {
+      acc[k] = compactObject(val as Obj);
+    } else {
+      acc[k] = val;
     }
 
-    if (Array.isArray(obj)) {
-        // @ts-expect-error
-        return obj
-            .filter((v) => Boolean(v))
-            .map((v) => compactObject(v as Obj));
-    }
-    const filteredKeys = Object.keys(obj).filter((k) => Boolean(obj[k]));
-
-    return filteredKeys.reduce((acc, k) => {
-        const val = obj[k];
-        if (Object.keys(val ?? {}).length > 0) {
-            acc[k] = compactObject(val as Obj);
-        } else {
-            acc[k] = val;
-        }
-
-        return acc;
-    }, {});
+    return acc;
+  }, {});
 }
 
 /*
@@ -1338,12 +1331,12 @@ Constraints:
 */
 type F = (x: number) => number;
 export function compose(functions: F[]): F {
-    return function (x) {
-        for (let i = functions.length - 1; i >= 0; i--) {
-            x = functions[i](x);
-        }
-        return x;
-    };
+  return function (x) {
+    for (let i = functions.length - 1; i >= 0; i--) {
+      x = functions[i](x);
+    }
+    return x;
+  };
 }
 
 /*
@@ -1387,38 +1380,38 @@ Constraints:
 	It is guaranteed that there will be at least one element in the stack before calling pop.
 */
 export class FreqStack {
-    freqMap: Map<number, number>;
-    valuesMap: Map<number, number[]>;
-    constructor() {
-        this.freqMap = new Map();
-        this.valuesMap = new Map();
+  freqMap: Map<number, number>;
+  valuesMap: Map<number, number[]>;
+  constructor() {
+    this.freqMap = new Map();
+    this.valuesMap = new Map();
+  }
+
+  push(val: number): void {
+    const times = (this.freqMap.get(val) ?? 0) + 1;
+    this.freqMap.set(val, times);
+    if (this.valuesMap.has(times)) {
+      this.valuesMap.get(times)?.push(val);
+    } else {
+      this.valuesMap.set(times, [val]);
+    }
+  }
+
+  pop(): number {
+    const maxTimes = this.valuesMap.size;
+    const val = this.valuesMap.get(maxTimes)?.pop()!;
+    if (this.valuesMap.get(maxTimes)?.length === 0) {
+      this.valuesMap.delete(maxTimes);
     }
 
-    push(val: number): void {
-        const times = (this.freqMap.get(val) ?? 0) + 1;
-        this.freqMap.set(val, times);
-        if (this.valuesMap.has(times)) {
-            this.valuesMap.get(times)?.push(val);
-        } else {
-            this.valuesMap.set(times, [val]);
-        }
+    if (this.freqMap.get(val) === 1) {
+      this.freqMap.delete(val);
+    } else {
+      this.freqMap.set(val, this.freqMap.get(val)! - 1);
     }
 
-    pop(): number {
-        const maxTimes = this.valuesMap.size;
-        const val = this.valuesMap.get(maxTimes)?.pop()!;
-        if (this.valuesMap.get(maxTimes)?.length === 0) {
-            this.valuesMap.delete(maxTimes);
-        }
-
-        if (this.freqMap.get(val) === 1) {
-            this.freqMap.delete(val);
-        } else {
-            this.freqMap.set(val, this.freqMap.get(val)! - 1);
-        }
-
-        return val;
-    }
+    return val;
+  }
 }
 
 /*
@@ -1453,18 +1446,18 @@ Constraints:
 	0 <= callCount <= 50
 */
 export function* fibGenerator(): Generator<number, any, number> {
-    yield 0;
-    yield 1;
+  yield 0;
+  yield 1;
 
-    let first = 0;
-    let second = 1;
-    while (true) {
-        const cur = first + second;
-        first = second;
-        second = cur;
+  let first = 0;
+  let second = 1;
+  while (true) {
+    const cur = first + second;
+    first = second;
+    second = cur;
 
-        yield cur;
-    }
+    yield cur;
+  }
 }
 
 /*
@@ -1507,26 +1500,26 @@ Constraints:
 	calls[i] is one of "increment", "decrement" and "reset"
 */
 type Counter = {
-    increment: () => number;
-    decrement: () => number;
-    reset: () => number;
+  increment: () => number;
+  decrement: () => number;
+  reset: () => number;
 };
 
 export function createCounter(init: number): Counter {
-    let initial = init;
+  let initial = init;
 
-    return {
-        increment() {
-            return ++initial;
-        },
-        decrement() {
-            return --initial;
-        },
-        reset() {
-            initial = init;
-            return initial;
-        },
-    };
+  return {
+    increment() {
+      return ++initial;
+    },
+    decrement() {
+      return --initial;
+    },
+    reset() {
+      initial = init;
+      return initial;
+    },
+  };
 }
 
 /*
@@ -1566,28 +1559,28 @@ Output: true
 Explanation: 5 is a Number. Note that the "instanceof" keyword would return false. However, it is still considered an instance of Number because it accesses the Number methods. For example "toFixed()".
 */
 export function checkIfInstanceOf(obj: any, classFunction: any): boolean {
-    return (
-        obj != null &&
-        typeof classFunction === 'function' &&
-        Object(obj) instanceof classFunction
-    );
+  return (
+    obj != null &&
+    typeof classFunction === 'function' &&
+    Object(obj) instanceof classFunction
+  );
 }
 
 export function checkIfInstanceOf2(obj: any, classFunction: any) {
-    if (obj === null || obj === undefined) {
-        return false;
-    }
-
-    // Traverse the prototype chain
-    let currentProto = Object.getPrototypeOf(obj);
-    while (currentProto !== null) {
-        if (currentProto.constructor === classFunction) {
-            return true;
-        }
-        currentProto = Object.getPrototypeOf(currentProto);
-    }
-
+  if (obj === null || obj === undefined) {
     return false;
+  }
+
+  // Traverse the prototype chain
+  let currentProto = Object.getPrototypeOf(obj);
+  while (currentProto !== null) {
+    if (currentProto.constructor === classFunction) {
+      return true;
+    }
+    currentProto = Object.getPrototypeOf(currentProto);
+  }
+
+  return false;
 }
 
 /*
@@ -1615,12 +1608,12 @@ Constraints:
 	0 <= arr.length <= 1000
 */
 export interface Array<T> {
-    last(): T | -1;
+  last(): T | -1;
 }
 
 // @ts-expect-error
 Array.prototype.last = function () {
-    return this.length > 0 ? this[this.length - 1] : -1;
+  return this.length > 0 ? this[this.length - 1] : -1;
 };
 
 /*
@@ -1649,9 +1642,9 @@ Constraints:
 	1 <= millis <= 1000
 */
 export async function sleep(millis: number): Promise<void> {
-    return new Promise((resolve) => {
-        setTimeout(resolve, millis);
-    });
+  return new Promise((resolve) => {
+    setTimeout(resolve, millis);
+  });
 }
 
 /*
@@ -1711,48 +1704,48 @@ Constraints:
 	First action is always "TimeLimitedCache" and must be executed immediately, with a 0-millisecond delay
 */
 export class TimeLimitedCache {
-    cache: Map<number, [number, number]>;
+  cache: Map<number, [number, number]>;
 
-    constructor() {
-        this.cache = new Map();
+  constructor() {
+    this.cache = new Map();
+  }
+
+  set(key: number, value: number, duration: number): boolean {
+    if (!this.cache.has(key)) {
+      this.cache.set(key, [value, Date.now() + duration]);
+      return false;
     }
 
-    set(key: number, value: number, duration: number): boolean {
-        if (!this.cache.has(key)) {
-            this.cache.set(key, [value, Date.now() + duration]);
-            return false;
-        }
+    const [, expired] = this.cache.get(key)!;
+    const flag = expired >= Date.now();
+    this.cache.set(key, [value, Date.now() + duration]);
+    return flag;
+  }
 
-        const [, expired] = this.cache.get(key)!;
-        const flag = expired >= Date.now();
-        this.cache.set(key, [value, Date.now() + duration]);
-        return flag;
+  get(key: number): number {
+    if (!this.cache.has(key)) {
+      return -1;
     }
 
-    get(key: number): number {
-        if (!this.cache.has(key)) {
-            return -1;
-        }
+    const [prev, expired] = this.cache.get(key)!;
+    if (Date.now() > expired) {
+      this.cache.delete(key);
+      return -1;
+    }
+    return prev;
+  }
 
-        const [prev, expired] = this.cache.get(key)!;
-        if (Date.now() > expired) {
-            this.cache.delete(key);
-            return -1;
-        }
-        return prev;
+  count(): number {
+    let sum = 0;
+    const now = Date.now();
+    for (const [, expired] of this.cache.values()) {
+      if (expired >= now) {
+        sum++;
+      }
     }
 
-    count(): number {
-        let sum = 0;
-        const now = Date.now();
-        for (const [, expired] of this.cache.values()) {
-            if (expired >= now) {
-                sum++;
-            }
-        }
-
-        return sum;
-    }
+    return sum;
+  }
 }
 
 /*
@@ -1812,16 +1805,16 @@ Constraints:
 	0 <= init <= 1000
 */
 export function reduce(
-    nums: number[],
-    fn: (accum: number, curr: number) => number,
-    init: number
+  nums: number[],
+  fn: (accum: number, curr: number) => number,
+  init: number
 ): number {
-    let acc = init;
-    for (let i = 0; i < nums.length; i++) {
-        acc = fn(acc, nums[i]);
-    }
+  let acc = init;
+  for (let i = 0; i < nums.length; i++) {
+    acc = fn(acc, nums[i]);
+  }
 
-    return acc;
+  return acc;
 }
 
 /*
@@ -1905,17 +1898,17 @@ Constraints:
 type AsyncFn = (...params: any[]) => Promise<any>;
 
 export function timeLimit(fn: AsyncFn, t: number): AsyncFn {
-    return async function (...args) {
-        return new Promise((resolve, reject) => {
-            fn(...args)
-                .then(resolve)
-                .catch(reject);
+  return async function (...args) {
+    return new Promise((resolve, reject) => {
+      fn(...args)
+        .then(resolve)
+        .catch(reject);
 
-            setTimeout(() => {
-                reject('Time Limit Exceeded');
-            }, t);
-        });
-    };
+      setTimeout(() => {
+        reject('Time Limit Exceeded');
+      }, t);
+    });
+  };
 }
 
 /*
@@ -1954,38 +1947,38 @@ Constraints:
 	It is guaranteed that there will be at least k elements in the array when you search for the kth element.
 */
 export class KthLargest {
-    heap: GenericHeap<number>;
-    k: number;
+  heap: GenericHeap<number>;
+  k: number;
 
-    constructor(k: number, nums: number[]) {
-        this.k = k;
+  constructor(k: number, nums: number[]) {
+    this.k = k;
 
-        this.heap = new GenericHeap((a, b) => a - b);
-        const len = Math.min(k, nums.length);
-        for (let i = 0; i < len; i++) {
-            this.heap.push(nums[i]);
-        }
-
-        for (let i = len; i < nums.length; i++) {
-            if (this.heap.peek() < nums[i]) {
-                this.heap.pop();
-                this.heap.push(nums[i]);
-            }
-        }
+    this.heap = new GenericHeap((a, b) => a - b);
+    const len = Math.min(k, nums.length);
+    for (let i = 0; i < len; i++) {
+      this.heap.push(nums[i]);
     }
 
-    add(val: number): number {
-        if (this.heap.size() < this.k) {
-            this.heap.push(val);
-            return this.heap.peek();
-        }
-
-        if (this.heap.peek() < val) {
-            this.heap.pop();
-            this.heap.push(val);
-        }
-        return this.heap.peek();
+    for (let i = len; i < nums.length; i++) {
+      if (this.heap.peek() < nums[i]) {
+        this.heap.pop();
+        this.heap.push(nums[i]);
+      }
     }
+  }
+
+  add(val: number): number {
+    if (this.heap.size() < this.k) {
+      this.heap.push(val);
+      return this.heap.peek();
+    }
+
+    if (this.heap.peek() < val) {
+      this.heap.pop();
+      this.heap.push(val);
+    }
+    return this.heap.peek();
+  }
 }
 
 /*
@@ -2022,22 +2015,22 @@ Constraints:
 	At most 104 calls will be made to sumRange.
 */
 export class NumArray {
-    prefix: number[];
+  prefix: number[];
 
-    constructor(nums: number[]) {
-        const n = nums.length;
-        this.prefix = Array(n);
-        this.prefix[0] = nums[0];
+  constructor(nums: number[]) {
+    const n = nums.length;
+    this.prefix = Array(n);
+    this.prefix[0] = nums[0];
 
-        for (let i = 1; i < n; i++) {
-            this.prefix[i] = this.prefix[i - 1] + nums[i];
-        }
+    for (let i = 1; i < n; i++) {
+      this.prefix[i] = this.prefix[i - 1] + nums[i];
     }
+  }
 
-    sumRange(left: number, right: number): number {
-        const before = left === 0 ? 0 : this.prefix[left - 1];
-        return this.prefix[right] - before;
-    }
+  sumRange(left: number, right: number): number {
+    const before = left === 0 ? 0 : this.prefix[left - 1];
+    return this.prefix[right] - before;
+  }
 }
 
 /*
@@ -2074,47 +2067,44 @@ Constraints:
 	At most 1000 calls will be made to book.
 */
 export class MyCalendar {
-    private booked: number[][];
+  private booked: number[][];
 
-    constructor() {
-        this.booked = [];
+  constructor() {
+    this.booked = [];
+  }
+
+  book(start: number, end: number): boolean {
+    const { booked } = this;
+    let left = 0;
+    let right = booked.length - 1;
+    let closest = -1;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (booked[mid][1] <= start) {
+        closest = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
     }
 
-    book(start: number, end: number): boolean {
-        const { booked } = this;
-        let left = 0;
-        let right = booked.length - 1;
-        let closest = -1;
-        while (left <= right) {
-            const mid = left + ((right - left) >> 1);
-            if (booked[mid][1] <= start) {
-                closest = mid;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-
-        if (closest === -1) {
-            if (
-                booked.length === 0 ||
-                (booked.length > 0 && booked[0][0] >= end)
-            ) {
-                booked.unshift([start, end]);
-                return true;
-            }
-            return false;
-        }
-        if (booked.length === closest + 1) {
-            booked.push([start, end]);
-            return true;
-        }
-        if (booked[closest + 1][0] < end) {
-            return false;
-        }
-        booked.splice(closest + 1, 0, [start, end]);
+    if (closest === -1) {
+      if (booked.length === 0 || (booked.length > 0 && booked[0][0] >= end)) {
+        booked.unshift([start, end]);
         return true;
+      }
+      return false;
     }
+    if (booked.length === closest + 1) {
+      booked.push([start, end]);
+      return true;
+    }
+    if (booked[closest + 1][0] < end) {
+      return false;
+    }
+    booked.splice(closest + 1, 0, [start, end]);
+    return true;
+  }
 }
 
 /*
@@ -2161,64 +2151,64 @@ Constraints:
 	At most 2000 calls will be made to insertFront, insertLast, deleteFront, deleteLast, getFront, getRear, isEmpty, isFull.
 */
 export class MyCircularDeque {
-    private queue: number[];
-    private k: number;
+  private queue: number[];
+  private k: number;
 
-    constructor(k: number) {
-        this.queue = [];
-        this.k = k;
+  constructor(k: number) {
+    this.queue = [];
+    this.k = k;
+  }
+
+  insertFront(value: number): boolean {
+    if (this.isFull()) {
+      return false;
     }
 
-    insertFront(value: number): boolean {
-        if (this.isFull()) {
-            return false;
-        }
+    this.queue.unshift(value);
+    return true;
+  }
 
-        this.queue.unshift(value);
-        return true;
+  insertLast(value: number): boolean {
+    if (this.isFull()) {
+      return false;
     }
 
-    insertLast(value: number): boolean {
-        if (this.isFull()) {
-            return false;
-        }
+    this.queue.push(value);
+    return true;
+  }
 
-        this.queue.push(value);
-        return true;
+  deleteFront(): boolean {
+    if (!this.isEmpty()) {
+      this.queue.splice(0, 1);
+      return true;
+    }
+    return false;
+  }
+
+  deleteLast(): boolean {
+    if (!this.isEmpty()) {
+      this.queue.length--;
+      return true;
     }
 
-    deleteFront(): boolean {
-        if (!this.isEmpty()) {
-            this.queue.splice(0, 1);
-            return true;
-        }
-        return false;
-    }
+    return false;
+  }
 
-    deleteLast(): boolean {
-        if (!this.isEmpty()) {
-            this.queue.length--;
-            return true;
-        }
+  getFront(): number {
+    return this.queue[0] ?? -1;
+  }
 
-        return false;
-    }
+  getRear(): number {
+    return this.queue.at(-1) ?? -1;
+  }
 
-    getFront(): number {
-        return this.queue[0] ?? -1;
-    }
+  isEmpty(): boolean {
+    return this.queue.length === 0;
+  }
 
-    getRear(): number {
-        return this.queue.at(-1) ?? -1;
-    }
-
-    isEmpty(): boolean {
-        return this.queue.length === 0;
-    }
-
-    isFull(): boolean {
-        return this.queue.length === this.k;
-    }
+  isFull(): boolean {
+    return this.queue.length === this.k;
+  }
 }
 
 /*
@@ -2262,34 +2252,34 @@ Constraints:
 	At most 1000 calls will be made to each method of increment, push and pop each separately.
 */
 export class CustomStack {
-    private stack: number[];
-    private top: number;
+  private stack: number[];
+  private top: number;
 
-    constructor(maxSize: number) {
-        this.stack = Array(maxSize);
-        this.top = -1;
+  constructor(maxSize: number) {
+    this.stack = Array(maxSize);
+    this.top = -1;
+  }
+
+  push(x: number): void {
+    if (this.top < this.stack.length - 1) {
+      this.stack[++this.top] = x;
+    }
+  }
+
+  pop(): number {
+    if (this.top === -1) {
+      return -1;
     }
 
-    push(x: number): void {
-        if (this.top < this.stack.length - 1) {
-            this.stack[++this.top] = x;
-        }
-    }
+    return this.stack[this.top--];
+  }
 
-    pop(): number {
-        if (this.top === -1) {
-            return -1;
-        }
-
-        return this.stack[this.top--];
+  increment(k: number, val: number): void {
+    const len = Math.min(k, this.top + 1);
+    for (let i = 0; i < len; i++) {
+      this.stack[i] += val;
     }
-
-    increment(k: number, val: number): void {
-        const len = Math.min(k, this.top + 1);
-        for (let i = 0; i < len; i++) {
-            this.stack[i] += val;
-        }
-    }
+  }
 }
 
 /*
@@ -2338,70 +2328,70 @@ Constraints:
 	At most 5 calls will be made to toString.
 */
 export class Bitset {
-    private bits: number[];
-    private flipped: boolean;
-    private oneCount: number;
-    private size: number;
+  private bits: number[];
+  private flipped: boolean;
+  private oneCount: number;
+  private size: number;
 
-    constructor(size: number) {
-        this.bits = new Array(size).fill(0); // Initialize all bits to 0
-        this.flipped = false; // Track if the bits have been flipped
-        this.oneCount = 0; // Count of 1's in the bitset
-        this.size = size; // Size of the bitset
-    }
+  constructor(size: number) {
+    this.bits = new Array(size).fill(0); // Initialize all bits to 0
+    this.flipped = false; // Track if the bits have been flipped
+    this.oneCount = 0; // Count of 1's in the bitset
+    this.size = size; // Size of the bitset
+  }
 
-    fix(index: number): void {
-        // If not flipped, set the bit to 1 if it's not already 1
-        if (!this.flipped) {
-            if (this.bits[index] === 0) {
-                this.bits[index] = 1;
-                this.oneCount++;
-            }
-        } else {
-            // If flipped, set the bit to 0 if it's not already 0
-            if (this.bits[index] === 1) {
-                this.bits[index] = 0;
-                this.oneCount++;
-            }
-        }
+  fix(index: number): void {
+    // If not flipped, set the bit to 1 if it's not already 1
+    if (!this.flipped) {
+      if (this.bits[index] === 0) {
+        this.bits[index] = 1;
+        this.oneCount++;
+      }
+    } else {
+      // If flipped, set the bit to 0 if it's not already 0
+      if (this.bits[index] === 1) {
+        this.bits[index] = 0;
+        this.oneCount++;
+      }
     }
+  }
 
-    unfix(index: number): void {
-        // If not flipped, set the bit to 0 if it's not already 0
-        if (!this.flipped) {
-            if (this.bits[index] === 1) {
-                this.bits[index] = 0;
-                this.oneCount--;
-            }
-        } else {
-            // If flipped, set the bit to 1 if it's not already 1
-            if (this.bits[index] === 0) {
-                this.bits[index] = 1;
-                this.oneCount--;
-            }
-        }
+  unfix(index: number): void {
+    // If not flipped, set the bit to 0 if it's not already 0
+    if (!this.flipped) {
+      if (this.bits[index] === 1) {
+        this.bits[index] = 0;
+        this.oneCount--;
+      }
+    } else {
+      // If flipped, set the bit to 1 if it's not already 1
+      if (this.bits[index] === 0) {
+        this.bits[index] = 1;
+        this.oneCount--;
+      }
     }
+  }
 
-    flip(): void {
-        this.flipped = !this.flipped;
-        this.oneCount = this.size - this.oneCount;
-    }
+  flip(): void {
+    this.flipped = !this.flipped;
+    this.oneCount = this.size - this.oneCount;
+  }
 
-    all(): boolean {
-        return this.oneCount === this.size;
-    }
+  all(): boolean {
+    return this.oneCount === this.size;
+  }
 
-    one(): boolean {
-        return this.oneCount > 0;
-    }
+  one(): boolean {
+    return this.oneCount > 0;
+  }
 
-    count(): number {
-        return this.oneCount;
-    }
+  count(): number {
+    return this.oneCount;
+  }
 
-    toString(): string {
-        return this.bits.map((bit) => (this.flipped ? 1 - bit : bit)).join('');
-    }
+  toString(): string {
+    return this.bits.map((bit) => (this.flipped ? 1 - bit : bit)).join('');
+  }
 }
 
 /*
@@ -2445,117 +2435,117 @@ Constraints:
 	At most 5 * 104 calls will be made to inc, dec, getMaxKey, and getMinKey.
 */
 class OneNode {
-    prev: OneNode | null = null;
-    next: OneNode | null = null;
-    val: number;
-    set: Set<string> = new Set();
+  prev: OneNode | null = null;
+  next: OneNode | null = null;
+  val: number;
+  set: Set<string> = new Set();
 
-    constructor(val: number, key?: string) {
-        this.val = val;
+  constructor(val: number, key?: string) {
+    this.val = val;
 
-        if (key) {
-            this.set.add(key);
-        }
+    if (key) {
+      this.set.add(key);
     }
+  }
 }
 
 export class AllOne {
-    head: OneNode;
-    tail: OneNode;
-    keyNodeMap: Map<string, OneNode>;
+  head: OneNode;
+  tail: OneNode;
+  keyNodeMap: Map<string, OneNode>;
 
-    constructor() {
-        this.head = new OneNode(0);
-        this.tail = new OneNode(Infinity);
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
+  constructor() {
+    this.head = new OneNode(0);
+    this.tail = new OneNode(Infinity);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
 
-        this.keyNodeMap = new Map();
+    this.keyNodeMap = new Map();
+  }
+
+  inc(key: string): void {
+    if (!this.keyNodeMap.has(key)) {
+      let next = this.head.next!;
+
+      if (next.val !== 1) {
+        const newNext = new OneNode(1, key);
+        newNext.prev = this.head;
+        newNext.next = next;
+
+        this.head.next = newNext;
+        next.prev = newNext;
+
+        this.keyNodeMap.set(key, newNext);
+      } else {
+        next.set.add(key);
+
+        this.keyNodeMap.set(key, next);
+      }
+    } else {
+      const node = this.keyNodeMap.get(key)!;
+      let next = node.next!;
+
+      if (next.val === node.val + 1) {
+        next.set.add(key);
+
+        this.keyNodeMap.set(key, next);
+      } else {
+        const newNext = new OneNode(node.val + 1, key);
+        newNext.next = next;
+        newNext.prev = node;
+
+        node.next = newNext;
+        next.prev = newNext;
+
+        this.keyNodeMap.set(key, newNext);
+      }
+
+      node.set.delete(key);
+      if (node.set.size === 0) {
+        node.prev!.next = node.next;
+        node.next!.prev = node.prev;
+      }
+    }
+  }
+
+  dec(key: string): void {
+    const node = this.keyNodeMap.get(key);
+    if (!node) {
+      return;
     }
 
-    inc(key: string): void {
-        if (!this.keyNodeMap.has(key)) {
-            let next = this.head.next!;
+    const prev = node.prev!;
 
-            if (next.val !== 1) {
-                const newNext = new OneNode(1, key);
-                newNext.prev = this.head;
-                newNext.next = next;
+    if (node.val === 1) {
+      this.keyNodeMap.delete(key);
+    } else if (prev.val === node.val - 1) {
+      prev.set.add(key);
+      this.keyNodeMap.set(key, prev);
+    } else {
+      const newNode = new OneNode(node.val - 1, key);
+      newNode.next = node;
+      newNode.prev = prev;
 
-                this.head.next = newNext;
-                next.prev = newNext;
+      prev.next = newNode;
+      node.prev = newNode;
 
-                this.keyNodeMap.set(key, newNext);
-            } else {
-                next.set.add(key);
-
-                this.keyNodeMap.set(key, next);
-            }
-        } else {
-            const node = this.keyNodeMap.get(key)!;
-            let next = node.next!;
-
-            if (next.val === node.val + 1) {
-                next.set.add(key);
-
-                this.keyNodeMap.set(key, next);
-            } else {
-                const newNext = new OneNode(node.val + 1, key);
-                newNext.next = next;
-                newNext.prev = node;
-
-                node.next = newNext;
-                next.prev = newNext;
-
-                this.keyNodeMap.set(key, newNext);
-            }
-
-            node.set.delete(key);
-            if (node.set.size === 0) {
-                node.prev!.next = node.next;
-                node.next!.prev = node.prev;
-            }
-        }
+      this.keyNodeMap.set(key, newNode);
     }
 
-    dec(key: string): void {
-        const node = this.keyNodeMap.get(key);
-        if (!node) {
-            return;
-        }
-
-        const prev = node.prev!;
-
-        if (node.val === 1) {
-            this.keyNodeMap.delete(key);
-        } else if (prev.val === node.val - 1) {
-            prev.set.add(key);
-            this.keyNodeMap.set(key, prev);
-        } else {
-            const newNode = new OneNode(node.val - 1, key);
-            newNode.next = node;
-            newNode.prev = prev;
-
-            prev.next = newNode;
-            node.prev = newNode;
-
-            this.keyNodeMap.set(key, newNode);
-        }
-
-        node.set.delete(key);
-        if (node.set.size === 0) {
-            node.prev!.next = node.next;
-            node.next!.prev = node.prev;
-        }
+    node.set.delete(key);
+    if (node.set.size === 0) {
+      node.prev!.next = node.next;
+      node.next!.prev = node.prev;
     }
+  }
 
-    getMaxKey(): string {
-        return this.tail.prev?.set.values().next().value ?? '';
-    }
+  getMaxKey(): string {
+    return this.tail.prev?.set.values().next().value ?? '';
+  }
 
-    getMinKey(): string {
-        return this.head.next?.set.values().next().value ?? '';
-    }
+  getMinKey(): string {
+    return this.head.next?.set.values().next().value ?? '';
+  }
 }
 /*
 https://leetcode.com/problems/my-calendar-ii/description/?envType=daily-question&envId=2024-09-27
@@ -2594,29 +2584,29 @@ Constraints:
 	At most 1000 calls will be made to book.
 */
 export class MyCalendarTwo {
-    calendar: [number, number][] = [];
-    overlaps: [number, number][] = [];
+  calendar: [number, number][] = [];
+  overlaps: [number, number][] = [];
 
-    constructor() {
-        this.calendar = [];
-        this.overlaps = [];
-    }
+  constructor() {
+    this.calendar = [];
+    this.overlaps = [];
+  }
 
-    book(startTime: number, endTime: number): boolean {
-        for (const date of this.overlaps) {
-            if (startTime < date[1] && endTime > date[0]) return false;
-        }
-        for (const date of this.calendar) {
-            if (startTime < date[1] && endTime > date[0]) {
-                this.overlaps.push([
-                    Math.max(date[0], startTime),
-                    Math.min(date[1], endTime),
-                ]);
-            }
-        }
-        this.calendar.push([startTime, endTime]);
-        return true;
+  book(startTime: number, endTime: number): boolean {
+    for (const date of this.overlaps) {
+      if (startTime < date[1] && endTime > date[0]) return false;
     }
+    for (const date of this.calendar) {
+      if (startTime < date[1] && endTime > date[0]) {
+        this.overlaps.push([
+          Math.max(date[0], startTime),
+          Math.min(date[1], endTime),
+        ]);
+      }
+    }
+    this.calendar.push([startTime, endTime]);
+    return true;
+  }
 }
 
 /*
@@ -2649,22 +2639,22 @@ Constraints:
 	At most 104 calls will be made to the function f.
 */
 export class WordFilter {
-    private dic: Map<string, number>;
+  private dic: Map<string, number>;
 
-    constructor(words: string[]) {
-        this.dic = new Map();
-        words.forEach((w, index) => {
-            for (let i = 0; i <= w.length; i++) {
-                for (let j = 0; j <= w.length; j++) {
-                    this.dic.set(w.slice(0, i) + '#' + w.slice(j), index);
-                }
-            }
-        });
-    }
+  constructor(words: string[]) {
+    this.dic = new Map();
+    words.forEach((w, index) => {
+      for (let i = 0; i <= w.length; i++) {
+        for (let j = 0; j <= w.length; j++) {
+          this.dic.set(w.slice(0, i) + '#' + w.slice(j), index);
+        }
+      }
+    });
+  }
 
-    f(pref: string, suff: string): number {
-        return this.dic.get(pref + '#' + suff) ?? -1;
-    }
+  f(pref: string, suff: string): number {
+    return this.dic.get(pref + '#' + suff) ?? -1;
+  }
 }
 
 /*
@@ -2712,36 +2702,36 @@ Constraints:
 Follow-up: Can you implement both GetProduct and Add to work in O(1) time complexity instead of O(k) time complexity?
 */
 export class ProductOfNumbers {
-    prefix: number[];
+  prefix: number[];
 
-    constructor() {
-        this.prefix = [];
+  constructor() {
+    this.prefix = [];
+  }
+
+  add(num: number): void {
+    const prev = this.prefix.length - 1;
+    if (num === 0) {
+      this.prefix.length = 0;
+      return;
     }
 
-    add(num: number): void {
-        const prev = this.prefix.length - 1;
-        if (num === 0) {
-            this.prefix.length = 0;
-            return;
-        }
+    if (prev === -1) {
+      this.prefix.push(num);
+    } else {
+      this.prefix[prev + 1] = this.prefix[prev] * num;
+    }
+  }
 
-        if (prev === -1) {
-            this.prefix.push(num);
-        } else {
-            this.prefix[prev + 1] = this.prefix[prev] * num;
-        }
+  getProduct(k: number): number {
+    const len = this.prefix.length;
+    if (len - k <= -1) {
+      return 0;
     }
 
-    getProduct(k: number): number {
-        const len = this.prefix.length;
-        if (len - k <= -1) {
-            return 0;
-        }
-
-        if (len - k - 1 >= 0) {
-            return this.prefix[len - 1] / this.prefix[len - k - 1];
-        } else {
-            return this.prefix[len - 1];
-        }
+    if (len - k - 1 >= 0) {
+      return this.prefix[len - 1] / this.prefix[len - k - 1];
+    } else {
+      return this.prefix[len - 1];
     }
+  }
 }

@@ -25,56 +25,56 @@ Constraints:
 	grid[i][j] is 0 or 1
 */
 export function maxDistance(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
-    let seas = 0;
-    const queue: number[][] = [];
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
+  const m = grid.length;
+  const n = grid[0].length;
+  let seas = 0;
+  const queue: number[][] = [];
+  const visited: boolean[][] = Array.from({ length: m }, () =>
+    Array(n).fill(false)
+  );
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 0) {
-                seas++;
-            } else {
-                visited[i][j] = true;
-                queue.push([i, j]);
-            }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 0) {
+        seas++;
+      } else {
+        visited[i][j] = true;
+        queue.push([i, j]);
+      }
+    }
+  }
+  if (seas === 0 || seas === m * n) {
+    return -1;
+  }
+
+  const moves: number[] = [-1, 0, 1, 0, -1];
+
+  let level = 0;
+  while (queue.length) {
+    const q = queue.slice();
+    queue.length = 0;
+    level++;
+
+    q.forEach(([x, y]) => {
+      for (let i = 0; i < moves.length - 1; i++) {
+        const nextX = x + moves[i];
+        const nextY = y + moves[i + 1];
+
+        if (
+          nextX >= 0 &&
+          nextX < m &&
+          nextY >= 0 &&
+          nextY < n &&
+          !visited[nextX][nextY]
+        ) {
+          visited[nextX][nextY] = true;
+          queue.push([nextX, nextY]);
         }
-    }
-    if (seas === 0 || seas === m * n) {
-        return -1;
-    }
+      }
+    });
+  }
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
-
-    let level = 0;
-    while (queue.length) {
-        const q = queue.slice();
-        queue.length = 0;
-        level++;
-
-        q.forEach(([x, y]) => {
-            for (let i = 0; i < moves.length - 1; i++) {
-                const nextX = x + moves[i];
-                const nextY = y + moves[i + 1];
-
-                if (
-                    nextX >= 0 &&
-                    nextX < m &&
-                    nextY >= 0 &&
-                    nextY < n &&
-                    !visited[nextX][nextY]
-                ) {
-                    visited[nextX][nextY] = true;
-                    queue.push([nextX, nextY]);
-                }
-            }
-        });
-    }
-
-    return level - 1;
+  return level - 1;
 }
 
 /*
@@ -127,78 +127,72 @@ Constraints:
 const ALPHA_REG = /[a-zA-Z]/;
 
 export function shortestPathAllKeys(grid: string[]): number {
-    const m = grid.length;
-    const n = grid[0].length;
-    let alphas = 0;
+  const m = grid.length;
+  const n = grid[0].length;
+  let alphas = 0;
 
-    const queue: Array<[x: number, y: number, status: number]> = [];
+  const queue: Array<[x: number, y: number, status: number]> = [];
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (ALPHA_REG.test(grid[i][j])) {
-                alphas++;
-            }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (ALPHA_REG.test(grid[i][j])) {
+        alphas++;
+      }
 
-            if (grid[i][j] === '@') {
-                queue.push([i, j, 0]);
-            }
-        }
+      if (grid[i][j] === '@') {
+        queue.push([i, j, 0]);
+      }
     }
-    const keys = alphas >> 1;
-    const keysMap = toStatusMap('abcdef'.split(''));
-    const locksMap = toStatusMap('ABCDEF'.split(''));
+  }
+  const keys = alphas >> 1;
+  const keysMap = toStatusMap('abcdef'.split(''));
+  const locksMap = toStatusMap('ABCDEF'.split(''));
 
-    const visited: boolean[][][] = Array.from({ length: m }, () =>
-        Array.from({ length: n }, () => Array(1 << keys).fill(false))
-    );
-    const [startX, startY, startStatus] = queue[0];
-    visited[startX][startY][startStatus] = true;
+  const visited: boolean[][][] = Array.from({ length: m }, () =>
+    Array.from({ length: n }, () => Array(1 << keys).fill(false))
+  );
+  const [startX, startY, startStatus] = queue[0];
+  visited[startX][startY][startStatus] = true;
 
-    let level = 0;
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    const target = (1 << keys) - 1;
-    while (queue.length) {
-        const q = queue.slice();
-        queue.length = 0;
-        level++;
+  let level = 0;
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  const target = (1 << keys) - 1;
+  while (queue.length) {
+    const q = queue.slice();
+    queue.length = 0;
+    level++;
 
-        for (let i = 0; i < q.length; i++) {
-            const [x, y, status] = q[i];
-            if (status === target) {
-                return level - 1;
-            }
+    for (let i = 0; i < q.length; i++) {
+      const [x, y, status] = q[i];
+      if (status === target) {
+        return level - 1;
+      }
 
-            for (let j = 0; j < moves.length - 1; j++) {
-                const nX = x + moves[j];
-                const nY = y + moves[j + 1];
+      for (let j = 0; j < moves.length - 1; j++) {
+        const nX = x + moves[j];
+        const nY = y + moves[j + 1];
 
-                if (
-                    nX >= 0 &&
-                    nX < m &&
-                    nY >= 0 &&
-                    nY < n &&
-                    grid[nX][nY] !== '#'
-                ) {
-                    const s = status | (keysMap[grid[nX][nY]] ?? 0);
-                    const lock = locksMap[grid[nX][nY]] ?? 0;
-                    const hasKey = lock & s;
-                    if (!visited[nX][nY][s] && (!lock || hasKey)) {
-                        visited[nX][nY][s] = true;
-                        queue.push([nX, nY, s]);
-                    }
-                }
-            }
+        if (nX >= 0 && nX < m && nY >= 0 && nY < n && grid[nX][nY] !== '#') {
+          const s = status | (keysMap[grid[nX][nY]] ?? 0);
+          const lock = locksMap[grid[nX][nY]] ?? 0;
+          const hasKey = lock & s;
+          if (!visited[nX][nY][s] && (!lock || hasKey)) {
+            visited[nX][nY][s] = true;
+            queue.push([nX, nY, s]);
+          }
         }
+      }
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 function toStatusMap(alphas: string[]) {
-    return alphas.reduce((acc, cur, i) => {
-        acc[cur] = 1 << i;
-        return acc;
-    }, {});
+  return alphas.reduce((acc, cur, i) => {
+    acc[cur] = 1 << i;
+    return acc;
+  }, {});
 }
 
 /*
@@ -233,57 +227,57 @@ Constraints:
 	target consists only of English lowercase letters.
 */
 export function alphabetBoardPath(target: string): string {
-    const board = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy', 'z'];
+  const board = ['abcde', 'fghij', 'klmno', 'pqrst', 'uvwxy', 'z'];
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    const directions: string[] = ['U', 'R', 'D', 'L'];
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  const directions: string[] = ['U', 'R', 'D', 'L'];
 
-    const bfs = (
-        x: number,
-        y: number,
-        t: string
-    ): [x: number, y: number, path: string] => {
-        const visited: boolean[][] = Array.from({ length: board.length }, () =>
-            Array(board[0].length).fill(false)
-        );
-        visited[x][y] = true;
+  const bfs = (
+    x: number,
+    y: number,
+    t: string
+  ): [x: number, y: number, path: string] => {
+    const visited: boolean[][] = Array.from({ length: board.length }, () =>
+      Array(board[0].length).fill(false)
+    );
+    visited[x][y] = true;
 
-        const queue: [x: number, y: number, path: string][] = [[x, y, '']];
-        while (queue.length) {
-            const [x, y, path] = queue.shift()!;
-            if (board[x][y] === t) {
-                return [x, y, path];
-            }
+    const queue: [x: number, y: number, path: string][] = [[x, y, '']];
+    while (queue.length) {
+      const [x, y, path] = queue.shift()!;
+      if (board[x][y] === t) {
+        return [x, y, path];
+      }
 
-            for (let i = 0; i < 4; i++) {
-                const nextX = x + moves[i];
-                const nextY = y + moves[i + 1];
-                const direction = directions[i];
+      for (let i = 0; i < 4; i++) {
+        const nextX = x + moves[i];
+        const nextY = y + moves[i + 1];
+        const direction = directions[i];
 
-                if (
-                    nextX >= 0 &&
-                    nextX < board.length &&
-                    nextY >= 0 &&
-                    nextY < board[nextX].length &&
-                    !visited[nextX][nextY]
-                ) {
-                    visited[nextX][nextY] = true;
-                    queue.push([nextX, nextY, path + direction]);
-                }
-            }
+        if (
+          nextX >= 0 &&
+          nextX < board.length &&
+          nextY >= 0 &&
+          nextY < board[nextX].length &&
+          !visited[nextX][nextY]
+        ) {
+          visited[nextX][nextY] = true;
+          queue.push([nextX, nextY, path + direction]);
         }
-
-        return [0, 0, ''];
-    };
-
-    let s = '';
-    let [x, y, path] = [0, 0, ''];
-    for (let i = 0; i < target.length; i++) {
-        [x, y, path] = bfs(x, y, target[i]);
-        s += path + '!';
+      }
     }
 
-    return s;
+    return [0, 0, ''];
+  };
+
+  let s = '';
+  let [x, y, path] = [0, 0, ''];
+  for (let i = 0; i < target.length; i++) {
+    [x, y, path] = bfs(x, y, target[i]);
+    s += path + '!';
+  }
+
+  return s;
 }
 
 /*
@@ -329,47 +323,47 @@ Constraints:
 Note: This question is the same as 542: https://leetcode.com/problems/01-matrix/
 */
 export function highestPeak(isWater: number[][]): number[][] {
-    const m = isWater.length;
-    const n = isWater[0].length;
+  const m = isWater.length;
+  const n = isWater[0].length;
 
-    const queue: number[][] = [];
-    const height: number[][] = Array.from({ length: m }, () => Array(n));
+  const queue: number[][] = [];
+  const height: number[][] = Array.from({ length: m }, () => Array(n));
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (isWater[i][j] === 1) {
-                height[i][j] = 0;
-                queue.push([i, j]);
-            }
-        }
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (isWater[i][j] === 1) {
+        height[i][j] = 0;
+        queue.push([i, j]);
+      }
     }
+  }
 
-    let level = 0;
-    while (queue.length) {
-        const q = queue.slice();
-        queue.length = 0;
-        level++;
+  let level = 0;
+  while (queue.length) {
+    const q = queue.slice();
+    queue.length = 0;
+    level++;
 
-        for (let i = 0; i < q.length; i++) {
-            const [x, y] = q[i];
-            for (let j = 0; j < moves.length - 1; j++) {
-                const nextX = x + moves[j];
-                const nextY = y + moves[j + 1];
+    for (let i = 0; i < q.length; i++) {
+      const [x, y] = q[i];
+      for (let j = 0; j < moves.length - 1; j++) {
+        const nextX = x + moves[j];
+        const nextY = y + moves[j + 1];
 
-                if (
-                    nextX >= 0 &&
-                    nextX < m &&
-                    nextY >= 0 &&
-                    nextY < n &&
-                    height[nextX][nextY] === undefined
-                ) {
-                    height[nextX][nextY] = level;
-                    queue.push([nextX, nextY]);
-                }
-            }
+        if (
+          nextX >= 0 &&
+          nextX < m &&
+          nextY >= 0 &&
+          nextY < n &&
+          height[nextX][nextY] === undefined
+        ) {
+          height[nextX][nextY] = level;
+          queue.push([nextX, nextY]);
         }
+      }
     }
+  }
 
-    return height;
+  return height;
 }

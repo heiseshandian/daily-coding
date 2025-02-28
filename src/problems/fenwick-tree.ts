@@ -65,35 +65,35 @@ import { FenwickTree } from '../algorithm/fanwick-tree';
 故输出结果14、16
  */
 {
-    const readline = require('readline');
+  const readline = require('readline');
 
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-    let n: number | null = null;
-    let tree: FenwickTree | null = null;
-    const result: number[] = [];
+  let n: number | null = null;
+  let tree: FenwickTree | null = null;
+  const result: number[] = [];
 
-    rl.on('line', function (line: string) {
-        const tokens = line.split(' ');
+  rl.on('line', function (line: string) {
+    const tokens = line.split(' ');
 
-        if (n === null) {
-            n = +tokens[0];
-        } else if (tree === null) {
-            tree = new FenwickTree(n);
-            tokens.forEach((v, i) => {
-                tree!.update(i + 1, +v);
-            });
-        } else if (tokens[0] === '1') {
-            tree?.update(+tokens[1], +tokens[2]);
-        } else {
-            result.push(tree.rangeSum(+tokens[1], +tokens[2]));
-        }
-    }).on('close', function () {
-        console.log(result.join('\n'));
-    });
+    if (n === null) {
+      n = +tokens[0];
+    } else if (tree === null) {
+      tree = new FenwickTree(n);
+      tokens.forEach((v, i) => {
+        tree!.update(i + 1, +v);
+      });
+    } else if (tokens[0] === '1') {
+      tree?.update(+tokens[1], +tokens[2]);
+    } else {
+      result.push(tree.rangeSum(+tokens[1], +tokens[2]));
+    }
+  }).on('close', function () {
+    console.log(result.join('\n'));
+  });
 }
 
 /**
@@ -163,40 +163,40 @@ import { FenwickTree } from '../algorithm/fanwick-tree';
 对于 $100\%$ 的数据：$1 \leq N, M\le 500000$，$1 \leq x, y \leq n$，保证任意时刻序列中任意元素的绝对值都不大于 $2^{30}$。
  */
 {
-    const readline = require('readline');
+  const readline = require('readline');
 
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-    let n: number | null = null;
-    let tree: FenwickTree | null = null;
-    const result: number[] = [];
+  let n: number | null = null;
+  let tree: FenwickTree | null = null;
+  const result: number[] = [];
 
-    rl.on('line', function (line: string) {
-        const tokens = line.split(' ');
+  rl.on('line', function (line: string) {
+    const tokens = line.split(' ');
 
-        if (n === null) {
-            n = +tokens[0];
-        } else if (tree === null) {
-            tree = new FenwickTree(n);
-            const nums = tokens.map((v) => +v);
-            for (let i = nums.length; i > 1; i--) {
-                nums[i] = nums[i - 1] - nums[i - 2];
-            }
-            nums[1] = nums[0];
+    if (n === null) {
+      n = +tokens[0];
+    } else if (tree === null) {
+      tree = new FenwickTree(n);
+      const nums = tokens.map((v) => +v);
+      for (let i = nums.length; i > 1; i--) {
+        nums[i] = nums[i - 1] - nums[i - 2];
+      }
+      nums[1] = nums[0];
 
-            for (let i = 1; i < nums.length; i++) {
-                tree.update(i, nums[i]);
-            }
-        } else if (tokens[0] === '1') {
-            tree.update(+tokens[1], +tokens[3]);
-            tree.update(+tokens[2] + 1, -tokens[3]);
-        } else {
-            result.push(tree.sum(+tokens[1]));
-        }
-    }).on('close', function () {
-        console.log(result.join('\n'));
-    });
+      for (let i = 1; i < nums.length; i++) {
+        tree.update(i, nums[i]);
+      }
+    } else if (tokens[0] === '1') {
+      tree.update(+tokens[1], +tokens[3]);
+      tree.update(+tokens[2] + 1, -tokens[3]);
+    } else {
+      result.push(tree.sum(+tokens[1]));
+    }
+  }).on('close', function () {
+    console.log(result.join('\n'));
+  });
 }

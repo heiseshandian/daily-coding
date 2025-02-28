@@ -1,33 +1,33 @@
 // 打印二进制位
 export function printBinary(n: number): string {
-    let result: string[] = [];
-    for (let i = 31; i >= 0; i--) {
-        // n & 000...0001
-        // n & 000...0010
-        // n & 000...0100 与完之后的结果只有某一位不是1结果才是0，否则那一位必然是1
-        result.push((n & (1 << i)) === 0 ? '0' : '1');
-    }
+  let result: string[] = [];
+  for (let i = 31; i >= 0; i--) {
+    // n & 000...0001
+    // n & 000...0010
+    // n & 000...0100 与完之后的结果只有某一位不是1结果才是0，否则那一位必然是1
+    result.push((n & (1 << i)) === 0 ? '0' : '1');
+  }
 
-    return result.join('');
+  return result.join('');
 }
 
 export function isEven(n: number) {
-    return (n & 1) === 0;
+  return (n & 1) === 0;
 }
 
 export function isOdd(n: number) {
-    return (n & 1) === 1;
+  return (n & 1) === 1;
 }
 
 // 统计一个数字的二进制表示中有多少个1
 export function countBits(n: number): number {
-    let count = 0;
-    while (n > 0) {
-        n &= n - 1; // Flip the least significant 1 to 0
-        count++;
-    }
+  let count = 0;
+  while (n > 0) {
+    n &= n - 1; // Flip the least significant 1 to 0
+    count++;
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -76,23 +76,23 @@ Constraints:
 	1 <= k <= nums.length
 */
 export function findKOr(nums: number[], k: number): number {
-    const bits: number[] = Array(32).fill(0);
-    let result = 0;
-    for (let i = 0; i < 32; i++) {
-        nums.forEach((v) => {
-            bits[i] += (v >> i) & 1;
-        });
+  const bits: number[] = Array(32).fill(0);
+  let result = 0;
+  for (let i = 0; i < 32; i++) {
+    nums.forEach((v) => {
+      bits[i] += (v >> i) & 1;
+    });
 
-        result += bits[i] >= k ? 1 << i : 0;
-    }
+    result += bits[i] >= k ? 1 << i : 0;
+  }
 
-    return result;
+  return result;
 }
 
 export function unsetRightMostBit(x: number) {
-    return x & (x - 1);
+  return x & (x - 1);
 }
 
 export function setRightMostBit(x: number) {
-    return x | (x + 1);
+  return x | (x + 1);
 }

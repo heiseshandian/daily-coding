@@ -1,30 +1,37 @@
 import { PrefixTree } from '../prefix-tree';
-import { searchTestData, deleteTestData, prefixTestData } from './prefix-tree.testdata';
+import {
+  searchTestData,
+  deleteTestData,
+  prefixTestData,
+} from './prefix-tree.testdata';
 
 describe('PrefixTree', () => {
-    it.each(searchTestData)('search', ({ input, searchWord, expected }) => {
-        const prefixTree = initPrefixTree(input);
+  it.each(searchTestData)('search', ({ input, searchWord, expected }) => {
+    const prefixTree = initPrefixTree(input);
 
-        expect(prefixTree.search(searchWord)).toBe(expected);
-    });
+    expect(prefixTree.search(searchWord)).toBe(expected);
+  });
 
-    it.each(deleteTestData)('delete', ({ input, deleteWord, searchWord, expected }) => {
-        const prefixTree = initPrefixTree(input);
+  it.each(deleteTestData)(
+    'delete',
+    ({ input, deleteWord, searchWord, expected }) => {
+      const prefixTree = initPrefixTree(input);
 
-        prefixTree.delete(deleteWord);
-        expect(prefixTree.search(searchWord)).toBe(expected);
-    });
+      prefixTree.delete(deleteWord);
+      expect(prefixTree.search(searchWord)).toBe(expected);
+    }
+  );
 
-    it.each(prefixTestData)('prefix', ({ input, prefixWord, expected }) => {
-        const prefixTree = initPrefixTree(input);
+  it.each(prefixTestData)('prefix', ({ input, prefixWord, expected }) => {
+    const prefixTree = initPrefixTree(input);
 
-        expect(prefixTree.prefixCount(prefixWord)).toBe(expected);
-    });
+    expect(prefixTree.prefixCount(prefixWord)).toBe(expected);
+  });
 });
 
 function initPrefixTree(input: string[]) {
-    const prefixTree = new PrefixTree();
-    input.forEach((word) => prefixTree.add(word));
+  const prefixTree = new PrefixTree();
+  input.forEach((word) => prefixTree.add(word));
 
-    return prefixTree;
+  return prefixTree;
 }

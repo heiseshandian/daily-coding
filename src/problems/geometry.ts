@@ -37,24 +37,24 @@ Output: [[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]
 2）扫描到出点时取较低点
 */
 export function getSkyline(buildings: number[][]): number[][] {
-    if (buildings.length === 1) {
-        const [l, r, h] = buildings[0];
-        return [
-            [l, h],
-            [r, 0],
-        ];
-    }
+  if (buildings.length === 1) {
+    const [l, r, h] = buildings[0];
+    return [
+      [l, h],
+      [r, 0],
+    ];
+  }
 
-    const events: ScanEvent[] = [];
-    buildings.forEach(([l, r, h], i) => {
-        // 用正数(h)来表示进入一个building
-        events.push([l, h, i]);
-        // 用负数(-h)来表示出一个building
-        events.push([r, -h, i]);
-    });
+  const events: ScanEvent[] = [];
+  buildings.forEach(([l, r, h], i) => {
+    // 用正数(h)来表示进入一个building
+    events.push([l, h, i]);
+    // 用负数(-h)来表示出一个building
+    events.push([r, -h, i]);
+  });
 
-    events.sort(([x1, h1], [x2, h2]) => {
-        /* 
+  events.sort(([x1, h1], [x2, h2]) => {
+    /* 
         对于进入事件
         如果x相同我们需要按照高度从大到小排列，因为如果是从小到大的话可能会多加入一些点，比如说有2个进入事件
         [2,2],[2,3]
@@ -68,37 +68,37 @@ export function getSkyline(buildings: number[][]): number[][] {
 
         又因为我们对出事件已经对高度取反了，所以对取反的结果从大到小排列即可
         */
-        if (x1 === x2) {
-            return h2 - h1;
-        }
-        // x是横坐标，从左到右扫描，自然x是从小到大排列
-        return x1 - x2;
-    });
-
-    const heap = new MaxHeapWithDelete();
-
-    const result: number[][] = [];
-    for (let i = 0; i < events.length; i++) {
-        let [x, h, id] = events[i];
-        const isEntering = h > 0;
-        h = Math.abs(h);
-
-        if (isEntering) {
-            if (h > heap.max()) {
-                // 进入时取较高点
-                result.push([x, h]);
-            }
-            heap.add([h, id]);
-        } else {
-            heap.remove(id);
-            if (h > heap.max()) {
-                // 出时取较低点
-                result.push([x, heap.max()]);
-            }
-        }
+    if (x1 === x2) {
+      return h2 - h1;
     }
+    // x是横坐标，从左到右扫描，自然x是从小到大排列
+    return x1 - x2;
+  });
 
-    return result;
+  const heap = new MaxHeapWithDelete();
+
+  const result: number[][] = [];
+  for (let i = 0; i < events.length; i++) {
+    let [x, h, id] = events[i];
+    const isEntering = h > 0;
+    h = Math.abs(h);
+
+    if (isEntering) {
+      if (h > heap.max()) {
+        // 进入时取较高点
+        result.push([x, h]);
+      }
+      heap.add([h, id]);
+    } else {
+      heap.remove(id);
+      if (h > heap.max()) {
+        // 出时取较低点
+        result.push([x, heap.max()]);
+      }
+    }
+  }
+
+  return result;
 }
 
 type ScanEvent = [x: number, h: number, id: number];
@@ -106,81 +106,80 @@ type ScanEvent = [x: number, h: number, id: number];
 type HeapItem = [h: number, id: number];
 
 class MaxHeapWithDelete {
-    arr: HeapItem[] = [];
+  arr: HeapItem[] = [];
 
-    // key:id,value:index
-    // 用于加速删除某个id
-    idToIndexMap: Map<number, number> = new Map();
+  // key:id,value:index
+  // 用于加速删除某个id
+  idToIndexMap: Map<number, number> = new Map();
 
-    public max(): number {
-        if (this.arr.length > 0) {
-            return this.arr[0][0];
-        }
-        return 0;
+  public max(): number {
+    if (this.arr.length > 0) {
+      return this.arr[0][0];
     }
+    return 0;
+  }
 
-    public add([h, id]: HeapItem) {
-        this.arr.push([h, id]);
-        this.idToIndexMap.set(id, this.arr.length - 1);
+  public add([h, id]: HeapItem) {
+    this.arr.push([h, id]);
+    this.idToIndexMap.set(id, this.arr.length - 1);
 
-        this.insertHeap();
+    this.insertHeap();
+  }
+
+  private insertHeap() {
+    let i = this.arr.length - 1;
+    let parent = (i - 1) >> 1;
+    // 从下往上
+    while (parent >= 0) {
+      // 比父节点大就交换
+      if (this.arr[i][0] > this.arr[parent][0]) {
+        this.swap(i, parent);
+        i = parent;
+        parent = (i - 1) >> 1;
+      } else {
+        break;
+      }
     }
+  }
 
-    private insertHeap() {
-        let i = this.arr.length - 1;
-        let parent = (i - 1) >> 1;
-        // 从下往上
-        while (parent >= 0) {
-            // 比父节点大就交换
-            if (this.arr[i][0] > this.arr[parent][0]) {
-                this.swap(i, parent);
-                i = parent;
-                parent = (i - 1) >> 1;
-            } else {
-                break;
-            }
-        }
+  public remove(id: number) {
+    if (!this.idToIndexMap.has(id)) {
+      return;
     }
+    const toDeleteIndex = this.idToIndexMap.get(id)!;
+    this.swap(toDeleteIndex, this.arr.length - 1);
+    this.idToIndexMap.delete(id);
 
-    public remove(id: number) {
-        if (!this.idToIndexMap.has(id)) {
-            return;
-        }
-        const toDeleteIndex = this.idToIndexMap.get(id)!;
-        this.swap(toDeleteIndex, this.arr.length - 1);
-        this.idToIndexMap.delete(id);
+    this.arr.length--;
+    this.heapify(toDeleteIndex);
+  }
 
-        this.arr.length--;
-        this.heapify(toDeleteIndex);
+  private heapify(i: number) {
+    let left = (i << 1) | 1;
+    while (left < this.arr.length) {
+      const right = left + 1;
+      let biggestIndex =
+        right < this.arr.length && this.arr[right][0] > this.arr[left][0]
+          ? right
+          : left;
+      biggestIndex =
+        this.arr[i][0] >= this.arr[biggestIndex][0] ? i : biggestIndex;
+      if (biggestIndex === i) {
+        break;
+      }
+
+      this.swap(i, biggestIndex);
+      i = biggestIndex;
+      left = (i << 1) | 1;
     }
+  }
 
-    private heapify(i: number) {
-        let left = (i << 1) | 1;
-        while (left < this.arr.length) {
-            const right = left + 1;
-            let biggestIndex =
-                right < this.arr.length &&
-                this.arr[right][0] > this.arr[left][0]
-                    ? right
-                    : left;
-            biggestIndex =
-                this.arr[i][0] >= this.arr[biggestIndex][0] ? i : biggestIndex;
-            if (biggestIndex === i) {
-                break;
-            }
+  private swap(i: number, j: number) {
+    this.idToIndexMap.set(this.arr[i][1], j);
+    this.idToIndexMap.set(this.arr[j][1], i);
 
-            this.swap(i, biggestIndex);
-            i = biggestIndex;
-            left = (i << 1) | 1;
-        }
-    }
-
-    private swap(i: number, j: number) {
-        this.idToIndexMap.set(this.arr[i][1], j);
-        this.idToIndexMap.set(this.arr[j][1], i);
-
-        swap(this.arr, i, j);
-    }
+    swap(this.arr, i, j);
+  }
 }
 
 /*
@@ -212,24 +211,24 @@ Constraints:
 	0 <= t <= 10^9
 */
 export function isReachableAtTime(
-    sx: number,
-    sy: number,
-    fx: number,
-    fy: number,
-    t: number
+  sx: number,
+  sy: number,
+  fx: number,
+  fy: number,
+  t: number
 ): boolean {
-    const distanceX = Math.abs(fx - sx);
-    const distanceY = Math.abs(fy - sy);
-    const minSeconds =
-        Math.min(distanceX, distanceY) + Math.abs(distanceX - distanceY);
-    if (t < minSeconds) {
-        return false;
-    }
+  const distanceX = Math.abs(fx - sx);
+  const distanceY = Math.abs(fy - sy);
+  const minSeconds =
+    Math.min(distanceX, distanceY) + Math.abs(distanceX - distanceY);
+  if (t < minSeconds) {
+    return false;
+  }
 
-    const rest = t - minSeconds;
+  const rest = t - minSeconds;
 
-    if (rest & 1) {
-        return Math.max(distanceX, distanceY) > 0 || rest > 2;
-    }
-    return true;
+  if (rest & 1) {
+    return Math.max(distanceX, distanceY) > 0 || rest > 2;
+  }
+  return true;
 }

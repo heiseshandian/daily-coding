@@ -31,26 +31,26 @@ Constraints:
 	1 <= startPos, endPos, k <= 1000
 */
 export function numberOfWays(
-    startPos: number,
-    endPos: number,
-    k: number
+  startPos: number,
+  endPos: number,
+  k: number
 ): number {
-    const mod = 1e9 + 7;
-    const dfs = cache((distance: number, rest: number) => {
-        if (rest === 0) {
-            return distance === 0 ? 1 : 0;
-        }
+  const mod = 1e9 + 7;
+  const dfs = cache((distance: number, rest: number) => {
+    if (rest === 0) {
+      return distance === 0 ? 1 : 0;
+    }
 
-        if ((distance & 1) !== (rest & 1) || rest < distance) {
-            return 0;
-        }
+    if ((distance & 1) !== (rest & 1) || rest < distance) {
+      return 0;
+    }
 
-        return (
-            ((dfs(distance + 1, rest - 1) % mod) +
-                (dfs(Math.abs(distance - 1), rest - 1) % mod)) %
-            mod
-        );
-    });
+    return (
+      ((dfs(distance + 1, rest - 1) % mod) +
+        (dfs(Math.abs(distance - 1), rest - 1) % mod)) %
+      mod
+    );
+  });
 
-    return dfs(Math.abs(endPos - startPos), k);
+  return dfs(Math.abs(endPos - startPos), k);
 }

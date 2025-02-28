@@ -4,44 +4,44 @@
 import { Stack } from '../../algorithm/stack';
 
 export class QueueWith2Stacks {
-    #inputStack: Stack;
+  #inputStack: Stack;
 
-    #outputStack: Stack;
+  #outputStack: Stack;
 
-    constructor() {
-        this.#inputStack = new Stack();
-        this.#outputStack = new Stack();
+  constructor() {
+    this.#inputStack = new Stack();
+    this.#outputStack = new Stack();
+  }
+
+  public add(val: any) {
+    this.#inputStack.push(val);
+  }
+
+  public poll() {
+    this.#fillOutputStack();
+    const result = this.#outputStack.pop();
+    this.#recoverInputStack();
+
+    return result;
+  }
+
+  public peek() {
+    this.#fillOutputStack();
+    const result = this.#outputStack.peek();
+    this.#recoverInputStack();
+
+    return result;
+  }
+
+  #fillOutputStack() {
+    while (!this.#inputStack.isEmpty()) {
+      this.#outputStack.push(this.#inputStack.pop());
     }
+  }
 
-    public add(val: any) {
-        this.#inputStack.push(val);
+  #recoverInputStack() {
+    while (!this.#outputStack.isEmpty()) {
+      this.#inputStack.push(this.#outputStack.pop());
     }
-
-    public poll() {
-        this.#fillOutputStack();
-        const result = this.#outputStack.pop();
-        this.#recoverInputStack();
-
-        return result;
-    }
-
-    public peek() {
-        this.#fillOutputStack();
-        const result = this.#outputStack.peek();
-        this.#recoverInputStack();
-
-        return result;
-    }
-
-    #fillOutputStack() {
-        while (!this.#inputStack.isEmpty()) {
-            this.#outputStack.push(this.#inputStack.pop());
-        }
-    }
-
-    #recoverInputStack() {
-        while (!this.#outputStack.isEmpty()) {
-            this.#inputStack.push(this.#outputStack.pop());
-        }
-    }
+  }
 }

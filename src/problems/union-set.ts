@@ -41,24 +41,24 @@ Constraints:
 	There is at least one path between 1 and n.
 */
 export function minScore(n: number, roads: number[][]): number {
-    const unionSet = new UnionSet(
-        Array(n)
-            .fill(0)
-            .map((_, i) => i + 1)
-    );
+  const unionSet = new UnionSet(
+    Array(n)
+      .fill(0)
+      .map((_, i) => i + 1)
+  );
 
-    roads.forEach(([a, b]) => {
-        unionSet.union(a, b);
-    });
+  roads.forEach(([a, b]) => {
+    unionSet.union(a, b);
+  });
 
-    let minDistance = Infinity;
-    roads.forEach(([a, , distance]) => {
-        if (unionSet.isSameSet(1, a) && unionSet.isSameSet(n, a)) {
-            minDistance = Math.min(minDistance, distance);
-        }
-    });
+  let minDistance = Infinity;
+  roads.forEach(([a, , distance]) => {
+    if (unionSet.isSameSet(1, a) && unionSet.isSameSet(n, a)) {
+      minDistance = Math.min(minDistance, distance);
+    }
+  });
 
-    return minDistance;
+  return minDistance;
 }
 
 /*
@@ -105,28 +105,28 @@ Constraints:
 	No two stones are at the same coordinate point.
 */
 export function removeStones(stones: number[][]): number {
-    const unionFind = new UnionFind(stones.length);
-    const rows = new Map<number, number>();
-    const cols = new Map<number, number>();
-    let sets = stones.length;
+  const unionFind = new UnionFind(stones.length);
+  const rows = new Map<number, number>();
+  const cols = new Map<number, number>();
+  let sets = stones.length;
 
-    stones.forEach(([x, y], i) => {
-        if (rows.has(x) && !unionFind.isSameSet(rows.get(x)!, i)) {
-            unionFind.union(rows.get(x)!, i);
-            sets--;
-        }
-        if (cols.has(y) && !unionFind.isSameSet(cols.get(y)!, i)) {
-            unionFind.union(cols.get(y)!, i);
-            sets--;
-        }
+  stones.forEach(([x, y], i) => {
+    if (rows.has(x) && !unionFind.isSameSet(rows.get(x)!, i)) {
+      unionFind.union(rows.get(x)!, i);
+      sets--;
+    }
+    if (cols.has(y) && !unionFind.isSameSet(cols.get(y)!, i)) {
+      unionFind.union(cols.get(y)!, i);
+      sets--;
+    }
 
-        if (!rows.has(x)) {
-            rows.set(x, i);
-        }
-        if (!cols.has(y)) {
-            cols.set(y, i);
-        }
-    });
+    if (!rows.has(x)) {
+      rows.set(x, i);
+    }
+    if (!cols.has(y)) {
+      cols.set(y, i);
+    }
+  });
 
-    return stones.length - sets;
+  return stones.length - sets;
 }

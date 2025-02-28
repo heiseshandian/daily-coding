@@ -5,85 +5,97 @@
 请求发送者只需要知道链中的第一个节点，从而弱化了发送者和一组接收者之间的强联系。
 */
 enum OrderType {
-    // 500元定金预购，得到100优惠券
-    VIP1,
-    // 200元定金预购，得到50优惠券
-    VIP2,
-    Normal,
+  // 500元定金预购，得到100优惠券
+  VIP1,
+  // 200元定金预购，得到50优惠券
+  VIP2,
+  Normal,
 }
 
 export function order(orderType: OrderType, pay: boolean, stock: number) {
-    if (orderType === OrderType.VIP1) {
-        if (pay === true) {
-            console.log('500元定金预购，得到100元优惠券');
-        } else {
-            if (stock > 0) {
-                console.log('普通购买，无优惠券');
-            } else {
-                console.log('手机库存不足');
-            }
-        }
-    } else if (orderType === OrderType.VIP2) {
-        if (pay === true) {
-            console.log('200元定金预购，得到50元优惠券');
-        } else {
-            if (stock > 0) {
-                console.log('普通购买，无优惠券');
-            } else {
-                console.log('手机库存不足');
-            }
-        }
+  if (orderType === OrderType.VIP1) {
+    if (pay === true) {
+      console.log('500元定金预购，得到100元优惠券');
     } else {
-        if (stock > 0) {
-            console.log('普通购买，无优惠券');
-        } else {
-            console.log('手机库存不足');
-        }
+      if (stock > 0) {
+        console.log('普通购买，无优惠券');
+      } else {
+        console.log('手机库存不足');
+      }
     }
+  } else if (orderType === OrderType.VIP2) {
+    if (pay === true) {
+      console.log('200元定金预购，得到50元优惠券');
+    } else {
+      if (stock > 0) {
+        console.log('普通购买，无优惠券');
+      } else {
+        console.log('手机库存不足');
+      }
+    }
+  } else {
+    if (stock > 0) {
+      console.log('普通购买，无优惠券');
+    } else {
+      console.log('手机库存不足');
+    }
+  }
 }
 
 /* 
 使用责任链模式重构代码
 */
 interface Chainable {
-    shouldGoNext?: boolean;
-    [key: number | string | symbol]: any;
+  shouldGoNext?: boolean;
+  [key: number | string | symbol]: any;
 }
 
-function order500(orderType: OrderType, pay: boolean, _stock: number): Chainable {
-    let shouldGoNext = true;
-    if (orderType === OrderType.VIP1 && pay === true) {
-        console.log('500元定金预购，得到100元优惠券');
-        shouldGoNext = false;
-    }
+function order500(
+  orderType: OrderType,
+  pay: boolean,
+  _stock: number
+): Chainable {
+  let shouldGoNext = true;
+  if (orderType === OrderType.VIP1 && pay === true) {
+    console.log('500元定金预购，得到100元优惠券');
+    shouldGoNext = false;
+  }
 
-    return {
-        shouldGoNext,
-    };
+  return {
+    shouldGoNext,
+  };
 }
 
-function order200(orderType: OrderType, pay: boolean, _stock: number): Chainable {
-    let shouldGoNext = true;
-    if (orderType === OrderType.VIP2 && pay === true) {
-        console.log('200元定金预购，得到50元优惠券');
-        shouldGoNext = false;
-    }
+function order200(
+  orderType: OrderType,
+  pay: boolean,
+  _stock: number
+): Chainable {
+  let shouldGoNext = true;
+  if (orderType === OrderType.VIP2 && pay === true) {
+    console.log('200元定金预购，得到50元优惠券');
+    shouldGoNext = false;
+  }
 
-    return {
-        shouldGoNext,
-    };
+  return {
+    shouldGoNext,
+  };
 }
 
-function orderNormal(_orderType: OrderType, _pay: boolean, stock: number): Chainable {
-    if (stock > 0) {
-        console.log('普通购买，无优惠券');
-    } else {
-        console.log('手机库存不足');
-    }
+function orderNormal(
+  _orderType: OrderType,
+  _pay: boolean,
+  stock: number
+): Chainable {
+  if (stock > 0) {
+    console.log('普通购买，无优惠券');
+  } else {
+    console.log('手机库存不足');
+  }
 
-    return {
-        shouldGoNext: false,
-    };
+  return {
+    shouldGoNext: false,
+  };
 }
 
 type ChainItem = (...args: any[]) => Chainable | void;
@@ -118,54 +130,54 @@ type ChainItem = (...args: any[]) => Chainable | void;
 // orderChain.run(0, false, 0);
 
 export class Chain {
-    fn: ChainItem;
-    nextChain?: Chain;
+  fn: ChainItem;
+  nextChain?: Chain;
 
-    constructor(fn: ChainItem, nextChain?: Chain) {
-        this.fn = fn;
-        this.nextChain = nextChain;
+  constructor(fn: ChainItem, nextChain?: Chain) {
+    this.fn = fn;
+    this.nextChain = nextChain;
+  }
+
+  public setNextChain(nextChain: Chain) {
+    return (this.nextChain = nextChain);
+  }
+
+  // 执行责任链，并自行判断是否需要将请求转给下一个对象
+  public run(...args: any[]): Chainable | void {
+    const result = this.fn.apply(this, args);
+    if (result?.shouldGoNext && this.nextChain) {
+      return this.nextChain.run.apply(this.nextChain, args);
     }
 
-    public setNextChain(nextChain: Chain) {
-        return (this.nextChain = nextChain);
+    return result;
+  }
+
+  // 用于支持异步的责任链，某个节点自行决定是否继续往下传
+  public next(...args: any[]): Chainable | void {
+    if (this.nextChain) {
+      return this.nextChain.run.apply(this.nextChain, args);
     }
 
-    // 执行责任链，并自行判断是否需要将请求转给下一个对象
-    public run(...args: any[]): Chainable | void {
-        const result = this.fn.apply(this, args);
-        if (result?.shouldGoNext && this.nextChain) {
-            return this.nextChain.run.apply(this.nextChain, args);
-        }
-
-        return result;
-    }
-
-    // 用于支持异步的责任链，某个节点自行决定是否继续往下传
-    public next(...args: any[]): Chainable | void {
-        if (this.nextChain) {
-            return this.nextChain.run.apply(this.nextChain, args);
-        }
-
-        return {
-            shouldGoNext: true,
-        };
-    }
+    return {
+      shouldGoNext: true,
+    };
+  }
 }
 
 export function initChain(fns: ChainItem[]) {
-    if (fns.length === 0) {
-        return;
-    }
+  if (fns.length === 0) {
+    return;
+  }
 
-    const first = new Chain(fns.shift()!);
+  const first = new Chain(fns.shift()!);
 
-    fns.reduce((curChain, next) => {
-        const nextChain = new Chain(next);
-        curChain.setNextChain(nextChain);
-        return nextChain;
-    }, first);
+  fns.reduce((curChain, next) => {
+    const nextChain = new Chain(next);
+    curChain.setNextChain(nextChain);
+    return nextChain;
+  }, first);
 
-    return first;
+  return first;
 }
 
 const chain = initChain([order500, order200, orderNormal])!;
@@ -181,26 +193,26 @@ chain.run(0, false, 0);
 此处不能使用箭头表达式，箭头表达式的this有特定的binding规则，不受call,apply传入的context影响
 */
 const chain1 = initChain([
-    function () {
-        console.log(1);
-        return {
-            shouldGoNext: true,
-        };
-    },
-    function () {
-        console.log(2);
-        setTimeout(() => {
-            this.next();
-        }, 1000);
+  function () {
+    console.log(1);
+    return {
+      shouldGoNext: true,
+    };
+  },
+  function () {
+    console.log(2);
+    setTimeout(() => {
+      this.next();
+    }, 1000);
 
-        // 先返回false，异步处理完成后再手动调用next来传递到下一个节点
-        return {
-            shouldGoNext: false,
-        };
-    },
-    function () {
-        console.log(3);
-    },
+    // 先返回false，异步处理完成后再手动调用next来传递到下一个节点
+    return {
+      shouldGoNext: false,
+    };
+  },
+  function () {
+    console.log(3);
+  },
 ])!;
 chain1.run();
 

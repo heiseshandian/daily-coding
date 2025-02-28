@@ -31,47 +31,47 @@ Constraints:
 	words[i] consists of only lowercase letters.
 */
 export function minimumLengthEncoding(words: string[]): number {
-    const root = new TrieNode();
-    words.forEach((w) => {
-        insertWord(root, w);
-    });
+  const root = new TrieNode();
+  words.forEach((w) => {
+    insertWord(root, w);
+  });
 
-    let ret = 0;
-    let height = 0;
-    let queue: TrieNode[] = [root];
-    while (queue.length) {
-        const nextQueue: TrieNode[] = [];
-        for (const node of queue) {
-            node.children.forEach((n) => nextQueue.push(n));
-            if (node.isLeaf) {
-                ret += height + 1;
-            }
-        }
-
-        height++;
-        queue = nextQueue;
+  let ret = 0;
+  let height = 0;
+  let queue: TrieNode[] = [root];
+  while (queue.length) {
+    const nextQueue: TrieNode[] = [];
+    for (const node of queue) {
+      node.children.forEach((n) => nextQueue.push(n));
+      if (node.isLeaf) {
+        ret += height + 1;
+      }
     }
 
-    return ret;
+    height++;
+    queue = nextQueue;
+  }
+
+  return ret;
 }
 
 function insertWord(root: TrieNode, word: string) {
-    let cur = root;
-    const a = 'a'.charCodeAt(0);
-    for (let i = word.length - 1; i >= 0; i--) {
-        const index = word[i].charCodeAt(0) - a;
-        if (!cur.children[index]) {
-            cur.isLeaf = false;
-            cur.children[index] = new TrieNode();
-        }
-
-        cur = cur.children[index];
+  let cur = root;
+  const a = 'a'.charCodeAt(0);
+  for (let i = word.length - 1; i >= 0; i--) {
+    const index = word[i].charCodeAt(0) - a;
+    if (!cur.children[index]) {
+      cur.isLeaf = false;
+      cur.children[index] = new TrieNode();
     }
+
+    cur = cur.children[index];
+  }
 }
 
 class TrieNode {
-    isLeaf = true;
-    children: Array<TrieNode> = [];
+  isLeaf = true;
+  children: Array<TrieNode> = [];
 }
 
 /*
@@ -110,44 +110,44 @@ Constraints:
 	1 <= arr1[i], arr2[i] <= 10^8
 */
 export function longestCommonPrefix(arr1: number[], arr2: number[]): number {
-    const root = new TrieNode();
-    arr1.forEach((v) => insertNumber(root, v));
+  const root = new TrieNode();
+  arr1.forEach((v) => insertNumber(root, v));
 
-    let max = 0;
-    for (const num of arr2) {
-        let cur = root;
-        const digits = getDigits(num);
-        let i = 0;
-        while (i < digits.length && cur && cur.children[digits[i]]) {
-            cur = cur.children[digits[i++]];
-        }
-
-        max = Math.max(max, i);
+  let max = 0;
+  for (const num of arr2) {
+    let cur = root;
+    const digits = getDigits(num);
+    let i = 0;
+    while (i < digits.length && cur && cur.children[digits[i]]) {
+      cur = cur.children[digits[i++]];
     }
 
-    return max;
+    max = Math.max(max, i);
+  }
+
+  return max;
 }
 
 function insertNumber(root: TrieNode, num: number) {
-    let cur = root;
-    const digits = getDigits(num);
-    for (const digit of digits) {
-        if (!cur.children[digit]) {
-            cur.children[digit] = new TrieNode();
-        }
-
-        cur = cur.children[digit];
+  let cur = root;
+  const digits = getDigits(num);
+  for (const digit of digits) {
+    if (!cur.children[digit]) {
+      cur.children[digit] = new TrieNode();
     }
+
+    cur = cur.children[digit];
+  }
 }
 
 function getDigits(num: number): number[] {
-    let divisor = Math.pow(10, Math.floor(Math.log10(num)));
-    const digits: number[] = [];
-    while (divisor >= 1) {
-        digits.push(Math.floor(num / divisor));
-        num %= divisor;
-        divisor /= 10;
-    }
+  let divisor = Math.pow(10, Math.floor(Math.log10(num)));
+  const digits: number[] = [];
+  while (divisor >= 1) {
+    digits.push(Math.floor(num / divisor));
+    num %= divisor;
+    divisor /= 10;
+  }
 
-    return digits;
+  return digits;
 }

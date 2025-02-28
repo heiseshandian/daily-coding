@@ -15,31 +15,31 @@ Output: false
 差分数组，用于支持区间操作
 */
 export function carPooling(trips: number[][], capacity: number): boolean {
-    let max = -Infinity;
-    for (let i = 0; i < trips.length; i++) {
-        max = Math.max(max, trips[i][2]);
-    }
+  let max = -Infinity;
+  for (let i = 0; i < trips.length; i++) {
+    max = Math.max(max, trips[i][2]);
+  }
 
-    const diff = new Array(max + 1).fill(0);
-    for (let i = 0; i < trips.length; i++) {
-        const [p, from, to] = trips[i];
-        diff[from] += p;
-        // to的时候就已经可以下车了
-        diff[to] -= p;
-    }
+  const diff = new Array(max + 1).fill(0);
+  for (let i = 0; i < trips.length; i++) {
+    const [p, from, to] = trips[i];
+    diff[from] += p;
+    // to的时候就已经可以下车了
+    diff[to] -= p;
+  }
 
-    if (diff[0] > capacity) {
-        return false;
+  if (diff[0] > capacity) {
+    return false;
+  }
+  const original: number[] = [diff[0]];
+  for (let i = 1; i < diff.length; i++) {
+    original[i] = original[i - 1] + diff[i];
+    if (original[i] > capacity) {
+      return false;
     }
-    const original: number[] = [diff[0]];
-    for (let i = 1; i < diff.length; i++) {
-        original[i] = original[i - 1] + diff[i];
-        if (original[i] > capacity) {
-            return false;
-        }
-    }
+  }
 
-    return true;
+  return true;
 }
 
 /*
@@ -83,17 +83,17 @@ Constraints:
     1 <= seatsi <= 10^4
 */
 export function corpFlightBookings(bookings: number[][], n: number): number[] {
-    const result: number[] = Array(n).fill(0);
-    bookings.forEach(([start, end, seats]) => {
-        result[start - 1] += seats;
-        if (end < n) {
-            result[end] -= seats;
-        }
-    });
-
-    for (let i = 1; i < n; i++) {
-        result[i] += result[i - 1];
+  const result: number[] = Array(n).fill(0);
+  bookings.forEach(([start, end, seats]) => {
+    result[start - 1] += seats;
+    if (end < n) {
+      result[end] -= seats;
     }
+  });
 
-    return result;
+  for (let i = 1; i < n; i++) {
+    result[i] += result[i - 1];
+  }
+
+  return result;
 }

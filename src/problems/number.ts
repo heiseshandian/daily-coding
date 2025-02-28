@@ -20,20 +20,20 @@ Constraints:
 	0 <= c <= 2^31 - 1
 */
 export function judgeSquareSum(c: number): boolean {
-    // 0^2 + 0^2 = 0
-    if (c === 0) {
-        return true;
+  // 0^2 + 0^2 = 0
+  if (c === 0) {
+    return true;
+  }
+
+  const sqrt = Math.floor(Math.sqrt(c));
+
+  for (let i = sqrt; i >= 1; i--) {
+    if (Number.isInteger(Math.sqrt(c - i * i))) {
+      return true;
     }
+  }
 
-    const sqrt = Math.floor(Math.sqrt(c));
-
-    for (let i = sqrt; i >= 1; i--) {
-        if (Number.isInteger(Math.sqrt(c - i * i))) {
-            return true;
-        }
-    }
-
-    return false;
+  return false;
 }
 
 /*
@@ -64,16 +64,16 @@ Constraints:
 	1 <= n <= 10^5
 */
 export function subtractProductAndSum(n: number): number {
-    const digits: number[] = [];
-    while (n) {
-        digits.push(n % 10);
-        n = Math.floor(n / 10);
-    }
+  const digits: number[] = [];
+  while (n) {
+    digits.push(n % 10);
+    n = Math.floor(n / 10);
+  }
 
-    return (
-        digits.reduce((acc, cur) => acc * cur, 1) -
-        digits.reduce((acc, cur) => acc + cur)
-    );
+  return (
+    digits.reduce((acc, cur) => acc * cur, 1) -
+    digits.reduce((acc, cur) => acc + cur)
+  );
 }
 
 /*
@@ -102,29 +102,29 @@ Constraints:
 	1 <= n <= 1000
 */
 export function sumZero(n: number): number[] {
-    const mid = n >> 1;
-    const left = new Array(mid).fill(0).map((_, i) => -(i + 1));
-    const right = left.map((v) => -v);
+  const mid = n >> 1;
+  const left = new Array(mid).fill(0).map((_, i) => -(i + 1));
+  const right = left.map((v) => -v);
 
-    if (n & 1) {
-        return left.concat(0).concat(right);
-    } else {
-        return left.concat(right);
-    }
+  if (n & 1) {
+    return left.concat(0).concat(right);
+  } else {
+    return left.concat(right);
+  }
 }
 
 export function sumZero2(n: number): number[] {
-    const mid = n >> 1;
-    const result: number[] = [];
-    for (let i = 1; i <= mid; i++) {
-        result.push(i, -i);
-    }
+  const mid = n >> 1;
+  const result: number[] = [];
+  for (let i = 1; i <= mid; i++) {
+    result.push(i, -i);
+  }
 
-    if (n & 1) {
-        result.push(0);
-    }
+  if (n & 1) {
+    result.push(0);
+  }
 
-    return result;
+  return result;
 }
 
 /*
@@ -169,43 +169,43 @@ We only need edges between 2 neighbors instead of edges for all pairs.
 - Any algorithm (i.e., BFS, DFS, or Union-Find Set) should work to find or check connected components
 */
 export function canTraverseAllPairs(nums: number[]): boolean {
-    if (nums.indexOf(1) !== nums.lastIndexOf(1)) {
-        return false;
+  if (nums.indexOf(1) !== nums.lastIndexOf(1)) {
+    return false;
+  }
+
+  const deduped = Array.from(new Set(nums));
+  const unionSet = new UnionSet();
+  const factor2N: Record<number, number> = {};
+  const updateFactor2N = (factor: number, n: number) => {
+    if (factor2N[factor]) {
+      unionSet.union(factor2N[factor], n);
+    } else {
+      factor2N[factor] = n;
+    }
+  };
+
+  for (let i = 0; i < deduped.length; i++) {
+    unionSet.addNode(deduped[i]);
+
+    let n = deduped[i];
+    while (n % 2 === 0) {
+      updateFactor2N(2, deduped[i]);
+      n >>= 1;
     }
 
-    const deduped = Array.from(new Set(nums));
-    const unionSet = new UnionSet();
-    const factor2N: Record<number, number> = {};
-    const updateFactor2N = (factor: number, n: number) => {
-        if (factor2N[factor]) {
-            unionSet.union(factor2N[factor], n);
-        } else {
-            factor2N[factor] = n;
-        }
-    };
-
-    for (let i = 0; i < deduped.length; i++) {
-        unionSet.addNode(deduped[i]);
-
-        let n = deduped[i];
-        while (n % 2 === 0) {
-            updateFactor2N(2, deduped[i]);
-            n >>= 1;
-        }
-
-        for (let k = 3; k * k <= n; k += 2) {
-            while (n % k === 0) {
-                updateFactor2N(k, deduped[i]);
-                n /= k;
-            }
-        }
-
-        if (n > 2) {
-            updateFactor2N(n, deduped[i]);
-        }
+    for (let k = 3; k * k <= n; k += 2) {
+      while (n % k === 0) {
+        updateFactor2N(k, deduped[i]);
+        n /= k;
+      }
     }
 
-    return unionSet.sizeMap.size === 1;
+    if (n > 2) {
+      updateFactor2N(n, deduped[i]);
+    }
+  }
+
+  return unionSet.sizeMap.size === 1;
 }
 
 /*
@@ -236,21 +236,21 @@ Constraints:
 	1 <= n <= 10^4
 */
 export function countLargestGroup(n: number): number {
-    const map: Record<number, number> = {};
-    let max = -Infinity;
-    while (n) {
-        let cur = n--;
-        let sum = 0;
-        while (cur) {
-            sum += cur % 10;
-            cur = Math.floor(cur / 10);
-        }
-
-        map[sum] = (map[sum] || 0) + 1;
-        max = Math.max(max, map[sum]);
+  const map: Record<number, number> = {};
+  let max = -Infinity;
+  while (n) {
+    let cur = n--;
+    let sum = 0;
+    while (cur) {
+      sum += cur % 10;
+      cur = Math.floor(cur / 10);
     }
 
-    return Object.values(map).filter((v) => v === max).length;
+    map[sum] = (map[sum] || 0) + 1;
+    max = Math.max(max, map[sum]);
+  }
+
+  return Object.values(map).filter((v) => v === max).length;
 }
 
 /*
@@ -282,19 +282,19 @@ Constraints:
 	2 <= numExchange <= 100
 */
 export function numWaterBottles(
-    numBottles: number,
-    numExchange: number
+  numBottles: number,
+  numExchange: number
 ): number {
-    let count = numBottles;
-    let prev = 0;
-    while (numBottles >= numExchange) {
-        const newBottles = Math.floor(numBottles / numExchange);
-        prev = numBottles - newBottles * numExchange;
-        count += newBottles;
-        numBottles = newBottles + prev;
-    }
+  let count = numBottles;
+  let prev = 0;
+  while (numBottles >= numExchange) {
+    const newBottles = Math.floor(numBottles / numExchange);
+    prev = numBottles - newBottles * numExchange;
+    count += newBottles;
+    numBottles = newBottles + prev;
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -316,22 +316,22 @@ Constraints:
 	1 <= n <= 10^4
 */
 export function lexicalOrder(n: number): number[] {
-    const result: number[] = [];
+  const result: number[] = [];
 
-    const backtracking = (prev: number) => {
-        if (prev > n) {
-            return;
-        }
-        result.push(prev);
+  const backtracking = (prev: number) => {
+    if (prev > n) {
+      return;
+    }
+    result.push(prev);
 
-        prev *= 10;
-        for (let i = prev === 0 ? 1 : 0; i < 10; i++) {
-            backtracking(prev + i);
-        }
-    };
-    backtracking(0);
+    prev *= 10;
+    for (let i = prev === 0 ? 1 : 0; i < 10; i++) {
+      backtracking(prev + i);
+    }
+  };
+  backtracking(0);
 
-    return result.slice(1);
+  return result.slice(1);
 }
 
 /*
@@ -363,15 +363,15 @@ Constraints:
 	1 <= nums[i] <= 100
 */
 export function maxFrequencyElements(nums: number[]): number {
-    const map: Record<number, number> = {};
-    nums.forEach((v) => {
-        map[v] = (map[v] || 0) + 1;
-    });
+  const map: Record<number, number> = {};
+  nums.forEach((v) => {
+    map[v] = (map[v] || 0) + 1;
+  });
 
-    const repeatTimes = Object.values(map);
-    const max = Math.max(...repeatTimes);
+  const repeatTimes = Object.values(map);
+  const max = Math.max(...repeatTimes);
 
-    return repeatTimes.reduce((acc, cur) => (cur === max ? acc + cur : acc), 0);
+  return repeatTimes.reduce((acc, cur) => (cur === max ? acc + cur : acc), 0);
 }
 
 /*
@@ -399,23 +399,23 @@ Constraints:
 	0 <= nums[i] <= 1000
 */
 export function triangleNumber(nums: number[]): number {
-    nums.sort((a, b) => b - a);
+  nums.sort((a, b) => b - a);
 
-    let count = 0;
-    for (let i = 0; i < nums.length - 2; i++) {
-        let left = i + 1;
-        let right = nums.length - 1;
-        while (left < right) {
-            if (nums[left] + nums[right] <= nums[i]) {
-                right--;
-            } else {
-                count += right - left;
-                left++;
-            }
-        }
+  let count = 0;
+  for (let i = 0; i < nums.length - 2; i++) {
+    let left = i + 1;
+    let right = nums.length - 1;
+    while (left < right) {
+      if (nums[left] + nums[right] <= nums[i]) {
+        right--;
+      } else {
+        count += right - left;
+        left++;
+      }
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -450,6 +450,6 @@ Constraints:
 	1 <= n <= 1000
 */
 export function pivotInteger(n: number): number {
-    const sqrt = Math.sqrt((n * n + n) / 2);
-    return Number.isInteger(sqrt) ? sqrt : -1;
+  const sqrt = Math.sqrt((n * n + n) / 2);
+  return Number.isInteger(sqrt) ? sqrt : -1;
 }

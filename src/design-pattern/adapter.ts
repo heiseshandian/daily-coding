@@ -30,25 +30,25 @@
 */
 
 const googleMap = {
-    show() {
-        console.log('展示google地图');
-    },
+  show() {
+    console.log('展示google地图');
+  },
 };
 
 const baiduMap = {
-    display() {
-        console.log('展示baidu地图');
-    },
+  display() {
+    console.log('展示baidu地图');
+  },
 };
 
 const baiduMapAdapter = {
-    show() {
-        baiduMap.display();
-    },
+  show() {
+    baiduMap.display();
+  },
 };
 
 export function showMap(map: { show: () => void }) {
-    map.show();
+  map.show();
 }
 
 showMap(googleMap);

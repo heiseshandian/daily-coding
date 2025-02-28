@@ -6,23 +6,23 @@
 import { Stack } from '../../algorithm/stack';
 
 export function reverseStack(stack: Stack) {
-    if (stack.isEmpty()) {
-        return;
-    }
+  if (stack.isEmpty()) {
+    return;
+  }
 
-    const last = getAndRemoveTheLastElement(stack);
-    reverseStack(stack);
-    stack.push(last);
+  const last = getAndRemoveTheLastElement(stack);
+  reverseStack(stack);
+  stack.push(last);
 }
 
 function getAndRemoveTheLastElement(stack: Stack): any {
-    const top = stack.pop();
+  const top = stack.pop();
 
-    if (stack.isEmpty()) {
-        return top;
-    } else {
-        const last = getAndRemoveTheLastElement(stack);
-        stack.push(top);
-        return last;
-    }
+  if (stack.isEmpty()) {
+    return top;
+  } else {
+    const last = getAndRemoveTheLastElement(stack);
+    stack.push(top);
+    return last;
+  }
 }

@@ -1,50 +1,50 @@
 export class QueueByArray {
-    #capacity: number;
+  #capacity: number;
 
-    #size: number;
+  #size: number;
 
-    #head: number;
+  #head: number;
 
-    #tail: number;
+  #tail: number;
 
-    #container: Array<any>;
+  #container: Array<any>;
 
-    constructor(capacity: number) {
-        this.#capacity = capacity;
-        this.#container = new Array(capacity);
+  constructor(capacity: number) {
+    this.#capacity = capacity;
+    this.#container = new Array(capacity);
 
-        this.#size = 0;
-        this.#head = -1;
-        this.#tail = -1;
+    this.#size = 0;
+    this.#head = -1;
+    this.#tail = -1;
+  }
+
+  public add(val: any) {
+    if (this.#size === this.#capacity) {
+      throw new Error('The queue is full');
     }
 
-    public add(val: any) {
-        if (this.#size === this.#capacity) {
-            throw new Error('The queue is full');
-        }
+    this.#size++;
+    this.#head = this.#getNextIndex(this.#head);
 
-        this.#size++;
-        this.#head = this.#getNextIndex(this.#head);
+    this.#container[this.#head] = val;
+  }
 
-        this.#container[this.#head] = val;
+  public poll() {
+    if (this.isEmpty()) {
+      throw new Error('The queue is empty');
     }
 
-    public poll() {
-        if (this.isEmpty()) {
-            throw new Error('The queue is empty');
-        }
+    this.#size--;
+    this.#tail = this.#getNextIndex(this.#tail);
 
-        this.#size--;
-        this.#tail = this.#getNextIndex(this.#tail);
+    return this.#container[this.#tail];
+  }
 
-        return this.#container[this.#tail];
-    }
+  public isEmpty() {
+    return this.#size === 0;
+  }
 
-    public isEmpty() {
-        return this.#size === 0;
-    }
-
-    #getNextIndex(current: number) {
-        return current < this.#capacity - 1 ? current + 1 : 0;
-    }
+  #getNextIndex(current: number) {
+    return current < this.#capacity - 1 ? current + 1 : 0;
+  }
 }

@@ -12,24 +12,24 @@ A subsequence of an array is obtained by deleting some number of elements (can b
 leaving the remaining elements in their original order.
 */
 export function constrainedSubsetSum(nums: number[], k: number): number {
-    // dp[i] 以i为结尾的数组最大的非空子序列的和
-    const dp: number[] = new Array(nums.length);
-    dp[0] = nums[0];
+  // dp[i] 以i为结尾的数组最大的非空子序列的和
+  const dp: number[] = new Array(nums.length);
+  dp[0] = nums[0];
 
-    let max = dp[0];
-    // 使用滑动窗口来加速求解窗口内最大值问题
-    const s = new SlidingWindow(dp);
-    for (let i = 1; i < nums.length; i++) {
-        s.moveRight();
-        if (i >= k + 1) {
-            s.moveLeft();
-        }
-
-        dp[i] = nums[i] + Math.max(0, s.peek());
-        max = Math.max(max, dp[i]);
+  let max = dp[0];
+  // 使用滑动窗口来加速求解窗口内最大值问题
+  const s = new SlidingWindow(dp);
+  for (let i = 1; i < nums.length; i++) {
+    s.moveRight();
+    if (i >= k + 1) {
+      s.moveLeft();
     }
 
-    return max;
+    dp[i] = nums[i] + Math.max(0, s.peek());
+    max = Math.max(max, dp[i]);
+  }
+
+  return max;
 }
 
 /* 
@@ -46,26 +46,26 @@ You may return the answer in any order.
 直接从前向后遍历即可，不用先遍历一遍拿到所有的tokens然后再遍历s对比token最后一次出现的下标是否比当前token更早
 */
 export function findRepeatedDnaSequences(s: string): string[] {
-    if (s.length < 11) {
-        return [];
-    }
+  if (s.length < 11) {
+    return [];
+  }
 
-    const dnaSeq = new Set<string>();
-    const visited = new Set<string>();
-    let start = 0;
-    let end = 10;
-    // 此处可以取到等于，因为slice不包含end处的字符，end-1是最后一个可以取到的字符
-    while (end <= s.length) {
-        const dna = s.slice(start, end);
-        if (visited.has(dna)) {
-            dnaSeq.add(dna);
-        }
-        visited.add(dna);
-        start++;
-        end++;
+  const dnaSeq = new Set<string>();
+  const visited = new Set<string>();
+  let start = 0;
+  let end = 10;
+  // 此处可以取到等于，因为slice不包含end处的字符，end-1是最后一个可以取到的字符
+  while (end <= s.length) {
+    const dna = s.slice(start, end);
+    if (visited.has(dna)) {
+      dnaSeq.add(dna);
     }
+    visited.add(dna);
+    start++;
+    end++;
+  }
 
-    return Array.from(dnaSeq);
+  return Array.from(dnaSeq);
 }
 
 /* 
@@ -81,27 +81,27 @@ Constraints:
 0 <= k <= 10^5
 */
 export function containsNearbyDuplicate(nums: number[], k: number): boolean {
-    if (k === 0) {
-        return false;
-    }
-
-    let left = -1;
-    let right = -1;
-    const set = new Set<number>();
-    while (right < nums.length) {
-        if (right - left === k + 1) {
-            left++;
-            set.delete(nums[left]);
-        }
-
-        right++;
-        if (set.has(nums[right])) {
-            return true;
-        }
-        set.add(nums[right]);
-    }
-
+  if (k === 0) {
     return false;
+  }
+
+  let left = -1;
+  let right = -1;
+  const set = new Set<number>();
+  while (right < nums.length) {
+    if (right - left === k + 1) {
+      left++;
+      set.delete(nums[left]);
+    }
+
+    right++;
+    if (set.has(nums[right])) {
+      return true;
+    }
+    set.add(nums[right]);
+  }
+
+  return false;
 }
 
 /* 
@@ -124,50 +124,50 @@ Constraints:
 0 <= valueDiff <= 10^9
 */
 export function containsNearbyAlmostDuplicate(
-    nums: number[],
-    indexDiff: number,
-    valueDiff: number
+  nums: number[],
+  indexDiff: number,
+  valueDiff: number
 ): boolean {
-    const window = nums.slice(0, indexDiff + 1).sort((a, b) => a - b);
-    for (let i = 1; i < window.length; i++) {
-        if (window[i] - window[i - 1] <= valueDiff) {
-            return true;
-        }
+  const window = nums.slice(0, indexDiff + 1).sort((a, b) => a - b);
+  for (let i = 1; i < window.length; i++) {
+    if (window[i] - window[i - 1] <= valueDiff) {
+      return true;
     }
+  }
 
-    let left = indexDiff;
-    let right = indexDiff;
-    while (right < nums.length) {
-        // 删除已经出窗口的元素
-        const toDelete = getClosestMaxOrEqual(
-            window,
-            nums[left - indexDiff],
-            0,
-            window.length - 1
-        );
-        window.splice(toDelete, 1);
+  let left = indexDiff;
+  let right = indexDiff;
+  while (right < nums.length) {
+    // 删除已经出窗口的元素
+    const toDelete = getClosestMaxOrEqual(
+      window,
+      nums[left - indexDiff],
+      0,
+      window.length - 1
+    );
+    window.splice(toDelete, 1);
 
-        left++;
-        right++;
+    left++;
+    right++;
 
-        const closestMaxOrEqual = getClosestMaxOrEqual(
-            window,
-            nums[right],
-            0,
-            window.length - 1
-        );
-        if (
-            (closestMaxOrEqual < window.length &&
-                window[closestMaxOrEqual] - nums[right] <= valueDiff) ||
-            (closestMaxOrEqual - 1 >= 0 &&
-                nums[right] - window[closestMaxOrEqual - 1] <= valueDiff)
-        ) {
-            return true;
-        }
-        window.splice(closestMaxOrEqual, 0, nums[right]);
+    const closestMaxOrEqual = getClosestMaxOrEqual(
+      window,
+      nums[right],
+      0,
+      window.length - 1
+    );
+    if (
+      (closestMaxOrEqual < window.length &&
+        window[closestMaxOrEqual] - nums[right] <= valueDiff) ||
+      (closestMaxOrEqual - 1 >= 0 &&
+        nums[right] - window[closestMaxOrEqual - 1] <= valueDiff)
+    ) {
+      return true;
     }
+    window.splice(closestMaxOrEqual, 0, nums[right]);
+  }
 
-    return false;
+  return false;
 }
 
 /*
@@ -203,30 +203,30 @@ Constraints:
 	grumpy[i] is either 0 or 1.
 */
 export function maxSatisfied(
-    customers: number[],
-    grumpy: number[],
-    minutes: number
+  customers: number[],
+  grumpy: number[],
+  minutes: number
 ): number {
-    const n = customers.length;
+  const n = customers.length;
 
-    let sum = 0;
-    let max = 0;
-    let minutesMax = 0;
-    let i = 0;
-    for (; i < minutes; i++) {
-        minutesMax += grumpy[i] === 1 ? customers[i] : 0;
-        sum += grumpy[i] === 0 ? customers[i] : 0;
-    }
-    max = minutesMax;
+  let sum = 0;
+  let max = 0;
+  let minutesMax = 0;
+  let i = 0;
+  for (; i < minutes; i++) {
+    minutesMax += grumpy[i] === 1 ? customers[i] : 0;
+    sum += grumpy[i] === 0 ? customers[i] : 0;
+  }
+  max = minutesMax;
 
-    for (; i < n; i++) {
-        minutesMax -= grumpy[i - minutes] === 1 ? customers[i - minutes] : 0;
-        minutesMax += grumpy[i] === 1 ? customers[i] : 0;
-        sum += grumpy[i] === 0 ? customers[i] : 0;
-        max = Math.max(max, minutesMax);
-    }
+  for (; i < n; i++) {
+    minutesMax -= grumpy[i - minutes] === 1 ? customers[i - minutes] : 0;
+    minutesMax += grumpy[i] === 1 ? customers[i] : 0;
+    sum += grumpy[i] === 0 ? customers[i] : 0;
+    max = Math.max(max, minutesMax);
+  }
 
-    return sum + max;
+  return sum + max;
 }
 
 /*
@@ -268,37 +268,37 @@ Constraints:
 	1 <= nums[i] <= 10^9
 */
 export function continuousSubarrays(nums: number[]): number {
-    const minQ: number[] = [];
-    const maxQ: number[] = [];
-    let sum = 0;
+  const minQ: number[] = [];
+  const maxQ: number[] = [];
+  let sum = 0;
 
-    let l = 0;
-    let r = 0;
-    while (r < nums.length) {
-        while (minQ.length > 0 && nums[minQ[minQ.length - 1]] >= nums[r]) {
-            minQ.pop();
-        }
-        while (maxQ.length > 0 && nums[maxQ[maxQ.length - 1]] <= nums[r]) {
-            maxQ.pop();
-        }
-
-        minQ.push(r);
-        maxQ.push(r);
-
-        if (nums[maxQ[0]] - nums[minQ[0]] <= 2) {
-            sum += r - l + 1;
-            r++;
-        } else {
-            l++;
-
-            if (minQ[0] < l) {
-                minQ.shift();
-            }
-            if (maxQ[0] < l) {
-                maxQ.shift();
-            }
-        }
+  let l = 0;
+  let r = 0;
+  while (r < nums.length) {
+    while (minQ.length > 0 && nums[minQ[minQ.length - 1]] >= nums[r]) {
+      minQ.pop();
+    }
+    while (maxQ.length > 0 && nums[maxQ[maxQ.length - 1]] <= nums[r]) {
+      maxQ.pop();
     }
 
-    return sum;
+    minQ.push(r);
+    maxQ.push(r);
+
+    if (nums[maxQ[0]] - nums[minQ[0]] <= 2) {
+      sum += r - l + 1;
+      r++;
+    } else {
+      l++;
+
+      if (minQ[0] < l) {
+        minQ.shift();
+      }
+      if (maxQ[0] < l) {
+        maxQ.shift();
+      }
+    }
+  }
+
+  return sum;
 }

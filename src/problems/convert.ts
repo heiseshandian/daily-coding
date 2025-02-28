@@ -39,21 +39,21 @@ Constraints:
 	0 <= nums[i], k <= 10^5
 */
 export function maximumBeauty(nums: number[], k: number): number {
-    nums.sort((a, b) => a - b);
-    k <<= 1;
+  nums.sort((a, b) => a - b);
+  k <<= 1;
 
-    let left = 0;
-    let size = 0;
+  let left = 0;
+  let size = 0;
 
-    for (let right = 0; right < nums.length; right++) {
-        // Adjust the left pointer if the range exceeds k
-        while (nums[right] - nums[left] > k) {
-            left++;
-        }
-
-        // Calculate the current size of the window
-        size = Math.max(size, right - left + 1);
+  for (let right = 0; right < nums.length; right++) {
+    // Adjust the left pointer if the range exceeds k
+    while (nums[right] - nums[left] > k) {
+      left++;
     }
 
-    return size;
+    // Calculate the current size of the window
+    size = Math.max(size, right - left + 1);
+  }
+
+  return size;
 }

@@ -22,32 +22,32 @@ Constraints:
 	s1 and s2 consist of lowercase English letters.
 */
 export function checkInclusion(s1: string, s2: string): boolean {
-    const freqMap = {};
-    for (const c of s1) {
-        freqMap[c] = (freqMap[c] ?? 0) + 1;
+  const freqMap = {};
+  for (const c of s1) {
+    freqMap[c] = (freqMap[c] ?? 0) + 1;
+  }
+
+  let i = 0;
+  for (; i < s1.length; i++) {
+    if (freqMap[s2[i]] !== undefined) {
+      freqMap[s2[i]]--;
+    }
+  }
+  while (i <= s2.length) {
+    if (Object.keys(freqMap).every((alpha) => freqMap[alpha] === 0)) {
+      return true;
     }
 
-    let i = 0;
-    for (; i < s1.length; i++) {
-        if (freqMap[s2[i]] !== undefined) {
-            freqMap[s2[i]]--;
-        }
+    if (freqMap[s2[i - s1.length]] !== undefined) {
+      freqMap[s2[i - s1.length]]++;
     }
-    while (i <= s2.length) {
-        if (Object.keys(freqMap).every((alpha) => freqMap[alpha] === 0)) {
-            return true;
-        }
-
-        if (freqMap[s2[i - s1.length]] !== undefined) {
-            freqMap[s2[i - s1.length]]++;
-        }
-        if (freqMap[s2[i]] !== undefined) {
-            freqMap[s2[i]]--;
-        }
-        i++;
+    if (freqMap[s2[i]] !== undefined) {
+      freqMap[s2[i]]--;
     }
+    i++;
+  }
 
-    return false;
+  return false;
 }
 
 /*
@@ -78,40 +78,40 @@ Constraints:
 	1 <= nums[i] <= 10^9
 */
 export function maximumSum(nums: number[]): number {
-    const digits: Record<number, [first: number, second: number]> = {};
-    nums.forEach((v) => {
-        const sum = getDigitSum(v);
+  const digits: Record<number, [first: number, second: number]> = {};
+  nums.forEach((v) => {
+    const sum = getDigitSum(v);
 
-        if (digits[sum]) {
-            const [first, second] = digits[sum];
-            if (v >= first) {
-                digits[sum] = [v, first];
-            } else {
-                digits[sum] = [first, Math.max(v, second)];
-            }
-        } else {
-            digits[sum] = [v, 0];
-        }
-    });
-
-    let max = -1;
-    const values = Object.values(digits);
-    for (const [first, second] of values) {
-        if (second) {
-            max = Math.max(max, first + second);
-        }
+    if (digits[sum]) {
+      const [first, second] = digits[sum];
+      if (v >= first) {
+        digits[sum] = [v, first];
+      } else {
+        digits[sum] = [first, Math.max(v, second)];
+      }
+    } else {
+      digits[sum] = [v, 0];
     }
+  });
 
-    return max;
+  let max = -1;
+  const values = Object.values(digits);
+  for (const [first, second] of values) {
+    if (second) {
+      max = Math.max(max, first + second);
+    }
+  }
+
+  return max;
 }
 
 function getDigitSum(v: number) {
-    let sum = 0;
-    while (v) {
-        sum += v % 10;
-        v /= 10;
-        v |= 0;
-    }
+  let sum = 0;
+  while (v) {
+    sum += v % 10;
+    v /= 10;
+    v |= 0;
+  }
 
-    return sum;
+  return sum;
 }

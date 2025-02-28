@@ -26,46 +26,46 @@
 修改或者删除一个对象都变得困难，此时我们可以引入中介者模式来管理这些对象。
 */
 interface Composable {
-    execute: () => void;
+  execute: () => void;
 }
 
 const openAirCommand: Composable = {
-    execute() {
-        console.log('open air conditioner');
-    },
+  execute() {
+    console.log('open air conditioner');
+  },
 };
 
 const playMusicCommand: Composable = {
-    execute() {
-        console.log('play music');
-    },
+  execute() {
+    console.log('play music');
+  },
 };
 
 export class MacroCommand implements Composable {
-    commands: Composable[] = [];
+  commands: Composable[] = [];
 
-    add(command: Composable | Composable[]) {
-        if (Array.isArray(command)) {
-            this.commands.push(...command);
-        } else {
-            this.commands.push(command);
-        }
+  add(command: Composable | Composable[]) {
+    if (Array.isArray(command)) {
+      this.commands.push(...command);
+    } else {
+      this.commands.push(command);
     }
+  }
 
-    execute() {
-        for (let i = 0; i < this.commands.length; i++) {
-            this.commands[i].execute();
-        }
+  execute() {
+    for (let i = 0; i < this.commands.length; i++) {
+      this.commands[i].execute();
     }
+  }
 }
 
 const macroCommand = new MacroCommand();
 macroCommand.add([openAirCommand, playMusicCommand]);
 
 const openQQCommand: Composable = {
-    execute() {
-        console.log('open QQ');
-    },
+  execute() {
+    console.log('open QQ');
+  },
 };
 const macroCommand2 = new MacroCommand();
 macroCommand2.add([macroCommand, openQQCommand]);

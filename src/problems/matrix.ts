@@ -3,123 +3,123 @@ import { UnionFind } from '../algorithm/union-find';
 import { ListNode } from '../algorithm/linked-list';
 // 锯齿形打印矩阵
 export function zigzagMatrix(matrix: number[][]) {
-    if (!matrix || matrix.length === 0) {
-        return [];
-    }
+  if (!matrix || matrix.length === 0) {
+    return [];
+  }
 
-    const result: number[] = [];
+  const result: number[] = [];
 
-    let pointAX = 0;
-    let pointAY = 0;
-    let pointBX = 0;
-    let pointBY = 0;
-    const endX = matrix.length - 1;
-    const endY = matrix[0].length - 1;
-    let shouldReverse = false;
+  let pointAX = 0;
+  let pointAY = 0;
+  let pointBX = 0;
+  let pointBY = 0;
+  const endX = matrix.length - 1;
+  const endY = matrix[0].length - 1;
+  let shouldReverse = false;
 
-    while (
-        pointAX <= endX &&
-        pointAY <= endY &&
-        pointBX <= endX &&
-        pointBY <= endY
-    ) {
-        const slashResult = slash(
-            matrix,
-            pointAX,
-            pointAY,
-            pointBX,
-            pointBY,
-            shouldReverse
-        );
-        result.push(...slashResult);
-        shouldReverse = !shouldReverse;
+  while (
+    pointAX <= endX &&
+    pointAY <= endY &&
+    pointBX <= endX &&
+    pointBY <= endY
+  ) {
+    const slashResult = slash(
+      matrix,
+      pointAX,
+      pointAY,
+      pointBX,
+      pointBY,
+      shouldReverse
+    );
+    result.push(...slashResult);
+    shouldReverse = !shouldReverse;
 
-        // 此处变量设置的顺序不能变
-        pointAX = pointAY < endY ? 0 : pointAX + 1;
-        pointAY = pointAX === 0 ? pointAY + 1 : endY;
-        pointBY = pointBX < endX ? 0 : pointBY + 1;
-        pointBX = pointBY === 0 ? pointBX + 1 : endX;
-    }
+    // 此处变量设置的顺序不能变
+    pointAX = pointAY < endY ? 0 : pointAX + 1;
+    pointAY = pointAX === 0 ? pointAY + 1 : endY;
+    pointBY = pointBX < endX ? 0 : pointBY + 1;
+    pointBX = pointBY === 0 ? pointBX + 1 : endX;
+  }
 
-    return result;
+  return result;
 }
 
 function slash(
-    matrix: number[][],
-    pointAX: number,
-    pointAY: number,
-    pointBX: number,
-    pointBY: number,
-    shouldReverse: boolean
+  matrix: number[][],
+  pointAX: number,
+  pointAY: number,
+  pointBX: number,
+  pointBY: number,
+  shouldReverse: boolean
 ) {
-    const result: number[] = [];
+  const result: number[] = [];
 
-    let x = pointBX;
-    let y = pointBY;
-    while (x >= pointAX && y <= pointAY) {
-        result.push(matrix[x--][y++]);
-    }
+  let x = pointBX;
+  let y = pointBY;
+  while (x >= pointAX && y <= pointAY) {
+    result.push(matrix[x--][y++]);
+  }
 
-    if (shouldReverse) {
-        return result.reverse();
-    }
-    return result;
+  if (shouldReverse) {
+    return result.reverse();
+  }
+  return result;
 }
 
 // 环形打印矩阵
 export function circleMatrix(matrix: number[][]) {
-    if (!matrix || matrix.length === 0) {
-        return [];
-    }
+  if (!matrix || matrix.length === 0) {
+    return [];
+  }
 
-    let startX = 0;
-    let startY = 0;
-    let endX = matrix.length - 1;
-    let endY = matrix[0].length - 1;
+  let startX = 0;
+  let startY = 0;
+  let endX = matrix.length - 1;
+  let endY = matrix[0].length - 1;
 
-    const result: number[] = [];
-    while (startX <= endX && startY <= endY) {
-        result.push(...getEdge(matrix, startX++, startY++, endX--, endY--));
-    }
+  const result: number[] = [];
+  while (startX <= endX && startY <= endY) {
+    result.push(...getEdge(matrix, startX++, startY++, endX--, endY--));
+  }
 
-    return result;
+  return result;
 }
 
 function getEdge(
-    matrix: number[][],
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number
+  matrix: number[][],
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number
 ) {
-    const result: number[] = [];
+  const result: number[] = [];
 
-    if (startX === endX) {
-        while (startY <= endY) {
-            result.push(matrix[startX][startY++]);
-        }
-    } else if (startY === endY) {
-        while (startX <= endX) {
-            result.push(matrix[startX++][startY]);
-        }
-    } else {
-        let x = startX;
-        let y = startY;
-        while (y < endY) {
-            result.push(matrix[startX][y++]);
-        }
-        while (x < endX) {
-            result.push(matrix[x++][endY]);
-        }
-        while (y > startY) {
-            result.push(matrix[endX][y--]);
-        }
-        while (x > startX) {
-            result.push(matrix[x--][startY]);
-        }
+  if (startX === endX) {
+    while (startY <= endY) {
+      result.push(matrix[startX][startY++]);
     }
+  } else if (startY === endY) {
+    while (startX <= endX) {
+      result.push(matrix[startX++][startY]);
+    }
+  } else {
+    let x = startX;
+    let y = startY;
+    while (y < endY) {
+      result.push(matrix[startX][y++]);
+    }
+    while (x < endX) {
+      result.push(matrix[x++][endY]);
+    }
+    while (y > startY) {
+      result.push(matrix[endX][y--]);
+    }
+    while (x > startX) {
+      result.push(matrix[x--][startY]);
+    }
+  }
 
-    return result;
+  return result;
 }
 
 /* 
@@ -130,38 +130,38 @@ Input: n = 3
 Output: [[1,2,3],[8,9,4],[7,6,5]]
 */
 export function generateMatrix(n: number): number[][] {
-    const matrix = new Array(n).fill(0).map((_) => new Array(n).fill(0));
+  const matrix = new Array(n).fill(0).map((_) => new Array(n).fill(0));
 
-    let start = 1;
-    const fill = (startX: number, endX: number) => {
-        // 填充第一行
-        for (let j = startX; j < endX; j++) {
-            matrix[startX][j] = start++;
-        }
-        // 填充右边的列
-        for (let i = startX; i < endX; i++) {
-            matrix[i][endX] = start++;
-        }
-        // 填充下边的行
-        for (let j = endX; j > startX; j--) {
-            matrix[endX][j] = start++;
-        }
-        // 填充左边的列
-        for (let i = endX; i > startX; i--) {
-            matrix[i][startX] = start++;
-        }
-    };
-
-    const level = n >> 1;
-    matrix[level][level] = n * n;
-
-    let i = 0;
-    while (i < level) {
-        fill(i, n - i - 1);
-        i++;
+  let start = 1;
+  const fill = (startX: number, endX: number) => {
+    // 填充第一行
+    for (let j = startX; j < endX; j++) {
+      matrix[startX][j] = start++;
     }
+    // 填充右边的列
+    for (let i = startX; i < endX; i++) {
+      matrix[i][endX] = start++;
+    }
+    // 填充下边的行
+    for (let j = endX; j > startX; j--) {
+      matrix[endX][j] = start++;
+    }
+    // 填充左边的列
+    for (let i = endX; i > startX; i--) {
+      matrix[i][startX] = start++;
+    }
+  };
 
-    return matrix;
+  const level = n >> 1;
+  matrix[level][level] = n * n;
+
+  let i = 0;
+  while (i < level) {
+    fill(i, n - i - 1);
+    i++;
+  }
+
+  return matrix;
 }
 
 /*
@@ -203,41 +203,38 @@ Constraints:
 	At most 10^4 calls will be made to sumRegion.
 */
 export class NumMatrix {
-    private prefixSumMatrix: number[][];
+  private prefixSumMatrix: number[][];
 
-    constructor(matrix: number[][]) {
-        const rowLen = matrix.length;
-        const columnLen = matrix[0].length;
+  constructor(matrix: number[][]) {
+    const rowLen = matrix.length;
+    const columnLen = matrix[0].length;
 
-        this.prefixSumMatrix = Array.from({ length: rowLen }, () =>
-            Array(columnLen).fill(0)
-        );
+    this.prefixSumMatrix = Array.from({ length: rowLen }, () =>
+      Array(columnLen).fill(0)
+    );
 
-        for (let i = 0; i < rowLen; i++) {
-            for (let j = 0; j < columnLen; j++) {
-                const top = i - 1 >= 0 ? this.prefixSumMatrix[i - 1][j] : 0;
-                const left = j - 1 >= 0 ? this.prefixSumMatrix[i][j - 1] : 0;
-                const leftTop =
-                    i - 1 >= 0 && j - 1 >= 0
-                        ? this.prefixSumMatrix[i - 1][j - 1]
-                        : 0;
+    for (let i = 0; i < rowLen; i++) {
+      for (let j = 0; j < columnLen; j++) {
+        const top = i - 1 >= 0 ? this.prefixSumMatrix[i - 1][j] : 0;
+        const left = j - 1 >= 0 ? this.prefixSumMatrix[i][j - 1] : 0;
+        const leftTop =
+          i - 1 >= 0 && j - 1 >= 0 ? this.prefixSumMatrix[i - 1][j - 1] : 0;
 
-                this.prefixSumMatrix[i][j] =
-                    top + left - leftTop + matrix[i][j];
-            }
-        }
+        this.prefixSumMatrix[i][j] = top + left - leftTop + matrix[i][j];
+      }
     }
+  }
 
-    sumRegion(row1: number, col1: number, row2: number, col2: number): number {
-        const top = row1 - 1 >= 0 ? this.prefixSumMatrix[row1 - 1][col2] : 0;
-        const left = col1 - 1 >= 0 ? this.prefixSumMatrix[row2][col1 - 1] : 0;
-        const topLeft =
-            row1 - 1 >= 0 && col1 - 1 >= 0
-                ? this.prefixSumMatrix[row1 - 1][col1 - 1]
-                : 0;
+  sumRegion(row1: number, col1: number, row2: number, col2: number): number {
+    const top = row1 - 1 >= 0 ? this.prefixSumMatrix[row1 - 1][col2] : 0;
+    const left = col1 - 1 >= 0 ? this.prefixSumMatrix[row2][col1 - 1] : 0;
+    const topLeft =
+      row1 - 1 >= 0 && col1 - 1 >= 0
+        ? this.prefixSumMatrix[row1 - 1][col1 - 1]
+        : 0;
 
-        return this.prefixSumMatrix[row2][col2] - left - top + topLeft;
-    }
+    return this.prefixSumMatrix[row2][col2] - left - top + topLeft;
+  }
 }
 
 /*
@@ -280,21 +277,21 @@ Keep track of seen rows and columns with a set.
 - When operating on an unseen row/column, the number of affected cells is the number of columns/rows you haven’t previously seen.
 */
 export function matrixSumQueries(n: number, queries: number[][]): number {
-    const seenRows = new Set<number>();
-    const seenColumns = new Set<number>();
-    let result = 0;
-    for (let i = queries.length - 1; i >= 0; i--) {
-        const [type, index, val] = queries[i];
-        if (type === 0 && !seenRows.has(index)) {
-            result += (n - seenColumns.size) * val;
-            seenRows.add(index);
-        } else if (type === 1 && !seenColumns.has(index)) {
-            result += (n - seenRows.size) * val;
-            seenColumns.add(index);
-        }
+  const seenRows = new Set<number>();
+  const seenColumns = new Set<number>();
+  let result = 0;
+  for (let i = queries.length - 1; i >= 0; i--) {
+    const [type, index, val] = queries[i];
+    if (type === 0 && !seenRows.has(index)) {
+      result += (n - seenColumns.size) * val;
+      seenRows.add(index);
+    } else if (type === 1 && !seenColumns.has(index)) {
+      result += (n - seenRows.size) * val;
+      seenColumns.add(index);
     }
+  }
 
-    return result;
+  return result;
 }
 
 /* 
@@ -303,83 +300,83 @@ https://leetcode.com/problems/maximal-square/description/
 Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
 */
 export function maximalSquare(matrix: string[][]): number {
-    const arr = matrix[0].map((v) => +v);
-    let max = arr.indexOf(1) !== -1 ? 1 : 0;
+  const arr = matrix[0].map((v) => +v);
+  let max = arr.indexOf(1) !== -1 ? 1 : 0;
 
-    for (let i = 1; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            arr[j] = matrix[i][j] === '0' ? 0 : 1 + arr[j];
-        }
-
-        for (let j = 0; j < arr.length; j++) {
-            if (arr[j] < 1) {
-                continue;
-            }
-
-            let left = 1;
-            let right = arr[j];
-            while (left <= right) {
-                const mid = left + ((right - left) >> 1);
-                if (canExpand(arr, mid, j)) {
-                    max = Math.max(max, mid);
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
-            }
-        }
+  for (let i = 1; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[0].length; j++) {
+      arr[j] = matrix[i][j] === '0' ? 0 : 1 + arr[j];
     }
 
-    return max * max;
+    for (let j = 0; j < arr.length; j++) {
+      if (arr[j] < 1) {
+        continue;
+      }
+
+      let left = 1;
+      let right = arr[j];
+      while (left <= right) {
+        const mid = left + ((right - left) >> 1);
+        if (canExpand(arr, mid, j)) {
+          max = Math.max(max, mid);
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+    }
+  }
+
+  return max * max;
 }
 
 function canExpand(arr: number[], target: number, i: number): boolean {
-    let len = 1;
-    let right = i + 1;
-    while (right < arr.length && len < target) {
-        if (arr[right] >= target) {
-            len++;
-            right++;
-        } else {
-            break;
-        }
+  let len = 1;
+  let right = i + 1;
+  while (right < arr.length && len < target) {
+    if (arr[right] >= target) {
+      len++;
+      right++;
+    } else {
+      break;
     }
+  }
 
-    let left = i - 1;
-    while (left >= 0 && len < target) {
-        if (arr[left] >= target) {
-            len++;
-            left--;
-        } else {
-            break;
-        }
+  let left = i - 1;
+  while (left >= 0 && len < target) {
+    if (arr[left] >= target) {
+      len++;
+      left--;
+    } else {
+      break;
     }
+  }
 
-    return len >= target;
+  return len >= target;
 }
 
 export function maximalSquare2(matrix: string[][]): number {
-    let max = 0;
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            if (matrix[i][j] === '0') {
-                continue;
-            }
+  let max = 0;
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[0].length; j++) {
+      if (matrix[i][j] === '0') {
+        continue;
+      }
 
-            if (i > 0 && j > 0) {
-                matrix[i][j] = (
-                    Math.min(
-                        Number(matrix[i - 1][j]),
-                        Number(matrix[i][j - 1]),
-                        Number(matrix[i - 1][j - 1])
-                    ) + 1
-                ).toString();
-            }
+      if (i > 0 && j > 0) {
+        matrix[i][j] = (
+          Math.min(
+            Number(matrix[i - 1][j]),
+            Number(matrix[i][j - 1]),
+            Number(matrix[i - 1][j - 1])
+          ) + 1
+        ).toString();
+      }
 
-            max = Math.max(max, Number(matrix[i][j]));
-        }
+      max = Math.max(max, Number(matrix[i][j]));
     }
-    return max * max;
+  }
+  return max * max;
 }
 
 /*
@@ -408,28 +405,28 @@ Constraints:
 	-100 <= matrix[i][j] <= 100
 */
 export function minFallingPathSum(matrix: number[][]): number {
-    const dfs = cache((row: number, col: number) => {
-        if (row === matrix.length) {
-            return 0;
-        }
-        const cur = matrix[row][col];
+  const dfs = cache((row: number, col: number) => {
+    if (row === matrix.length) {
+      return 0;
+    }
+    const cur = matrix[row][col];
 
-        let min = Infinity;
-        // left
-        if (col - 1 >= 0) {
-            min = Math.min(min, cur + dfs(row + 1, col - 1));
-        }
-        // center
-        min = Math.min(min, cur + dfs(row + 1, col));
-        // right
-        if (col + 1 < matrix[0].length) {
-            min = Math.min(min, cur + dfs(row + 1, col + 1));
-        }
+    let min = Infinity;
+    // left
+    if (col - 1 >= 0) {
+      min = Math.min(min, cur + dfs(row + 1, col - 1));
+    }
+    // center
+    min = Math.min(min, cur + dfs(row + 1, col));
+    // right
+    if (col + 1 < matrix[0].length) {
+      min = Math.min(min, cur + dfs(row + 1, col + 1));
+    }
 
-        return min;
-    });
+    return min;
+  });
 
-    return Math.min(...matrix[0].map((_, j) => dfs(0, j)));
+  return Math.min(...matrix[0].map((_, j) => dfs(0, j)));
 }
 
 /*
@@ -488,44 +485,44 @@ if it does, we return its index as a good subset.
 the array and if they form a good subset, if they do, return their indices as a good subset.
 */
 export function goodSubsetofBinaryMatrix(grid: number[][]): number[] {
-    for (let i = 0; i < grid.length; i++) {
-        if (grid[i].every((v) => v === 0)) {
-            return [i];
-        }
+  for (let i = 0; i < grid.length; i++) {
+    if (grid[i].every((v) => v === 0)) {
+      return [i];
     }
-    const n = grid[0].length;
+  }
+  const n = grid[0].length;
 
-    const bitMasks: number[][] = [];
-    const backtracking = (i: number, left: number, right: number) => {
-        if (i === n) {
-            bitMasks.push([left, right]);
-            return;
-        }
-
-        left <<= 1;
-        right <<= 1;
-
-        // left取1
-        backtracking(i + 1, left | 1, right | 0);
-
-        // left取0
-        backtracking(i + 1, left | 0, right | 1);
-        backtracking(i + 1, left | 0, right | 0);
-    };
-    backtracking(0, 0, 0);
-
-    const gridNumbers = grid.map((row) => parseInt(row.join(''), 2));
-
-    for (let i = 0; i < bitMasks.length; i++) {
-        const [left, right] = bitMasks[i];
-        const index1 = gridNumbers.indexOf(left);
-        const index2 = gridNumbers.indexOf(right);
-        if (index1 !== -1 && index2 !== -1 && index1 !== index2) {
-            return [index1, index2].sort((a, b) => a - b);
-        }
+  const bitMasks: number[][] = [];
+  const backtracking = (i: number, left: number, right: number) => {
+    if (i === n) {
+      bitMasks.push([left, right]);
+      return;
     }
 
-    return [];
+    left <<= 1;
+    right <<= 1;
+
+    // left取1
+    backtracking(i + 1, left | 1, right | 0);
+
+    // left取0
+    backtracking(i + 1, left | 0, right | 1);
+    backtracking(i + 1, left | 0, right | 0);
+  };
+  backtracking(0, 0, 0);
+
+  const gridNumbers = grid.map((row) => parseInt(row.join(''), 2));
+
+  for (let i = 0; i < bitMasks.length; i++) {
+    const [left, right] = bitMasks[i];
+    const index1 = gridNumbers.indexOf(left);
+    const index2 = gridNumbers.indexOf(right);
+    if (index1 !== -1 && index2 !== -1 && index1 !== index2) {
+      return [index1, index2].sort((a, b) => a - b);
+    }
+  }
+
+  return [];
 }
 
 /*
@@ -554,17 +551,17 @@ Constraints:
 	-10^9 <= matrix[i][j] <= 10^9
 */
 export function transpose(matrix: number[][]): number[][] {
-    const m = matrix.length;
-    const n = matrix[0].length;
-    const newMatrix = Array.from({ length: n }, () => Array(m));
+  const m = matrix.length;
+  const n = matrix[0].length;
+  const newMatrix = Array.from({ length: n }, () => Array(m));
 
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
-            newMatrix[i][j] = matrix[j][i];
-        }
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      newMatrix[i][j] = matrix[j][i];
     }
+  }
 
-    return newMatrix;
+  return newMatrix;
 }
 
 /*
@@ -604,47 +601,47 @@ Constraints:
 	0 <= sc < n
 */
 export function floodFill(
-    image: number[][],
-    sr: number,
-    sc: number,
-    color: number
+  image: number[][],
+  sr: number,
+  sc: number,
+  color: number
 ): number[][] {
-    const prev = image[sr][sc];
-    image[sr][sc] = color;
+  const prev = image[sr][sc];
+  image[sr][sc] = color;
 
-    const m = image.length;
-    const n = image[0].length;
+  const m = image.length;
+  const n = image[0].length;
 
-    const directions: number[][] = [
-        [1, 0],
-        [-1, 0],
-        [0, 1],
-        [0, -1],
-    ];
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
-    const infect = (i: number, j: number) => {
-        directions.forEach(([x, y]) => {
-            const nextI = i + x;
-            const nextJ = j + y;
-            if (
-                nextI >= 0 &&
-                nextI < m &&
-                nextJ >= 0 &&
-                nextJ < n &&
-                image[nextI][nextJ] === prev &&
-                !visited[nextI][nextJ]
-            ) {
-                visited[nextI][nextJ] = true;
-                image[nextI][nextJ] = color;
-                infect(nextI, nextJ);
-            }
-        });
-    };
-    infect(sr, sc);
+  const directions: number[][] = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+  const visited: boolean[][] = Array.from({ length: m }, () =>
+    Array(n).fill(false)
+  );
+  const infect = (i: number, j: number) => {
+    directions.forEach(([x, y]) => {
+      const nextI = i + x;
+      const nextJ = j + y;
+      if (
+        nextI >= 0 &&
+        nextI < m &&
+        nextJ >= 0 &&
+        nextJ < n &&
+        image[nextI][nextJ] === prev &&
+        !visited[nextI][nextJ]
+      ) {
+        visited[nextI][nextJ] = true;
+        image[nextI][nextJ] = color;
+        infect(nextI, nextJ);
+      }
+    });
+  };
+  infect(sr, sc);
 
-    return image;
+  return image;
 }
 
 /*
@@ -683,44 +680,44 @@ Constraints:
 	0 <= img[i][j] <= 255
 */
 export function imageSmoother(img: number[][]): number[][] {
-    const m = img.length;
-    const n = img[0].length;
+  const m = img.length;
+  const n = img[0].length;
 
-    const newImg = Array.from({ length: m }, () => Array(n).fill(0));
+  const newImg = Array.from({ length: m }, () => Array(n).fill(0));
 
-    const directions = [
-        [-1, -1],
-        [-1, 0],
-        [-1, 1],
-        [0, -1],
-        [0, 1],
-        [1, -1],
-        [1, 0],
-        [1, 1],
-    ];
-    const getAverage = (x: number, y: number) => {
-        let count = 1;
-        let sum = img[x][y];
+  const directions = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+  ];
+  const getAverage = (x: number, y: number) => {
+    let count = 1;
+    let sum = img[x][y];
 
-        directions.forEach(([xDelta, yDelta]) => {
-            const nextX = x + xDelta;
-            const nextY = y + yDelta;
-            if (nextX >= 0 && nextX < m && nextY >= 0 && nextY < n) {
-                count++;
-                sum += img[nextX][nextY];
-            }
-        });
+    directions.forEach(([xDelta, yDelta]) => {
+      const nextX = x + xDelta;
+      const nextY = y + yDelta;
+      if (nextX >= 0 && nextX < m && nextY >= 0 && nextY < n) {
+        count++;
+        sum += img[nextX][nextY];
+      }
+    });
 
-        return Math.floor(sum / count);
-    };
+    return Math.floor(sum / count);
+  };
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            newImg[i][j] = getAverage(i, j);
-        }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      newImg[i][j] = getAverage(i, j);
     }
+  }
 
-    return newImg;
+  return newImg;
 }
 
 /*
@@ -759,26 +756,26 @@ Constraints:
 	1 <= mat[i][j] <= 100
 */
 export function diagonalSum(mat: number[][]): number {
-    const n = mat.length;
-    let sum = 0;
+  const n = mat.length;
+  let sum = 0;
 
-    let x = 0;
-    let y = 0;
-    while (x < n) {
-        sum += mat[x++][y++];
-    }
+  let x = 0;
+  let y = 0;
+  while (x < n) {
+    sum += mat[x++][y++];
+  }
 
-    x = n - 1;
-    y = 0;
-    while (y < n) {
-        sum += mat[x--][y++];
-    }
+  x = n - 1;
+  y = 0;
+  while (y < n) {
+    sum += mat[x--][y++];
+  }
 
-    if ((n & 1) === 1) {
-        const center = n >> 1;
-        return sum - mat[center][center];
-    }
-    return sum;
+  if ((n & 1) === 1) {
+    const center = n >> 1;
+    return sum - mat[center][center];
+  }
+  return sum;
 }
 
 /*
@@ -821,44 +818,44 @@ Hints
 - If it's on the right side, run this algorithm on subarray right_side + central_column
 */
 export function findPeakGrid(mat: number[][]): number[] {
-    const m = mat.length;
-    const n = mat[0].length;
+  const m = mat.length;
+  const n = mat[0].length;
 
-    const getMaxIndex = (column: number) => {
-        let max = -Infinity;
-        let maxIndex = -1;
+  const getMaxIndex = (column: number) => {
+    let max = -Infinity;
+    let maxIndex = -1;
 
-        for (let i = 0; i < m; i++) {
-            if (max < mat[i][column]) {
-                max = mat[i][column];
-                maxIndex = i;
-            }
-        }
-
-        return [max, maxIndex];
-    };
-
-    let left = 0;
-    let right = n - 1;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        const [leftMax] = mid - 1 >= 0 ? getMaxIndex(mid - 1) : [-Infinity, -1];
-        const [midMax, midMaxIndex] = getMaxIndex(mid);
-        const [rightMax] = mid + 1 < n ? getMaxIndex(mid + 1) : [-Infinity, -1];
-
-        const max = Math.max(leftMax, midMax, rightMax);
-        if (max === midMax) {
-            return [midMaxIndex, mid];
-        }
-
-        if (max === leftMax) {
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
+    for (let i = 0; i < m; i++) {
+      if (max < mat[i][column]) {
+        max = mat[i][column];
+        maxIndex = i;
+      }
     }
 
-    return [-1, -1];
+    return [max, maxIndex];
+  };
+
+  let left = 0;
+  let right = n - 1;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    const [leftMax] = mid - 1 >= 0 ? getMaxIndex(mid - 1) : [-Infinity, -1];
+    const [midMax, midMaxIndex] = getMaxIndex(mid);
+    const [rightMax] = mid + 1 < n ? getMaxIndex(mid + 1) : [-Infinity, -1];
+
+    const max = Math.max(leftMax, midMax, rightMax);
+    if (max === midMax) {
+      return [midMaxIndex, mid];
+    }
+
+    if (max === leftMax) {
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  return [-1, -1];
 }
 
 /*
@@ -898,30 +895,30 @@ Constraints:
 	1 <= grid[i][j] <= 10^6
 */
 export function maxMoves(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
-    const dp: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
+  const m = grid.length;
+  const n = grid[0].length;
+  const dp: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
 
-    for (let j = n - 2; j >= 0; j--) {
-        for (let i = 0; i < m; i++) {
-            if (i - 1 >= 0 && grid[i][j] < grid[i - 1][j + 1]) {
-                dp[i][j] = 1 + dp[i - 1][j + 1];
-            }
-            if (grid[i][j] < grid[i][j + 1]) {
-                dp[i][j] = Math.max(dp[i][j], 1 + dp[i][j + 1]);
-            }
-            if (i + 1 < m && grid[i][j] < grid[i + 1][j + 1]) {
-                dp[i][j] = Math.max(dp[i][j], 1 + dp[i + 1][j + 1]);
-            }
-        }
-    }
-
-    let max = 0;
+  for (let j = n - 2; j >= 0; j--) {
     for (let i = 0; i < m; i++) {
-        max = Math.max(max, dp[i][0]);
+      if (i - 1 >= 0 && grid[i][j] < grid[i - 1][j + 1]) {
+        dp[i][j] = 1 + dp[i - 1][j + 1];
+      }
+      if (grid[i][j] < grid[i][j + 1]) {
+        dp[i][j] = Math.max(dp[i][j], 1 + dp[i][j + 1]);
+      }
+      if (i + 1 < m && grid[i][j] < grid[i + 1][j + 1]) {
+        dp[i][j] = Math.max(dp[i][j], 1 + dp[i + 1][j + 1]);
+      }
     }
+  }
 
-    return max;
+  let max = 0;
+  for (let i = 0; i < m; i++) {
+    max = Math.max(max, dp[i][0]);
+  }
+
+  return max;
 }
 
 /*
@@ -960,26 +957,26 @@ Constraints:
 	There is exactly one island in grid.
 */
 export function islandPerimeter(grid: number[][]): number {
-    let perimeters = 0;
+  let perimeters = 0;
 
-    const m = grid.length;
-    const n = grid[0].length;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 1) {
-                perimeters += 4;
+  const m = grid.length;
+  const n = grid[0].length;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        perimeters += 4;
 
-                if (j + 1 < n && grid[i][j + 1] === 1) {
-                    perimeters -= 2;
-                }
-                if (i + 1 < m && grid[i + 1][j] === 1) {
-                    perimeters -= 2;
-                }
-            }
+        if (j + 1 < n && grid[i][j + 1] === 1) {
+          perimeters -= 2;
         }
+        if (i + 1 < m && grid[i + 1][j] === 1) {
+          perimeters -= 2;
+        }
+      }
     }
+  }
 
-    return perimeters;
+  return perimeters;
 }
 
 /*
@@ -1029,45 +1026,45 @@ Constraints:
 	Groups of farmland are rectangular in shape.
 */
 export function findFarmland(land: number[][]): number[][] {
-    const m = land.length;
-    const n = land[0].length;
-    const visited: boolean[][] = Array.from({ length: m }, () =>
-        Array(n).fill(false)
-    );
+  const m = land.length;
+  const n = land[0].length;
+  const visited: boolean[][] = Array.from({ length: m }, () =>
+    Array(n).fill(false)
+  );
 
-    const markVisited = (positions: number[]) => {
-        const [i1, j1, i2, j2] = positions;
-        for (let i = i1; i <= i2; i++) {
-            for (let j = j1; j <= j2; j++) {
-                visited[i][j] = true;
-            }
-        }
-    };
-
-    const result: number[][] = [];
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (visited[i][j] || land[i][j] === 0) {
-                continue;
-            }
-            visited[i][j] = true;
-
-            const leftTop = [i, j];
-            while (j < n && land[i][j] === 1) {
-                j++;
-            }
-            let k = i;
-            while (k < m && land[k][j - 1] === 1) {
-                k++;
-            }
-
-            const cur = leftTop.concat([k - 1, j - 1]);
-            markVisited(cur);
-            result.push(cur);
-        }
+  const markVisited = (positions: number[]) => {
+    const [i1, j1, i2, j2] = positions;
+    for (let i = i1; i <= i2; i++) {
+      for (let j = j1; j <= j2; j++) {
+        visited[i][j] = true;
+      }
     }
+  };
 
-    return result;
+  const result: number[][] = [];
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (visited[i][j] || land[i][j] === 0) {
+        continue;
+      }
+      visited[i][j] = true;
+
+      const leftTop = [i, j];
+      while (j < n && land[i][j] === 1) {
+        j++;
+      }
+      let k = i;
+      while (k < m && land[k][j - 1] === 1) {
+        k++;
+      }
+
+      const cur = leftTop.concat([k - 1, j - 1]);
+      markVisited(cur);
+      result.push(cur);
+    }
+  }
+
+  return result;
 }
 
 /*
@@ -1100,21 +1097,21 @@ Constraints:
 	0 <= nums[i][j] <= 10^3
 */
 export function matrixSum(nums: number[][]): number {
-    nums.forEach((row) => {
-        row.sort((a, b) => b - a);
-    });
+  nums.forEach((row) => {
+    row.sort((a, b) => b - a);
+  });
 
-    let score = 0;
-    for (let j = 0; j < nums[0].length; j++) {
-        let max = -Infinity;
-        for (let i = 0; i < nums.length; i++) {
-            max = Math.max(max, nums[i][j]);
-        }
-
-        score += max;
+  let score = 0;
+  for (let j = 0; j < nums[0].length; j++) {
+    let max = -Infinity;
+    for (let i = 0; i < nums.length; i++) {
+      max = Math.max(max, nums[i][j]);
     }
 
-    return score;
+    score += max;
+  }
+
+  return score;
 }
 
 /*
@@ -1152,22 +1149,22 @@ Constraints:
 	mat[i][j] is either 0 or 1.
 */
 export function rowAndMaximumOnes(mat: number[][]): number[] {
-    let maxIndex = 0;
-    let maxOnes = -Infinity;
+  let maxIndex = 0;
+  let maxOnes = -Infinity;
 
-    for (let i = 0; i < mat.length; i++) {
-        let ones = 0;
-        for (let j = 0; j < mat[0].length; j++) {
-            ones += mat[i][j];
-        }
-
-        if (ones > maxOnes) {
-            maxOnes = ones;
-            maxIndex = i;
-        }
+  for (let i = 0; i < mat.length; i++) {
+    let ones = 0;
+    for (let j = 0; j < mat[0].length; j++) {
+      ones += mat[i][j];
     }
 
-    return [maxIndex, maxOnes];
+    if (ones > maxOnes) {
+      maxOnes = ones;
+      maxIndex = i;
+    }
+  }
+
+  return [maxIndex, maxOnes];
 }
 
 /*
@@ -1193,38 +1190,28 @@ Constraints:
 	grid[i][j] is 0 or 1
 */
 export function largest1BorderedSquare(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
-    const numMatrix = new NumMatrix(grid);
+  const m = grid.length;
+  const n = grid[0].length;
+  const numMatrix = new NumMatrix(grid);
 
-    let max = 0;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            const maxLen = Math.min(n - j, m - i);
-            for (let len = 1; len <= maxLen; len++) {
-                const outer = numMatrix.sumRegion(
-                    i,
-                    j,
-                    i + len - 1,
-                    j + len - 1
-                );
-                const inner =
-                    len > 2
-                        ? numMatrix.sumRegion(
-                              i + 1,
-                              j + 1,
-                              i + len - 2,
-                              j + len - 2
-                          )
-                        : 0;
-                if (outer - inner === (len === 1 ? 1 : (len - 1) * 4)) {
-                    max = Math.max(max, len * len);
-                }
-            }
+  let max = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      const maxLen = Math.min(n - j, m - i);
+      for (let len = 1; len <= maxLen; len++) {
+        const outer = numMatrix.sumRegion(i, j, i + len - 1, j + len - 1);
+        const inner =
+          len > 2
+            ? numMatrix.sumRegion(i + 1, j + 1, i + len - 2, j + len - 2)
+            : 0;
+        if (outer - inner === (len === 1 ? 1 : (len - 1) * 4)) {
+          max = Math.max(max, len * len);
         }
+      }
     }
+  }
 
-    return max;
+  return max;
 }
 
 /*
@@ -1260,26 +1247,26 @@ Constraints:
 	1 <= grid[i][j] <= 100
 */
 export function largestLocal(grid: number[][]): number[][] {
-    const n = grid.length;
-    const local = Array.from({ length: n - 2 }, () => Array(n - 2));
+  const n = grid.length;
+  const local = Array.from({ length: n - 2 }, () => Array(n - 2));
 
-    for (let i = 1; i < n - 1; i++) {
-        for (let j = 1; j < n - 1; j++) {
-            local[i - 1][j - 1] = Math.max(
-                grid[i - 1][j - 1],
-                grid[i - 1][j],
-                grid[i - 1][j + 1],
-                grid[i][j - 1],
-                grid[i][j],
-                grid[i][j + 1],
-                grid[i + 1][j - 1],
-                grid[i + 1][j],
-                grid[i + 1][j + 1]
-            );
-        }
+  for (let i = 1; i < n - 1; i++) {
+    for (let j = 1; j < n - 1; j++) {
+      local[i - 1][j - 1] = Math.max(
+        grid[i - 1][j - 1],
+        grid[i - 1][j],
+        grid[i - 1][j + 1],
+        grid[i][j - 1],
+        grid[i][j],
+        grid[i][j + 1],
+        grid[i + 1][j - 1],
+        grid[i + 1][j],
+        grid[i + 1][j + 1]
+      );
     }
+  }
 
-    return local;
+  return local;
 }
 
 /*
@@ -1316,34 +1303,33 @@ Constraints:
 - 纵向 0 的个数比 1 多才 flip
 */
 export function matrixScore(grid: number[][]): number {
+  for (let i = 0; i < grid.length; i++) {
+    if (grid[i][0] === 0) {
+      for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j] ^= 1;
+      }
+    }
+  }
+
+  for (let j = 0; j < grid[0].length; j++) {
+    let zeroCount = 0;
     for (let i = 0; i < grid.length; i++) {
-        if (grid[i][0] === 0) {
-            for (let j = 0; j < grid[i].length; j++) {
-                grid[i][j] ^= 1;
-            }
-        }
+      if (grid[i][j] === 0) {
+        zeroCount++;
+      }
     }
-
-    for (let j = 0; j < grid[0].length; j++) {
-        let zeroCount = 0;
-        for (let i = 0; i < grid.length; i++) {
-            if (grid[i][j] === 0) {
-                zeroCount++;
-            }
-        }
-        if (zeroCount > grid.length - zeroCount) {
-            for (let i = 0; i < grid.length; i++) {
-                grid[i][j] ^= 1;
-            }
-        }
+    if (zeroCount > grid.length - zeroCount) {
+      for (let i = 0; i < grid.length; i++) {
+        grid[i][j] ^= 1;
+      }
     }
+  }
 
-    return grid.reduce(
-        (sum, row) =>
-            sum +
-            row.reduce((s, cur, i) => s + (cur << (row.length - i - 1)), 0),
-        0
-    );
+  return grid.reduce(
+    (sum, row) =>
+      sum + row.reduce((s, cur, i) => s + (cur << (row.length - i - 1)), 0),
+    0
+  );
 }
 
 /*
@@ -1390,38 +1376,38 @@ Constraints:
 	There are at most 25 cells containing gold.
 */
 export function getMaximumGold(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
+  const m = grid.length;
+  const n = grid[0].length;
 
-    function dfs(x: number, y: number): number {
-        if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] === 0) {
-            return 0;
-        }
-
-        const gold = grid[x][y];
-        grid[x][y] = 0;
-
-        const maxGold = Math.max(
-            dfs(x + 1, y),
-            dfs(x - 1, y),
-            dfs(x, y + 1),
-            dfs(x, y - 1)
-        );
-
-        grid[x][y] = gold;
-        return gold + maxGold;
+  function dfs(x: number, y: number): number {
+    if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] === 0) {
+      return 0;
     }
 
-    let maxGold = 0;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] > 0) {
-                maxGold = Math.max(maxGold, dfs(i, j));
-            }
-        }
-    }
+    const gold = grid[x][y];
+    grid[x][y] = 0;
 
-    return maxGold;
+    const maxGold = Math.max(
+      dfs(x + 1, y),
+      dfs(x - 1, y),
+      dfs(x, y + 1),
+      dfs(x, y - 1)
+    );
+
+    grid[x][y] = gold;
+    return gold + maxGold;
+  }
+
+  let maxGold = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] > 0) {
+        maxGold = Math.max(maxGold, dfs(i, j));
+      }
+    }
+  }
+
+  return maxGold;
 }
 
 /*
@@ -1473,101 +1459,101 @@ Constraints:
 	There is at least one thief in the grid.
 */
 export function maximumSafenessFactor(grid: number[][]): number {
-    const n = grid.length;
-    const distance = Array.from({ length: n }, () => Array(n).fill(n));
+  const n = grid.length;
+  const distance = Array.from({ length: n }, () => Array(n).fill(n));
 
-    let queue: number[][] = [];
-    grid.forEach((row, i) => {
-        row.forEach((v, j) => {
-            if (v) {
-                queue.push([i, j]);
-                distance[i][j] = 0;
-            }
-        });
+  let queue: number[][] = [];
+  grid.forEach((row, i) => {
+    row.forEach((v, j) => {
+      if (v) {
+        queue.push([i, j]);
+        distance[i][j] = 0;
+      }
     });
+  });
 
-    const dirs: number[][] = [
-        [0, -1],
-        [0, 1],
-        [1, 0],
-        [-1, 0],
-    ];
-    let d = 1;
+  const dirs: number[][] = [
+    [0, -1],
+    [0, 1],
+    [1, 0],
+    [-1, 0],
+  ];
+  let d = 1;
+  while (queue.length) {
+    const len = queue.length;
+    let tmp: number[][] = [];
+    for (let i = 0; i < len; i++) {
+      const [x, y] = queue[i];
+
+      dirs.forEach(([xDelta, yDelta]) => {
+        const nextI = x + xDelta;
+        const nextJ = y + yDelta;
+
+        if (
+          nextI >= 0 &&
+          nextI < n &&
+          nextJ >= 0 &&
+          nextJ < n &&
+          grid[nextI][nextJ] === 0 &&
+          distance[nextI][nextJ] > d
+        ) {
+          tmp.push([nextI, nextJ]);
+          distance[nextI][nextJ] = d;
+        }
+      });
+    }
+
+    queue = tmp;
+    d++;
+    if (d > n) {
+      break;
+    }
+  }
+
+  const isConnected = (factor: number): boolean => {
+    const queue: number[][] = [[0, 0]];
+    const visited = new Set([`0,0`]);
     while (queue.length) {
-        const len = queue.length;
-        let tmp: number[][] = [];
-        for (let i = 0; i < len; i++) {
-            const [x, y] = queue[i];
+      const [x, y] = queue.shift()!;
+      if (x === n - 1 && y === n - 1) {
+        return true;
+      }
 
-            dirs.forEach(([xDelta, yDelta]) => {
-                const nextI = x + xDelta;
-                const nextJ = y + yDelta;
+      dirs.forEach(([xDelta, yDelta]) => {
+        const nextI = x + xDelta;
+        const nextJ = y + yDelta;
 
-                if (
-                    nextI >= 0 &&
-                    nextI < n &&
-                    nextJ >= 0 &&
-                    nextJ < n &&
-                    grid[nextI][nextJ] === 0 &&
-                    distance[nextI][nextJ] > d
-                ) {
-                    tmp.push([nextI, nextJ]);
-                    distance[nextI][nextJ] = d;
-                }
-            });
+        if (
+          nextI >= 0 &&
+          nextI < n &&
+          nextJ >= 0 &&
+          nextJ < n &&
+          distance[nextI][nextJ] >= factor &&
+          !visited.has(`${nextI},${nextJ}`)
+        ) {
+          visited.add(`${nextI},${nextJ}`);
+          queue.push([nextI, nextJ]);
         }
-
-        queue = tmp;
-        d++;
-        if (d > n) {
-            break;
-        }
+      });
     }
 
-    const isConnected = (factor: number): boolean => {
-        const queue: number[][] = [[0, 0]];
-        const visited = new Set([`0,0`]);
-        while (queue.length) {
-            const [x, y] = queue.shift()!;
-            if (x === n - 1 && y === n - 1) {
-                return true;
-            }
+    return false;
+  };
 
-            dirs.forEach(([xDelta, yDelta]) => {
-                const nextI = x + xDelta;
-                const nextJ = y + yDelta;
-
-                if (
-                    nextI >= 0 &&
-                    nextI < n &&
-                    nextJ >= 0 &&
-                    nextJ < n &&
-                    distance[nextI][nextJ] >= factor &&
-                    !visited.has(`${nextI},${nextJ}`)
-                ) {
-                    visited.add(`${nextI},${nextJ}`);
-                    queue.push([nextI, nextJ]);
-                }
-            });
-        }
-
-        return false;
-    };
-
-    let l = 0;
-    let r = Math.min(distance[0][0], distance[n - 1][n - 1]);
-    let max = 0;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (isConnected(m)) {
-            max = Math.max(max, m);
-            l = m + 1;
-        } else {
-            r = m - 1;
-        }
+  let l = 0;
+  let r = Math.min(distance[0][0], distance[n - 1][n - 1]);
+  let max = 0;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (isConnected(m)) {
+      max = Math.max(max, m);
+      l = m + 1;
+    } else {
+      r = m - 1;
     }
+  }
 
-    return max;
+  return max;
 }
 
 /*
@@ -1601,20 +1587,20 @@ Constraints:
 	isConnected[i][j] == isConnected[j][i]
 */
 export function findCircleNum(isConnected: number[][]): number {
-    const n = isConnected.length;
-    const unionFind = new UnionFind(n);
-    let province = n;
+  const n = isConnected.length;
+  const unionFind = new UnionFind(n);
+  let province = n;
 
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            if (isConnected[i][j] && !unionFind.isSameSet(i, j)) {
-                unionFind.union(i, j);
-                province--;
-            }
-        }
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (isConnected[i][j] && !unionFind.isSameSet(i, j)) {
+        unionFind.union(i, j);
+        province--;
+      }
     }
+  }
 
-    return province;
+  return province;
 }
 
 /*
@@ -1651,33 +1637,33 @@ Constraints:
 	All elements in the matrix are distinct.
 */
 export function luckyNumbers(matrix: number[][]): number[] {
-    const res: number[] = [];
-    const m = matrix.length;
-    const n = matrix[0].length;
-    for (let i = 0; i < m; i++) {
-        let min = Infinity;
-        let minIndex = -1;
-        for (let j = 0; j < n; j++) {
-            if (min > matrix[i][j]) {
-                min = matrix[i][j];
-                minIndex = j;
-            }
-        }
-
-        let found = true;
-        for (let k = 0; k < m; k++) {
-            if (matrix[k][minIndex] > min) {
-                found = false;
-                break;
-            }
-        }
-
-        if (found) {
-            res.push(min);
-        }
+  const res: number[] = [];
+  const m = matrix.length;
+  const n = matrix[0].length;
+  for (let i = 0; i < m; i++) {
+    let min = Infinity;
+    let minIndex = -1;
+    for (let j = 0; j < n; j++) {
+      if (min > matrix[i][j]) {
+        min = matrix[i][j];
+        minIndex = j;
+      }
     }
 
-    return res;
+    let found = true;
+    for (let k = 0; k < m; k++) {
+      if (matrix[k][minIndex] > min) {
+        found = false;
+        break;
+      }
+    }
+
+    if (found) {
+      res.push(min);
+    }
+  }
+
+  return res;
 }
 
 /*
@@ -1717,37 +1703,37 @@ Constraints:
 	sum(rowSum) == sum(colSum)
 */
 export function restoreMatrix(rowSum: number[], colSum: number[]): number[][] {
-    const m = rowSum.length;
-    const n = colSum.length;
-    const matrix = Array.from({ length: m }, () => Array(n).fill(0));
-    for (let i = 0; i < m; i++) {
-        matrix[i][0] = rowSum[i];
+  const m = rowSum.length;
+  const n = colSum.length;
+  const matrix = Array.from({ length: m }, () => Array(n).fill(0));
+  for (let i = 0; i < m; i++) {
+    matrix[i][0] = rowSum[i];
+  }
+
+  for (let j = 0; j < n - 1; j++) {
+    let sum = 0;
+    let i = 0;
+    while (i < m) {
+      sum += matrix[i][j];
+      if (sum >= colSum[j]) {
+        break;
+      }
+
+      i++;
     }
 
-    for (let j = 0; j < n - 1; j++) {
-        let sum = 0;
-        let i = 0;
-        while (i < m) {
-            sum += matrix[i][j];
-            if (sum >= colSum[j]) {
-                break;
-            }
+    const delta = sum - colSum[j];
+    matrix[i][j] -= delta;
+    matrix[i][j + 1] += delta;
 
-            i++;
-        }
-
-        const delta = sum - colSum[j];
-        matrix[i][j] -= delta;
-        matrix[i][j + 1] += delta;
-
-        while (i + 1 < m) {
-            matrix[i + 1][j + 1] = matrix[i + 1][j];
-            matrix[i + 1][j] = 0;
-            i++;
-        }
+    while (i + 1 < m) {
+      matrix[i + 1][j + 1] = matrix[i + 1][j];
+      matrix[i + 1][j] = 0;
+      i++;
     }
+  }
 
-    return matrix;
+  return matrix;
 }
 
 /*
@@ -1776,47 +1762,47 @@ Constraints:
 	0 <= cStart < cols
 */
 export function spiralMatrixIII(
-    rows: number,
-    cols: number,
-    rStart: number,
-    cStart: number
+  rows: number,
+  cols: number,
+  rStart: number,
+  cStart: number
 ): number[][] {
-    const result: number[][] = [];
-    const total = rows * cols;
+  const result: number[][] = [];
+  const total = rows * cols;
 
-    const isValid = (x: number, y: number): boolean =>
-        x >= 0 && x < rows && y >= 0 && y < cols;
+  const isValid = (x: number, y: number): boolean =>
+    x >= 0 && x < rows && y >= 0 && y < cols;
 
-    let x = rStart;
-    let y = cStart;
-    const circle = (len: number, reverse: boolean) => {
-        const delta = reverse ? 1 : -1;
+  let x = rStart;
+  let y = cStart;
+  const circle = (len: number, reverse: boolean) => {
+    const delta = reverse ? 1 : -1;
 
-        let start = len;
-        while (start-- > 0) {
-            if (isValid(x, y)) {
-                result.push([x, y]);
-            }
-            y += delta;
-        }
-
-        start = len;
-        while (start-- > 0) {
-            if (isValid(x, y)) {
-                result.push([x, y]);
-            }
-            x += delta;
-        }
-    };
-
-    let len = 1;
-    let reverse = true;
-    while (result.length < total) {
-        circle(len++, reverse);
-        reverse = !reverse;
+    let start = len;
+    while (start-- > 0) {
+      if (isValid(x, y)) {
+        result.push([x, y]);
+      }
+      y += delta;
     }
 
-    return result;
+    start = len;
+    while (start-- > 0) {
+      if (isValid(x, y)) {
+        result.push([x, y]);
+      }
+      x += delta;
+    }
+  };
+
+  let len = 1;
+  let reverse = true;
+  while (result.length < total) {
+    circle(len++, reverse);
+    reverse = !reverse;
+  }
+
+  return result;
 }
 
 /*
@@ -1852,67 +1838,62 @@ Constraints:
 	0 <= grid[i][j] <= 15
 */
 export function numMagicSquaresInside(grid: number[][]): number {
-    const row = grid.length;
-    const col = grid[0].length;
-    const positions: number[][] = [
-        [0, 0],
-        [0, 1],
-        [0, 2],
-        [1, 0],
-        [1, 1],
-        [1, 2],
-        [2, 0],
-        [2, 1],
-        [2, 2],
-    ];
-    const nums = Array(10).fill(0);
-    const clear = () => {
-        for (let i = 1; i < 10; i++) {
-            nums[i] = 0;
-        }
-    };
+  const row = grid.length;
+  const col = grid[0].length;
+  const positions: number[][] = [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+    [1, 0],
+    [1, 1],
+    [1, 2],
+    [2, 0],
+    [2, 1],
+    [2, 2],
+  ];
+  const nums = Array(10).fill(0);
+  const clear = () => {
+    for (let i = 1; i < 10; i++) {
+      nums[i] = 0;
+    }
+  };
 
-    const isValid = (i: number, j: number): boolean => {
-        clear();
-        let valid = true;
-        for (const [iDelta, jDelta] of positions) {
-            const val = grid[i + iDelta][j + jDelta];
-            if (val < 1 || val > 9 || nums[val] !== 0) {
-                valid = false;
-                break;
-            }
-            nums[val]++;
-        }
-
-        return valid;
-    };
-
-    let count = 0;
-    for (let i = 0; i < row - 2; i++) {
-        for (let j = 0; j < col - 2; j++) {
-            if (isValid(i, j)) {
-                const sum = grid[i][j] + grid[i][j + 1] + grid[i][j + 2];
-                if (
-                    grid[i + 1][j] + grid[i + 1][j + 1] + grid[i + 1][j + 2] ===
-                        sum &&
-                    grid[i + 2][j] + grid[i + 2][j + 1] + grid[i + 2][j + 2] ===
-                        sum &&
-                    grid[i][j] + grid[i + 1][j] + grid[i + 2][j] === sum &&
-                    grid[i][j + 1] + grid[i + 1][j + 1] + grid[i + 2][j + 1] ===
-                        sum &&
-                    grid[i][j + 2] + grid[i + 1][j + 2] + grid[i + 2][j + 2] ===
-                        sum &&
-                    grid[i][j] + grid[i + 1][j + 1] + grid[i + 2][j + 2] ===
-                        sum &&
-                    grid[i][j + 2] + grid[i + 1][j + 1] + grid[i + 2][j] === sum
-                ) {
-                    count++;
-                }
-            }
-        }
+  const isValid = (i: number, j: number): boolean => {
+    clear();
+    let valid = true;
+    for (const [iDelta, jDelta] of positions) {
+      const val = grid[i + iDelta][j + jDelta];
+      if (val < 1 || val > 9 || nums[val] !== 0) {
+        valid = false;
+        break;
+      }
+      nums[val]++;
     }
 
-    return count;
+    return valid;
+  };
+
+  let count = 0;
+  for (let i = 0; i < row - 2; i++) {
+    for (let j = 0; j < col - 2; j++) {
+      if (isValid(i, j)) {
+        const sum = grid[i][j] + grid[i][j + 1] + grid[i][j + 2];
+        if (
+          grid[i + 1][j] + grid[i + 1][j + 1] + grid[i + 1][j + 2] === sum &&
+          grid[i + 2][j] + grid[i + 2][j + 1] + grid[i + 2][j + 2] === sum &&
+          grid[i][j] + grid[i + 1][j] + grid[i + 2][j] === sum &&
+          grid[i][j + 1] + grid[i + 1][j + 1] + grid[i + 2][j + 1] === sum &&
+          grid[i][j + 2] + grid[i + 1][j + 2] + grid[i + 2][j + 2] === sum &&
+          grid[i][j] + grid[i + 1][j + 1] + grid[i + 2][j + 2] === sum &&
+          grid[i][j + 2] + grid[i + 1][j + 1] + grid[i + 2][j] === sum
+        ) {
+          count++;
+        }
+      }
+    }
+  }
+
+  return count;
 }
 
 /*
@@ -1946,47 +1927,47 @@ Constraints:
 	grid1[i][j] and grid2[i][j] are either 0 or 1.
 */
 export function countSubIslands(grid1: number[][], grid2: number[][]): number {
-    let found = true;
+  let found = true;
 
-    const infect = (i: number, j: number): void => {
-        if (grid2[i][j] !== 1) {
-            return;
-        }
-
-        grid2[i][j] = 2;
-        if (grid1[i][j] === 0) {
-            found = false;
-        }
-
-        if (i - 1 >= 0) {
-            infect(i - 1, j);
-        }
-        if (i + 1 < grid2.length) {
-            infect(i + 1, j);
-        }
-        if (j - 1 >= 0) {
-            infect(i, j - 1);
-        }
-        if (j + 1 < grid2[0].length) {
-            infect(i, j + 1);
-        }
-    };
-
-    let subIsLands = 0;
-    for (let i = 0; i < grid2.length; i++) {
-        for (let j = 0; j < grid2[0].length; j++) {
-            found = true;
-            if (grid2[i][j] === 1) {
-                infect(i, j);
-
-                if (found) {
-                    subIsLands++;
-                }
-            }
-        }
+  const infect = (i: number, j: number): void => {
+    if (grid2[i][j] !== 1) {
+      return;
     }
 
-    return subIsLands;
+    grid2[i][j] = 2;
+    if (grid1[i][j] === 0) {
+      found = false;
+    }
+
+    if (i - 1 >= 0) {
+      infect(i - 1, j);
+    }
+    if (i + 1 < grid2.length) {
+      infect(i + 1, j);
+    }
+    if (j - 1 >= 0) {
+      infect(i, j - 1);
+    }
+    if (j + 1 < grid2[0].length) {
+      infect(i, j + 1);
+    }
+  };
+
+  let subIsLands = 0;
+  for (let i = 0; i < grid2.length; i++) {
+    for (let j = 0; j < grid2[0].length; j++) {
+      found = true;
+      if (grid2[i][j] === 1) {
+        infect(i, j);
+
+        if (found) {
+          subIsLands++;
+        }
+      }
+    }
+  }
+
+  return subIsLands;
 }
 
 /*
@@ -2022,70 +2003,70 @@ Constraints:
 	0 <= Node.val <= 1000
 */
 export function spiralMatrix(
-    m: number,
-    n: number,
-    head: ListNode | null
+  m: number,
+  n: number,
+  head: ListNode | null
 ): number[][] {
-    const ret: number[][] = Array.from({ length: m }, () => Array(n).fill(-1));
+  const ret: number[][] = Array.from({ length: m }, () => Array(n).fill(-1));
 
-    let cur = head;
-    let x1 = 0;
-    let y1 = 0;
-    let x2 = m - 1;
-    let y2 = n - 1;
+  let cur = head;
+  let x1 = 0;
+  let y1 = 0;
+  let x2 = m - 1;
+  let y2 = n - 1;
 
-    const fill = () => {
-        // north
-        for (let j = y1; j <= y2; j++) {
-            if (!cur) {
-                return;
-            }
+  const fill = () => {
+    // north
+    for (let j = y1; j <= y2; j++) {
+      if (!cur) {
+        return;
+      }
 
-            ret[x1][j] = cur.val;
-            cur = cur.next;
-        }
-
-        // east
-        for (let i = x1 + 1; i < x2; i++) {
-            if (!cur) {
-                return;
-            }
-
-            ret[i][y2] = cur.val;
-            cur = cur.next;
-        }
-
-        // south
-        for (let j = y2; j > y1; j--) {
-            if (!cur) {
-                return;
-            }
-
-            ret[x2][j] = cur.val;
-            cur = cur.next;
-        }
-
-        // west
-        for (let i = x2; i > x1; i--) {
-            if (!cur) {
-                return;
-            }
-
-            ret[i][y1] = cur.val;
-            cur = cur.next;
-        }
-    };
-
-    while (cur) {
-        fill();
-
-        x1++;
-        y1++;
-        x2--;
-        y2--;
+      ret[x1][j] = cur.val;
+      cur = cur.next;
     }
 
-    return ret;
+    // east
+    for (let i = x1 + 1; i < x2; i++) {
+      if (!cur) {
+        return;
+      }
+
+      ret[i][y2] = cur.val;
+      cur = cur.next;
+    }
+
+    // south
+    for (let j = y2; j > y1; j--) {
+      if (!cur) {
+        return;
+      }
+
+      ret[x2][j] = cur.val;
+      cur = cur.next;
+    }
+
+    // west
+    for (let i = x2; i > x1; i--) {
+      if (!cur) {
+        return;
+      }
+
+      ret[i][y1] = cur.val;
+      cur = cur.next;
+    }
+  };
+
+  while (cur) {
+    fill();
+
+    x1++;
+    y1++;
+    x2--;
+    y2--;
+  }
+
+  return ret;
 }
 
 /*
@@ -2129,30 +2110,27 @@ Constraints:
 	0 <= arr[i][j] <= 1
 */
 export function countSquares(matrix: number[][]): number {
-    const numMatrix = new NumMatrix(matrix);
-    let count = 0;
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            if (matrix[i][j] === 0) {
-                continue;
-            }
+  const numMatrix = new NumMatrix(matrix);
+  let count = 0;
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[0].length; j++) {
+      if (matrix[i][j] === 0) {
+        continue;
+      }
 
-            count++;
-            const max = Math.min(matrix.length - i, matrix[0].length - j);
-            for (let len = 2; len <= max; len++) {
-                if (
-                    numMatrix.sumRegion(i, j, i + len - 1, j + len - 1) ===
-                    len * len
-                ) {
-                    count++;
-                } else {
-                    break;
-                }
-            }
+      count++;
+      const max = Math.min(matrix.length - i, matrix[0].length - j);
+      for (let len = 2; len <= max; len++) {
+        if (numMatrix.sumRegion(i, j, i + len - 1, j + len - 1) === len * len) {
+          count++;
+        } else {
+          break;
         }
+      }
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -2192,46 +2170,46 @@ Constraints:
 	0 <= grid[i][j] <= 10
 */
 export function findMaxFish(grid: number[][]): number {
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    const m = grid.length;
-    const n = grid[0].length;
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  const m = grid.length;
+  const n = grid[0].length;
 
-    const infect = (x: number, y: number) => {
-        if (grid[x][y] === 0) {
-            return 0;
-        }
-
-        let fish = grid[x][y];
-        grid[x][y] = 0;
-
-        for (let i = 0; i < 4; i++) {
-            const nextX = x + moves[i];
-            const nextY = y + moves[i + 1];
-
-            if (
-                nextX >= 0 &&
-                nextX < m &&
-                nextY >= 0 &&
-                nextY < n &&
-                grid[nextX][nextY] !== 0
-            ) {
-                fish += infect(nextX, nextY);
-            }
-        }
-
-        return fish;
-    };
-
-    let max = 0;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] !== 0) {
-                max = Math.max(max, infect(i, j));
-            }
-        }
+  const infect = (x: number, y: number) => {
+    if (grid[x][y] === 0) {
+      return 0;
     }
 
-    return max;
+    let fish = grid[x][y];
+    grid[x][y] = 0;
+
+    for (let i = 0; i < 4; i++) {
+      const nextX = x + moves[i];
+      const nextY = y + moves[i + 1];
+
+      if (
+        nextX >= 0 &&
+        nextX < m &&
+        nextY >= 0 &&
+        nextY < n &&
+        grid[nextX][nextY] !== 0
+      ) {
+        fish += infect(nextX, nextY);
+      }
+    }
+
+    return fish;
+  };
+
+  let max = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] !== 0) {
+        max = Math.max(max, infect(i, j));
+      }
+    }
+  }
+
+  return max;
 }
 
 /*
@@ -2269,53 +2247,53 @@ Constraints:
 	All the positions in guards and walls are unique.
 */
 export function countUnguarded(
-    m: number,
-    n: number,
-    guards: number[][],
-    walls: number[][]
+  m: number,
+  n: number,
+  guards: number[][],
+  walls: number[][]
 ): number {
-    const grid: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
+  const grid: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
 
-    for (const [r, c] of guards) {
-        grid[r][c] = 1;
+  for (const [r, c] of guards) {
+    grid[r][c] = 1;
+  }
+  for (const [r, c] of walls) {
+    grid[r][c] = 2;
+  }
+
+  const markGuarded = (r: number, c: number): void => {
+    for (let row = r + 1; row < m; row++) {
+      if (grid[row][c] === 1 || grid[row][c] === 2) break;
+      grid[row][c] = 3;
     }
-    for (const [r, c] of walls) {
-        grid[r][c] = 2;
+    for (let row = r - 1; row >= 0; row--) {
+      if (grid[row][c] === 1 || grid[row][c] === 2) break;
+      grid[row][c] = 3;
     }
-
-    const markGuarded = (r: number, c: number): void => {
-        for (let row = r + 1; row < m; row++) {
-            if (grid[row][c] === 1 || grid[row][c] === 2) break;
-            grid[row][c] = 3;
-        }
-        for (let row = r - 1; row >= 0; row--) {
-            if (grid[row][c] === 1 || grid[row][c] === 2) break;
-            grid[row][c] = 3;
-        }
-        for (let col = c + 1; col < n; col++) {
-            if (grid[r][col] === 1 || grid[r][col] === 2) break;
-            grid[r][col] = 3;
-        }
-        for (let col = c - 1; col >= 0; col--) {
-            if (grid[r][col] === 1 || grid[r][col] === 2) break;
-            grid[r][col] = 3;
-        }
-    };
-
-    for (const [r, c] of guards) {
-        markGuarded(r, c);
+    for (let col = c + 1; col < n; col++) {
+      if (grid[r][col] === 1 || grid[r][col] === 2) break;
+      grid[r][col] = 3;
     }
-
-    let res = 0;
-    for (const row of grid) {
-        for (const cell of row) {
-            if (cell === 0) {
-                res++;
-            }
-        }
+    for (let col = c - 1; col >= 0; col--) {
+      if (grid[r][col] === 1 || grid[r][col] === 2) break;
+      grid[r][col] = 3;
     }
+  };
 
-    return res;
+  for (const [r, c] of guards) {
+    markGuarded(r, c);
+  }
+
+  let res = 0;
+  for (const row of grid) {
+    for (const cell of row) {
+      if (cell === 0) {
+        res++;
+      }
+    }
+  }
+
+  return res;
 }
 
 /*
@@ -2369,39 +2347,39 @@ Constraints:
 	box[i][j] is either '#', '*', or '.'.
 */
 export function rotateTheBox(box: string[][]): string[][] {
-    const m = box.length;
-    const n = box[0].length;
-    const rotated = Array.from({ length: n }, () => Array(m));
+  const m = box.length;
+  const n = box[0].length;
+  const rotated = Array.from({ length: n }, () => Array(m));
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            rotated[j][m - i - 1] = box[i][j];
-        }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      rotated[j][m - i - 1] = box[i][j];
     }
+  }
 
-    for (let i = 0; i < m; i++) {
-        let j = n - 1;
-        let lastEmpty = j;
-        while (j >= 0) {
-            if (rotated[j][i] === '*') {
-                lastEmpty = j - 1;
-            } else if (rotated[j][i] === '.' && rotated[lastEmpty][i] !== '.') {
-                lastEmpty = j;
-            } else if (
-                rotated[j][i] === '#' &&
-                lastEmpty >= 0 &&
-                rotated[lastEmpty][i] === '.'
-            ) {
-                rotated[lastEmpty][i] = '#';
-                rotated[j][i] = '.';
-                lastEmpty--;
-            }
+  for (let i = 0; i < m; i++) {
+    let j = n - 1;
+    let lastEmpty = j;
+    while (j >= 0) {
+      if (rotated[j][i] === '*') {
+        lastEmpty = j - 1;
+      } else if (rotated[j][i] === '.' && rotated[lastEmpty][i] !== '.') {
+        lastEmpty = j;
+      } else if (
+        rotated[j][i] === '#' &&
+        lastEmpty >= 0 &&
+        rotated[lastEmpty][i] === '.'
+      ) {
+        rotated[lastEmpty][i] = '#';
+        rotated[j][i] = '.';
+        lastEmpty--;
+      }
 
-            j--;
-        }
+      j--;
     }
+  }
 
-    return rotated;
+  return rotated;
 }
 
 /*
@@ -2437,27 +2415,27 @@ Constraints:
 	-10^5 <= matrix[i][j] <= 10^5
 */
 export function maxMatrixSum(matrix: number[][]): number {
-    let sum = 0;
-    let min = Infinity;
-    let negativeCount = 0;
+  let sum = 0;
+  let min = Infinity;
+  let negativeCount = 0;
 
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            if (matrix[i][j] < 0) {
-                negativeCount++;
-                min = Math.min(min, -matrix[i][j]);
-                sum += -matrix[i][j];
-            } else {
-                sum += matrix[i][j];
-                min = Math.min(min, matrix[i][j]);
-            }
-        }
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[0].length; j++) {
+      if (matrix[i][j] < 0) {
+        negativeCount++;
+        min = Math.min(min, -matrix[i][j]);
+        sum += -matrix[i][j];
+      } else {
+        sum += matrix[i][j];
+        min = Math.min(min, matrix[i][j]);
+      }
     }
+  }
 
-    if (negativeCount & 1) {
-        sum -= min << 1;
-    }
-    return sum;
+  if (negativeCount & 1) {
+    sum -= min << 1;
+  }
+  return sum;
 }
 
 /*
@@ -2503,20 +2481,20 @@ Constraints:
 	1 <= grid[r][c] <= 10^5
 */
 export function gridGame(grid: number[][]): number {
-    const n = grid[0].length;
-    const sum = grid[0].reduce((acc, val) => acc + val, 0);
+  const n = grid[0].length;
+  const sum = grid[0].reduce((acc, val) => acc + val, 0);
 
-    let min = Infinity;
-    let bottom = 0;
-    let top = sum;
-    for (let i = 0; i < n; i++) {
-        top -= grid[0][i];
-        const m = Math.max(top, bottom);
-        min = Math.min(min, m);
-        bottom += grid[1][i];
-    }
+  let min = Infinity;
+  let bottom = 0;
+  let top = sum;
+  for (let i = 0; i < n; i++) {
+    top -= grid[0][i];
+    const m = Math.max(top, bottom);
+    min = Math.min(min, m);
+    bottom += grid[1][i];
+  }
 
-    return min;
+  return min;
 }
 
 /*
@@ -2553,26 +2531,26 @@ Constraints:
 	grid[i][j] == 0 or 1
 */
 export function countServers(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
-    const rows = Array(m).fill(0);
-    const cols = Array(n).fill(0);
+  const m = grid.length;
+  const n = grid[0].length;
+  const rows = Array(m).fill(0);
+  const cols = Array(n).fill(0);
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            rows[i] += grid[i][j];
-            cols[j] += grid[i][j];
-        }
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      rows[i] += grid[i][j];
+      cols[j] += grid[i][j];
     }
+  }
 
-    let count = 0;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 1 && (rows[i] > 1 || cols[j] > 1)) {
-                count++;
-            }
-        }
+  let count = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1 && (rows[i] > 1 || cols[j] > 1)) {
+        count++;
+      }
     }
+  }
 
-    return count;
+  return count;
 }

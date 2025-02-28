@@ -7,11 +7,11 @@
 如果外观不能满足客户的个性化需求，那么客户也可以选择越过外观来直接访问子系统。
 */
 export function funcA() {
-    console.log('funcA');
+  console.log('funcA');
 }
 
 export function funcB() {
-    console.log('funcB');
+  console.log('funcB');
 }
 
 /*
@@ -21,6 +21,6 @@ export function funcB() {
 自己调节水量，时间这些参数以实现更精细的控制
 */
 export function facade() {
-    funcA();
-    funcB();
+  funcA();
+  funcB();
 }

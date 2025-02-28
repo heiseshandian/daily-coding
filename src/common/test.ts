@@ -5,12 +5,12 @@
  * @returns
  */
 export function randomArray(n: number, v: number): number[] {
-    const ret: number[] = Array(n);
-    for (let i = 0; i < n; i++) {
-        ret[i] = Math.floor(Math.random() * v) + 1;
-    }
+  const ret: number[] = Array(n);
+  for (let i = 0; i < n; i++) {
+    ret[i] = Math.floor(Math.random() * v) + 1;
+  }
 
-    return ret;
+  return ret;
 }
 
 /**
@@ -19,16 +19,16 @@ export function randomArray(n: number, v: number): number[] {
  * @param iterations 测试次数
  */
 export function benchmark(fn: () => void, iterations: number = 1000): void {
-    const start = performance.now();
+  const start = performance.now();
 
-    for (let i = 0; i < iterations; i++) {
-        fn();
-    }
+  for (let i = 0; i < iterations; i++) {
+    fn();
+  }
 
-    const end = performance.now();
-    const totalTime = end - start;
-    const averageTime = totalTime / iterations;
+  const end = performance.now();
+  const totalTime = end - start;
+  const averageTime = totalTime / iterations;
 
-    console.log(`Total time: ${totalTime.toFixed(4)} ms`);
-    console.log(`Average time per iteration: ${averageTime.toFixed(4)} ms`);
+  console.log(`Total time: ${totalTime.toFixed(4)} ms`);
+  console.log(`Average time per iteration: ${averageTime.toFixed(4)} ms`);
 }

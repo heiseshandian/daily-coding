@@ -11,71 +11,71 @@ type DefaultEventKey = string | number | symbol;
 也许某个模块的作用就是暴露一些接口给其他模块调用。
 */
 export class EventBus<
-    EventKey extends DefaultEventKey = DefaultEventKey,
-    Callback extends DefaultCallback = DefaultCallback
+  EventKey extends DefaultEventKey = DefaultEventKey,
+  Callback extends DefaultCallback = DefaultCallback
 > {
-    clientList: Partial<Record<EventKey, Callback[]>> = {};
+  clientList: Partial<Record<EventKey, Callback[]>> = {};
 
-    listen(key: EventKey, fn: Callback) {
-        if (!this.clientList[key]) {
-            this.clientList[key] = [];
-        }
-
-        this.clientList[key]?.push(fn);
-
-        // 如果存在离线消息就把之前的离线消息都发出去
-        const paramsList = this.offlineEvents[key];
-        if (paramsList && paramsList.length > 0) {
-            paramsList.forEach((params) => {
-                this.trigger(key, ...params);
-            });
-
-            paramsList.length = 0;
-        }
-
-        // 离线消息发完之后清空，避免再次接收到离线消息
-        delete this.offlineEvents[key];
+  listen(key: EventKey, fn: Callback) {
+    if (!this.clientList[key]) {
+      this.clientList[key] = [];
     }
 
-    // 离线事件（比如说某个事件暂时还没订阅者，我们希望后面订阅的人可以收到之前发出的离线消息）
-    offlineEvents: Partial<Record<EventKey, any[][]>> = {};
+    this.clientList[key]?.push(fn);
 
-    trigger(key: EventKey, ...rest: any[]) {
-        const fns = this.clientList[key];
+    // 如果存在离线消息就把之前的离线消息都发出去
+    const paramsList = this.offlineEvents[key];
+    if (paramsList && paramsList.length > 0) {
+      paramsList.forEach((params) => {
+        this.trigger(key, ...params);
+      });
 
-        // 暂时没有订阅者就把消息先存在离线消息队列里
-        if (!fns || fns.length === 0) {
-            if (!this.offlineEvents[key]) {
-                this.offlineEvents[key] = [];
-            }
-
-            this.offlineEvents[key]?.push(rest);
-            return;
-        }
-
-        for (let i = 0; i < fns.length; i++) {
-            fns[i].apply(this, rest);
-        }
+      paramsList.length = 0;
     }
 
-    remove(key: EventKey, fn: Callback) {
-        const fns = this.clientList[key];
-        if (!fns || fns.length === 0) {
-            return;
-        }
+    // 离线消息发完之后清空，避免再次接收到离线消息
+    delete this.offlineEvents[key];
+  }
 
-        // 未传入fn说明需要取消key对应的所有订阅
-        if (fn === undefined) {
-            fns.length = 0;
-        } else {
-            // 这里特意使用反向遍历，否则删除一个元素的时候还要调整i的值
-            for (let i = fns.length - 1; i >= 0; i--) {
-                if (fns[i] === fn) {
-                    fns.splice(i, 1);
-                }
-            }
-        }
+  // 离线事件（比如说某个事件暂时还没订阅者，我们希望后面订阅的人可以收到之前发出的离线消息）
+  offlineEvents: Partial<Record<EventKey, any[][]>> = {};
+
+  trigger(key: EventKey, ...rest: any[]) {
+    const fns = this.clientList[key];
+
+    // 暂时没有订阅者就把消息先存在离线消息队列里
+    if (!fns || fns.length === 0) {
+      if (!this.offlineEvents[key]) {
+        this.offlineEvents[key] = [];
+      }
+
+      this.offlineEvents[key]?.push(rest);
+      return;
     }
+
+    for (let i = 0; i < fns.length; i++) {
+      fns[i].apply(this, rest);
+    }
+  }
+
+  remove(key: EventKey, fn: Callback) {
+    const fns = this.clientList[key];
+    if (!fns || fns.length === 0) {
+      return;
+    }
+
+    // 未传入fn说明需要取消key对应的所有订阅
+    if (fn === undefined) {
+      fns.length = 0;
+    } else {
+      // 这里特意使用反向遍历，否则删除一个元素的时候还要调整i的值
+      for (let i = fns.length - 1; i >= 0; i--) {
+        if (fns[i] === fn) {
+          fns.splice(i, 1);
+        }
+      }
+    }
+  }
 }
 
 export const getEventBusInstance = getSingleClass(EventBus);
@@ -107,42 +107,42 @@ export const getEventBusInstance = getSingleClass(EventBus);
 */
 
 enum LoginEventType {
-    LoginSuccess,
+  LoginSuccess,
 }
 
 // login模块在信息请求成功的时候发布事件
 // 使用发布订阅模式解除模块之间的强依赖
 class Login extends EventBus {
-    init() {
-        // 请求数据，请求成功后发布消息
-        this.trigger(LoginEventType.LoginSuccess, {
-            // user info
-        });
-    }
+  init() {
+    // 请求数据，请求成功后发布消息
+    this.trigger(LoginEventType.LoginSuccess, {
+      // user info
+    });
+  }
 
-    listen(key: LoginEventType, fn: DefaultCallback) {
-        this.listen(key, fn);
-    }
+  listen(key: LoginEventType, fn: DefaultCallback) {
+    this.listen(key, fn);
+  }
 }
 
 const getLoginInstance = getSingleClass(Login);
 
 export class Header {
-    login: Login = getLoginInstance();
+  login: Login = getLoginInstance();
 
-    init() {
-        this.login.listen(LoginEventType.LoginSuccess, () => {
-            // 根据Login模块传过来的用户信息做处理
-        });
-    }
+  init() {
+    this.login.listen(LoginEventType.LoginSuccess, () => {
+      // 根据Login模块传过来的用户信息做处理
+    });
+  }
 }
 
 export class Address {
-    login: Login = getLoginInstance();
+  login: Login = getLoginInstance();
 
-    init() {
-        this.login.listen(LoginEventType.LoginSuccess, () => {
-            // 根据Login模块传过来的用户信息做处理
-        });
-    }
+  init() {
+    this.login.listen(LoginEventType.LoginSuccess, () => {
+      // 根据Login模块传过来的用户信息做处理
+    });
+  }
 }

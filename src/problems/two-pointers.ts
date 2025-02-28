@@ -14,22 +14,22 @@ The tests are generated such that there is exactly one solution. You may not use
 Your solution must use only constant extra space.
 */
 export function twoSum(numbers: number[], target: number): number[] {
-    let left = 0;
-    let right = numbers.length - 1;
-    while (left < right) {
-        const sum = numbers[left] + numbers[right];
-        if (sum === target) {
-            return [left + 1, right + 1];
-        }
-
-        if (sum > target) {
-            right--;
-        } else {
-            left++;
-        }
+  let left = 0;
+  let right = numbers.length - 1;
+  while (left < right) {
+    const sum = numbers[left] + numbers[right];
+    if (sum === target) {
+      return [left + 1, right + 1];
     }
 
-    return [];
+    if (sum > target) {
+      right--;
+    } else {
+      left++;
+    }
+  }
+
+  return [];
 }
 
 /* 
@@ -45,24 +45,21 @@ Return the maximum amount of water a container can store.
 Notice that you may not slant the container.
 */
 export function maxArea(height: number[]): number {
-    let max = 0;
+  let max = 0;
 
-    let left = 0;
-    let right = height.length - 1;
-    while (left < right) {
-        max = Math.max(
-            max,
-            (right - left) * Math.min(height[left], height[right])
-        );
+  let left = 0;
+  let right = height.length - 1;
+  while (left < right) {
+    max = Math.max(max, (right - left) * Math.min(height[left], height[right]));
 
-        if (height[left] < height[right]) {
-            left++;
-        } else {
-            right--;
-        }
+    if (height[left] < height[right]) {
+      left++;
+    } else {
+      right--;
     }
+  }
 
-    return max;
+  return max;
 }
 
 /* 
@@ -75,34 +72,34 @@ at the same time, provided the sum of the weight of those people is at most limi
 Return the minimum number of boats to carry every given person.
 */
 export function numRescueBoats(people: number[], limit: number): number {
-    people.sort((a, b) => a - b);
+  people.sort((a, b) => a - b);
 
-    let count = 0;
-    let closestMaxOrEqual = people.length;
-    if (people[people.length - 1] >= limit) {
-        closestMaxOrEqual = getClosestMaxOrEqual(
-            people,
-            limit,
-            0,
-            people.length - 1
-        );
-        count += people.length - closestMaxOrEqual;
+  let count = 0;
+  let closestMaxOrEqual = people.length;
+  if (people[people.length - 1] >= limit) {
+    closestMaxOrEqual = getClosestMaxOrEqual(
+      people,
+      limit,
+      0,
+      people.length - 1
+    );
+    count += people.length - closestMaxOrEqual;
+  }
+
+  let left = 0;
+  let right = closestMaxOrEqual - 1;
+  while (left <= right) {
+    if (people[left] + people[right] <= limit) {
+      count++;
+      left++;
+      right--;
+    } else {
+      count++;
+      right--;
     }
+  }
 
-    let left = 0;
-    let right = closestMaxOrEqual - 1;
-    while (left <= right) {
-        if (people[left] + people[right] <= limit) {
-            count++;
-            left++;
-            right--;
-        } else {
-            count++;
-            right--;
-        }
-    }
-
-    return count;
+  return count;
 }
 
 /* 
@@ -122,33 +119,33 @@ After you are done modifying the input array, return the new length of the array
 You must write an algorithm that uses only constant extra space.
 */
 export function compress(chars: string[]): number {
-    // 此处故意从后往前遍历，避免删除元素之后导致索引不对
-    let prev = chars.length - 1;
-    let next = prev - 1;
-    let count = 1;
-    const spliceChars = () => {
-        chars.splice(next + 2, count - 1, ...`${count}`.split(''));
-    };
+  // 此处故意从后往前遍历，避免删除元素之后导致索引不对
+  let prev = chars.length - 1;
+  let next = prev - 1;
+  let count = 1;
+  const spliceChars = () => {
+    chars.splice(next + 2, count - 1, ...`${count}`.split(''));
+  };
 
-    while (next >= 0) {
-        if (chars[prev] === chars[next]) {
-            next--;
-            count++;
-            continue;
-        }
-
-        if (count > 1) {
-            spliceChars();
-        }
-        count = 1;
-        prev = next;
-        next--;
+  while (next >= 0) {
+    if (chars[prev] === chars[next]) {
+      next--;
+      count++;
+      continue;
     }
+
     if (count > 1) {
-        spliceChars();
+      spliceChars();
     }
+    count = 1;
+    prev = next;
+    next--;
+  }
+  if (count > 1) {
+    spliceChars();
+  }
 
-    return chars.length;
+  return chars.length;
 }
 
 /*
@@ -185,23 +182,22 @@ Constraints:
 	1 <= houses[i], heaters[i] <= 10^9
 */
 export function findRadius(houses: number[], heaters: number[]): number {
-    houses.sort((a, b) => a - b);
-    heaters.sort((a, b) => a - b);
+  houses.sort((a, b) => a - b);
+  heaters.sort((a, b) => a - b);
 
-    let l = 0;
-    let r = 0;
-    let radius = 0;
-    while (l < houses.length) {
-        while (
-            r + 1 < heaters.length &&
-            Math.abs(heaters[r + 1] - houses[l]) <=
-                Math.abs(heaters[r] - houses[l])
-        ) {
-            r++;
-        }
-
-        radius = Math.max(radius, Math.abs(heaters[r] - houses[l++]));
+  let l = 0;
+  let r = 0;
+  let radius = 0;
+  while (l < houses.length) {
+    while (
+      r + 1 < heaters.length &&
+      Math.abs(heaters[r + 1] - houses[l]) <= Math.abs(heaters[r] - houses[l])
+    ) {
+      r++;
     }
 
-    return radius;
+    radius = Math.max(radius, Math.abs(heaters[r] - houses[l++]));
+  }
+
+  return radius;
 }

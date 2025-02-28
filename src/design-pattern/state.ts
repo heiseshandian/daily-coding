@@ -10,28 +10,28 @@
 这个对象看起来是从不同的类中实例化而来的，实际上这是使用了委托的效果。
 */
 export function loadUploadPlugin() {
-    const plugin = document.createElement('embed');
-    plugin.style.display = 'none';
-    plugin.type = 'application/txftn-webkit';
+  const plugin = document.createElement('embed');
+  plugin.style.display = 'none';
+  plugin.type = 'application/txftn-webkit';
 
-    Object.assign(plugin, {
-        sign() {
-            console.log('开始文件扫描');
-        },
-        pause() {
-            console.log('暂停文件上传');
-        },
-        uploading() {
-            console.log('文件上传中');
-        },
-        del() {
-            console.log('删除文件');
-        },
-        done() {
-            console.log('文件上传完成');
-        },
-    });
+  Object.assign(plugin, {
+    sign() {
+      console.log('开始文件扫描');
+    },
+    pause() {
+      console.log('暂停文件上传');
+    },
+    uploading() {
+      console.log('文件上传中');
+    },
+    del() {
+      console.log('删除文件');
+    },
+    done() {
+      console.log('文件上传完成');
+    },
+  });
 
-    document.body.appendChild(plugin);
-    return plugin;
+  document.body.appendChild(plugin);
+  return plugin;
 }

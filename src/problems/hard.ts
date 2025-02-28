@@ -1,10 +1,10 @@
 import { cache } from '../design-pattern/proxy';
 import {
-    getCharIndex,
-    getPrimeFactors,
-    lcm,
-    sqrtBigInt,
-    swap,
+  getCharIndex,
+  getPrimeFactors,
+  lcm,
+  sqrtBigInt,
+  swap,
 } from '../common/index';
 import { SlidingWindow } from '../algorithm/sliding-window';
 import { GenericHeap } from '../algorithm/generic-heap';
@@ -64,31 +64,31 @@ Constraints:
 	1 <= obstacles[i] <= 10^7
 */
 export function longestObstacleCourseAtEachPosition(
-    obstacles: number[]
+  obstacles: number[]
 ): number[] {
-    const result: number[] = Array(obstacles.length);
-    result[0] = 1;
-    const minEnd = [obstacles[0]];
+  const result: number[] = Array(obstacles.length);
+  result[0] = 1;
+  const minEnd = [obstacles[0]];
 
-    for (let i = 1; i < obstacles.length; i++) {
-        let left = 0;
-        let right = minEnd.length - 1;
-        let closestBiggerIndex = minEnd.length;
-        while (left <= right) {
-            const mid = left + ((right - left) >> 1);
-            if (minEnd[mid] <= obstacles[i]) {
-                left = mid + 1;
-            } else {
-                closestBiggerIndex = mid;
-                right = mid - 1;
-            }
-        }
-
-        minEnd[closestBiggerIndex] = obstacles[i];
-        result[i] = closestBiggerIndex + 1;
+  for (let i = 1; i < obstacles.length; i++) {
+    let left = 0;
+    let right = minEnd.length - 1;
+    let closestBiggerIndex = minEnd.length;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (minEnd[mid] <= obstacles[i]) {
+        left = mid + 1;
+      } else {
+        closestBiggerIndex = mid;
+        right = mid - 1;
+      }
     }
 
-    return result;
+    minEnd[closestBiggerIndex] = obstacles[i];
+    result[i] = closestBiggerIndex + 1;
+  }
+
+  return result;
 }
 
 /*
@@ -128,28 +128,28 @@ Constraints:
 	0 <= ranges[i] <= 100
 */
 export function minTaps(n: number, ranges: number[]): number {
-    const areas = ranges
-        .map((v, i) => [i - v, i + v])
-        .sort(([startA], [startB]) => startA - startB);
+  const areas = ranges
+    .map((v, i) => [i - v, i + v])
+    .sort(([startA], [startB]) => startA - startB);
 
-    let min = 0;
-    let currentEnd = 0;
-    let i = 0;
-    while (currentEnd < n) {
-        let maxEnd = currentEnd;
-        while (i < areas.length && areas[i][0] <= currentEnd) {
-            maxEnd = Math.max(maxEnd, areas[i++][1]);
-        }
-
-        if (maxEnd === currentEnd) {
-            return -1;
-        }
-
-        currentEnd = maxEnd;
-        min++;
+  let min = 0;
+  let currentEnd = 0;
+  let i = 0;
+  while (currentEnd < n) {
+    let maxEnd = currentEnd;
+    while (i < areas.length && areas[i][0] <= currentEnd) {
+      maxEnd = Math.max(maxEnd, areas[i++][1]);
     }
 
-    return min;
+    if (maxEnd === currentEnd) {
+      return -1;
+    }
+
+    currentEnd = maxEnd;
+    min++;
+  }
+
+  return min;
 }
 
 /*
@@ -207,63 +207,63 @@ Constraints:
 	0 <= answers[i] <= 1000
 */
 export function scoreOfStudents(s: string, answers: number[]): number {
-    const MAX = 1000;
-    const calc = cache((start: number, end: number): Set<number> => {
-        if (start === end) {
-            return new Set([+s[start]]);
-        }
+  const MAX = 1000;
+  const calc = cache((start: number, end: number): Set<number> => {
+    if (start === end) {
+      return new Set([+s[start]]);
+    }
 
-        const results = new Set<number>();
-        for (let i = start + 1; i < end; i += 2) {
-            const left = calc(start, i - 1);
-            const right = calc(i + 1, end);
+    const results = new Set<number>();
+    for (let i = start + 1; i < end; i += 2) {
+      const left = calc(start, i - 1);
+      const right = calc(i + 1, end);
 
-            left.forEach((l) => {
-                right.forEach((r) => {
-                    const val = s[i] === '+' ? l + r : l * r;
-                    if (val <= MAX) {
-                        results.add(val);
-                    }
-                });
-            });
-        }
+      left.forEach((l) => {
+        right.forEach((r) => {
+          const val = s[i] === '+' ? l + r : l * r;
+          if (val <= MAX) {
+            results.add(val);
+          }
+        });
+      });
+    }
 
-        return results;
-    });
+    return results;
+  });
 
-    const set = calc(0, s.length - 1);
-    const correctResult = calculate(s);
+  const set = calc(0, s.length - 1);
+  const correctResult = calculate(s);
 
-    return answers.reduce((acc, cur) => {
-        return acc + (cur === correctResult ? 5 : set.has(cur) ? 2 : 0);
-    }, 0);
+  return answers.reduce((acc, cur) => {
+    return acc + (cur === correctResult ? 5 : set.has(cur) ? 2 : 0);
+  }, 0);
 }
 
 function calculate(s: string): number {
-    const stack: Array<string | number> = [s[0]];
-    let i = 1;
-    while (i < s.length) {
-        if (s[i] >= '0' && s[i] <= '9') {
-            const peek = stack[stack.length - 1];
-            if (peek === '*') {
-                stack.pop();
-                stack.push(Number(stack.pop()!) * Number(s[i]));
-            } else {
-                stack.push(s[i]);
-            }
-        } else if (s[i] === '*') {
-            stack.push('*');
-        }
-
-        i++;
+  const stack: Array<string | number> = [s[0]];
+  let i = 1;
+  while (i < s.length) {
+    if (s[i] >= '0' && s[i] <= '9') {
+      const peek = stack[stack.length - 1];
+      if (peek === '*') {
+        stack.pop();
+        stack.push(Number(stack.pop()!) * Number(s[i]));
+      } else {
+        stack.push(s[i]);
+      }
+    } else if (s[i] === '*') {
+      stack.push('*');
     }
 
-    let sum = 0;
-    stack.forEach((v) => {
-        sum += Number(v);
-    });
+    i++;
+  }
 
-    return sum;
+  let sum = 0;
+  stack.forEach((v) => {
+    sum += Number(v);
+  });
+
+  return sum;
 }
 
 /*
@@ -299,74 +299,74 @@ Constraints:
 	1 <= basket1[i],basket2[i] <= 10^9
 */
 export function minCost(basket1: number[], basket2: number[]): number {
-    const [repeatTimes1, min1] = getRepeatTimesAndMin(basket1);
-    const [repeatTimes2, min2] = getRepeatTimesAndMin(basket2);
+  const [repeatTimes1, min1] = getRepeatTimesAndMin(basket1);
+  const [repeatTimes2, min2] = getRepeatTimesAndMin(basket2);
 
-    let restLen = basket1.length;
-    Object.keys(repeatTimes1).forEach((v) => {
-        if (repeatTimes2[v]) {
-            const min = Math.min(repeatTimes1[v], repeatTimes2[v]);
-            repeatTimes1[v] -= min;
-            repeatTimes2[v] -= min;
-            restLen -= min;
+  let restLen = basket1.length;
+  Object.keys(repeatTimes1).forEach((v) => {
+    if (repeatTimes2[v]) {
+      const min = Math.min(repeatTimes1[v], repeatTimes2[v]);
+      repeatTimes1[v] -= min;
+      repeatTimes2[v] -= min;
+      restLen -= min;
 
-            if (repeatTimes1[v] === 0) {
-                delete repeatTimes1[v];
-            }
-            if (repeatTimes2[v] === 0) {
-                delete repeatTimes2[v];
-            }
-        }
-    });
-    if (restLen === 0) {
-        return 0;
+      if (repeatTimes1[v] === 0) {
+        delete repeatTimes1[v];
+      }
+      if (repeatTimes2[v] === 0) {
+        delete repeatTimes2[v];
+      }
     }
+  });
+  if (restLen === 0) {
+    return 0;
+  }
 
-    if (
-        Object.keys(repeatTimes1).some((v) => repeatTimes1[v] & 1) ||
-        Object.keys(repeatTimes2).some((v) => repeatTimes1[v] & 1)
-    ) {
-        return -1;
-    }
+  if (
+    Object.keys(repeatTimes1).some((v) => repeatTimes1[v] & 1) ||
+    Object.keys(repeatTimes2).some((v) => repeatTimes1[v] & 1)
+  ) {
+    return -1;
+  }
 
-    const nums1 = fillNums(repeatTimes1, restLen);
-    const nums2 = fillNums(repeatTimes2, restLen);
-    nums1.sort((a, b) => a - b);
-    nums2.sort((a, b) => b - a);
+  const nums1 = fillNums(repeatTimes1, restLen);
+  const nums2 = fillNums(repeatTimes2, restLen);
+  nums1.sort((a, b) => a - b);
+  nums2.sort((a, b) => b - a);
 
-    let score = 0;
-    const min = Math.min(min1, min2) << 1;
-    nums1.forEach((v, i) => {
-        score += Math.min(v, nums2[i], min);
-    });
+  let score = 0;
+  const min = Math.min(min1, min2) << 1;
+  nums1.forEach((v, i) => {
+    score += Math.min(v, nums2[i], min);
+  });
 
-    return score;
+  return score;
 }
 
 function fillNums(times: Record<number, number>, len: number) {
-    const nums: number[] = Array(len);
-    let i = 0;
+  const nums: number[] = Array(len);
+  let i = 0;
 
-    Object.keys(times).forEach((v) => {
-        Array(times[v] >> 1)
-            .fill(+v)
-            .forEach((v) => (nums[i++] = v));
-    });
+  Object.keys(times).forEach((v) => {
+    Array(times[v] >> 1)
+      .fill(+v)
+      .forEach((v) => (nums[i++] = v));
+  });
 
-    return nums;
+  return nums;
 }
 
 function getRepeatTimesAndMin(
-    nums: number[]
+  nums: number[]
 ): [times: Record<number, number>, min: number] {
-    const repeatTimes: Record<number, number> = {};
-    let min = Infinity;
-    nums.forEach((v) => {
-        repeatTimes[v] = (repeatTimes[v] || 0) + 1;
-        min = Math.min(min, v);
-    });
+  const repeatTimes: Record<number, number> = {};
+  let min = Infinity;
+  nums.forEach((v) => {
+    repeatTimes[v] = (repeatTimes[v] || 0) + 1;
+    min = Math.min(min, v);
+  });
 
-    return [repeatTimes, min];
+  return [repeatTimes, min];
 }
 
 /*
@@ -400,24 +400,24 @@ Constraints:
 	2^31 <= nums[i] <= 2^31 - 1
 */
 export function firstMissingPositive(nums: number[]): number {
-    let left = 0;
-    let right = nums.length;
+  let left = 0;
+  let right = nums.length;
 
-    while (left < right) {
-        if (nums[left] < left + 1 || nums[left] > right) {
-            // 当前数字范围不在 left+1 到 right之间，把left位置的数丢进垃圾区
-            swap(nums, left, --right);
-        } else if (nums[left] === left + 1) {
-            left++;
-        } else if (nums[left] === nums[nums[left] - 1]) {
-            // 重复出现值也直接丢进垃圾区
-            swap(nums, left, --right);
-        } else {
-            swap(nums, left, nums[left] - 1);
-        }
+  while (left < right) {
+    if (nums[left] < left + 1 || nums[left] > right) {
+      // 当前数字范围不在 left+1 到 right之间，把left位置的数丢进垃圾区
+      swap(nums, left, --right);
+    } else if (nums[left] === left + 1) {
+      left++;
+    } else if (nums[left] === nums[nums[left] - 1]) {
+      // 重复出现值也直接丢进垃圾区
+      swap(nums, left, --right);
+    } else {
+      swap(nums, left, nums[left] - 1);
     }
+  }
 
-    return left + 1;
+  return left + 1;
 }
 
 /*
@@ -449,36 +449,36 @@ Constraints:
 	1 <= nums[i], k <= nums.length
 */
 export function subarraysWithKDistinct(nums: number[], k: number): number {
-    const freqMap = new Map<number, number>();
-    freqMap.set(nums[0], 1);
-    let left = 0;
-    let right = 0;
-    let count = 0;
-    while (left < nums.length) {
-        while (freqMap.size < k && right < nums.length) {
-            right++;
-            freqMap.set(nums[right], (freqMap.get(nums[right]) || 0) + 1);
-        }
-
-        if (freqMap.size === k) {
-            let j = right;
-            while (j < nums.length && freqMap.has(nums[j])) {
-                count++;
-                j++;
-            }
-
-            if (freqMap.get(nums[left]) === 1) {
-                freqMap.delete(nums[left]);
-            } else {
-                freqMap.set(nums[left], freqMap.get(nums[left])! - 1);
-            }
-            left++;
-        } else {
-            break;
-        }
+  const freqMap = new Map<number, number>();
+  freqMap.set(nums[0], 1);
+  let left = 0;
+  let right = 0;
+  let count = 0;
+  while (left < nums.length) {
+    while (freqMap.size < k && right < nums.length) {
+      right++;
+      freqMap.set(nums[right], (freqMap.get(nums[right]) || 0) + 1);
     }
 
-    return count;
+    if (freqMap.size === k) {
+      let j = right;
+      while (j < nums.length && freqMap.has(nums[j])) {
+        count++;
+        j++;
+      }
+
+      if (freqMap.get(nums[left]) === 1) {
+        freqMap.delete(nums[left]);
+      } else {
+        freqMap.set(nums[left], freqMap.get(nums[left])! - 1);
+      }
+      left++;
+    } else {
+      break;
+    }
+  }
+
+  return count;
 }
 
 /*
@@ -513,44 +513,44 @@ Constraints:
 	1 <= nums[i], minK, maxK <= 10^6
 */
 export function countSubarrays(
-    nums: number[],
-    minK: number,
-    maxK: number
+  nums: number[],
+  minK: number,
+  maxK: number
 ): number {
-    const minWindow = new SlidingWindow(nums, (a, b) => a - b);
-    const maxWindow = new SlidingWindow(nums, (a, b) => b - a);
-    minWindow.moveRight();
-    maxWindow.moveRight();
+  const minWindow = new SlidingWindow(nums, (a, b) => a - b);
+  const maxWindow = new SlidingWindow(nums, (a, b) => b - a);
+  minWindow.moveRight();
+  maxWindow.moveRight();
 
-    let count = 0;
-    let lastK = -1;
-    while (maxWindow.right < nums.length) {
-        if (minWindow.peek() === minK && maxWindow.peek() === maxK) {
-            let k = Math.max(lastK, minWindow.right);
-            while (k < nums.length && nums[k] >= minK && nums[k] <= maxK) {
-                k++;
-            }
-            lastK = k;
+  let count = 0;
+  let lastK = -1;
+  while (maxWindow.right < nums.length) {
+    if (minWindow.peek() === minK && maxWindow.peek() === maxK) {
+      let k = Math.max(lastK, minWindow.right);
+      while (k < nums.length && nums[k] >= minK && nums[k] <= maxK) {
+        k++;
+      }
+      lastK = k;
 
-            count += lastK - minWindow.right;
+      count += lastK - minWindow.right;
 
-            minWindow.moveLeft();
-            maxWindow.moveLeft();
-        } else if (minWindow.peek() >= minK && maxWindow.peek() <= maxK) {
-            minWindow.moveRight();
-            maxWindow.moveRight();
-        } else {
-            while (minWindow.left < minWindow.right) {
-                minWindow.moveLeft();
-                maxWindow.moveLeft();
-            }
+      minWindow.moveLeft();
+      maxWindow.moveLeft();
+    } else if (minWindow.peek() >= minK && maxWindow.peek() <= maxK) {
+      minWindow.moveRight();
+      maxWindow.moveRight();
+    } else {
+      while (minWindow.left < minWindow.right) {
+        minWindow.moveLeft();
+        maxWindow.moveLeft();
+      }
 
-            minWindow.moveRight();
-            maxWindow.moveRight();
-        }
+      minWindow.moveRight();
+      maxWindow.moveRight();
     }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -583,35 +583,34 @@ Constraints:
 	1 <= nums[i] <= 10^5
 */
 export function sumOfFlooredPairs(nums: number[]) {
-    const MAX = Math.max(...nums);
+  const MAX = Math.max(...nums);
 
-    const countsGreaterOrEqualTo = new Array(MAX + 1).fill(0);
+  const countsGreaterOrEqualTo = new Array(MAX + 1).fill(0);
 
-    nums.forEach((num) => (countsGreaterOrEqualTo[num] += 1));
+  nums.forEach((num) => (countsGreaterOrEqualTo[num] += 1));
 
-    for (let num = MAX - 1; num >= 0; num -= 1) {
-        countsGreaterOrEqualTo[num] += countsGreaterOrEqualTo[num + 1];
+  for (let num = MAX - 1; num >= 0; num -= 1) {
+    countsGreaterOrEqualTo[num] += countsGreaterOrEqualTo[num + 1];
+  }
+
+  const numCounts = nums.reduce((counts, num) => {
+    counts.set(num, (counts.get(num) || 0) + 1);
+    return counts;
+  }, new Map());
+
+  const MOD = 10 ** 9 + 7;
+  let totalCount = 0;
+
+  numCounts.forEach((count, num) => {
+    let current = num;
+
+    while (current <= MAX) {
+      totalCount = (totalCount + countsGreaterOrEqualTo[current] * count) % MOD;
+      current += num;
     }
+  });
 
-    const numCounts = nums.reduce((counts, num) => {
-        counts.set(num, (counts.get(num) || 0) + 1);
-        return counts;
-    }, new Map());
-
-    const MOD = 10 ** 9 + 7;
-    let totalCount = 0;
-
-    numCounts.forEach((count, num) => {
-        let current = num;
-
-        while (current <= MAX) {
-            totalCount =
-                (totalCount + countsGreaterOrEqualTo[current] * count) % MOD;
-            current += num;
-        }
-    });
-
-    return totalCount;
+  return totalCount;
 }
 
 /*
@@ -660,72 +659,72 @@ Constraints:
 	There will be at least one element in the data structure when getRandom is called.
 */
 export class RandomizedCollection {
-    private index2ValMap: Map<number, number>;
-    private val2IndexMap: Map<number, Set<number>>;
-    private size: number;
+  private index2ValMap: Map<number, number>;
+  private val2IndexMap: Map<number, Set<number>>;
+  private size: number;
 
-    constructor() {
-        this.index2ValMap = new Map();
-        this.val2IndexMap = new Map();
-        this.size = 0;
+  constructor() {
+    this.index2ValMap = new Map();
+    this.val2IndexMap = new Map();
+    this.size = 0;
+  }
+
+  insert(val: number): boolean {
+    const inserted = this.val2IndexMap.has(val);
+    if (!inserted) {
+      this.index2ValMap.set(this.size, val);
+      this.val2IndexMap.set(val, new Set([this.size]));
+    } else {
+      const indexSet = this.val2IndexMap.get(val)!;
+      this.index2ValMap.set(this.size, val);
+      indexSet.add(this.size);
+    }
+    this.size++;
+
+    return !inserted;
+  }
+
+  remove(val: number): boolean {
+    const indexSet = this.val2IndexMap.get(val);
+    if (indexSet === undefined) {
+      return false;
     }
 
-    insert(val: number): boolean {
-        const inserted = this.val2IndexMap.has(val);
-        if (!inserted) {
-            this.index2ValMap.set(this.size, val);
-            this.val2IndexMap.set(val, new Set([this.size]));
-        } else {
-            const indexSet = this.val2IndexMap.get(val)!;
-            this.index2ValMap.set(this.size, val);
-            indexSet.add(this.size);
-        }
-        this.size++;
-
-        return !inserted;
+    const toDeleteIndex = indexSet.values().next().value;
+    this.swap(toDeleteIndex, this.size - 1);
+    indexSet.delete(this.size - 1);
+    if (indexSet.size === 0) {
+      this.val2IndexMap.delete(val);
     }
 
-    remove(val: number): boolean {
-        const indexSet = this.val2IndexMap.get(val);
-        if (indexSet === undefined) {
-            return false;
-        }
+    this.index2ValMap.delete(this.size - 1);
+    this.size--;
 
-        const toDeleteIndex = indexSet.values().next().value;
-        this.swap(toDeleteIndex, this.size - 1);
-        indexSet.delete(this.size - 1);
-        if (indexSet.size === 0) {
-            this.val2IndexMap.delete(val);
-        }
+    return true;
+  }
 
-        this.index2ValMap.delete(this.size - 1);
-        this.size--;
-
-        return true;
+  private swap(i: number, j: number) {
+    if (i === j) {
+      return;
     }
 
-    private swap(i: number, j: number) {
-        if (i === j) {
-            return;
-        }
+    const valI = this.index2ValMap.get(i)!;
+    const valJ = this.index2ValMap.get(j)!;
+    this.index2ValMap.set(i, valJ);
+    this.index2ValMap.set(j, valI);
 
-        const valI = this.index2ValMap.get(i)!;
-        const valJ = this.index2ValMap.get(j)!;
-        this.index2ValMap.set(i, valJ);
-        this.index2ValMap.set(j, valI);
+    const indexSetI = this.val2IndexMap.get(valI)!;
+    const indexSetJ = this.val2IndexMap.get(valJ)!;
+    indexSetI.delete(i);
+    indexSetI.add(j);
+    indexSetJ.delete(j);
+    indexSetJ.add(i);
+  }
 
-        const indexSetI = this.val2IndexMap.get(valI)!;
-        const indexSetJ = this.val2IndexMap.get(valJ)!;
-        indexSetI.delete(i);
-        indexSetI.add(j);
-        indexSetJ.delete(j);
-        indexSetJ.add(i);
-    }
-
-    getRandom(): number {
-        const random = Math.floor(Math.random() * this.size);
-        return this.index2ValMap.get(random)!;
-    }
+  getRandom(): number {
+    const random = Math.floor(Math.random() * this.size);
+    return this.index2ValMap.get(random)!;
+  }
 }
 
 /*
@@ -772,70 +771,70 @@ Constraints:
 // This is the MountainArray's API interface.
 // You should not implement it, or speculate about its implementation
 class MountainArray {
-    // @ts-expect-error
-    get(index: number): number {}
-    // @ts-expect-error
-    length(): number {}
+  // @ts-expect-error
+  get(index: number): number {}
+  // @ts-expect-error
+  length(): number {}
 }
 
 export function findInMountainArray(
-    target: number,
-    mountainArr: MountainArray
+  target: number,
+  mountainArr: MountainArray
 ) {
-    const len = mountainArr.length();
-    const get = cache((index: number) => mountainArr.get(index));
+  const len = mountainArr.length();
+  const get = cache((index: number) => mountainArr.get(index));
 
-    // find peak
-    let left = 0;
-    let right = len - 1;
-    let peak: number = 0;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (get(mid) > get(mid - 1) && get(mid) > get(mid + 1)) {
-            peak = mid;
-            break;
-        }
-
-        if (get(mid - 1) < get(mid) && get(mid) < get(mid + 1)) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
+  // find peak
+  let left = 0;
+  let right = len - 1;
+  let peak: number = 0;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (get(mid) > get(mid - 1) && get(mid) > get(mid + 1)) {
+      peak = mid;
+      break;
     }
 
-    // find target from left side
-    left = 0;
-    right = peak;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (get(mid) === target) {
-            return mid;
-        }
+    if (get(mid - 1) < get(mid) && get(mid) < get(mid + 1)) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
 
-        if (get(mid) > target) {
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
+  // find target from left side
+  left = 0;
+  right = peak;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (get(mid) === target) {
+      return mid;
     }
 
-    // find target from right side
-    left = peak + 1;
-    right = len - 1;
-    while (left <= right) {
-        const mid = left + ((right - left) >> 1);
-        if (get(mid) === target) {
-            return mid;
-        }
+    if (get(mid) > target) {
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
 
-        if (get(mid) > target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
+  // find target from right side
+  left = peak + 1;
+  right = len - 1;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (get(mid) === target) {
+      return mid;
     }
 
-    return -1;
+    if (get(mid) > target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return -1;
 }
 
 /*
@@ -870,32 +869,32 @@ Constraints:
 	1 <= people[i] <= 10^9
 */
 export function fullBloomFlowers(
-    flowers: number[][],
-    people: number[]
+  flowers: number[][],
+  people: number[]
 ): number[] {
-    flowers.sort(([startA], [startB]) => startA - startB);
-    const sorted = people.map((t, i) => [t, i]).sort(([tA], [tB]) => tA - tB);
-    const result = Array(people.length);
+  flowers.sort(([startA], [startB]) => startA - startB);
+  const sorted = people.map((t, i) => [t, i]).sort(([tA], [tB]) => tA - tB);
+  const result = Array(people.length);
 
-    const heap = new GenericHeap((a, b) => a - b);
+  const heap = new GenericHeap((a, b) => a - b);
 
-    let prev = 0;
-    sorted.forEach(([t, index]) => {
-        let i = prev;
-        while (i < flowers.length && flowers[i][0] <= t) {
-            heap.push(flowers[i][1]);
-            i++;
-        }
-        prev = i;
+  let prev = 0;
+  sorted.forEach(([t, index]) => {
+    let i = prev;
+    while (i < flowers.length && flowers[i][0] <= t) {
+      heap.push(flowers[i][1]);
+      i++;
+    }
+    prev = i;
 
-        while (heap.size() > 0 && heap.peek() < t) {
-            heap.pop();
-        }
+    while (heap.size() > 0 && heap.peek() < t) {
+      heap.pop();
+    }
 
-        result[index] = heap.size();
-    });
+    result[index] = heap.size();
+  });
 
-    return result;
+  return result;
 }
 
 /*
@@ -947,7 +946,7 @@ Constraints:
 	s consists of only English letters (both uppercase and lowercase), digits (0-9), plus '+', minus '-', or dot '.'.
 */
 export function isNumber(s: string): boolean {
-    return /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s.trim());
+  return /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s.trim());
 }
 
 /*
@@ -973,31 +972,27 @@ Constraints:
 	1 <= n <= 9
 */
 export function totalNQueens(n: number): number {
-    const limit = (1 << n) - 1;
+  const limit = (1 << n) - 1;
 
-    const dfs = (column: number, left: number, right: number): number => {
-        if (column === limit) {
-            return 1;
-        }
+  const dfs = (column: number, left: number, right: number): number => {
+    if (column === limit) {
+      return 1;
+    }
 
-        const l = column | left | right;
-        let candidate = limit & ~l;
+    const l = column | left | right;
+    let candidate = limit & ~l;
 
-        let count = 0;
-        while (candidate) {
-            const place = candidate & -candidate;
-            candidate ^= place;
-            count += dfs(
-                column | place,
-                (left | place) >> 1,
-                (right | place) << 1
-            );
-        }
+    let count = 0;
+    while (candidate) {
+      const place = candidate & -candidate;
+      candidate ^= place;
+      count += dfs(column | place, (left | place) >> 1, (right | place) << 1);
+    }
 
-        return count;
-    };
+    return count;
+  };
 
-    return dfs(0, 0, 0);
+  return dfs(0, 0, 0);
 }
 
 /*
@@ -1025,32 +1020,32 @@ Constraints:
 * 采用二分答案的思路来求解
 */
 export function nthMagicalNumber(n: number, a: number, b: number): number {
-    const l = lcm(a, b);
-    const countMagicNumbers = (x: number) =>
-        Math.floor(x / a) + Math.floor(x / b) - Math.floor(x / l);
-    const modulo = Math.pow(10, 9) + 7;
+  const l = lcm(a, b);
+  const countMagicNumbers = (x: number) =>
+    Math.floor(x / a) + Math.floor(x / b) - Math.floor(x / l);
+  const modulo = Math.pow(10, 9) + 7;
 
-    let left = 1;
-    let right = n * Math.min(a, b);
-    let closest = right;
-    while (left <= right) {
-        // ! 此处不可使用 位运算 来求解 mid ，会溢出导致超时
-        const mid = left + Math.floor((right - left) / 2);
+  let left = 1;
+  let right = n * Math.min(a, b);
+  let closest = right;
+  while (left <= right) {
+    // ! 此处不可使用 位运算 来求解 mid ，会溢出导致超时
+    const mid = left + Math.floor((right - left) / 2);
 
-        /**
-         * ! 此处找到 n 个 magic number 的时候不能直接返回 mid，因为 mid 有可能比第 n 个
-         * ! magic number 大，比如说 n=3,a=6,b=4 此时 mid = 9，1-9 一共三个 magic number
-         * ! 但是 9 本身并不是 magic number ，我们需要继续缩小范围，找到第 n 个 magic number
-         */
-        if (countMagicNumbers(mid) >= n) {
-            closest = mid;
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
+    /**
+     * ! 此处找到 n 个 magic number 的时候不能直接返回 mid，因为 mid 有可能比第 n 个
+     * ! magic number 大，比如说 n=3,a=6,b=4 此时 mid = 9，1-9 一共三个 magic number
+     * ! 但是 9 本身并不是 magic number ，我们需要继续缩小范围，找到第 n 个 magic number
+     */
+    if (countMagicNumbers(mid) >= n) {
+      closest = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
     }
+  }
 
-    return closest % modulo;
+  return closest % modulo;
 }
 
 /*
@@ -1084,28 +1079,28 @@ Constraints:
 	1 <= quality[i], wage[i] <= 10^4
 */
 export function mincostToHireWorkers(
-    quality: number[],
-    wage: number[],
-    k: number
+  quality: number[],
+  wage: number[],
+  k: number
 ): number {
-    const sorted = quality
-        .map((q, i) => [wage[i] / q, q])
-        .sort(([a], [b]) => a - b);
+  const sorted = quality
+    .map((q, i) => [wage[i] / q, q])
+    .sort(([a], [b]) => a - b);
 
-    let sum = 0;
-    const maxHeap = new GenericHeap((a, b) => b - a);
-    let minCost = Infinity;
-    for (const [ratio, q] of sorted) {
-        sum += q;
-        maxHeap.push(q);
-        if (maxHeap.size() > k) {
-            sum -= maxHeap.pop()!;
-        }
-        if (maxHeap.size() === k) {
-            minCost = Math.min(minCost, sum * ratio);
-        }
+  let sum = 0;
+  const maxHeap = new GenericHeap((a, b) => b - a);
+  let minCost = Infinity;
+  for (const [ratio, q] of sorted) {
+    sum += q;
+    maxHeap.push(q);
+    if (maxHeap.size() > k) {
+      sum -= maxHeap.pop()!;
     }
-    return minCost;
+    if (maxHeap.size() === k) {
+      minCost = Math.min(minCost, sum * ratio);
+    }
+  }
+  return minCost;
 }
 
 /*
@@ -1143,40 +1138,40 @@ Constraints:
 3. f 函数分析：给定 nums 和 range，问分出的份数是否小于等于 k
 */
 export function splitArray(nums: number[], k: number): number {
-    let l = 0;
-    let r = nums.reduce((sum, cur) => sum + cur);
-    let result = 0;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (canSplit(nums, k, m)) {
-            result = m;
-            r = m - 1;
-        } else {
-            l = m + 1;
-        }
+  let l = 0;
+  let r = nums.reduce((sum, cur) => sum + cur);
+  let result = 0;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (canSplit(nums, k, m)) {
+      result = m;
+      r = m - 1;
+    } else {
+      l = m + 1;
     }
+  }
 
-    return result;
+  return result;
 }
 
 function canSplit(nums: number[], k: number, range: number): boolean {
-    let parts = 1;
-    let sum = 0;
-    let i = 0;
-    while (i < nums.length) {
-        if (nums[i] > range) {
-            return false;
-        }
-
-        if (sum + nums[i] > range) {
-            parts++;
-            sum = nums[i++];
-        } else {
-            sum += nums[i++];
-        }
+  let parts = 1;
+  let sum = 0;
+  let i = 0;
+  while (i < nums.length) {
+    if (nums[i] > range) {
+      return false;
     }
 
-    return parts <= k;
+    if (sum + nums[i] > range) {
+      parts++;
+      sum = nums[i++];
+    } else {
+      sum += nums[i++];
+    }
+  }
+
+  return parts <= k;
 }
 
 /*
@@ -1214,52 +1209,52 @@ Constraints:
 	1 <= k <= n * (n - 1) / 2
 */
 export function smallestDistancePair(nums: number[], k: number): number {
-    nums.sort((a, b) => a - b);
+  nums.sort((a, b) => a - b);
 
-    let l = 0;
-    let r = nums[nums.length - 1] - nums[0];
-    let distance = -1;
-    while (l <= r) {
-        const m = l + ((r - l) >> 1);
-        if (countPairsWithSmallerDistance(nums, m) >= k) {
-            distance = m;
-            r = m - 1;
-        } else {
-            l = m + 1;
-        }
+  let l = 0;
+  let r = nums[nums.length - 1] - nums[0];
+  let distance = -1;
+  while (l <= r) {
+    const m = l + ((r - l) >> 1);
+    if (countPairsWithSmallerDistance(nums, m) >= k) {
+      distance = m;
+      r = m - 1;
+    } else {
+      l = m + 1;
     }
+  }
 
-    return distance;
+  return distance;
 }
 
 function countPairsWithSmallerDistance(
-    nums: number[],
-    distance: number
+  nums: number[],
+  distance: number
 ): number {
-    let count = 0;
-    const n = nums.length;
-    for (let i = 0; i < n - 1; i++) {
-        if (nums[i + 1] - nums[i] > distance) {
-            continue;
-        }
-
-        let l = i + 1;
-        let r = n - 1;
-        let rightBound = i + 1;
-        while (l <= r) {
-            const m = l + ((r - l) >> 1);
-            if (nums[m] - nums[i] <= distance) {
-                rightBound = m;
-                l = m + 1;
-            } else {
-                r = m - 1;
-            }
-        }
-
-        count += rightBound - i;
+  let count = 0;
+  const n = nums.length;
+  for (let i = 0; i < n - 1; i++) {
+    if (nums[i + 1] - nums[i] > distance) {
+      continue;
     }
 
-    return count;
+    let l = i + 1;
+    let r = n - 1;
+    let rightBound = i + 1;
+    while (l <= r) {
+      const m = l + ((r - l) >> 1);
+      if (nums[m] - nums[i] <= distance) {
+        rightBound = m;
+        l = m + 1;
+      } else {
+        r = m - 1;
+      }
+    }
+
+    count += rightBound - i;
+  }
+
+  return count;
 }
 
 /*
@@ -1287,31 +1282,31 @@ Constraints:
 	1 <= k <= 10^9
 */
 export function shortestSubarray(nums: number[], k: number): number {
-    const minQ: number[] = [];
-    const prefix: number[] = Array(nums.length);
-    let i = 0;
-    let sum = 0;
-    let min = Infinity;
-    while (i < nums.length) {
-        sum += nums[i];
-        prefix[i] = sum;
-        if (sum >= k) {
-            min = Math.min(min, i + 1);
-        }
-
-        while (minQ.length && prefix[minQ[minQ.length - 1]] >= sum) {
-            minQ.pop();
-        }
-        minQ.push(i);
-
-        while (minQ.length && prefix[minQ[0]] <= sum - k) {
-            min = Math.min(min, i - minQ[0]);
-            minQ.shift();
-        }
-        i++;
+  const minQ: number[] = [];
+  const prefix: number[] = Array(nums.length);
+  let i = 0;
+  let sum = 0;
+  let min = Infinity;
+  while (i < nums.length) {
+    sum += nums[i];
+    prefix[i] = sum;
+    if (sum >= k) {
+      min = Math.min(min, i + 1);
     }
 
-    return min === Infinity ? -1 : min;
+    while (minQ.length && prefix[minQ[minQ.length - 1]] >= sum) {
+      minQ.pop();
+    }
+    minQ.push(i);
+
+    while (minQ.length && prefix[minQ[0]] <= sum - k) {
+      min = Math.min(min, i - minQ[0]);
+      minQ.shift();
+    }
+    i++;
+  }
+
+  return min === Infinity ? -1 : min;
 }
 
 /*
@@ -1347,21 +1342,21 @@ Constraints:
 	All the elements of row are unique.
 */
 export function minSwapsCouples(row: number[]): number {
-    const n = row.length;
-    const couples = n >> 1;
-    const unionFind = new UnionFind(couples);
-    let sets = couples;
+  const n = row.length;
+  const couples = n >> 1;
+  const unionFind = new UnionFind(couples);
+  let sets = couples;
 
-    for (let i = 0; i < n; i += 2) {
-        const a = row[i] >> 1;
-        const b = row[i + 1] >> 1;
-        if (a !== b && !unionFind.isSameSet(a, b)) {
-            unionFind.union(a, b);
-            sets--;
-        }
+  for (let i = 0; i < n; i += 2) {
+    const a = row[i] >> 1;
+    const b = row[i + 1] >> 1;
+    if (a !== b && !unionFind.isSameSet(a, b)) {
+      unionFind.union(a, b);
+      sets--;
     }
+  }
 
-    return couples - sets;
+  return couples - sets;
 }
 
 /*
@@ -1399,38 +1394,38 @@ Constraints:
 	All words in strs have the same length and are anagrams of each other.
 */
 export function numSimilarGroups(strs: string[]): number {
-    const n = strs.length;
-    const unionFind = new UnionFind(n);
-    let sets = n;
+  const n = strs.length;
+  const unionFind = new UnionFind(n);
+  let sets = n;
 
-    for (let i = 0; i < n; i++) {
-        for (let j = i + 1; j < n; j++) {
-            if (!unionFind.isSameSet(i, j) && isSimilar(strs[i], strs[j])) {
-                unionFind.union(i, j);
-                sets--;
-            }
-        }
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      if (!unionFind.isSameSet(i, j) && isSimilar(strs[i], strs[j])) {
+        unionFind.union(i, j);
+        sets--;
+      }
     }
+  }
 
-    return sets;
+  return sets;
 }
 
 function isSimilar(a: string, b: string): boolean {
-    let i = 0;
-    let n = a.length;
-    let diff = 0;
+  let i = 0;
+  let n = a.length;
+  let diff = 0;
 
-    while (i < n) {
-        if (a[i] !== b[i]) {
-            diff++;
-        }
-        if (diff >= 3) {
-            return false;
-        }
-        i++;
+  while (i < n) {
+    if (a[i] !== b[i]) {
+      diff++;
     }
+    if (diff >= 3) {
+      return false;
+    }
+    i++;
+  }
 
-    return true;
+  return true;
 }
 
 /*
@@ -1478,58 +1473,58 @@ Constraints:
 	words[i], letters[i] contains only lower case English letters.
 */
 export function maxScoreWords(
-    words: string[],
-    letters: string[],
-    score: number[]
+  words: string[],
+  letters: string[],
+  score: number[]
 ): number {
-    const freq = Array(26).fill(0);
-    letters.forEach((l) => {
-        freq[getCharIndex(l)]++;
+  const freq = Array(26).fill(0);
+  letters.forEach((l) => {
+    freq[getCharIndex(l)]++;
+  });
+
+  const subsets = getAllSubsets(words);
+  let max = 0;
+
+  subsets.forEach((subset) => {
+    const f = freq.slice();
+    let cur = 0;
+    subset.forEach((w) => {
+      let wCur = 0;
+      for (let i = 0; i < w.length; i++) {
+        const index = getCharIndex(w[i]);
+        if (f[index] === 0) {
+          return;
+        }
+
+        f[index]--;
+        wCur += score[index];
+      }
+      cur += wCur;
     });
 
-    const subsets = getAllSubsets(words);
-    let max = 0;
+    max = Math.max(max, cur);
+  });
 
-    subsets.forEach((subset) => {
-        const f = freq.slice();
-        let cur = 0;
-        subset.forEach((w) => {
-            let wCur = 0;
-            for (let i = 0; i < w.length; i++) {
-                const index = getCharIndex(w[i]);
-                if (f[index] === 0) {
-                    return;
-                }
-
-                f[index]--;
-                wCur += score[index];
-            }
-            cur += wCur;
-        });
-
-        max = Math.max(max, cur);
-    });
-
-    return max;
+  return max;
 }
 
 function getAllSubsets(words: string[]) {
-    const subsets: string[][] = [];
-    const backtracking = (i: number, path: string[]) => {
-        if (i === words.length) {
-            subsets.push(path.slice());
-            return;
-        }
+  const subsets: string[][] = [];
+  const backtracking = (i: number, path: string[]) => {
+    if (i === words.length) {
+      subsets.push(path.slice());
+      return;
+    }
 
-        path.push(words[i]);
-        backtracking(i + 1, path);
-        path.pop();
+    path.push(words[i]);
+    backtracking(i + 1, path);
+    path.pop();
 
-        backtracking(i + 1, path);
-    };
-    backtracking(0, []);
+    backtracking(i + 1, path);
+  };
+  backtracking(0, []);
 
-    return subsets;
+  return subsets;
 }
 
 /*
@@ -1565,32 +1560,32 @@ Constraints:
 	Input is generated in a way that the length of the answer doesn't exceed 105.
 */
 export function wordBreak(s: string, wordDict: string[]): string[] {
-    const set = new Set<string>();
-    let min = 0;
-    let max = 0;
-    wordDict.forEach((w) => {
-        min = Math.min(min, w.length);
-        max = Math.max(max, w.length);
-        set.add(w);
-    });
+  const set = new Set<string>();
+  let min = 0;
+  let max = 0;
+  wordDict.forEach((w) => {
+    min = Math.min(min, w.length);
+    max = Math.max(max, w.length);
+    set.add(w);
+  });
 
-    const result: string[] = [];
-    const backtracking = (index: number, path: string) => {
-        if (index === s.length) {
-            result.push(path.trim());
-            return;
-        }
+  const result: string[] = [];
+  const backtracking = (index: number, path: string) => {
+    if (index === s.length) {
+      result.push(path.trim());
+      return;
+    }
 
-        for (let l = min; l <= max; l++) {
-            const w = s.slice(index, index + l);
-            if (set.has(w)) {
-                backtracking(index + l, path + ' ' + w);
-            }
-        }
-    };
-    backtracking(0, '');
+    for (let l = min; l <= max; l++) {
+      const w = s.slice(index, index + l);
+      if (set.has(w)) {
+        backtracking(index + l, path + ' ' + w);
+      }
+    }
+  };
+  backtracking(0, '');
 
-    return result;
+  return result;
 }
 
 /*
@@ -1645,28 +1640,28 @@ Constraints:
 	The input is generated such that edges represent a valid tree.
 */
 export function maximumValueSum(
-    nums: number[],
-    k: number,
-    _edges: number[][]
+  nums: number[],
+  k: number,
+  _edges: number[][]
 ): number {
-    const sum = nums.reduce((s, c) => s + c, 0);
-    let minDiff = Infinity;
-    let diff = 0;
-    let diffCount = 0;
-    nums.forEach((n) => {
-        const d = (n ^ k) - n;
-        if (d > 0) {
-            diff += d;
-            diffCount++;
-        }
-        minDiff = Math.min(minDiff, Math.abs(d));
-    });
-
-    if ((diffCount & 1) === 1) {
-        diff -= minDiff;
+  const sum = nums.reduce((s, c) => s + c, 0);
+  let minDiff = Infinity;
+  let diff = 0;
+  let diffCount = 0;
+  nums.forEach((n) => {
+    const d = (n ^ k) - n;
+    if (d > 0) {
+      diff += d;
+      diffCount++;
     }
+    minDiff = Math.min(minDiff, Math.abs(d));
+  });
 
-    return sum + diff;
+  if ((diffCount & 1) === 1) {
+    diff -= minDiff;
+  }
+
+  return sum + diff;
 }
 
 /*
@@ -1722,37 +1717,37 @@ Constraints:
 	edges represents a valid tree.
 */
 export function numberOfGoodPaths(vals: number[], edges: number[][]): number {
-    let count = vals.length;
-    const unionFind = new UnionFind(count);
-    const map = new Map<number, [max: number, count: number]>();
-    vals.forEach((val, i) => {
-        map.set(i, [val, 1]);
+  let count = vals.length;
+  const unionFind = new UnionFind(count);
+  const map = new Map<number, [max: number, count: number]>();
+  vals.forEach((val, i) => {
+    map.set(i, [val, 1]);
+  });
+
+  edges
+    .sort(
+      ([a, b], [c, d]) =>
+        Math.max(vals[a], vals[b]) - Math.max(vals[c], vals[d])
+    )
+    .forEach(([a, b]) => {
+      const pA = unionFind.find(a);
+      const pB = unionFind.find(b);
+      const [maxA, countA] = map.get(pA)!;
+      const [maxB, countB] = map.get(pB)!;
+
+      unionFind.union(pA, pB);
+      const newP = unionFind.find(pA);
+      if (maxA === maxB) {
+        count += countA * countB;
+        map.set(newP, [maxA, countA + countB]);
+      } else if (maxA > maxB) {
+        map.set(newP, [maxA, countA]);
+      } else {
+        map.set(newP, [maxB, countB]);
+      }
     });
 
-    edges
-        .sort(
-            ([a, b], [c, d]) =>
-                Math.max(vals[a], vals[b]) - Math.max(vals[c], vals[d])
-        )
-        .forEach(([a, b]) => {
-            const pA = unionFind.find(a);
-            const pB = unionFind.find(b);
-            const [maxA, countA] = map.get(pA)!;
-            const [maxB, countB] = map.get(pB)!;
-
-            unionFind.union(pA, pB);
-            const newP = unionFind.find(pA);
-            if (maxA === maxB) {
-                count += countA * countB;
-                map.set(newP, [maxA, countA + countB]);
-            } else if (maxA > maxB) {
-                map.set(newP, [maxA, countA]);
-            } else {
-                map.set(newP, [maxB, countB]);
-            }
-        });
-
-    return count;
+  return count;
 }
 
 /*
@@ -1790,62 +1785,62 @@ Constraints:
 	grid[i][j] is either 0 or 1.
 */
 export function largestIsland(grid: number[][]): number {
-    let id = 2;
-    const m = grid.length;
-    const n = grid[0].length;
-    const islandCount: number[] = [];
+  let id = 2;
+  const m = grid.length;
+  const n = grid[0].length;
+  const islandCount: number[] = [];
 
-    const moves: number[] = [-1, 0, 1, 0, -1];
-    const infect = (i: number, j: number) => {
-        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] !== 1) {
-            return;
-        }
+  const moves: number[] = [-1, 0, 1, 0, -1];
+  const infect = (i: number, j: number) => {
+    if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] !== 1) {
+      return;
+    }
 
-        grid[i][j] = id;
-        islandCount[id] = (islandCount[id] || 0) + 1;
+    grid[i][j] = id;
+    islandCount[id] = (islandCount[id] || 0) + 1;
+    for (let k = 0; k < moves.length - 1; k++) {
+      infect(i + moves[k], j + moves[k + 1]);
+    }
+  };
+
+  let max = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        infect(i, j);
+        max = Math.max(max, islandCount[id++]);
+      }
+    }
+  }
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 0) {
+        const set = new Set<number>();
         for (let k = 0; k < moves.length - 1; k++) {
-            infect(i + moves[k], j + moves[k + 1]);
-        }
-    };
+          const nextI = i + moves[k];
+          const nextJ = j + moves[k + 1];
 
-    let max = 0;
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 1) {
-                infect(i, j);
-                max = Math.max(max, islandCount[id++]);
-            }
+          if (
+            nextI >= 0 &&
+            nextI < m &&
+            nextJ >= 0 &&
+            nextJ < n &&
+            grid[nextI][nextJ]
+          ) {
+            set.add(grid[nextI][nextJ]);
+          }
         }
+
+        max = Math.max(
+          max,
+          Array.from(set).reduce((s, c) => s + islandCount[c], 1)
+        );
+      }
     }
+  }
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 0) {
-                const set = new Set<number>();
-                for (let k = 0; k < moves.length - 1; k++) {
-                    const nextI = i + moves[k];
-                    const nextJ = j + moves[k + 1];
-
-                    if (
-                        nextI >= 0 &&
-                        nextI < m &&
-                        nextJ >= 0 &&
-                        nextJ < n &&
-                        grid[nextI][nextJ]
-                    ) {
-                        set.add(grid[nextI][nextJ]);
-                    }
-                }
-
-                max = Math.max(
-                    max,
-                    Array.from(set).reduce((s, c) => s + islandCount[c], 1)
-                );
-            }
-        }
-    }
-
-    return max;
+  return max;
 }
 
 /*
@@ -1877,31 +1872,31 @@ Constraints:
 	1 <= wi, hi <= 10^5
 */
 export function maxEnvelopes(envelopes: number[][]): number {
-    const heights = envelopes
-        .sort(([wa, ha], [wb, hb]) => wa - wb || hb - ha)
-        .map(([, h]) => h);
+  const heights = envelopes
+    .sort(([wa, ha], [wb, hb]) => wa - wb || hb - ha)
+    .map(([, h]) => h);
 
-    const ends: number[] = [];
-    let max = -Infinity;
-    heights.forEach((v) => {
-        let l = 0;
-        let r = ends.length - 1;
-        let closest = r + 1;
-        while (l <= r) {
-            const m = l + ((r - l) >> 1);
-            if (ends[m] >= v) {
-                closest = m;
-                r = m - 1;
-            } else {
-                l = m + 1;
-            }
-        }
+  const ends: number[] = [];
+  let max = -Infinity;
+  heights.forEach((v) => {
+    let l = 0;
+    let r = ends.length - 1;
+    let closest = r + 1;
+    while (l <= r) {
+      const m = l + ((r - l) >> 1);
+      if (ends[m] >= v) {
+        closest = m;
+        r = m - 1;
+      } else {
+        l = m + 1;
+      }
+    }
 
-        ends[closest] = v;
-        max = Math.max(max, closest + 1);
-    });
+    ends[closest] = v;
+    max = Math.max(max, closest + 1);
+  });
 
-    return max;
+  return max;
 }
 
 /*
@@ -1954,26 +1949,26 @@ If flipped = 0 and A[i] = 0, we need to flip at A[i].
 If flipped = 1 and A[i] = 1, we need to flip at A[i].
 */
 export function minKBitFlips(nums: number[], k: number): number {
-    const n = nums.length;
-    let flipped = 0;
-    const isFlipped = Array(n).fill(0);
+  const n = nums.length;
+  let flipped = 0;
+  const isFlipped = Array(n).fill(0);
 
-    let count = 0;
-    for (let i = 0; i < n; i++) {
-        if (i >= k) {
-            flipped ^= isFlipped[i - k];
-        }
-        if (flipped === nums[i]) {
-            if (i + k > n) {
-                return -1;
-            }
-            isFlipped[i] = 1;
-            flipped ^= 1;
-            count++;
-        }
+  let count = 0;
+  for (let i = 0; i < n; i++) {
+    if (i >= k) {
+      flipped ^= isFlipped[i - k];
     }
+    if (flipped === nums[i]) {
+      if (i + k > n) {
+        return -1;
+      }
+      isFlipped[i] = 1;
+      flipped ^= 1;
+      count++;
+    }
+  }
 
-    return count;
+  return count;
 }
 
 /*
@@ -2006,32 +2001,32 @@ Constraints:
 	-99 <= grid[i][j] <= 99
 */
 export function minFallingPathSum(grid: number[][]): number {
-    const n = grid.length;
-    const dp: number[] = Array(n);
+  const n = grid.length;
+  const dp: number[] = Array(n);
+  for (let j = 0; j < n; j++) {
+    dp[j] = grid[0][j];
+  }
+
+  for (let i = 1; i < n; i++) {
+    let min = Infinity;
+    let minIndex = -1;
+    let secondMin = Infinity;
+    for (let k = 0; k < n; k++) {
+      if (dp[k] < min) {
+        secondMin = min;
+        min = dp[k];
+        minIndex = k;
+      } else if (dp[k] >= min && dp[k] < secondMin) {
+        secondMin = dp[k];
+      }
+    }
+
     for (let j = 0; j < n; j++) {
-        dp[j] = grid[0][j];
+      dp[j] = (j === minIndex ? secondMin : min) + grid[i][j];
     }
+  }
 
-    for (let i = 1; i < n; i++) {
-        let min = Infinity;
-        let minIndex = -1;
-        let secondMin = Infinity;
-        for (let k = 0; k < n; k++) {
-            if (dp[k] < min) {
-                secondMin = min;
-                min = dp[k];
-                minIndex = k;
-            } else if (dp[k] >= min && dp[k] < secondMin) {
-                secondMin = dp[k];
-            }
-        }
-
-        for (let j = 0; j < n; j++) {
-            dp[j] = (j === minIndex ? secondMin : min) + grid[i][j];
-        }
-    }
-
-    return Math.min(...dp);
+  return Math.min(...dp);
 }
 
 /*
@@ -2075,47 +2070,47 @@ Constraints:
 	All tuples (typei, ui, vi) are distinct.
 */
 export function maxNumEdgesToRemove(n: number, edges: number[][]): number {
-    const alice = new UnionFind(n);
-    const bob = new UnionFind(n);
-    let set = n;
-    let max = 0;
-    for (const [type, from, to] of edges) {
-        if (type !== 3) {
-            continue;
-        }
-
-        if (alice.isSameSet(from, to)) {
-            max++;
-        } else {
-            alice.union(from, to);
-            bob.union(from, to);
-            set--;
-        }
+  const alice = new UnionFind(n);
+  const bob = new UnionFind(n);
+  let set = n;
+  let max = 0;
+  for (const [type, from, to] of edges) {
+    if (type !== 3) {
+      continue;
     }
 
-    let aliceSet = set;
-    let bobSet = set;
-    for (const [type, from, to] of edges) {
-        if (type === 1) {
-            if (alice.isSameSet(from, to)) {
-                max++;
-            } else {
-                alice.union(from, to);
-                aliceSet--;
-            }
-        }
+    if (alice.isSameSet(from, to)) {
+      max++;
+    } else {
+      alice.union(from, to);
+      bob.union(from, to);
+      set--;
+    }
+  }
 
-        if (type === 2) {
-            if (bob.isSameSet(from, to)) {
-                max++;
-            } else {
-                bob.union(from, to);
-                bobSet--;
-            }
-        }
+  let aliceSet = set;
+  let bobSet = set;
+  for (const [type, from, to] of edges) {
+    if (type === 1) {
+      if (alice.isSameSet(from, to)) {
+        max++;
+      } else {
+        alice.union(from, to);
+        aliceSet--;
+      }
     }
 
-    return aliceSet === 1 && bobSet === 1 ? max : -1;
+    if (type === 2) {
+      if (bob.isSameSet(from, to)) {
+        max++;
+      } else {
+        bob.union(from, to);
+        bobSet--;
+      }
+    }
+  }
+
+  return aliceSet === 1 && bobSet === 1 ? max : -1;
 }
 
 /*
@@ -2154,33 +2149,33 @@ Constraints:
 	It is guaranteed that key could always be spelled by rotating ring.
 */
 export function findRotateSteps(ring: string, key: string): number {
-    const indexMap: Record<string, number[]> = {};
-    for (let i = 0, c = ring[i]; i < ring.length; c = ring[++i]) {
-        if (indexMap[c]) {
-            indexMap[c].push(i);
-        } else {
-            indexMap[c] = [i];
-        }
+  const indexMap: Record<string, number[]> = {};
+  for (let i = 0, c = ring[i]; i < ring.length; c = ring[++i]) {
+    if (indexMap[c]) {
+      indexMap[c].push(i);
+    } else {
+      indexMap[c] = [i];
+    }
+  }
+
+  const dfs = cache((ringIndex: number, keyIndex: number): number => {
+    if (keyIndex === key.length) {
+      return 0;
     }
 
-    const dfs = cache((ringIndex: number, keyIndex: number): number => {
-        if (keyIndex === key.length) {
-            return 0;
-        }
+    let ret = Infinity;
+    let c = key[keyIndex];
+    for (const i of indexMap[c]) {
+      let d1 = Math.abs(i - ringIndex);
+      let d2 = ring.length - i;
+      let min = Math.min(d1, d2);
+      ret = Math.min(ret, min + dfs(i, keyIndex + 1));
+    }
 
-        let ret = Infinity;
-        let c = key[keyIndex];
-        for (const i of indexMap[c]) {
-            let d1 = Math.abs(i - ringIndex);
-            let d2 = ring.length - i;
-            let min = Math.min(d1, d2);
-            ret = Math.min(ret, min + dfs(i, keyIndex + 1));
-        }
+    return ret;
+  });
 
-        return ret;
-    });
-
-    return key.length + dfs(0, 0);
+  return key.length + dfs(0, 0);
 }
 
 /*
@@ -2221,42 +2216,41 @@ Constraints:
 	The given input represents a valid tree.
 */
 export function sumOfDistancesInTree(n: number, edges: number[][]): number[] {
-    const tree: number[][] = Array.from({ length: n }, () => []);
-    const res: number[] = Array(n).fill(0);
-    const count: number[] = Array(n).fill(1);
+  const tree: number[][] = Array.from({ length: n }, () => []);
+  const res: number[] = Array(n).fill(0);
+  const count: number[] = Array(n).fill(1);
 
-    // Build the tree using adjacency list
-    for (const [u, v] of edges) {
-        tree[u].push(v);
-        tree[v].push(u);
+  // Build the tree using adjacency list
+  for (const [u, v] of edges) {
+    tree[u].push(v);
+    tree[v].push(u);
+  }
+
+  // First DFS to calculate subtree sizes and root distances
+  function dfs(node: number, parent: number) {
+    for (const neighbor of tree[node]) {
+      if (neighbor !== parent) {
+        dfs(neighbor, node);
+        count[node] += count[neighbor];
+        res[node] += res[neighbor] + count[neighbor];
+      }
     }
+  }
 
-    // First DFS to calculate subtree sizes and root distances
-    function dfs(node: number, parent: number) {
-        for (const neighbor of tree[node]) {
-            if (neighbor !== parent) {
-                dfs(neighbor, node);
-                count[node] += count[neighbor];
-                res[node] += res[neighbor] + count[neighbor];
-            }
-        }
+  // Second DFS to calculate result for all nodes
+  function dfs2(node: number, parent: number) {
+    for (const neighbor of tree[node]) {
+      if (neighbor !== parent) {
+        res[neighbor] = res[node] - count[neighbor] + (n - count[neighbor]);
+        dfs2(neighbor, node);
+      }
     }
+  }
 
-    // Second DFS to calculate result for all nodes
-    function dfs2(node: number, parent: number) {
-        for (const neighbor of tree[node]) {
-            if (neighbor !== parent) {
-                res[neighbor] =
-                    res[node] - count[neighbor] + (n - count[neighbor]);
-                dfs2(neighbor, node);
-            }
-        }
-    }
+  dfs(0, -1);
+  dfs2(0, -1);
 
-    dfs(0, -1);
-    dfs2(0, -1);
-
-    return res;
+  return res;
 }
 
 /*
@@ -2291,25 +2285,25 @@ Constraints:
 	1 <= k <= sum(piles[i].length) <= 2000
 */
 export function maxValueOfCoins(piles: number[][], k: number): number {
-    const n = piles.length;
-    const dp: number[] = Array(k + 1).fill(0);
+  const n = piles.length;
+  const dp: number[] = Array(k + 1).fill(0);
 
-    for (let i = 1; i <= n; i++) {
-        const pile = piles[i - 1];
-        const max = Math.min(k, pile.length);
-        const prefix: number[] = [pile[0]];
-        for (let j = 1; j < max; j++) {
-            prefix[j] = prefix[j - 1] + pile[j];
-        }
-
-        for (let j = k; j >= 0; j--) {
-            for (let l = Math.min(max - 1, j - 1); l >= 0; l--) {
-                dp[j] = Math.max(dp[j], dp[j - l - 1] + prefix[l]);
-            }
-        }
+  for (let i = 1; i <= n; i++) {
+    const pile = piles[i - 1];
+    const max = Math.min(k, pile.length);
+    const prefix: number[] = [pile[0]];
+    for (let j = 1; j < max; j++) {
+      prefix[j] = prefix[j - 1] + pile[j];
     }
 
-    return dp[k];
+    for (let j = k; j >= 0; j--) {
+      for (let l = Math.min(max - 1, j - 1); l >= 0; l--) {
+        dp[j] = Math.max(dp[j], dp[j - l - 1] + prefix[l]);
+      }
+    }
+  }
+
+  return dp[k];
 }
 
 /*
@@ -2345,58 +2339,58 @@ Constraints:
 	grid[i][j] is either 0 or 1.
 */
 export function minDays(grid: number[][]): number {
-    const m = grid.length;
-    const n = grid[0].length;
+  const m = grid.length;
+  const n = grid[0].length;
 
-    const directions = [
-        [-1, 0],
-        [1, 0],
-        [0, -1],
-        [0, 1],
-    ];
+  const directions = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ];
 
-    const isInBounds = (x: number, y: number): boolean => {
-        return x >= 0 && x < m && y >= 0 && y < n;
-    };
+  const isInBounds = (x: number, y: number): boolean => {
+    return x >= 0 && x < m && y >= 0 && y < n;
+  };
 
-    const dfs = (x: number, y: number, visited: boolean[][]): void => {
-        visited[x][y] = true;
-        for (const [dx, dy] of directions) {
-            const nx = x + dx;
-            const ny = y + dy;
-            if (isInBounds(nx, ny) && grid[nx][ny] === 1 && !visited[nx][ny]) {
-                dfs(nx, ny, visited);
-            }
-        }
-    };
-
-    const countIslands = (): number => {
-        const visited = Array.from({ length: m }, () => Array(n).fill(false));
-        let count = 0;
-        for (let i = 0; i < m; i++) {
-            for (let j = 0; j < n; j++) {
-                if (grid[i][j] === 1 && !visited[i][j]) {
-                    count++;
-                    dfs(i, j, visited);
-                }
-            }
-        }
-        return count;
-    };
-
-    if (countIslands() !== 1) return 0;
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 1) {
-                grid[i][j] = 0;
-                if (countIslands() !== 1) return 1;
-                grid[i][j] = 1;
-            }
-        }
+  const dfs = (x: number, y: number, visited: boolean[][]): void => {
+    visited[x][y] = true;
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (isInBounds(nx, ny) && grid[nx][ny] === 1 && !visited[nx][ny]) {
+        dfs(nx, ny, visited);
+      }
     }
+  };
 
-    return 2;
+  const countIslands = (): number => {
+    const visited = Array.from({ length: m }, () => Array(n).fill(false));
+    let count = 0;
+    for (let i = 0; i < m; i++) {
+      for (let j = 0; j < n; j++) {
+        if (grid[i][j] === 1 && !visited[i][j]) {
+          count++;
+          dfs(i, j, visited);
+        }
+      }
+    }
+    return count;
+  };
+
+  if (countIslands() !== 1) return 0;
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        grid[i][j] = 0;
+        if (countIslands() !== 1) return 1;
+        grid[i][j] = 1;
+      }
+    }
+  }
+
+  return 2;
 }
 
 /*
@@ -2427,25 +2421,25 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function strangePrinter(s: string): number {
-    const n = s.length;
-    const dp: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
+  const n = s.length;
+  const dp: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
 
-    for (let i = n - 1; i >= 0; i--) {
-        dp[i][i] = 1;
-        for (let j = i + 1; j < n; j++) {
-            dp[i][j] = dp[i][j - 1] + 1;
-            for (let k = i; k < j; k++) {
-                if (s[k] === s[j]) {
-                    dp[i][j] = Math.min(
-                        dp[i][j],
-                        dp[i][k] + (k + 1 <= j - 1 ? dp[k + 1][j - 1] : 0)
-                    );
-                }
-            }
+  for (let i = n - 1; i >= 0; i--) {
+    dp[i][i] = 1;
+    for (let j = i + 1; j < n; j++) {
+      dp[i][j] = dp[i][j - 1] + 1;
+      for (let k = i; k < j; k++) {
+        if (s[k] === s[j]) {
+          dp[i][j] = Math.min(
+            dp[i][j],
+            dp[i][k] + (k + 1 <= j - 1 ? dp[k + 1][j - 1] : 0)
+          );
         }
+      }
     }
+  }
 
-    return dp[0][n - 1];
+  return dp[0][n - 1];
 }
 
 /*
@@ -2481,23 +2475,23 @@ Constraints:
 	s consists of lowercase English letters.
 */
 export function minInsertions(s: string): number {
-    const n = s.length;
-    const dp: number[] = Array(n).fill(0);
-    for (let i = n - 2; i >= 0; i--) {
-        let leftDown = 0;
-        let backup = 0;
-        for (let j = i + 1; j < n; j++) {
-            backup = dp[j];
-            if (s[i] === s[j]) {
-                dp[j] = leftDown;
-            } else {
-                dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1);
-            }
-            leftDown = backup;
-        }
+  const n = s.length;
+  const dp: number[] = Array(n).fill(0);
+  for (let i = n - 2; i >= 0; i--) {
+    let leftDown = 0;
+    let backup = 0;
+    for (let j = i + 1; j < n; j++) {
+      backup = dp[j];
+      if (s[i] === s[j]) {
+        dp[j] = leftDown;
+      } else {
+        dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1);
+      }
+      leftDown = backup;
     }
+  }
 
-    return dp[n - 1];
+  return dp[n - 1];
 }
 
 /*
@@ -2526,53 +2520,51 @@ Constraints:
 	n is representing an integer in the range [1, 1018 - 1].
 */
 export function nearestPalindromic(n: string): string {
-    const length = n.length;
-    const candidates = new Set<string>();
+  const length = n.length;
+  const candidates = new Set<string>();
 
-    // Edge case for '1'
-    if (n === '1') {
-        return '0';
+  // Edge case for '1'
+  if (n === '1') {
+    return '0';
+  }
+
+  // 1. Consider the mirrored palindrome
+  const prefix = n.substring(0, Math.floor((length + 1) / 2));
+  const prefixNum = parseInt(prefix);
+
+  // Generate palindromes by decrementing, mirroring, and incrementing the prefix
+  for (let i of [prefixNum - 1, prefixNum, prefixNum + 1]) {
+    const iStr = i.toString();
+    if (length % 2 === 0) {
+      candidates.add(iStr + iStr.split('').reverse().join(''));
+    } else {
+      candidates.add(iStr + iStr.slice(0, -1).split('').reverse().join(''));
     }
+  }
 
-    // 1. Consider the mirrored palindrome
-    const prefix = n.substring(0, Math.floor((length + 1) / 2));
-    const prefixNum = parseInt(prefix);
+  // 2. Consider palindromes with different lengths
+  candidates.add('9'.repeat(length - 1)); // Example: "999" for "1000"
+  candidates.add('1' + '0'.repeat(length - 1) + '1'); // Example: "1001" for "999"
 
-    // Generate palindromes by decrementing, mirroring, and incrementing the prefix
-    for (let i of [prefixNum - 1, prefixNum, prefixNum + 1]) {
-        const iStr = i.toString();
-        if (length % 2 === 0) {
-            candidates.add(iStr + iStr.split('').reverse().join(''));
-        } else {
-            candidates.add(
-                iStr + iStr.slice(0, -1).split('').reverse().join('')
-            );
-        }
+  // 3. Remove the original number from candidates if present
+  candidates.delete(n);
+
+  // 4. Find the closest palindrome by comparing differences
+  let closest: string | null = null;
+  for (let candidate of candidates) {
+    if (
+      closest === null ||
+      Math.abs(Number(BigInt(candidate) - BigInt(n))) <
+        Math.abs(Number(BigInt(closest) - BigInt(n))) ||
+      (Math.abs(Number(BigInt(candidate) - BigInt(n))) ===
+        Math.abs(Number(BigInt(closest) - BigInt(n))) &&
+        BigInt(candidate) < BigInt(closest))
+    ) {
+      closest = candidate;
     }
+  }
 
-    // 2. Consider palindromes with different lengths
-    candidates.add('9'.repeat(length - 1)); // Example: "999" for "1000"
-    candidates.add('1' + '0'.repeat(length - 1) + '1'); // Example: "1001" for "999"
-
-    // 3. Remove the original number from candidates if present
-    candidates.delete(n);
-
-    // 4. Find the closest palindrome by comparing differences
-    let closest: string | null = null;
-    for (let candidate of candidates) {
-        if (
-            closest === null ||
-            Math.abs(Number(BigInt(candidate) - BigInt(n))) <
-                Math.abs(Number(BigInt(closest) - BigInt(n))) ||
-            (Math.abs(Number(BigInt(candidate) - BigInt(n))) ===
-                Math.abs(Number(BigInt(closest) - BigInt(n))) &&
-                BigInt(candidate) < BigInt(closest))
-        ) {
-            closest = candidate;
-        }
-    }
-
-    return closest!;
+  return closest!;
 }
 
 /*
@@ -2597,35 +2589,35 @@ Constraints:
 	1 <= n <= 8
 */
 export function largestPalindrome(n: number): number {
-    const start = BigInt('9'.padEnd(n, '9'));
-    const end = BigInt('1'.padEnd(n, '0'));
+  const start = BigInt('9'.padEnd(n, '9'));
+  const end = BigInt('1'.padEnd(n, '0'));
 
-    const isValid = (palindrome: bigint): boolean => {
-        for (let i = start; i >= end; i--) {
-            if (palindrome / i > i) {
-                return false;
-            }
-
-            if (palindrome % i === 0n) {
-                return true;
-            }
-        }
-
+  const isValid = (palindrome: bigint): boolean => {
+    for (let i = start; i >= end; i--) {
+      if (palindrome / i > i) {
         return false;
-    };
+      }
 
-    let i = BigInt((start * start).toString().slice(0, n));
-    let p = 1n;
-    while (i >= end) {
-        p = BigInt(i.toString() + i.toString().split('').reverse().join(''));
-        if (isValid(p)) {
-            return Number(p % 1337n);
-        }
-        i--;
+      if (palindrome % i === 0n) {
+        return true;
+      }
     }
 
-    // when n === 1
-    return 9;
+    return false;
+  };
+
+  let i = BigInt((start * start).toString().slice(0, n));
+  let p = 1n;
+  while (i >= end) {
+    p = BigInt(i.toString() + i.toString().split('').reverse().join(''));
+    if (isValid(p)) {
+      return Number(p % 1337n);
+    }
+    i--;
+  }
+
+  // when n === 1
+  return 9;
 }
 
 /*
@@ -2656,65 +2648,65 @@ Constraints:
 	left is less than or equal to right.
 */
 export function superpalindromesInRange(left: string, right: string): number {
-    const down = BigInt(left);
-    const upper = BigInt(right);
+  const down = BigInt(left);
+  const upper = BigInt(right);
 
-    const isValid = (n: string) => {
-        const square = BigInt(n) * BigInt(n);
-        if (square < down || square > upper) {
-            return false;
-        }
-
-        const target = square.toString();
-        let l = 0;
-        let r = target.length - 1;
-        while (l < r) {
-            if (target[l] !== target[r]) {
-                return false;
-            }
-            l++;
-            r--;
-        }
-
-        return true;
-    };
-
-    const reverse = (part: string) => {
-        if (!part) {
-            return part;
-        }
-
-        return part.split('').reverse().join('');
-    };
-
-    const sqrtLeft = sqrtBigInt(down);
-    // sqrtBigInt 默认会向下取整，这里加个 1 确保我们不会漏掉一些接近 right 的超级回文数
-    const sqrtRight = sqrtBigInt(upper) + 1n;
-    const sqrtLeftStr = sqrtLeft.toString();
-    const sqrtRightStr = sqrtRight.toString();
-    let l = Number(sqrtLeftStr.slice(0, sqrtLeftStr.length >> 1));
-    let r = Number(sqrtRightStr.slice(0, (sqrtRightStr.length >> 1) + 1));
-
-    let count = 0;
-    while (l <= r) {
-        // odd
-        const char = String(l);
-        let leftPart = char.slice(0, char.length - 1);
-        const centerPart = char[char.length - 1];
-        if (isValid(`${leftPart}${centerPart}${reverse(leftPart)}`)) {
-            count++;
-        }
-
-        // even
-        leftPart = char;
-        if (isValid(`${leftPart}${reverse(leftPart)}`)) {
-            count++;
-        }
-
-        l++;
+  const isValid = (n: string) => {
+    const square = BigInt(n) * BigInt(n);
+    if (square < down || square > upper) {
+      return false;
     }
 
-    return count;
+    const target = square.toString();
+    let l = 0;
+    let r = target.length - 1;
+    while (l < r) {
+      if (target[l] !== target[r]) {
+        return false;
+      }
+      l++;
+      r--;
+    }
+
+    return true;
+  };
+
+  const reverse = (part: string) => {
+    if (!part) {
+      return part;
+    }
+
+    return part.split('').reverse().join('');
+  };
+
+  const sqrtLeft = sqrtBigInt(down);
+  // sqrtBigInt 默认会向下取整，这里加个 1 确保我们不会漏掉一些接近 right 的超级回文数
+  const sqrtRight = sqrtBigInt(upper) + 1n;
+  const sqrtLeftStr = sqrtLeft.toString();
+  const sqrtRightStr = sqrtRight.toString();
+  let l = Number(sqrtLeftStr.slice(0, sqrtLeftStr.length >> 1));
+  let r = Number(sqrtRightStr.slice(0, (sqrtRightStr.length >> 1) + 1));
+
+  let count = 0;
+  while (l <= r) {
+    // odd
+    const char = String(l);
+    let leftPart = char.slice(0, char.length - 1);
+    const centerPart = char[char.length - 1];
+    if (isValid(`${leftPart}${centerPart}${reverse(leftPart)}`)) {
+      count++;
+    }
+
+    // even
+    leftPart = char;
+    if (isValid(`${leftPart}${reverse(leftPart)}`)) {
+      count++;
+    }
+
+    l++;
+  }
+
+  return count;
 }
 
 /*
@@ -2749,22 +2741,22 @@ Constraints:
 	All the values of nums are unique.
 */
 export function largestComponentSize(nums: number[]): number {
-    const unionFind = new UnionFindWithSize(nums.length);
-    const map: Record<number, number> = {};
+  const unionFind = new UnionFindWithSize(nums.length);
+  const map: Record<number, number> = {};
 
-    nums.forEach((v, i) => {
-        const factors = getPrimeFactors(v);
+  nums.forEach((v, i) => {
+    const factors = getPrimeFactors(v);
 
-        factors.forEach((f) => {
-            if (map[f] === undefined) {
-                map[f] = i;
-            } else if (!unionFind.isSameSet(map[f], i)) {
-                unionFind.union(map[f], i);
-            }
-        });
+    factors.forEach((f) => {
+      if (map[f] === undefined) {
+        map[f] = i;
+      } else if (!unionFind.isSameSet(map[f], i)) {
+        unionFind.union(map[f], i);
+      }
     });
+  });
 
-    return Math.max(...unionFind.size);
+  return Math.max(...unionFind.size);
 }
 
 /*
@@ -2787,31 +2779,31 @@ Constraints:
 	s consists of lowercase English letters only.
 */
 export function shortestPalindrome(s: string): string {
-    const isPalindrome = (left: number, right: number): boolean => {
-        while (left < right) {
-            if (s[left++] !== s[right--]) {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    let i = s.length - 1;
-    while (i > 0) {
-        if (isPalindrome(0, i)) {
-            break;
-        }
-        i--;
+  const isPalindrome = (left: number, right: number): boolean => {
+    while (left < right) {
+      if (s[left++] !== s[right--]) {
+        return false;
+      }
     }
 
-    const prefix = s
-        .slice(i + 1)
-        .split('')
-        .reverse()
-        .join('');
+    return true;
+  };
 
-    return prefix + s;
+  let i = s.length - 1;
+  while (i > 0) {
+    if (isPalindrome(0, i)) {
+      break;
+    }
+    i--;
+  }
+
+  const prefix = s
+    .slice(i + 1)
+    .split('')
+    .reverse()
+    .join('');
+
+  return prefix + s;
 }
 
 /*
@@ -2842,21 +2834,21 @@ Constraints:
 	0 <= prices[i] <= 1000
 */
 export function maxProfit(k: number, prices: number[]): number {
-    const dp: number[][] = Array.from({ length: k + 1 }, () =>
-        Array(prices.length).fill(0)
-    );
+  const dp: number[][] = Array.from({ length: k + 1 }, () =>
+    Array(prices.length).fill(0)
+  );
 
-    for (let i = 1; i <= k; i++) {
-        // https://www.bilibili.com/list/8888480?sort_field=pubtime&spm_id_from=333.999.0.0&oid=494277801&bvid=BV1PN411j7aG
-        // 通过画格子观察优化枚举行为
-        let prev = dp[i - 1][0] - prices[0];
-        for (let j = 1; j < prices.length; j++) {
-            prev = Math.max(prev, dp[i - 1][j - 1] - prices[j - 1]);
-            dp[i][j] = Math.max(prev + prices[j], dp[i][j - 1]);
-        }
+  for (let i = 1; i <= k; i++) {
+    // https://www.bilibili.com/list/8888480?sort_field=pubtime&spm_id_from=333.999.0.0&oid=494277801&bvid=BV1PN411j7aG
+    // 通过画格子观察优化枚举行为
+    let prev = dp[i - 1][0] - prices[0];
+    for (let j = 1; j < prices.length; j++) {
+      prev = Math.max(prev, dp[i - 1][j - 1] - prices[j - 1]);
+      dp[i][j] = Math.max(prev + prices[j], dp[i][j - 1]);
     }
+  }
 
-    return dp[k][prices.length - 1];
+  return dp[k][prices.length - 1];
 }
 
 /*
@@ -2880,42 +2872,42 @@ Constraints:
 	1 <= k <= n <= 10^9
 */
 export function findKthNumber(n: number, k: number): number {
-    // Helper function to calculate how many numbers are lexicographically between current and current + 1
-    const countSteps = () => {
-        let first = current;
-        let last = current;
-        let steps = 0;
+  // Helper function to calculate how many numbers are lexicographically between current and current + 1
+  const countSteps = () => {
+    let first = current;
+    let last = current;
+    let steps = 0;
 
-        // Count numbers in ranges [current, current+1), [current*10, (current+1)*10), etc.
-        while (first <= n) {
-            steps += Math.min(last, n) - first + 1;
-            // first number in the range that ending with 0
-            first *= 10;
-            // last number in the range that ending with 9
-            last = last * 10 + 9;
-        }
-
-        return steps;
-    };
-
-    let current = 1;
-    // Since we already start at 1, we decrement k
-    k--;
-
-    while (k > 0) {
-        const steps = countSteps();
-        if (steps <= k) {
-            // Not enough steps, move to the next sibling prefix
-            k -= steps;
-            current++;
-        } else {
-            // Enough steps, go down to the next level in the current subtree
-            k--;
-            current *= 10;
-        }
+    // Count numbers in ranges [current, current+1), [current*10, (current+1)*10), etc.
+    while (first <= n) {
+      steps += Math.min(last, n) - first + 1;
+      // first number in the range that ending with 0
+      first *= 10;
+      // last number in the range that ending with 9
+      last = last * 10 + 9;
     }
 
-    return current;
+    return steps;
+  };
+
+  let current = 1;
+  // Since we already start at 1, we decrement k
+  k--;
+
+  while (k > 0) {
+    const steps = countSteps();
+    if (steps <= k) {
+      // Not enough steps, move to the next sibling prefix
+      k -= steps;
+      current++;
+    } else {
+      // Enough steps, go down to the next level in the current subtree
+      k--;
+      current *= 10;
+    }
+  }
+
+  return current;
 }
 
 /*
@@ -2964,46 +2956,46 @@ Constraints:
 	words[i] consists of lowercase English letters.
 */
 export function sumPrefixScores(words: string[]): number[] {
-    const root = new AlphaTrieNode();
-    words.forEach((w) => {
-        insertWord(root, w);
-    });
+  const root = new AlphaTrieNode();
+  words.forEach((w) => {
+    insertWord(root, w);
+  });
 
-    return words.map((w) => countPrefix(root, w));
+  return words.map((w) => countPrefix(root, w));
 }
 
 class AlphaTrieNode {
-    pass = 0;
-    children: Record<string, AlphaTrieNode> = {};
+  pass = 0;
+  children: Record<string, AlphaTrieNode> = {};
 }
 
 function insertWord(root: AlphaTrieNode, word: string) {
-    let cur = root;
-    cur.pass++;
+  let cur = root;
+  cur.pass++;
 
-    for (const char of word) {
-        if (!cur.children[char]) {
-            cur.children[char] = new AlphaTrieNode();
-        }
-
-        cur = cur.children[char];
-        cur.pass++;
+  for (const char of word) {
+    if (!cur.children[char]) {
+      cur.children[char] = new AlphaTrieNode();
     }
+
+    cur = cur.children[char];
+    cur.pass++;
+  }
 }
 
 function countPrefix(root: AlphaTrieNode, prefix: string): number {
-    let cur = root;
-    let count = 0;
-    for (const char of prefix) {
-        if (!cur.children[char]) {
-            return count;
-        }
-
-        cur = cur.children[char];
-        count += cur.pass;
+  let cur = root;
+  let count = 0;
+  for (const char of prefix) {
+    if (!cur.children[char]) {
+      return count;
     }
 
-    return count;
+    cur = cur.children[char];
+    count += cur.pass;
+  }
+
+  return count;
 }
 
 /*
@@ -3039,40 +3031,40 @@ Constraints:
 	1 <= nums[i], numsDivide[i] <= 10^9
 */
 export function minOperations(nums: number[], numsDivide: number[]): number {
-    const factors = new Set(getFactors(numsDivide[0]));
+  const factors = new Set(getFactors(numsDivide[0]));
 
-    for (let i = 1; i < numsDivide.length; i++) {
-        factors.forEach((f) => {
-            if (numsDivide[i] % f !== 0) {
-                factors.delete(f);
-            }
-        });
+  for (let i = 1; i < numsDivide.length; i++) {
+    factors.forEach((f) => {
+      if (numsDivide[i] % f !== 0) {
+        factors.delete(f);
+      }
+    });
+  }
+
+  factors.add(1);
+
+  nums.sort((a, b) => a - b);
+  for (let i = 0; i < nums.length; i++) {
+    if (factors.has(nums[i])) {
+      return i;
     }
+  }
 
-    factors.add(1);
-
-    nums.sort((a, b) => a - b);
-    for (let i = 0; i < nums.length; i++) {
-        if (factors.has(nums[i])) {
-            return i;
-        }
-    }
-
-    return -1;
+  return -1;
 }
 
 function getFactors(num: number): number[] {
-    const factors: number[] = [];
-    for (let i = 1; i <= Math.sqrt(num); i++) {
-        if (num % i === 0) {
-            factors.push(i);
-            if (i !== num / i) {
-                factors.push(num / i);
-            }
-        }
+  const factors: number[] = [];
+  for (let i = 1; i <= Math.sqrt(num); i++) {
+    if (num % i === 0) {
+      factors.push(i);
+      if (i !== num / i) {
+        factors.push(num / i);
+      }
     }
+  }
 
-    return factors;
+  return factors;
 }
 
 /*
@@ -3105,33 +3097,33 @@ Constraints:
 	nums[i] is sorted in non-decreasing order.
 */
 export function smallestRange(nums: number[][]): number[] {
-    const minHeap = new GenericHeap<[v: number, i: number, j: number]>(
-        (a, b) => a[0] - b[0]
-    );
+  const minHeap = new GenericHeap<[v: number, i: number, j: number]>(
+    (a, b) => a[0] - b[0]
+  );
 
-    let max = -Infinity;
-    nums.forEach((row, i) => {
-        minHeap.push([row[0], i, 0]);
-        max = Math.max(max, row[0]);
-    });
+  let max = -Infinity;
+  nums.forEach((row, i) => {
+    minHeap.push([row[0], i, 0]);
+    max = Math.max(max, row[0]);
+  });
 
-    let left = minHeap.peek()[0];
-    let right = max;
-    while (true) {
-        const [, i, j] = minHeap.pop();
-        if (j === nums[i].length - 1) {
-            break;
-        }
-
-        minHeap.push([nums[i][j + 1], i, j + 1]);
-        max = Math.max(max, nums[i][j + 1]);
-        if (max - minHeap.peek()[0] < right - left) {
-            left = minHeap.peek()[0];
-            right = max;
-        }
+  let left = minHeap.peek()[0];
+  let right = max;
+  while (true) {
+    const [, i, j] = minHeap.pop();
+    if (j === nums[i].length - 1) {
+      break;
     }
 
-    return [left, right];
+    minHeap.push([nums[i][j + 1], i, j + 1]);
+    max = Math.max(max, nums[i][j + 1]);
+    if (max - minHeap.peek()[0] < right - left) {
+      left = minHeap.peek()[0];
+      right = max;
+    }
+  }
+
+  return [left, right];
 }
 
 /*
@@ -3178,40 +3170,40 @@ Constraints:
 	expression[i] is one following characters: '(', ')', '&', '|', '!', 't', 'f', and ','.
 */
 export function parseBoolExpr(expression: string): boolean {
-    const stack: string[] = [];
+  const stack: string[] = [];
 
-    for (let i = 0; i < expression.length; i++) {
-        const char = expression[i];
-        if (char === '(') {
-            continue;
-        }
-        if (char === ')') {
-            const vals: string[] = [];
-            while (stack.length > 0) {
-                if (stack.at(-1) === '!') {
-                    stack.pop();
-                    stack.push(vals[0] === 't' ? 'f' : 't');
-                    break;
-                }
-                if (stack.at(-1) === '|') {
-                    stack.pop();
-                    stack.push(vals.includes('t') ? 't' : 'f');
-                    break;
-                }
-                if (stack.at(-1) === '&') {
-                    stack.pop();
-                    stack.push(vals.includes('f') ? 'f' : 't');
-                    break;
-                }
-
-                vals.push(stack.pop()!);
-            }
-            continue;
-        }
-        stack.push(char);
+  for (let i = 0; i < expression.length; i++) {
+    const char = expression[i];
+    if (char === '(') {
+      continue;
     }
+    if (char === ')') {
+      const vals: string[] = [];
+      while (stack.length > 0) {
+        if (stack.at(-1) === '!') {
+          stack.pop();
+          stack.push(vals[0] === 't' ? 'f' : 't');
+          break;
+        }
+        if (stack.at(-1) === '|') {
+          stack.pop();
+          stack.push(vals.includes('t') ? 't' : 'f');
+          break;
+        }
+        if (stack.at(-1) === '&') {
+          stack.pop();
+          stack.push(vals.includes('f') ? 'f' : 't');
+          break;
+        }
 
-    return stack[0] === 't';
+        vals.push(stack.pop()!);
+      }
+      continue;
+    }
+    stack.push(char);
+  }
+
+  return stack[0] === 't';
 }
 
 /*
@@ -3259,40 +3251,40 @@ Constraints:
 	queries[i] != root.val
 */
 export function treeQueries(
-    root: TreeNode | null,
-    queries: number[]
+  root: TreeNode | null,
+  queries: number[]
 ): number[] {
-    const heights = [0];
+  const heights = [0];
 
-    const getHeight = (node: TreeNode | null) => {
-        if (!node) {
-            return 0;
-        }
+  const getHeight = (node: TreeNode | null) => {
+    if (!node) {
+      return 0;
+    }
 
-        const left = getHeight(node.left);
-        const right = getHeight(node.right);
-        heights[node.val] = Math.max(left, right) + 1;
-        return heights[node.val];
-    };
+    const left = getHeight(node.left);
+    const right = getHeight(node.right);
+    heights[node.val] = Math.max(left, right) + 1;
+    return heights[node.val];
+  };
 
-    const dfs = (node: TreeNode | null, depth: number, maxHeight: number) => {
-        if (!node) {
-            return;
-        }
-        // update heights without current node
-        heights[node.val] = maxHeight;
+  const dfs = (node: TreeNode | null, depth: number, maxHeight: number) => {
+    if (!node) {
+      return;
+    }
+    // update heights without current node
+    heights[node.val] = maxHeight;
 
-        const left = node.left ? heights[node.left.val] : 0;
-        const right = node.right ? heights[node.right.val] : 0;
+    const left = node.left ? heights[node.left.val] : 0;
+    const right = node.right ? heights[node.right.val] : 0;
 
-        dfs(node.left, depth + 1, Math.max(maxHeight, depth + right));
-        dfs(node.right, depth + 1, Math.max(maxHeight, depth + left));
-    };
+    dfs(node.left, depth + 1, Math.max(maxHeight, depth + right));
+    dfs(node.right, depth + 1, Math.max(maxHeight, depth + left));
+  };
 
-    getHeight(root);
-    dfs(root, 0, 0);
+  getHeight(root);
+  dfs(root, 0, 0);
 
-    return queries.map((v) => heights[v]);
+  return queries.map((v) => heights[v]);
 }
 
 /*
@@ -3356,47 +3348,47 @@ Constraints:
 	words[i].length <= maxWidth
 */
 export function fullJustify(words: string[], maxWidth: number): string[] {
-    const ret: string[] = [];
-    let line = words[0];
-    for (let i = 1; i < words.length; i++) {
-        const char = words[i];
+  const ret: string[] = [];
+  let line = words[0];
+  for (let i = 1; i < words.length; i++) {
+    const char = words[i];
 
-        if ((line + ' ' + char).length <= maxWidth) {
-            line += ' ' + char;
-        } else {
-            ret.push(justifyLine(line, maxWidth));
-            line = char;
-        }
+    if ((line + ' ' + char).length <= maxWidth) {
+      line += ' ' + char;
+    } else {
+      ret.push(justifyLine(line, maxWidth));
+      line = char;
     }
-    const last = line.split(' ').join(' ');
-    ret.push(last.padEnd(maxWidth, ' '));
+  }
+  const last = line.split(' ').join(' ');
+  ret.push(last.padEnd(maxWidth, ' '));
 
-    return ret;
+  return ret;
 }
 
 function justifyLine(line: string, maxWidth: number): string {
-    const w = line.split(' ');
-    if (w.length === 1) {
-        return w[0] + ' '.repeat(maxWidth - w[0].length);
-    }
+  const w = line.split(' ');
+  if (w.length === 1) {
+    return w[0] + ' '.repeat(maxWidth - w[0].length);
+  }
 
-    const wordsWidth = w.reduce((s, v) => s + v.length, 0);
-    const spaceWidth = maxWidth - wordsWidth;
-    const spaceCount = w.length - 1;
-    const base = (spaceWidth / spaceCount) | 0;
-    const extra = spaceWidth % spaceCount;
+  const wordsWidth = w.reduce((s, v) => s + v.length, 0);
+  const spaceWidth = maxWidth - wordsWidth;
+  const spaceCount = w.length - 1;
+  const base = (spaceWidth / spaceCount) | 0;
+  const extra = spaceWidth % spaceCount;
 
-    let l = '';
-    let i = 0;
-    while (i < extra) {
-        l += w[i++] + ' '.repeat(base + 1);
-    }
-    while (i < w.length - 1) {
-        l += w[i++] + ' '.repeat(base);
-    }
-    l += w[i];
+  let l = '';
+  let i = 0;
+  while (i < extra) {
+    l += w[i++] + ' '.repeat(base + 1);
+  }
+  while (i < w.length - 1) {
+    l += w[i++] + ' '.repeat(base);
+  }
+  l += w[i];
 
-    return l;
+  return l;
 }
 
 /*
@@ -3444,53 +3436,53 @@ Constraints:
 	s1 and s2 consist of lowercase English letters.
 */
 export const isScramble = cache((s1: string, s2: string) => {
-    if (s1 === s2) {
-        return true;
-    }
-    if (!hasEqualFreq(s1, s2)) {
-        return false;
-    }
-
-    for (let i = 1; i < s1.length; i++) {
-        const x = s1.slice(0, i);
-        const y = s1.slice(i);
-        const x1 = s2.slice(0, i);
-        const y1 = s2.slice(i);
-        const x2 = s2.slice(0, y.length);
-        const y2 = s2.slice(y.length);
-
-        if (
-            (isScramble(x, x1) && isScramble(y, y1)) ||
-            (isScramble(x, y2) && isScramble(x2, y))
-        ) {
-            return true;
-        }
-    }
-
+  if (s1 === s2) {
+    return true;
+  }
+  if (!hasEqualFreq(s1, s2)) {
     return false;
+  }
+
+  for (let i = 1; i < s1.length; i++) {
+    const x = s1.slice(0, i);
+    const y = s1.slice(i);
+    const x1 = s2.slice(0, i);
+    const y1 = s2.slice(i);
+    const x2 = s2.slice(0, y.length);
+    const y2 = s2.slice(y.length);
+
+    if (
+      (isScramble(x, x1) && isScramble(y, y1)) ||
+      (isScramble(x, y2) && isScramble(x2, y))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 });
 
 function hasEqualFreq(s1: string, s2: string): boolean {
-    if (s1.length !== s2.length) {
-        return false;
+  if (s1.length !== s2.length) {
+    return false;
+  }
+
+  const freq = s1.split('').reduce((s, c) => {
+    s[c] = (s[c] ?? 0) + 1;
+    return s;
+  }, {});
+
+  for (let i = 0; i < s2.length; i++) {
+    const char = s2[i];
+
+    if (freq[char] > 0) {
+      freq[char]--;
+    } else {
+      return false;
     }
+  }
 
-    const freq = s1.split('').reduce((s, c) => {
-        s[c] = (s[c] ?? 0) + 1;
-        return s;
-    }, {});
-
-    for (let i = 0; i < s2.length; i++) {
-        const char = s2[i];
-
-        if (freq[char] > 0) {
-            freq[char]--;
-        } else {
-            return false;
-        }
-    }
-
-    return true;
+  return true;
 }
 
 /*
@@ -3525,33 +3517,31 @@ Constraints:
 	It is guaranteed that you can make a mountain array out of nums.
 */
 export function minimumMountainRemovals(nums: number[]): number {
-    const prefix = longestIncreasingSubSequence(nums);
-    const suffix = longestIncreasingSubSequence(
-        nums.slice().reverse()
-    ).reverse();
+  const prefix = longestIncreasingSubSequence(nums);
+  const suffix = longestIncreasingSubSequence(nums.slice().reverse()).reverse();
 
-    let max = 1;
-    for (let i = 1; i < nums.length - 1; i++) {
-        if (prefix[i] > 1 && suffix[i] > 1) {
-            max = Math.max(max, prefix[i] + suffix[i] - 1);
-        }
+  let max = 1;
+  for (let i = 1; i < nums.length - 1; i++) {
+    if (prefix[i] > 1 && suffix[i] > 1) {
+      max = Math.max(max, prefix[i] + suffix[i] - 1);
     }
+  }
 
-    return nums.length - max;
+  return nums.length - max;
 }
 
 function longestIncreasingSubSequence(nums: number[]) {
-    const dp: number[] = Array(nums.length).fill(1);
+  const dp: number[] = Array(nums.length).fill(1);
 
-    for (let i = 1; i < nums.length; i++) {
-        for (let j = i - 1; j >= 0; j--) {
-            if (nums[i] > nums[j]) {
-                dp[i] = Math.max(dp[i], dp[j] + 1);
-            }
-        }
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = i - 1; j >= 0; j--) {
+      if (nums[i] > nums[j]) {
+        dp[i] = Math.max(dp[i], dp[j] + 1);
+      }
     }
+  }
 
-    return dp;
+  return dp;
 }
 
 /*
@@ -3607,36 +3597,36 @@ Constraints:
 	The input will be generated such that it is always possible to repair every robot.
 */
 export function minimumTotalDistance(
-    robots: number[],
-    factories: [number, number][]
+  robots: number[],
+  factories: [number, number][]
 ): number {
-    // Sort robots and factories based on position
-    robots.sort((a, b) => a - b);
-    factories.sort((a, b) => a[0] - b[0]);
+  // Sort robots and factories based on position
+  robots.sort((a, b) => a - b);
+  factories.sort((a, b) => a[0] - b[0]);
 
-    const m = robots.length;
-    const n = factories.length;
+  const m = robots.length;
+  const n = factories.length;
 
-    const dp: number[][] = Array.from({ length: m + 1 }, () =>
-        Array(n + 1).fill(Infinity)
-    );
-    dp[0][0] = 0;
+  const dp: number[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill(Infinity)
+  );
+  dp[0][0] = 0;
 
-    for (let f = 1; f <= n; f++) {
-        const [factoryPos, capacity] = factories[f - 1];
-        for (let r = 0; r <= m; r++) {
-            dp[r][f] = dp[r][f - 1]; // Skip assigning any robots to this factory
+  for (let f = 1; f <= n; f++) {
+    const [factoryPos, capacity] = factories[f - 1];
+    for (let r = 0; r <= m; r++) {
+      dp[r][f] = dp[r][f - 1]; // Skip assigning any robots to this factory
 
-            // Try assigning robots to this factory, up to its capacity
-            let totalDist = 0;
-            for (let k = 1; k <= Math.min(capacity, r); k++) {
-                totalDist += Math.abs(robots[r - k] - factoryPos);
-                dp[r][f] = Math.min(dp[r][f], dp[r - k][f - 1] + totalDist);
-            }
-        }
+      // Try assigning robots to this factory, up to its capacity
+      let totalDist = 0;
+      for (let k = 1; k <= Math.min(capacity, r); k++) {
+        totalDist += Math.abs(robots[r - k] - factoryPos);
+        dp[r][f] = Math.min(dp[r][f], dp[r - k][f - 1] + totalDist);
+      }
     }
+  }
 
-    return dp[m][n];
+  return dp[m][n];
 }
 
 /*
@@ -3681,65 +3671,65 @@ Constraints:
 	Each value board[i][j] is unique.
 */
 export function slidingPuzzle(board: number[][]): number {
-    // Convert the board to a string representation
-    const start = board.flat().join('');
-    const target = '123450';
+  // Convert the board to a string representation
+  const start = board.flat().join('');
+  const target = '123450';
 
-    // Define possible moves for each index in the 1D array
-    const neighbors = [
-        [1, 3], // index 0 can swap with indices 1, 3
-        [0, 2, 4], // index 1 can swap with indices 0, 2, 4
-        [1, 5], // index 2 can swap with indices 1, 5
-        [0, 4], // index 3 can swap with indices 0, 4
-        [1, 3, 5], // index 4 can swap with indices 1, 3, 5
-        [2, 4], // index 5 can swap with indices 2, 4
-    ];
+  // Define possible moves for each index in the 1D array
+  const neighbors = [
+    [1, 3], // index 0 can swap with indices 1, 3
+    [0, 2, 4], // index 1 can swap with indices 0, 2, 4
+    [1, 5], // index 2 can swap with indices 1, 5
+    [0, 4], // index 3 can swap with indices 0, 4
+    [1, 3, 5], // index 4 can swap with indices 1, 3, 5
+    [2, 4], // index 5 can swap with indices 2, 4
+  ];
 
-    const swap = (state: string, i: number, j: number) => {
-        const arr = state.split('');
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-        return arr.join('');
-    };
+  const swap = (state: string, i: number, j: number) => {
+    const arr = state.split('');
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+    return arr.join('');
+  };
 
-    // BFS setup
-    // 720 = 6! Thare are 720 states at most
-    const queue: string[] = Array(720);
-    let left = 0;
-    let right = 0;
-    queue[right++] = start;
+  // BFS setup
+  // 720 = 6! Thare are 720 states at most
+  const queue: string[] = Array(720);
+  let left = 0;
+  let right = 0;
+  queue[right++] = start;
 
-    const visited = new Set<string>();
-    visited.add(start);
-    let steps = 0;
+  const visited = new Set<string>();
+  visited.add(start);
+  let steps = 0;
 
-    while (left < right) {
-        const prevRight = right;
-        while (left < prevRight) {
-            const current = queue[left++];
-            if (current === target) {
-                return steps;
-            }
+  while (left < right) {
+    const prevRight = right;
+    while (left < prevRight) {
+      const current = queue[left++];
+      if (current === target) {
+        return steps;
+      }
 
-            const zeroIndex = current.indexOf('0');
+      const zeroIndex = current.indexOf('0');
 
-            // Generate all possible moves
-            for (const neighbor of neighbors[zeroIndex]) {
-                // Swap '0' with the neighbor
-                const newState = swap(current, zeroIndex, neighbor);
+      // Generate all possible moves
+      for (const neighbor of neighbors[zeroIndex]) {
+        // Swap '0' with the neighbor
+        const newState = swap(current, zeroIndex, neighbor);
 
-                // If the state has not been visited, add it to the queue
-                if (!visited.has(newState)) {
-                    visited.add(newState);
-                    queue[right++] = newState;
-                }
-            }
+        // If the state has not been visited, add it to the queue
+        if (!visited.has(newState)) {
+          visited.add(newState);
+          queue[right++] = newState;
         }
-
-        steps++;
+      }
     }
 
-    // If no solution is found, return -1
-    return -1;
+    steps++;
+  }
+
+  // If no solution is found, return -1
+  return -1;
 }
 
 /*
@@ -3782,50 +3772,49 @@ Constraints:
 	grid[0][0] == 0
 */
 export function minimumTime(grid: number[][]): number {
-    if (grid[0][1] > 1 && grid[1][0] > 1) {
-        return -1;
+  if (grid[0][1] > 1 && grid[1][0] > 1) {
+    return -1;
+  }
+
+  const m = grid.length;
+  const n = grid[0].length;
+  const distances: number[][] = Array.from({ length: m }, () => Array(n));
+  const minHeap = new GenericHeap<[number, number, number]>(
+    (a, b) => a[2] - b[2]
+  );
+  const moves: number[] = [-1, 0, 1, 0, -1];
+
+  minHeap.push([0, 0, 0]);
+  distances[0][0] = 0;
+
+  while (minHeap.size() > 0) {
+    const [i, j, distance] = minHeap.pop();
+    if (i === m - 1 && j === n - 1) {
+      return distance;
     }
 
-    const m = grid.length;
-    const n = grid[0].length;
-    const distances: number[][] = Array.from({ length: m }, () => Array(n));
-    const minHeap = new GenericHeap<[number, number, number]>(
-        (a, b) => a[2] - b[2]
-    );
-    const moves: number[] = [-1, 0, 1, 0, -1];
+    for (let k = 0; k < moves.length - 1; k++) {
+      const nextI = i + moves[k];
+      const nextJ = j + moves[k + 1];
 
-    minHeap.push([0, 0, 0]);
-    distances[0][0] = 0;
-
-    while (minHeap.size() > 0) {
-        const [i, j, distance] = minHeap.pop();
-        if (i === m - 1 && j === n - 1) {
-            return distance;
+      if (nextI >= 0 && nextI < m && nextJ >= 0 && nextJ < n) {
+        let nextDistance = distance + 1;
+        if (nextDistance < grid[nextI][nextJ]) {
+          nextDistance =
+            grid[nextI][nextJ] + ((grid[nextI][nextJ] - nextDistance) % 2);
         }
-
-        for (let k = 0; k < moves.length - 1; k++) {
-            const nextI = i + moves[k];
-            const nextJ = j + moves[k + 1];
-
-            if (nextI >= 0 && nextI < m && nextJ >= 0 && nextJ < n) {
-                let nextDistance = distance + 1;
-                if (nextDistance < grid[nextI][nextJ]) {
-                    nextDistance =
-                        grid[nextI][nextJ] +
-                        ((grid[nextI][nextJ] - nextDistance) % 2);
-                }
-                if (
-                    distances[nextI][nextJ] === undefined ||
-                    nextDistance < distances[nextI][nextJ]
-                ) {
-                    distances[nextI][nextJ] = nextDistance;
-                    minHeap.push([nextI, nextJ, nextDistance]);
-                }
-            }
+        if (
+          distances[nextI][nextJ] === undefined ||
+          nextDistance < distances[nextI][nextJ]
+        ) {
+          distances[nextI][nextJ] = nextDistance;
+          minHeap.push([nextI, nextJ, nextDistance]);
         }
+      }
     }
+  }
 
-    return distances[m - 1][n - 1];
+  return distances[m - 1][n - 1];
 }
 
 /*
@@ -3876,51 +3865,51 @@ Constraints:
 	There exists a valid arrangement of pairs.
 */
 export function validArrangement(pairs: number[][]): number[][] {
-    // Create graph structures
-    const graph: Map<number, number[]> = new Map();
-    const inDegree: Map<number, number> = new Map();
-    const outDegree: Map<number, number> = new Map();
+  // Create graph structures
+  const graph: Map<number, number[]> = new Map();
+  const inDegree: Map<number, number> = new Map();
+  const outDegree: Map<number, number> = new Map();
 
-    // Build the graph and track in-degree and out-degree
-    for (const [start, end] of pairs) {
-        if (!graph.has(start)) graph.set(start, []);
-        graph.get(start)!.push(end);
+  // Build the graph and track in-degree and out-degree
+  for (const [start, end] of pairs) {
+    if (!graph.has(start)) graph.set(start, []);
+    graph.get(start)!.push(end);
 
-        outDegree.set(start, (outDegree.get(start) || 0) + 1);
-        inDegree.set(end, (inDegree.get(end) || 0) + 1);
+    outDegree.set(start, (outDegree.get(start) || 0) + 1);
+    inDegree.set(end, (inDegree.get(end) || 0) + 1);
+  }
+
+  // Find the starting node
+  let startNode: number | null = null;
+  for (const [node] of graph) {
+    const out = outDegree.get(node) || 0;
+    const in_ = inDegree.get(node) || 0;
+    if (out - in_ === 1) {
+      startNode = node; // Start node for Eulerian path
+      break;
     }
+  }
 
-    // Find the starting node
-    let startNode: number | null = null;
-    for (const [node] of graph) {
-        const out = outDegree.get(node) || 0;
-        const in_ = inDegree.get(node) || 0;
-        if (out - in_ === 1) {
-            startNode = node; // Start node for Eulerian path
-            break;
-        }
+  // If no specific start node, use any node from the graph
+  if (startNode === null) {
+    startNode = pairs[0][0];
+  }
+
+  // Hierholzer's Algorithm to find Eulerian path
+  const result: number[][] = [];
+  const dfs = (node: number) => {
+    const edges = graph.get(node) || [];
+    while (edges.length > 0) {
+      const nextNode = edges.pop()!;
+      dfs(nextNode);
+      result.push([node, nextNode]);
     }
+  };
 
-    // If no specific start node, use any node from the graph
-    if (startNode === null) {
-        startNode = pairs[0][0];
-    }
+  dfs(startNode);
 
-    // Hierholzer's Algorithm to find Eulerian path
-    const result: number[][] = [];
-    const dfs = (node: number) => {
-        const edges = graph.get(node) || [];
-        while (edges.length > 0) {
-            const nextNode = edges.pop()!;
-            dfs(nextNode);
-            result.push([node, nextNode]);
-        }
-    };
-
-    dfs(startNode);
-
-    // Reverse the result to get the correct order
-    return result.reverse();
+  // Reverse the result to get the correct order
+  return result.reverse();
 }
 
 /*
@@ -3952,32 +3941,32 @@ Constraints:
 	s consists of lowercase English letters only.
 */
 export function minCut(s: string): number {
-    const n = s.length;
-    const isPalindrome: boolean[][] = Array.from({ length: n }, () =>
-        Array(n).fill(false)
-    );
-    for (let i = n - 1; i >= 0; i--) {
-        for (let j = i; j < n; j++) {
-            if (s[i] === s[j] && (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
-                isPalindrome[i][j] = true;
-            }
-        }
+  const n = s.length;
+  const isPalindrome: boolean[][] = Array.from({ length: n }, () =>
+    Array(n).fill(false)
+  );
+  for (let i = n - 1; i >= 0; i--) {
+    for (let j = i; j < n; j++) {
+      if (s[i] === s[j] && (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
+        isPalindrome[i][j] = true;
+      }
+    }
+  }
+
+  const dfs = cache((i: number) => {
+    if (i === s.length) {
+      return 0;
     }
 
-    const dfs = cache((i: number) => {
-        if (i === s.length) {
-            return 0;
-        }
+    let min = Infinity;
+    for (let j = i; j < s.length; j++) {
+      if (isPalindrome[i][j]) {
+        min = Math.min(min, 1 + dfs(j + 1));
+      }
+    }
 
-        let min = Infinity;
-        for (let j = i; j < s.length; j++) {
-            if (isPalindrome[i][j]) {
-                min = Math.min(min, 1 + dfs(j + 1));
-            }
-        }
+    return min;
+  });
 
-        return min;
-    });
-
-    return dfs(0) - 1;
+  return dfs(0) - 1;
 }
