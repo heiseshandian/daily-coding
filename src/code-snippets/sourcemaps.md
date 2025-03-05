@@ -54,7 +54,7 @@ module.exports = {
       {
         test: /\.js$/,
         enforce: 'pre',
-        use: ['sourcemaploader'],
+        use: ['source-map-loader'],
         include: /node_modules/, // Apply to node_modules
       },
     ],
