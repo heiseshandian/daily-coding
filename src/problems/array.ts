@@ -10318,7 +10318,7 @@ Constraints:
 	0 <= queries[i][0] <= limit
 	1 <= queries[i][1] <= 10^9
 */
-export function queryResults(limit: number, queries: number[][]): number[] {
+export function queryResults(_limit: number, queries: number[][]): number[] {
   const usedColors = new Map<number, number>();
   const balls = new Map<number, number>();
 
