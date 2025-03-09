@@ -363,3 +363,254 @@ export function minimumRecolors(blocks: string, k: number): number {
 
   return min;
 }
+
+/*
+https://leetcode.com/problems/sliding-window-maximum/description/
+239. Sliding Window Maximum
+You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+
+Return the max sliding window.
+
+Example 1:
+
+Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]
+Explanation: 
+Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	-10^4 <= nums[i] <= 10^4
+	1 <= k <= nums.length
+*/
+export function maxSlidingWindow(nums: number[], k: number): number[] {
+  const queue: number[] = [];
+
+  const addPositions = (p: number) => {
+    while (queue.length > 0 && nums[queue[queue.length - 1]] <= nums[p]) {
+      queue.pop();
+    }
+
+    queue.push(p);
+  };
+
+  let l = 0;
+  let r = 0;
+  while (r < k) {
+    addPositions(r++);
+  }
+
+  const result = Array(nums.length - k + 1);
+  let i = 0;
+  result[i++] = nums[queue[0]];
+  while (r < nums.length) {
+    addPositions(r++);
+
+    l++;
+    if (queue[0] < l) {
+      queue.shift();
+    }
+
+    result[i++] = nums[queue[0]];
+  }
+
+  return result;
+}
+
+/*
+https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii/description/?envType=daily-question&envId=2024-08-02
+2134. Minimum Swaps to Group All 1's Together II
+A swap is defined as taking two distinct positions in an array and swapping the values in them.
+
+A circular array is defined as an array where we consider the first element and the last element to be adjacent.
+
+Given a binary circular array nums, return the minimum number of swaps required to group all 1's present in the array together at any location.
+
+Example 1:
+
+Input: nums = [0,1,0,1,1,0,0]
+Output: 1
+Explanation: Here are a few of the ways to group all the 1's together:
+[0,0,1,1,1,0,0] using 1 swap.
+[0,1,1,1,0,0,0] using 1 swap.
+[1,1,0,0,0,0,1] using 2 swaps (using the circular property of the array).
+There is no way to group all 1's together with 0 swaps.
+Thus, the minimum number of swaps required is 1.
+
+Example 2:
+
+Input: nums = [0,1,1,1,0,0,1,1,0]
+Output: 2
+Explanation: Here are a few of the ways to group all the 1's together:
+[1,1,1,0,0,0,0,1,1] using 2 swaps (using the circular property of the array).
+[1,1,1,1,1,0,0,0,0] using 2 swaps.
+There is no way to group all 1's together with 0 or 1 swaps.
+Thus, the minimum number of swaps required is 2.
+
+Example 3:
+
+Input: nums = [1,1,0,0,1]
+Output: 0
+Explanation: All the 1's are already grouped together due to the circular property of the array.
+Thus, the minimum number of swaps required is 0.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	nums[i] is either 0 or 1.
+
+Hints:
+
+Our end solution is to create a group of n contiguous ones, where n is the number of ones in the entire array. 
+This means we wish to find a slice of the array of size n that has the most ones already contained within it.
+
+Calculate the window size, which is the number of ones in the array. Calculate the number of ones in the first window, 
+from 0 to the window size. Then simulate rotating the window through the circular array by removing the previous element 
+and adding the next element. We then get the number of ones by subtracting the best window size found from the total number of ones.
+*/
+export function minSwaps(nums: number[]): number {
+  const windowSize = nums.filter((n) => n === 1).length;
+  let onesInWindow = nums
+    .slice(0, windowSize)
+    .reduce((acc, cur) => acc + cur, 0);
+  let max = onesInWindow;
+  for (let i = 1; i < nums.length; i++) {
+    onesInWindow -= nums[i - 1];
+    onesInWindow += nums[(i + windowSize - 1) % nums.length];
+    max = Math.max(max, onesInWindow);
+  }
+
+  return windowSize - max;
+}
+
+/*
+https://leetcode.com/problems/minimum-number-of-operations-to-make-array-continuous/?envType=daily-question&envId=2024-02-15
+2009. Minimum Number of Operations to Make Array Continuous
+You are given an integer array nums. In one operation, you can replace any element in nums with any integer.
+
+nums is considered continuous if both of the following conditions are fulfilled:
+
+    All elements in nums are unique.
+    The difference between the maximum element and the minimum element in nums equals nums.length - 1.
+
+For example, nums = [4, 2, 5, 3] is continuous, but nums = [1, 2, 3, 5, 6] is not continuous.
+
+Return the minimum number of operations to make nums continuous.
+
+Example 1:
+
+Input: nums = [4,2,5,3]
+Output: 0
+Explanation: nums is already continuous.
+
+Example 2:
+
+Input: nums = [1,2,3,5,6]
+Output: 1
+Explanation: One possible solution is to change the last element to 4.
+The resulting array is [1,2,3,5,4], which is continuous.
+
+Example 3:
+
+Input: nums = [1,10,100,1000]
+Output: 3
+Explanation: One possible solution is to:
+- Change the second element to 2.
+- Change the third element to 3.
+- Change the fourth element to 4.
+The resulting array is [1,2,3,4], which is continuous.
+
+Constraints:
+
+    1 <= nums.length <= 10^5
+    1 <= nums[i] <= 10^9
+
+Hint:
+- Sort the array.
+- For every index do a binary search to get the possible right end of the window and calculate the possible answer.
+*/
+export function minOperations(nums: number[]): number {
+  nums.sort((a, b) => a - b);
+
+  const dupes: number[] = [];
+  let prev = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] === prev) {
+      dupes.push(prev);
+    } else {
+      prev = nums[i];
+    }
+  }
+  const getDupesLen = (leftTarget: number, rightTarget: number): number => {
+    let left = 0;
+    let right = dupes.length - 1;
+    let l: number | null = null;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (dupes[mid] >= leftTarget) {
+        l = mid;
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    }
+    if (l === null) {
+      return 0;
+    }
+
+    left = 0;
+    right = dupes.length - 1;
+    let r: number | null = null;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (dupes[mid] <= rightTarget) {
+        r = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+    if (r === null) {
+      return 0;
+    }
+
+    return r - l + 1;
+  };
+
+  let minOps = Infinity;
+  for (let i = 0; i < nums.length; i++) {
+    let left = 0;
+    let right = nums.length - 1;
+    let mostEnd = i;
+    const target = nums[i] + nums.length - 1;
+    while (left <= right) {
+      const mid = left + ((right - left) >> 1);
+      if (nums[mid] <= target) {
+        mostEnd = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+
+    minOps = Math.min(
+      minOps,
+      nums.length - (mostEnd - i + 1 - getDupesLen(nums[i], nums[mostEnd]))
+    );
+  }
+
+  return minOps;
+}
