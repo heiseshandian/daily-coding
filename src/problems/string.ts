@@ -4923,3 +4923,52 @@ export function removeOccurrences(s: string, part: string): string {
 
   return s;
 }
+
+/*
+https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/description/?envType=daily-question&envId=2025-03-11
+1358. Number of Substrings Containing All Three Characters
+Given a string s consisting only of characters a, b and c.
+
+Return the number of substrings containing at least one occurrence of all these characters a, b and c.
+
+Example 1:
+
+Input: s = "abcabc"
+Output: 10
+Explanation: The substrings containing at least one occurrence of the characters a, b and c are "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" and "abc" (again). 
+
+Example 2:
+
+Input: s = "aaacb"
+Output: 3
+Explanation: The substrings containing at least one occurrence of the characters a, b and c are "aaacb", "aacb" and "acb". 
+
+Example 3:
+
+Input: s = "abc"
+Output: 1
+
+Constraints:
+
+	3 <= s.length <= 5 x 10^4
+	s only consists of a, b or c characters.
+*/
+export function numberOfSubstrings(s: string): number {
+  let count = 0;
+  let left = 0;
+  const map = new Map<string, number>();
+  for (let right = 0; right < s.length; right++) {
+    map.set(s[right], (map.get(s[right]) || 0) + 1);
+
+    while (map.size === 3) {
+      count += s.length - right;
+      map.set(s[left], map.get(s[left])! - 1);
+      if (map.get(s[left]) === 0) {
+        map.delete(s[left]);
+      }
+      left++;
+    }
+  }
+
+  return count;
+}
