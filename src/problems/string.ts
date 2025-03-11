@@ -4956,17 +4956,14 @@ Constraints:
 export function numberOfSubstrings(s: string): number {
   let count = 0;
   let left = 0;
-  const map = new Map<string, number>();
+  const alphas = ['a', 'b', 'c'];
+  const freq = Array(alphas.length).fill(0);
   for (let right = 0; right < s.length; right++) {
-    map.set(s[right], (map.get(s[right]) || 0) + 1);
+    freq[alphas.indexOf(s[right])]++;
 
-    while (map.size === 3) {
+    while (freq.every((f) => f > 0)) {
       count += s.length - right;
-      map.set(s[left], map.get(s[left])! - 1);
-      if (map.get(s[left]) === 0) {
-        map.delete(s[left]);
-      }
-      left++;
+      freq[alphas.indexOf(s[left++])]--;
     }
   }
 
