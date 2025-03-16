@@ -42,7 +42,7 @@ const generate = require('@babel/generator').default;
 const t = require('@babel/types');
 
 module.exports = function (source, sourceMap) {
-  // Tell webpack that the output of this loader can be cached
+  // Mark the loader as cacheable
   this.cacheable && this.cacheable();
 
   // Parse the source code
@@ -108,6 +108,7 @@ module.exports = function (source, sourceMap) {
       if (processedNodes.has(path.node)) {
         return;
       }
+      processedNodes.add(path.node);
 
       const openingElement = path.node.openingElement;
 
@@ -131,27 +132,6 @@ module.exports = function (source, sourceMap) {
           const otherAttributes = openingElement.attributes.filter(
             (attr) => !(t.isJSXAttribute(attr) && attr.name.name === 'src')
           );
-
-          // Create the img element for fallback
-          const imgElement = t.jsxElement(
-            t.jsxOpeningElement(
-              t.jsxIdentifier('img'),
-              [
-                ...otherAttributes,
-                t.jsxAttribute(
-                  t.jsxIdentifier('src'),
-                  t.jsxExpressionContainer(srcValue)
-                ),
-              ],
-              true
-            ),
-            null,
-            [],
-            true
-          );
-
-          // Mark the img element as processed
-          processedNodes.add(imgElement);
 
           // Create WebP source element
           const webpSource = t.jsxElement(
@@ -183,7 +163,7 @@ module.exports = function (source, sourceMap) {
           const pictureElement = t.jsxElement(
             t.jsxOpeningElement(t.jsxIdentifier('picture'), [], false),
             t.jsxClosingElement(t.jsxIdentifier('picture')),
-            [webpSource, imgElement],
+            [webpSource, path.node],
             false
           );
 
