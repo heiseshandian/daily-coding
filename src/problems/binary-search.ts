@@ -334,3 +334,20 @@ export function longestNiceSubarray(nums: number[]): number {
 
   return closest;
 }
+
+export function longestNiceSubarray2(nums: number[]): number {
+  let slidingWindow = 0;
+  let left = 0;
+  let longestSubArr = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    while ((slidingWindow & nums[i]) !== 0) {
+      slidingWindow ^= nums[left++];
+    }
+
+    slidingWindow |= nums[i];
+    longestSubArr = Math.max(longestSubArr, i - left + 1);
+  }
+
+  return longestSubArr;
+}
