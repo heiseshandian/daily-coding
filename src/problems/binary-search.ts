@@ -262,3 +262,75 @@ export function repairCars(ranks: number[], cars: number): number {
 
   return min;
 }
+
+/*
+https://leetcode.com/problems/longest-nice-subarray/description/?envType=daily-question&envId=2025-03-18
+2401. Longest Nice Subarray
+You are given an array nums consisting of positive integers.
+
+We call a subarray of nums nice if the bitwise AND of every pair of elements that are in different positions in the subarray is equal to 0.
+
+Return the length of the longest nice subarray.
+
+A subarray is a contiguous part of an array.
+
+Note that subarrays of length 1 are always considered nice.
+
+Example 1:
+
+Input: nums = [1,3,8,48,10]
+Output: 3
+Explanation: The longest nice subarray is [3,8,48]. This subarray satisfies the conditions:
+- 3 AND 8 = 0.
+- 3 AND 48 = 0.
+- 8 AND 48 = 0.
+It can be proven that no longer nice subarray can be obtained, so we return 3.
+
+Example 2:
+
+Input: nums = [3,1,5,11,13]
+Output: 1
+Explanation: The length of the longest nice subarray is 1. Any subarray of length 1 can be chosen.
+
+Constraints:
+
+	1 <= nums.length <= 10^5
+	1 <= nums[i] <= 10^9
+*/
+export function longestNiceSubarray(nums: number[]): number {
+  const isValid = (len: number) => {
+    for (let i = 0; i < nums.length - len + 1; i++) {
+      let found = true;
+
+      let bitmask = 0;
+      for (let j = i; j < i + len; j++) {
+        if ((bitmask & nums[j]) !== 0) {
+          found = false;
+          break;
+        }
+        bitmask |= nums[j];
+      }
+
+      if (found) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  let left = 1;
+  let right = 30;
+  let closest = left;
+  while (left <= right) {
+    const mid = left + ((right - left) >> 1);
+    if (isValid(mid)) {
+      closest = mid;
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return closest;
+}
