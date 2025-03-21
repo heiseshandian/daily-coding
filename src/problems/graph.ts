@@ -1969,3 +1969,102 @@ export function minimumCost(
     return unionFind.distances[unionFind.find(from)];
   });
 }
+
+/*
+https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/?envType=daily-question&envId=2025-03-21
+2115. Find All Possible Recipes from Given Supplies
+You have information about n different recipes. You are given a string array recipes and a 2D string array ingredients. The ith recipe has the name recipes[i], and you can create it if you have all the needed ingredients from ingredients[i]. A recipe can also be an ingredient for other recipes, i.e., ingredients[i] may contain a string that is in recipes.
+
+You are also given a string array supplies containing all the ingredients that you initially have, and you have an infinite supply of all of them.
+
+Return a list of all the recipes that you can create. You may return the answer in any order.
+
+Note that two recipes may contain each other in their ingredients.
+
+Example 1:
+
+Input: recipes = ["bread"], ingredients = [["yeast","flour"]], supplies = ["yeast","flour","corn"]
+Output: ["bread"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+
+Example 2:
+
+Input: recipes = ["bread","sandwich"], ingredients = [["yeast","flour"],["bread","meat"]], supplies = ["yeast","flour","meat"]
+Output: ["bread","sandwich"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+We can create "sandwich" since we have the ingredient "meat" and can create the ingredient "bread".
+
+Example 3:
+
+Input: recipes = ["bread","sandwich","burger"], ingredients = [["yeast","flour"],["bread","meat"],["sandwich","meat","bread"]], supplies = ["yeast","flour","meat"]
+Output: ["bread","sandwich","burger"]
+Explanation:
+We can create "bread" since we have the ingredients "yeast" and "flour".
+We can create "sandwich" since we have the ingredient "meat" and can create the ingredient "bread".
+We can create "burger" since we have the ingredient "meat" and can create the ingredients "bread" and "sandwich".
+
+Constraints:
+
+	n == recipes.length == ingredients.length
+	1 <= n <= 100
+	1 <= ingredients[i].length, supplies.length <= 100
+	1 <= recipes[i].length, ingredients[i][j].length, supplies[k].length <= 10
+	recipes[i], ingredients[i][j], and supplies[k] consist only of lowercase English letters.
+	All the values of recipes and supplies combined are unique.
+	Each ingredients[i] does not contain any duplicate values.
+*/
+export function findAllRecipes(
+  recipes: string[],
+  ingredients: string[][],
+  supplies: string[]
+): string[] {
+  const tables = new Map<string, string[]>();
+  const inDegree = new Map<string, number>();
+  const suppliesSet = new Set(supplies);
+  ingredients.forEach((ingredient, i) => {
+    const recipe = recipes[i];
+
+    ingredient.forEach((item) => {
+      if (!tables.has(item)) {
+        tables.set(item, []);
+      }
+      tables.get(item)!.push(recipe);
+      inDegree.set(recipe, (inDegree.get(recipe) || 0) + 1);
+    });
+  });
+
+  const queue = Array(recipes.length * 3);
+  let left = 0;
+  let right = 0;
+  supplies.forEach((s) => {
+    if (tables.has(s)) {
+      queue[right++] = s;
+    }
+  });
+
+  const result: string[] = [];
+  while (left < right) {
+    const r = right;
+    for (let i = left; i < r; i++) {
+      const item = queue[left++];
+      if (suppliesSet.has(item)) {
+        tables.get(item)?.forEach((recipe) => {
+          inDegree.set(recipe, (inDegree.get(recipe) || 0) - 1);
+          if (inDegree.get(recipe) === 0) {
+            queue[right++] = recipe;
+            suppliesSet.add(recipe);
+            result.push(recipe);
+          }
+        });
+      }
+    }
+
+    if (r === right) {
+      break;
+    }
+  }
+
+  return result;
+}
