@@ -1,1 +1,9 @@
-{}
+{
+  "marscode.enableCodelens": {
+    "enableInlineDocumentation": false,
+    "enableInlineUnitTest": false,
+    "enableInlineExplain": false
+  },
+  "marscode.enableInlineCommand": false,
+  "marscode.chatLanguage": "test"
+}
