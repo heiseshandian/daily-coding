@@ -10623,24 +10623,20 @@ Constraints:
 */
 export function maximumTripletValue(nums: number[]): number {
   const n = nums.length;
+  const leftMax = Array(n - 1);
   const rightMax = Array(n - 1);
-  const rightMin = Array(n - 1);
+  leftMax[1] = nums[0];
   rightMax[n - 2] = nums[n - 1];
-  rightMin[n - 2] = nums[n - 1];
   for (let i = n - 3; i >= 0; i--) {
     rightMax[i] = Math.max(rightMax[i + 1], nums[i + 1]);
-    rightMin[i] = Math.min(rightMin[i + 1], nums[i + 1]);
+  }
+  for (let i = 2; i < n; i++) {
+    leftMax[i] = Math.max(leftMax[i - 1], nums[i - 1]);
   }
 
   let max = 0;
-  for (let i = 0; i <= n - 3; i++) {
-    for (let j = i + 1; j <= n - 2; j++) {
-      max = Math.max(
-        max,
-        (nums[i] - nums[j]) * rightMax[j],
-        (nums[i] - nums[j]) * rightMin[j]
-      );
-    }
+  for (let j = 1; j < n - 1; j++) {
+    max = Math.max((leftMax[j] - nums[j]) * rightMax[j], max);
   }
 
   return max;
