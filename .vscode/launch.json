@@ -1,34 +1,45 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            // 用于调试当前打开文件
-            "name": "ts-node",
-            "type": "node",
-            "runtimeExecutable": "ts-node",
-            "request": "launch",
-            // ${relativeFile} 表示当前打开文件
-            "args": ["${relativeFile}"],
-            "cwd": "${workspaceRoot}",
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            // 用于调试当前打开文件
-            "name": "node",
-            "type": "node",
-            "runtimeExecutable": "node",
-            "request": "launch",
-            // ${relativeFile} 表示当前打开文件
-            "args": ["${relativeFile}"],
-            "cwd": "${workspaceRoot}",
-            "internalConsoleOptions": "openOnSessionStart",
-            "skipFiles": [
-                // 通过注释掉node_internals来允许step into node_internals
-                // "<node_internals>/**"
-            ]
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 用于调试当前打开文件
+      "name": "ts-node",
+      "type": "node",
+      "runtimeExecutable": "ts-node",
+      "request": "launch",
+      // ${relativeFile} 表示当前打开文件
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      // 用于调试当前打开文件
+      "name": "node",
+      "type": "node",
+      "runtimeExecutable": "node",
+      "request": "launch",
+      // ${relativeFile} 表示当前打开文件
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        // 通过注释掉node_internals来允许step into node_internals
+        // "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "bashdb",
+      "request": "launch",
+      "name": "Debug Shell Script",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "terminalKind": "integrated",
+      "env": {
+        "SHELL": "/opt/homebrew/bin/bash"
+      }
+    }
+  ]
 }
