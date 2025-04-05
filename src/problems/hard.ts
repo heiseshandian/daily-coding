@@ -4192,18 +4192,22 @@ Constraints:
 */
 export function maxChunksToSorted(arr: number[]): number {
   const n = arr.length;
-  const sorted = arr.slice().sort((a, b) => a - b);
   const rightMin = Array(n);
+  const leftMax = Array(n);
   rightMin[n - 1] = Infinity;
+  leftMax[0] = -Infinity;
   for (let i = n - 2; i >= 0; i--) {
     rightMin[i] = Math.min(rightMin[i + 1], arr[i + 1]);
+  }
+  for (let i = 1; i < n; i++) {
+    leftMax[i] = Math.max(leftMax[i - 1], arr[i - 1]);
   }
 
   let max = -Infinity;
   let count = 0;
   for (let i = 0; i < n; i++) {
     max = Math.max(max, arr[i]);
-    if (max === sorted[i] && rightMin[i] >= max) {
+    if (max >= leftMax[i] && rightMin[i] >= max) {
       count++;
     }
   }
