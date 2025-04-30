@@ -1,5 +1,6 @@
 import { debounce } from '../coding.js';
 import { EventEmitter } from '../coding.js';
+import { P } from '../coding.js';
 
 describe('debounce 函数测试', () => {
   it('函数抛出错误时应正确传递错误', async () => {
@@ -103,5 +104,48 @@ describe('EventEmitter 类测试', () => {
     eventEmitter.emit('testEvent');
     eventEmitter.emit('testEvent');
     expect(mockHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('P 类测试', () => {
+  it('应正确处理 resolve 状态', (done) => {
+    new P((resolve) => {
+      resolve(42);
+    }).then((value) => {
+      expect(value).toBe(42);
+      done();
+    });
+  });
+
+  it('应正确处理 reject 状态', (done) => {
+    const error = new Error('Test error');
+    new P((_, reject) => {
+      reject(error);
+    }).then(null, (reason) => {
+      expect(reason).toBe(error);
+      done();
+    });
+  });
+
+  it('应支持 then 方法链式调用', (done) => {
+    new P((resolve) => {
+      resolve(1);
+    })
+      .then((value) => value * 2)
+      .then((value) => value + 3)
+      .then((value) => {
+        expect(value).toBe(5);
+        done();
+      });
+  });
+
+  it('应捕获 executor 中的异常', (done) => {
+    const error = new Error('Test error');
+    new P(() => {
+      throw error;
+    }).then(null, (reason) => {
+      expect(reason).toBe(error);
+      done();
+    });
   });
 });
