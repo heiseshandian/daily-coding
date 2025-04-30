@@ -44,3 +44,46 @@ export function debounce(fn, delay, leading = false) {
     });
   };
 }
+
+export class EventEmitter {
+  constructor() {
+    this.events = {};
+  }
+
+  on(eventName, handler) {
+    if (!this.events[eventName]) {
+      this.events[eventName] = [];
+    }
+    this.events[eventName].push(handler);
+  }
+
+  emit(eventName, ...args) {
+    if (this.events[eventName]) {
+      this.events[eventName].forEach((handler) => {
+        handler(...args);
+      });
+    }
+  }
+
+  off(eventName, handler) {
+    if (!handler) {
+      delete this.events[eventName];
+      return;
+    }
+
+    if (this.events[eventName]) {
+      const index = this.events[eventName].indexOf(handler);
+      if (index !== -1) {
+        this.events[eventName].splice(index, 1);
+      }
+    }
+  }
+
+  once(eventName, handler) {
+    const onceHandler = (...args) => {
+      handler(...args);
+      this.off(eventName, onceHandler);
+    };
+    this.on(eventName, onceHandler);
+  }
+}

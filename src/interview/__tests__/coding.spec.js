@@ -1,4 +1,5 @@
 import { debounce } from '../coding.js';
+import { EventEmitter } from '../coding.js';
 
 describe('debounce 函数测试', () => {
   it('函数抛出错误时应正确传递错误', async () => {
@@ -56,5 +57,51 @@ describe('debounce 函数测试', () => {
     await debounced(...args);
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(mockFn).toHaveBeenCalledWith(...args);
+  });
+});
+
+describe('EventEmitter 类测试', () => {
+  let eventEmitter;
+
+  beforeEach(() => {
+    eventEmitter = new EventEmitter();
+  });
+
+  it('应正确注册事件处理函数', () => {
+    const mockHandler = jest.fn();
+    eventEmitter.on('testEvent', mockHandler);
+    expect(eventEmitter.events['testEvent']).toContain(mockHandler);
+  });
+
+  it('应正确触发事件处理函数', () => {
+    const mockHandler = jest.fn();
+    eventEmitter.on('testEvent', mockHandler);
+    eventEmitter.emit('testEvent', 'arg1', 'arg2');
+    expect(mockHandler).toHaveBeenCalledWith('arg1', 'arg2');
+  });
+
+  it('应正确移除特定事件处理函数', () => {
+    const mockHandler1 = jest.fn();
+    const mockHandler2 = jest.fn();
+    eventEmitter.on('testEvent', mockHandler1);
+    eventEmitter.on('testEvent', mockHandler2);
+    eventEmitter.off('testEvent', mockHandler1);
+    expect(eventEmitter.events['testEvent']).not.toContain(mockHandler1);
+    expect(eventEmitter.events['testEvent']).toContain(mockHandler2);
+  });
+
+  it('应正确移除所有事件处理函数', () => {
+    const mockHandler = jest.fn();
+    eventEmitter.on('testEvent', mockHandler);
+    eventEmitter.off('testEvent');
+    expect(eventEmitter.events['testEvent']).toBeUndefined();
+  });
+
+  it('应正确执行一次性事件处理函数', () => {
+    const mockHandler = jest.fn();
+    eventEmitter.once('testEvent', mockHandler);
+    eventEmitter.emit('testEvent');
+    eventEmitter.emit('testEvent');
+    expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 });
