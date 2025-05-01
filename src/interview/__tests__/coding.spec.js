@@ -1,6 +1,7 @@
 import { debounce } from '../coding.js';
 import { EventEmitter } from '../coding.js';
 import { P } from '../coding.js';
+import { throttle } from '../coding.js';
 
 describe('debounce 函数测试', () => {
   it('函数抛出错误时应正确传递错误', async () => {
@@ -147,5 +148,76 @@ describe('P 类测试', () => {
       expect(reason).toBe(error);
       done();
     });
+  });
+});
+
+describe('throttle 函数测试', () => {
+  it('leading 为 true 且 trailing 为 true 时应按预期节流', (done) => {
+    const mockFn = jest.fn();
+    const throttled = throttle(mockFn, 100, { leading: true, trailing: true });
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    setTimeout(() => {
+      throttled();
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      done();
+    }, 150);
+  });
+
+  it('leading 为 false 且 trailing 为 true 时应延迟首次执行', (done) => {
+    const mockFn = jest.fn();
+    const throttled = throttle(mockFn, 100, { leading: false, trailing: true });
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    setTimeout(() => {
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      done();
+    }, 150);
+  });
+
+  it('leading 为 true 且 trailing 为 false 时应只执行首次调用', (done) => {
+    const mockFn = jest.fn();
+    const throttled = throttle(mockFn, 100, { leading: true, trailing: false });
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    setTimeout(() => {
+      throttled();
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      done();
+    }, 150);
+  });
+
+  it('函数抛出错误时应正确传递错误', () => {
+    const error = new Error('Test error');
+    const errorFn = jest.fn(() => {
+      throw error;
+    });
+    const throttled = throttle(errorFn, 100);
+
+    expect(() => throttled()).toThrow(error);
+  });
+
+  it('cancel 方法应停止节流并重置状态', () => {
+    const mockFn = jest.fn();
+    const throttled = throttle(mockFn, 100);
+
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    throttled.cancel();
+    throttled();
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });

@@ -195,3 +195,56 @@ export class P {
     return this.then(null, onRejected);
   }
 }
+
+export function throttle(fn, delay, options = {}) {
+  const { leading = true, trailing = true } = options;
+  let lastCallTime = 0;
+  let timer = null;
+  let lastContext = null;
+
+  const invoke = (args) => {
+    try {
+      lastCallTime = Date.now();
+      fn.apply(lastContext, args);
+    } catch (error) {
+      throw error;
+    } finally {
+      lastContext = null;
+    }
+  };
+
+  const throttled = function (...args) {
+    const now = Date.now();
+    if (!lastCallTime && leading === false) {
+      lastCallTime = now;
+    }
+
+    const remaining = delay - (now - lastCallTime);
+    if (remaining <= 0) {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      invoke(args);
+    } else if (trailing && !timer) {
+      timer = setTimeout(() => {
+        timer = null;
+        lastCallTime = Date.now();
+        if (trailing) {
+          invoke(args);
+        }
+      }, remaining);
+    }
+  };
+
+  throttled.cancel = function () {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+    lastCallTime = 0;
+    lastContext = null;
+  };
+
+  return throttled;
+}
