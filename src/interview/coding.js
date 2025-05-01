@@ -248,3 +248,45 @@ export function throttle(fn, delay, options = {}) {
 
   return throttled;
 }
+
+export class Scheduler {
+  limit;
+  queue = [];
+  activeCount = 0;
+
+  constructor(limit) {
+    this.limit = limit;
+  }
+
+  /**
+   *
+   * @param {()=>Promise<any>} fn
+   * @returns {Promise<any>}
+   */
+  add(fn) {
+    return new Promise((resolve, reject) => {
+      const runTask = () => {
+        this.activeCount++;
+        fn()
+          .then(resolve)
+          .catch(reject)
+          .finally(() => {
+            this.activeCount--;
+            this.runNext();
+          });
+      };
+
+      if (this.activeCount < this.limit) {
+        runTask();
+      } else {
+        this.queue.push(runTask);
+      }
+    });
+  }
+
+  runNext() {
+    if (this.queue.length > 0 && this.activeCount < this.limit) {
+      this.queue.shift()();
+    }
+  }
+}

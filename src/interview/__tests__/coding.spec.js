@@ -2,6 +2,7 @@ import { debounce } from '../coding.js';
 import { EventEmitter } from '../coding.js';
 import { P } from '../coding.js';
 import { throttle } from '../coding.js';
+import { Scheduler } from '../coding.js';
 
 describe('debounce 函数测试', () => {
   it('函数抛出错误时应正确传递错误', async () => {
@@ -219,5 +220,48 @@ describe('throttle 函数测试', () => {
     throttled.cancel();
     throttled();
     expect(mockFn).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('Scheduler 类测试', () => {
+  it('应正确添加任务并执行', async () => {
+    const mockFn = jest.fn(() => Promise.resolve());
+    const scheduler = new Scheduler(1);
+
+    await scheduler.add(mockFn);
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('应限制并发任务数量', async () => {
+    const limit = 2;
+    const mockFns = Array.from({ length: 4 }, () =>
+      jest.fn(() => new Promise((resolve) => setTimeout(resolve, 20)))
+    );
+    const scheduler = new Scheduler(limit);
+
+    mockFns.forEach((fn) => scheduler.add(fn));
+
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(mockFns.filter((fn) => fn.mock.calls.length > 0).length).toBe(limit);
+  });
+
+  it('任务完成后应执行下一个任务', async () => {
+    const mockFn1 = jest.fn(() => Promise.resolve());
+    const mockFn2 = jest.fn(() => Promise.resolve());
+    const scheduler = new Scheduler(1);
+
+    scheduler.add(mockFn1);
+    await scheduler.add(mockFn2);
+
+    expect(mockFn1).toHaveBeenCalledTimes(1);
+    expect(mockFn2).toHaveBeenCalledTimes(1);
+  });
+
+  it('任务抛出错误时应正确处理', async () => {
+    const error = new Error('Test error');
+    const errorFn = jest.fn(() => Promise.reject(error));
+    const scheduler = new Scheduler(1);
+
+    await expect(scheduler.add(errorFn)).rejects.toThrow(error);
   });
 });
