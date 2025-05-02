@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*\""
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/heiseshandian/daily-coding.git"
