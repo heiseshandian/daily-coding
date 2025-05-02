@@ -290,3 +290,54 @@ export class Scheduler {
     }
   }
 }
+
+Function.prototype._call = function (context, ...args) {
+  if (typeof this !== 'function') {
+    throw new TypeError('not a function');
+  }
+
+  context = context || globalThis;
+  // 避免覆盖已有属性
+  const fnSymbol = Symbol('fn');
+  context[fnSymbol] = this;
+  const result = context[fnSymbol](...args);
+  delete context[fnSymbol];
+
+  return result;
+};
+
+Function.prototype._apply = function (context, args) {
+  if (typeof this !== 'function') {
+    throw new TypeError('not a function');
+  }
+
+  context = context || globalThis;
+  args = args || [];
+  // 避免覆盖已有属性
+  const fnSymbol = Symbol('fn');
+  context[fnSymbol] = this;
+  const result = context[fnSymbol](...args);
+  delete context[fnSymbol];
+
+  return result;
+};
+
+Function.prototype._bind = function (context, ...args) {
+  if (typeof this !== 'function') {
+    throw new TypeError('not a function');
+  }
+
+  const self = this;
+  const boundFn = function (...innerArgs) {
+    // 处理 new 的场景
+    if (this instanceof boundFn) {
+      return new self(...args.concat(innerArgs));
+    }
+
+    return self.apply(context, args.concat(innerArgs));
+  };
+
+  // 继承原函数的原型
+  boundFn.prototype = Object.create(self.prototype);
+  return boundFn;
+};
