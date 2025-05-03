@@ -1,6 +1,7 @@
 import { debounce } from '../coding.js';
 import { EventEmitter } from '../coding.js';
 import { P } from '../coding.js';
+import { compose } from '../coding.js';
 import { throttle } from '../coding.js';
 import { Scheduler } from '../coding.js';
 
@@ -263,5 +264,49 @@ describe('Scheduler 类测试', () => {
     const scheduler = new Scheduler(1);
 
     await expect(scheduler.add(errorFn)).rejects.toThrow(error);
+  });
+});
+
+describe('compose 函数测试', () => {
+  it('应按顺序执行中间件', async () => {
+    const middleware1 = jest.fn((ctx, next) => {
+      ctx.value += 1;
+      return next();
+    });
+    const middleware2 = jest.fn((ctx, next) => {
+      ctx.value *= 2;
+      return next();
+    });
+    const context = { value: 0 };
+
+    const composed = compose([middleware1, middleware2]);
+    await composed(context);
+
+    expect(context.value).toBe(2);
+    expect(middleware1).toHaveBeenCalled();
+    expect(middleware2).toHaveBeenCalled();
+  });
+
+  it('应处理空中间件数组', async () => {
+    const context = { value: 10 };
+    const next = jest.fn();
+
+    const composed = compose([]);
+    await composed(context, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(context.value).toBe(10);
+  });
+
+  it('中间件抛出错误时应正确传递错误', async () => {
+    const error = new Error('中间件错误');
+    const middleware = jest.fn(() => {
+      throw error;
+    });
+    const context = {};
+
+    const composed = compose([middleware]);
+
+    await expect(composed(context)).rejects.toThrow(error);
   });
 });

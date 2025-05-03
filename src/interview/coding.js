@@ -341,3 +341,28 @@ Function.prototype._bind = function (context, ...args) {
   boundFn.prototype = Object.create(self.prototype);
   return boundFn;
 };
+
+export function newOperator(constructor, ...args) {
+  if (typeof constructor !== 'function') {
+    throw new TypeError('not a function');
+  }
+
+  const obj = Object.create(constructor.prototype);
+  const result = constructor.apply(obj, args);
+  return result instanceof Object ? result : obj;
+}
+
+export function compose(middlewares) {
+  return function (context, next) {
+    async function dispatch(index) {
+      const fn = index === middlewares.length ? next : middlewares[index];
+      if (!fn) {
+        return;
+      }
+
+      return await fn(context, () => dispatch(index + 1));
+    }
+
+    return dispatch(0);
+  };
+}
