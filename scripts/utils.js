@@ -85,14 +85,30 @@ function getCriticalCss(element) {
  * @param {string} toCopy
  */
 function copyToClipboard(toCopy) {
-  navigator.clipboard
-    .writeText(toCopy)
-    .then(() => {
-      console.log('Text copied to clipboard');
-    })
-    .catch((err) => {
-      console.error(err);
+  // 优先使用navigator.clipboard API
+  if (navigator.clipboard) {
+    // 确保页面处于focused状态
+    if (!document.hasFocus()) {
+      window.focus();
+    }
+
+    return navigator.clipboard.writeText(toCopy).catch(() => {
+      // 如果失败，回退到execCommand方法
+      legacyCopyToClipboard(toCopy);
     });
+  }
+
+  // 不支持clipboard API时使用execCommand方法
+  legacyCopyToClipboard(toCopy);
+}
+
+function legacyCopyToClipboard(toCopy) {
+  const textarea = document.createElement('textarea');
+  textarea.value = toCopy;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
 }
 
 // 暴露到window对象
