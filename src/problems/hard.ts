@@ -4282,3 +4282,45 @@ export function calculateMinimumHP(dungeon: number[][]): number {
 
   return min;
 }
+
+export function calculateMinimumHP1(dungeon: number[][]): number {
+  const m = dungeon.length;
+  const n = dungeon[0].length;
+
+  const dp: number[][] = Array.from({ length: m }, () =>
+    Array(n).fill(Infinity)
+  );
+  dp[m - 1][n - 1] = Math.max(-dungeon[m - 1][n - 1] + 1, 1);
+
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      if (i === m - 1 && j === n - 1) continue;
+      const right = j + 1 < n ? dp[i][j + 1] : Infinity;
+      const down = i + 1 < m ? dp[i + 1][j] : Infinity;
+      dp[i][j] = Math.max(Math.min(right, down) - dungeon[i][j], 1);
+    }
+  }
+
+  return dp[0][0];
+}
+
+export function calculateMinimumHP2(dungeon: number[][]): number {
+  const m = dungeon.length;
+  const n = dungeon[0].length;
+
+  const dp: number[] = Array(n).fill(Infinity);
+  dp[n - 1] = Math.max(-dungeon[m - 1][n - 1] + 1, 1);
+
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      if (i === m - 1 && j === n - 1) {
+        continue;
+      }
+      const right = j + 1 < n ? dp[j + 1] : Infinity;
+      const down = i + 1 < m ? dp[j] : Infinity;
+      dp[j] = Math.max(Math.min(right, down) - dungeon[i][j], 1);
+    }
+  }
+
+  return dp[0];
+}
