@@ -40,6 +40,22 @@ function getCriticalCss(element) {
         if (matchesAnyElement) {
           criticalSelectors.add(rule.cssText);
         }
+        // 新增：处理 ::before 和 ::after 伪类
+        if (
+          rule.selectorText.includes('::before') ||
+          rule.selectorText.includes('::after')
+        ) {
+          const baseSelector = rule.selectorText.replace(
+            /::before|::after/g,
+            ''
+          );
+          const matchesBase = allElements.some((el) =>
+            el.matches(baseSelector)
+          );
+          if (matchesBase) {
+            criticalSelectors.add(rule.cssText);
+          }
+        }
       } catch (e) {
         // 忽略无效选择器
       }
@@ -56,6 +72,24 @@ function getCriticalCss(element) {
               criticalSelectors.add(
                 `@media ${rule.conditionText} { ${nestedRule.cssText} }`
               );
+            }
+            // 新增：处理 ::before 和 ::after 伪类
+            if (
+              nestedRule.selectorText.includes('::before') ||
+              nestedRule.selectorText.includes('::after')
+            ) {
+              const baseSelector = nestedRule.selectorText.replace(
+                /::before|::after/g,
+                ''
+              );
+              const matchesBase = allElements.some((el) =>
+                el.matches(baseSelector)
+              );
+              if (matchesBase) {
+                criticalSelectors.add(
+                  `@media ${rule.conditionText} { ${nestedRule.cssText} }`
+                );
+              }
             }
           } catch (e) {
             // 忽略无效选择器
