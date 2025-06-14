@@ -5,19 +5,9 @@ autoJumpBackToEnglishVersion();
 
 const observer = new MutationObserver(function () {
   addBtns();
-  saveTitle();
 });
 
 observer.observe(document, { childList: true, subtree: true });
-
-document.addEventListener('visibilitychange', function () {
-  if (
-    document.visibilityState === 'visible' &&
-    location.href.includes('https://leetcode.com/problems/')
-  ) {
-    saveTitle();
-  }
-});
 
 function autoJumpBackToEnglishVersion() {
   if (location.href.startsWith('https://leetcode.cn')) {
@@ -29,7 +19,6 @@ function autoJumpBackToEnglishVersion() {
 
 function addBtns() {
   addCopyBtn();
-  addCopyGptPrompt();
 }
 
 const COPY_BTN_CONTENT = 'copy content';
@@ -47,28 +36,6 @@ async function addCopyBtn() {
 
   btnContainer.appendChild(copyBtn);
   btnContainer.hasAddedCopyBtn = true;
-}
-
-const GPT_PROMPT = 'gpt prompt';
-
-async function addCopyGptPrompt() {
-  const btnContainer = (await getBtnContainer('.items-center.gap-4 button'))
-    .parentNode;
-  if (btnContainer.hasAddGptPrompt) {
-    return;
-  }
-
-  const gptPrompt = document.createElement('button');
-  gptPrompt.textContent = GPT_PROMPT;
-  'whitespace-nowrap focus:outline-none text-white dark:text-dark-white text-md flex h-8 items-center gap-1 rounded-lg px-4 font-medium purple-btn'
-    .split(' ')
-    .forEach((cls) => {
-      gptPrompt.classList.add(cls);
-    });
-  gptPrompt.addEventListener('click', handleClickGptPrompt);
-
-  btnContainer.appendChild(gptPrompt);
-  btnContainer.hasAddGptPrompt = true;
 }
 
 /**
@@ -183,43 +150,6 @@ function isPythonCode(lines) {
  */
 function removeComment(lines) {
   return lines.replace(/\/\*[\s\S]*?\*\//, '');
-}
-
-/**
- * 将 title 保存到 localStorage
- */
-async function saveTitle() {
-  const titleElement = await getBtnContainer(
-    '.flexlayout__tab .text-title-large'
-  );
-
-  let title = removeSuffix(titleElement.textContent, COPY_BTN_CONTENT);
-  localStorage.setItem('leetcode_title_baymax', title);
-}
-
-/**
- * 从 localStorage 取出之前保存的标题
- *
- */
-function getTitleFromCache() {
-  return localStorage.getItem('leetcode_title_baymax');
-}
-
-/**
- * 点击复制gpt prompt
- */
-function handleClickGptPrompt() {
-  const title = getTitleFromCache();
-
-  let lines = document.getElementById('code').nextElementSibling.textContent;
-  lines = `// code start\n${lines}\n // code end\n`;
-
-  const output =
-    'Output markdown instead of formatting the markdown content directly.';
-
-  const toCopy = `${title}\n${lines}\n${output}`;
-
-  copyToClipboard(toCopy);
 }
 
 /**
