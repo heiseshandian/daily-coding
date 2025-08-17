@@ -12,9 +12,7 @@ function getCriticalCss(element) {
   const allElements = [element, ...element.querySelectorAll('*')];
 
   // 收集所有样式表
-  const allStylesheets = Array.from(document.styleSheets).filter(
-    (sheet) => !sheet.href || sheet.href.startsWith(window.location.origin)
-  );
+  const allStylesheets = Array.from(document.styleSheets);
 
   // 收集所有CSS规则
   const allRules = [];
