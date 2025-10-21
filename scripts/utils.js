@@ -145,3 +145,122 @@ function legacyCopyToClipboard(toCopy) {
 
 // 暴露到window对象
 window.getCriticalCss = getCriticalCss;
+
+/**
+ * 由于 btnContainer 是异步加载的，这里使用 raf 来获取
+ *
+ * @param {string} selectors
+ * @returns {Promise<HTMLDivElement>} btnContainer
+ */
+/**
+ * 获取按钮容器元素（通过提供一个返回目标元素的函数）
+ * @param {() => (HTMLElement|null|undefined)} getElementFn - 返回目标元素的函数；未找到时应返回 null/undefined
+ * @param {Object} options - 配置选项
+ * @param {number} options.timeout - 超时时间（毫秒），默认 5000ms
+ * @returns {Promise<HTMLElement>} 按钮容器元素
+ */
+function getBtnContainer(getElementFn, options = {}) {
+  const { timeout = 5000 } = options;
+
+  // 参数验证
+  if (typeof getElementFn !== 'function') {
+    return Promise.reject(new Error('getElementFn must be a function'));
+  }
+
+  return new Promise((resolve, reject) => {
+    let timeoutId;
+    let rafId;
+    const startTime = Date.now();
+
+    const updateBtnContainer = () => {
+      let el;
+      try {
+        el = getElementFn();
+      } catch (e) {
+        // 若函数抛错，继续重试
+      }
+
+      // 找到元素
+      if (el instanceof Element) {
+        clearTimeout(timeoutId);
+        cancelAnimationFrame(rafId);
+        resolve(el);
+        return;
+      }
+
+      // 超时检查
+      if (Date.now() - startTime > timeout) {
+        clearTimeout(timeoutId);
+        cancelAnimationFrame(rafId);
+        reject(new Error('Failed to obtain element within timeout'));
+        return;
+      }
+
+      // 继续查找
+      rafId = requestAnimationFrame(updateBtnContainer);
+    };
+
+    // 启动查找
+    updateBtnContainer();
+
+    // 设置超时
+    timeoutId = setTimeout(() => {
+      cancelAnimationFrame(rafId);
+      reject(new Error('getBtnContainer timeout'));
+    }, timeout);
+  });
+}
+
+async function addBtn() {
+  const container = await getBtnContainer(
+    () => document.querySelectorAll('[aria-current="page"]')?.[0]?.parentElement
+  );
+
+  if (!container) {
+    return;
+  }
+
+  const maxPage = getBiggestPage(container) || 150;
+
+  // 在容器中添加按钮
+  const btn = document.createElement('button');
+  btn.textContent = '任意门';
+  btn.style.marginLeft = '8px';
+  btn.className =
+    'btn btn-sm bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700';
+
+  btn.onclick = () => {
+    const upper = Math.max(1, Math.floor(maxPage));
+    const randomPage = Math.floor(Math.random() * upper) + 1;
+
+    const url = new URL(location.href);
+    url.searchParams.set('page', randomPage);
+    location.href = url.toString();
+  };
+
+  container.appendChild(btn);
+}
+
+function getBiggestPage(container) {
+  if (!container || !(container instanceof Element)) return null;
+
+  const pages = Array.from(container.querySelectorAll('a[href*="page="]'))
+    .map((a) => {
+      // Try URL API first
+      let href = a.getAttribute('href') || '';
+      try {
+        const url = new URL(href, location.origin); // handles relative links
+        const v = parseInt(url.searchParams.get('page'), 10);
+        return Number.isFinite(v) ? v : null;
+      } catch {
+        // Fallback regex parse
+        const m = href.match(/[?&]page=(\\d+)/);
+        return m ? parseInt(m[1], 10) : null;
+      }
+    })
+    .filter((n) => n != null);
+
+  return pages.length ? Math.max(...pages) : null;
+}
+
+addBtn();
