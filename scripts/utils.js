@@ -212,6 +212,9 @@ function getBtnContainer(getElementFn, options = {}) {
 }
 
 async function addBtn() {
+  if (!window.location.host.startsWith('miss')) {
+    return;
+  }
   const container = await getBtnContainer(
     () => document.querySelectorAll('[aria-current="page"]')?.[0]?.parentElement
   );
